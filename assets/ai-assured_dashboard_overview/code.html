@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cipherion Dashboard Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6d18ff",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111921",
+                        "success": "#10b981",
+                        "warning": "#f59e0b",
+                        "danger": "#ef4444",
+                        "info": "#3b82f6",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        .gauge-svg {
+            transform: rotate(-90deg);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<nav class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-icons text-white text-sm">security</span>
+</div>
+<span class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white uppercase">Cipherion</span>
+</div>
+<div class="hidden md:flex items-center space-x-4">
+<a class="px-3 py-2 text-sm font-semibold text-primary border-b-2 border-primary" href="#">Dashboard</a>
+<a class="px-3 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200" href="#">Assessments</a>
+<a class="px-3 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200" href="#">Reports</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+<span class="material-icons">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-danger rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-semibold">Alex Chen</p>
+<p class="text-xs text-slate-500">Compliance Lead</p>
+</div>
+<img alt="User Profile" class="w-10 h-10 rounded-full border-2 border-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBL-gBCY-NTgazT1kN3jn_zJvvFt2-nXZOQElgGSt7RyjAnZwNrlmxsNsaJLWR2g-4WGnKYRc3S4-kljfZ4uaPL7t9ZqG43rfNN3O3MOY2UTd5Grr3pHFX5SdKZJiO70SJ0CwtEkZGPEnjpYsOeI_K4m5GF4BQTDzrtHNRi_ySILPM-B79nuofo5Z0gGcQHSLsjytPUgGgovyfean-F8WE7PjyoqQb29vQlWJ_vdpiq3hjHdO99AFxWFIo8es8_3lT_8VQOnVMdvGsI"/>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+<div>
+<h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Assessment Overview</h1>
+<p class="text-slate-500 dark:text-slate-400">Monitoring real-time compliance readiness across your infrastructure with Cipherion AI.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700">
+<span class="material-icons text-sm">list_alt</span>
+                View Checklist
+            </button>
+<button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:brightness-110 transition-all shadow-md shadow-primary/20">
+<span class="material-icons text-sm">description</span>
+                Generate Report
+            </button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+<div class="lg:col-span-1 bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-center shadow-sm">
+<h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-6">Overall Compliance Score</h3>
+<div class="relative w-48 h-48 mb-6">
+<svg class="w-full h-full gauge-svg" viewBox="0 0 100 100">
+<circle class="text-slate-100 dark:text-slate-800 stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-width="8"></circle>
+<circle class="text-primary stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-dasharray="251.2" stroke-dashoffset="80.384" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-5xl font-extrabold text-slate-900 dark:text-white">68%</span>
+<span class="text-xs font-semibold text-slate-500 uppercase">On Track</span>
+</div>
+</div>
+<div class="bg-primary/5 dark:bg-primary/10 px-4 py-3 rounded-xl w-full">
+<p class="text-sm font-medium text-slate-700 dark:text-slate-300">
+<span class="font-bold text-primary">82</span> / 120 items completed
+                </p>
+<div class="flex items-center justify-center gap-1 mt-1">
+<span class="material-icons text-success text-xs">trending_up</span>
+<span class="text-xs text-success font-bold">+4% from last week</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+<h3 class="text-lg font-bold">Risk Summary</h3>
+<span class="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded font-bold text-slate-500">Updated 12m ago</span>
+</div>
+<div class="flex-grow p-6">
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+<div class="p-4 rounded-lg bg-danger/5 border border-danger/10">
+<p class="text-xs font-bold text-danger uppercase mb-1">Critical</p>
+<p class="text-2xl font-extrabold text-danger">03</p>
+</div>
+<div class="p-4 rounded-lg bg-warning/5 border border-warning/10">
+<p class="text-xs font-bold text-warning uppercase mb-1">High</p>
+<p class="text-2xl font-extrabold text-warning">08</p>
+</div>
+<div class="p-4 rounded-lg bg-info/5 border border-info/10">
+<p class="text-xs font-bold text-info uppercase mb-1">Medium</p>
+<p class="text-2xl font-extrabold text-info">14</p>
+</div>
+<div class="p-4 rounded-lg bg-primary/5 border border-primary/10">
+<p class="text-xs font-bold text-primary uppercase mb-1">Low</p>
+<p class="text-2xl font-extrabold text-primary">22</p>
+</div>
+</div>
+<div class="overflow-hidden">
+<table class="w-full text-left text-sm">
+<thead>
+<tr class="text-slate-400 border-b border-slate-100 dark:border-slate-800">
+<th class="pb-3 font-semibold">Active Vulnerability</th>
+<th class="pb-3 font-semibold">Status</th>
+<th class="pb-3 font-semibold">Assignee</th>
+<th class="pb-3 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-danger"></span>
+<span class="font-medium">Missing Encryption (at rest)</span>
+</div>
+</td>
+<td class="py-4">
+<span class="px-2 py-1 rounded-full bg-danger/10 text-danger text-[10px] font-bold uppercase">Critical</span>
+</td>
+<td class="py-4 text-slate-500">Infrastructure Team</td>
+<td class="py-4 text-right">
+<button class="text-primary font-bold hover:underline">Fix Now</button>
+</td>
+</tr>
+<tr>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-warning"></span>
+<span class="font-medium">Multi-Factor Auth Policy</span>
+</div>
+</td>
+<td class="py-4">
+<span class="px-2 py-1 rounded-full bg-warning/10 text-warning text-[10px] font-bold uppercase">High</span>
+</td>
+<td class="py-4 text-slate-500">Security Ops</td>
+<td class="py-4 text-right">
+<button class="text-primary font-bold hover:underline">Review</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+        Framework Status
+        <span class="material-icons text-slate-400 text-lg">info_outline</span>
+</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+<span class="material-icons">gavel</span>
+</div>
+<span class="text-xs font-bold text-success flex items-center gap-1">
+<span class="material-icons text-[14px]">verified</span>
+                    Compliant
+                </span>
+</div>
+<h4 class="font-bold text-lg mb-1">GDPR</h4>
+<p class="text-sm text-slate-500 mb-6">General Data Protection Regulation</p>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold">
+<span>Progress</span>
+<span>92%</span>
+</div>
+<div class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-success rounded-full" style="width: 92%"></div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+<span class="material-icons">health_and_safety</span>
+</div>
+<span class="text-xs font-bold text-warning flex items-center gap-1">
+<span class="material-icons text-[14px]">pending</span>
+                    Ongoing
+                </span>
+</div>
+<h4 class="font-bold text-lg mb-1">HIPAA</h4>
+<p class="text-sm text-slate-500 mb-6">Health Insurance Portability Act</p>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold">
+<span>Progress</span>
+<span>45%</span>
+</div>
+<div class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-warning rounded-full" style="width: 45%"></div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+<span class="material-icons">payments</span>
+</div>
+<span class="text-xs font-bold text-slate-400 flex items-center gap-1">
+<span class="material-icons text-[14px]">not_started</span>
+                    New
+                </span>
+</div>
+<h4 class="font-bold text-lg mb-1">PCI-DSS</h4>
+<p class="text-sm text-slate-500 mb-6">Payment Card Industry Standard</p>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold">
+<span>Progress</span>
+<span>18%</span>
+</div>
+<div class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 18%"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 bg-gradient-to-r from-primary to-info p-6 rounded-xl text-white shadow-lg shadow-primary/20 relative overflow-hidden">
+<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="flex gap-4 items-start">
+<div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center shrink-0">
+<span class="material-icons">auto_awesome</span>
+</div>
+<div>
+<h4 class="font-bold text-lg">Cipherion Recommendation</h4>
+<p class="text-white/80 text-sm max-w-xl">Based on your current progress, resolving the <span class="font-bold text-white underline italic">3 Critical Risks</span> in Infrastructure will increase your overall compliance score to 81% and satisfy 12 remaining GDPR sub-requirements.</p>
+</div>
+</div>
+<button class="bg-white text-primary px-6 py-3 rounded-lg font-bold text-sm whitespace-nowrap hover:bg-slate-50 transition-colors shadow-lg">
+                Start Auto-Remediation
+            </button>
+</div>
+<div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+</div>
+</main>
+<footer class="mt-12 border-t border-slate-200 dark:border-slate-800 py-8 bg-white dark:bg-slate-900">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-sm text-slate-500">© 2024 Cipherion Platform. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-sm text-slate-500 hover:text-primary transition-colors" href="#">Documentation</a>
+<a class="text-sm text-slate-500 hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-sm text-slate-500 hover:text-primary transition-colors" href="#">Support Center</a>
+</div>
+</div>
+</footer>
+
+</body></html>
