@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cipherion - AI Compliance Recommendations</title>
+<!-- Tailwind CSS v3 CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style data-purpose="global-styles">
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fcfaff;
+      color: #1a1a1a;
+    }
+    .purple-primary { color: #6d18ff; }
+    .bg-purple-primary { background-color: #6d18ff; }
+    .border-purple-primary { border-color: #6d18ff; }
+    .bg-light-purple { background-color: #f5f0ff; }
+  </style>
+</head>
+<body class="min-h-screen pb-24">
+<!-- BEGIN: MainHeader -->
+<header class="max-w-7xl mx-auto px-6 pt-12 pb-8">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div data-purpose="title-section">
+<h1 class="text-[32px] font-bold tracking-tight text-slate-900">AI Compliance Recommendations</h1>
+<p class="text-slate-500 mt-1 text-lg">Based on your organizational profile and data processing activities.</p>
+</div>
+<div data-purpose="framework-badge">
+<span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-purple-100 text-[#6d18ff] border border-purple-200">
+<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          8 frameworks analyzed • 4 recommended
+        </span>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<main class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-10 gap-8">
+<!-- BEGIN: ResultsSection -->
+<section class="lg:col-span-7 space-y-6">
+<!-- BEGIN: Legend -->
+<div class="bg-light-purple border border-purple-100 rounded-xl p-5 flex flex-col md:flex-row md:items-center gap-4" data-purpose="confidence-legend">
+<div class="flex-shrink-0">
+<svg class="w-6 h-6 text-[#6d18ff]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="flex-grow">
+<p class="text-sm font-semibold text-purple-900">Understanding Confidence Scores</p>
+<div class="flex flex-wrap gap-4 mt-2">
+<div class="flex items-center text-xs text-slate-600">
+<span class="w-3 h-3 rounded-full bg-emerald-500 mr-2"></span>
+              90-100% Very High
+            </div>
+<div class="flex items-center text-xs text-slate-600">
+<span class="w-3 h-3 rounded-full bg-blue-500 mr-2"></span>
+              75-89% High
+            </div>
+<div class="flex items-center text-xs text-slate-600">
+<span class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></span>
+              60-74% Medium
+            </div>
+</div>
+</div>
+</div>
+<!-- END: Legend -->
+<!-- BEGIN: FrameworkCards -->
+<div class="space-y-4" data-purpose="recommendation-list">
+<!-- Card: GDPR (Selected) -->
+<div class="bg-white rounded-xl shadow-sm border-2 border-purple-primary p-6 relative overflow-hidden transition-all hover:shadow-md">
+<div class="flex items-start justify-between">
+<div class="flex gap-4">
+<div class="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center border border-slate-100">
+<span class="text-xl font-bold text-slate-400">EU</span>
+</div>
+<div>
+<div class="flex items-center gap-3">
+<h3 class="text-xl font-bold text-slate-900">GDPR</h3>
+<span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-medium rounded">Europe</span>
+<span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-medium rounded">Privacy</span>
+</div>
+<div class="mt-4 max-w-lg">
+<p class="text-sm text-slate-600 leading-relaxed">
+<span class="font-semibold">Why this applies:</span> Your system processes data of residents in the European Union and handles Personally Identifiable Information (PII) at scale.
+                  </p>
+</div>
+</div>
+</div>
+<!-- Progress Ring -->
+<div class="flex flex-col items-center">
+<div class="relative w-16 h-16">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<circle class="stroke-slate-100" cx="18" cy="18" fill="none" r="16" stroke-width="3"></circle>
+<circle class="stroke-emerald-500" cx="18" cy="18" fill="none" r="16" stroke-dasharray="95, 100" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center text-xs font-bold text-emerald-600">95%</div>
+</div>
+<span class="text-[10px] uppercase font-bold text-slate-400 mt-1">Match</span>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-slate-50">
+<button class="text-[#6d18ff] text-sm font-medium flex items-center gap-1">
+              View key requirements
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<div class="flex flex-wrap gap-2 mt-3">
+<span class="bg-purple-50 text-[#6d18ff] text-[11px] font-semibold px-3 py-1 rounded-full uppercase">Article 25 Compliance</span>
+<span class="bg-purple-50 text-[#6d18ff] text-[11px] font-semibold px-3 py-1 rounded-full uppercase">DPIA Mandatory</span>
+</div>
+</div>
+<div class="mt-6 flex items-center justify-between text-xs text-slate-400 font-medium">
+<div class="flex items-center gap-4">
+<span>32 Controls</span>
+<span>Est. 2-3 hours</span>
+</div>
+<div class="flex items-center text-emerald-600">
+<svg class="w-4 h-4 mr-1" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg>
+              Selected
+            </div>
+</div>
+</div>
+<!-- Card: HIPAA (Selected) -->
+<div class="bg-white rounded-xl shadow-sm border-2 border-purple-primary p-6 relative overflow-hidden transition-all hover:shadow-md">
+<div class="flex items-start justify-between">
+<div class="flex gap-4">
+<div class="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center border border-slate-100">
+<span class="text-xl font-bold text-slate-400">H</span>
+</div>
+<div>
+<div class="flex items-center gap-3">
+<h3 class="text-xl font-bold text-slate-900">HIPAA</h3>
+<span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-medium rounded">USA</span>
+<span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-medium rounded">Healthcare</span>
+</div>
+<div class="mt-4 max-w-lg">
+<p class="text-sm text-slate-600 leading-relaxed">
+<span class="font-semibold">Why this applies:</span> Detected health-related data points and medical diagnostic patterns in your training datasets.
+                  </p>
+</div>
+</div>
+</div>
+<!-- Progress Ring -->
+<div class="flex flex-col items-center">
+<div class="relative w-16 h-16">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<circle class="stroke-slate-100" cx="18" cy="18" fill="none" r="16" stroke-width="3"></circle>
+<circle class="stroke-emerald-500" cx="18" cy="18" fill="none" r="16" stroke-dasharray="90, 100" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center text-xs font-bold text-emerald-600">90%</div>
+</div>
+<span class="text-[10px] uppercase font-bold text-slate-400 mt-1">Match</span>
+</div>
+</div>
+<div class="mt-6 flex items-center justify-between text-xs text-slate-400 font-medium">
+<div class="flex items-center gap-4">
+<span>45 Controls</span>
+<span>Est. 3-4 hours</span>
+</div>
+<div class="flex items-center text-emerald-600">
+<svg class="w-4 h-4 mr-1" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg>
+              Selected
+            </div>
+</div>
+</div>
+<!-- Card: PCI-DSS (Selected) -->
+<div class="bg-white rounded-xl shadow-sm border-2 border-purple-primary p-6 relative overflow-hidden transition-all hover:shadow-md">
+<div class="flex items-start justify-between">
+<div class="flex gap-4">
+<div class="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center border border-slate-100">
+<span class="text-xl font-bold text-slate-400">$$</span>
+</div>
+<div>
+<div class="flex items-center gap-3">
+<h3 class="text-xl font-bold text-slate-900">PCI-DSS v4.0</h3>
+<span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-medium rounded">Global</span>
+<span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-medium rounded">Finance</span>
+</div>
+<div class="mt-4 max-w-lg">
+<p class="text-sm text-slate-600 leading-relaxed">
+<span class="font-semibold">Why this applies:</span> Your AI application interfaces with payment gateways and stores customer transaction metadata.
+                  </p>
+</div>
+</div>
+</div>
+<!-- Progress Ring -->
+<div class="flex flex-col items-center">
+<div class="relative w-16 h-16">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<circle class="stroke-slate-100" cx="18" cy="18" fill="none" r="16" stroke-width="3"></circle>
+<circle class="stroke-blue-500" cx="18" cy="18" fill="none" r="16" stroke-dasharray="88, 100" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center text-xs font-bold text-blue-600">88%</div>
+</div>
+<span class="text-[10px] uppercase font-bold text-slate-400 mt-1">Match</span>
+</div>
+</div>
+<div class="mt-6 flex items-center justify-between text-xs text-slate-400 font-medium">
+<div class="flex items-center gap-4">
+<span>43 Controls</span>
+<span>Est. 3 hours</span>
+</div>
+<div class="flex items-center text-emerald-600">
+<svg class="w-4 h-4 mr-1" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg>
+              Selected
+            </div>
+</div>
+</div>
+<!-- Card: SOC 2 (Unchecked) -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden transition-all hover:border-slate-300">
+<div class="flex items-start justify-between">
+<div class="flex gap-4 opacity-75">
+<div class="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center border border-slate-100">
+<span class="text-xl font-bold text-slate-400">S2</span>
+</div>
+<div>
+<div class="flex items-center gap-3">
+<h3 class="text-xl font-bold text-slate-900">SOC 2 Type II</h3>
+<span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-medium rounded">USA</span>
+<span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-medium rounded">Security</span>
+</div>
+<div class="mt-4 max-w-lg">
+<p class="text-sm text-slate-500 leading-relaxed">
+<span class="font-semibold text-slate-600">Why this applies:</span> General recommendation for SaaS providers hosting enterprise customer data in the cloud.
+                  </p>
+</div>
+</div>
+</div>
+<!-- Progress Ring -->
+<div class="flex flex-col items-center">
+<div class="relative w-16 h-16">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<circle class="stroke-slate-100" cx="18" cy="18" fill="none" r="16" stroke-width="3"></circle>
+<circle class="stroke-blue-500" cx="18" cy="18" fill="none" r="16" stroke-dasharray="78, 100" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center text-xs font-bold text-blue-600">78%</div>
+</div>
+<span class="text-[10px] uppercase font-bold text-slate-400 mt-1 text-center">Match</span>
+</div>
+</div>
+<div class="mt-6 flex items-center justify-between text-xs text-slate-400 font-medium">
+<div class="flex items-center gap-4">
+<span>62 Controls</span>
+<span>Est. 5-6 hours</span>
+</div>
+<button class="text-slate-400 hover:text-[#6d18ff] flex items-center gap-1 transition-colors">
+<div class="w-5 h-5 border-2 border-slate-200 rounded mr-1"></div>
+              Add to Assessment
+            </button>
+</div>
+</div>
+</div>
+<!-- END: FrameworkCards -->
+</section>
+<!-- END: ResultsSection -->
+<!-- BEGIN: Sidebar -->
+<aside class="lg:col-span-3">
+<div class="sticky top-8 bg-light-purple border border-purple-100 rounded-2xl p-6 shadow-sm">
+<h2 class="text-lg font-bold text-purple-900 mb-6 flex items-center justify-between">
+          Selected Frameworks
+          <span class="bg-purple-primary text-white text-xs px-2 py-0.5 rounded-full">3</span>
+</h2>
+<ul class="space-y-4 mb-8">
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-purple-primary"></div>
+<span class="text-sm font-medium text-purple-800">GDPR</span>
+</div>
+<button class="text-slate-400 hover:text-red-500">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</li>
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-purple-primary"></div>
+<span class="text-sm font-medium text-purple-800">HIPAA</span>
+</div>
+<button class="text-slate-400 hover:text-red-500">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</li>
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-purple-primary"></div>
+<span class="text-sm font-medium text-purple-800">PCI-DSS v4.0</span>
+</div>
+<button class="text-slate-400 hover:text-red-500">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</li>
+</ul>
+<div class="space-y-3 pt-6 border-t border-purple-200 mb-8">
+<div class="flex justify-between text-sm">
+<span class="text-purple-700">Total Controls</span>
+<span class="font-bold text-purple-900">120</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-purple-700">Estimated Time</span>
+<span class="font-bold text-purple-900">8-10 hours</span>
+</div>
+</div>
+<button class="w-full bg-purple-primary text-white font-bold py-4 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 group shadow-lg shadow-purple-200">
+          Continue to Assessment
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</aside>
+<!-- END: Sidebar -->
+</main>
+<!-- BEGIN: BottomActionBar -->
+<footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-6 py-4 z-50">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<button class="flex items-center gap-2 text-slate-600 font-semibold hover:text-slate-900 transition-colors">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+        Back
+      </button>
+<div class="flex items-center gap-8">
+<a class="text-sm text-slate-400 hover:text-slate-600 font-medium underline underline-offset-4" href="#">Skip AI suggestions</a>
+<button class="bg-purple-primary text-white font-bold px-8 py-3 rounded-xl hover:opacity-95 transition-all shadow-md">
+          Create Assessment (3 selected)
+        </button>
+</div>
+</div>
+</footer>
+<!-- END: BottomActionBar -->
+</body></html>

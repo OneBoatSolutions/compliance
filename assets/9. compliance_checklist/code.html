@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cipherion | Compliance Checklist</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Public Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6d18ff",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Public Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-3">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center text-white">
+<span class="material-symbols-outlined">security</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight">Cipherion</h1>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-sm font-semibold text-primary border-b-2 border-primary pb-4 mt-4" href="#">Assessments</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Frameworks</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm w-64 focus:ring-2 focus:ring-primary" placeholder="Search..." type="text"/>
+</div>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+<span class="material-symbols-outlined text-primary text-sm">person</span>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-8">
+<!-- Breadcrumbs & Title Section -->
+<div class="mb-8">
+<nav class="flex items-center gap-2 text-sm text-slate-500 mb-4">
+<a class="hover:text-primary" href="#">Assessments</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-slate-900 dark:text-slate-100 font-medium">HealthTrack App Compliance</span>
+</nav>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<h2 class="text-2xl font-bold">HealthTrack App Compliance</h2>
+<span class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-500 text-xs font-bold rounded-full uppercase tracking-wider">In Progress</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined text-lg">arrow_back</span>
+                        Back to Dashboard
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg text-sm font-medium hover:bg-primary/5">
+<span class="material-symbols-outlined text-lg">description</span>
+                        Generate Report
+                    </button>
+<button class="p-2 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<p class="text-sm text-slate-500 mt-2">Last updated: 2 hours ago by Sarah Chen</p>
+</div>
+<!-- Sticky Metrics Bar -->
+<div class="sticky top-[73px] z-40 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm p-6 mb-8 flex flex-wrap lg:flex-nowrap items-center divide-y lg:divide-y-0 lg:divide-x divide-slate-100 dark:divide-slate-800 gap-6 lg:gap-0">
+<!-- Overall Progress -->
+<div class="flex-1 min-w-[200px] flex items-center gap-4 pr-6">
+<div class="relative flex items-center justify-center">
+<svg class="w-16 h-16 transform -rotate-90">
+<circle class="text-slate-100 dark:text-slate-800" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-primary" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175.9" stroke-dashoffset="56.3" stroke-width="6"></circle>
+</svg>
+<span class="absolute text-sm font-bold">68%</span>
+</div>
+<div>
+<p class="text-xs text-slate-500 uppercase font-semibold">Overall Progress</p>
+<p class="text-lg font-bold">Steady Growth</p>
+</div>
+</div>
+<!-- Framework Breakdown -->
+<div class="flex-1 min-w-[250px] px-6">
+<p class="text-xs text-slate-500 uppercase font-semibold mb-3">Framework Breakdown</p>
+<div class="space-y-2">
+<div class="flex items-center gap-2">
+<span class="text-[10px] w-12 font-bold">HIPAA</span>
+<div class="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 72%"></div>
+</div>
+<span class="text-[10px] font-bold">72%</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] w-12 font-bold">GDPR</span>
+<div class="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 65%"></div>
+</div>
+<span class="text-[10px] font-bold">65%</span>
+</div>
+</div>
+</div>
+<!-- Status Distribution -->
+<div class="flex-1 min-w-[250px] px-6">
+<p class="text-xs text-slate-500 uppercase font-semibold mb-3">Status Distribution</p>
+<div class="h-6 w-full flex rounded-lg overflow-hidden">
+<div class="h-full bg-green-500" style="width: 45%"></div>
+<div class="h-full bg-yellow-500" style="width: 30%"></div>
+<div class="h-full bg-red-500" style="width: 15%"></div>
+<div class="h-full bg-slate-300 dark:bg-slate-700" style="width: 10%"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] font-bold text-slate-400">
+<span>Compliant</span>
+<span>Gap</span>
+</div>
+</div>
+<!-- Critical Gaps -->
+<div class="flex-1 min-w-[150px] pl-6 flex items-center justify-between">
+<div>
+<p class="text-xs text-slate-500 uppercase font-semibold">Critical Gaps</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-red-500 tracking-tighter">2</span>
+<span class="text-red-500 text-sm font-medium">Attention Required</span>
+</div>
+</div>
+<div class="bg-red-50 dark:bg-red-900/20 p-2 rounded-lg text-red-500">
+<span class="material-symbols-outlined">warning</span>
+</div>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="bg-slate-100 dark:bg-slate-900/50 rounded-xl p-4 mb-6 flex flex-wrap items-center gap-4">
+<div class="flex-1 min-w-[240px] relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 border-none bg-white dark:bg-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-primary" placeholder="Search controls..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<select class="bg-white dark:bg-slate-800 border-none rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-primary px-3 py-2 min-w-[120px]">
+<option>Framework</option>
+<option>HIPAA</option>
+<option>GDPR</option>
+</select>
+<select class="bg-white dark:bg-slate-800 border-none rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-primary px-3 py-2 min-w-[120px]">
+<option>Status</option>
+<option>Compliant</option>
+<option>Non-Compliant</option>
+</select>
+<select class="bg-white dark:bg-slate-800 border-none rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-primary px-3 py-2 min-w-[120px]">
+<option>Severity</option>
+<option>High</option>
+<option>Medium</option>
+<option>Low</option>
+</select>
+</div>
+<div class="w-full lg:w-auto h-px lg:h-8 lg:w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+<div class="flex items-center gap-2">
+<div class="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded-md flex items-center gap-1">
+                    Framework: HIPAA
+                    <span class="material-symbols-outlined text-[14px] cursor-pointer">close</span>
+</div>
+<div class="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded-md flex items-center gap-1">
+                    Status: Non-Compliant
+                    <span class="material-symbols-outlined text-[14px] cursor-pointer">close</span>
+</div>
+<button class="text-xs font-semibold text-primary hover:underline ml-2">Clear all</button>
+</div>
+</div>
+<!-- Main Content: Collapsible Framework Section -->
+<div class="space-y-4">
+<!-- Section Header -->
+<div class="flex items-center justify-between bg-slate-200 dark:bg-slate-800/50 px-4 py-3 rounded-lg cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-800 transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-500">expand_more</span>
+<h3 class="font-bold text-sm uppercase tracking-wide">HIPAA - Administrative Safeguards</h3>
+</div>
+<div class="flex items-center gap-4 text-xs font-semibold text-slate-500">
+<span>12 Controls</span>
+<span>4 Compliant</span>
+<span class="text-red-500">2 Non-Compliant</span>
+</div>
+</div>
+<!-- Control Card 1 (Compliant) -->
+<div class="bg-white dark:bg-slate-900 border-l-4 border-l-green-500 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800 transition-shadow hover:shadow-md">
+<div class="p-5 flex items-start gap-4">
+<div class="mt-1">
+<span class="material-symbols-outlined text-green-500">check_circle</span>
+</div>
+<div class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+<div class="md:col-span-2">
+<code class="text-xs font-mono font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">HIPAA-AS-01</code>
+</div>
+<div class="md:col-span-4">
+<h4 class="font-bold text-slate-900 dark:text-slate-100">Access Control Policy</h4>
+<p class="text-xs text-slate-500 line-clamp-1">Ensure policies exist for assigning user access levels.</p>
+</div>
+<div class="md:col-span-2 flex justify-center">
+<span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold rounded uppercase">Medium</span>
+</div>
+<div class="md:col-span-2">
+<select class="w-full text-xs font-semibold bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-500 border-none rounded px-2 py-1.5 focus:ring-0">
+<option>Compliant</option>
+<option>In Progress</option>
+<option>Gap</option>
+</select>
+</div>
+<div class="md:col-span-1 flex items-center justify-end gap-1 text-slate-400">
+<span class="material-symbols-outlined text-lg">attachment</span>
+<span class="text-xs font-bold">3</span>
+</div>
+<div class="md:col-span-1 flex justify-end">
+<button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Control Card 2 (Non-Compliant & Expanded) -->
+<div class="bg-white dark:bg-slate-900 border-l-4 border-l-red-500 rounded-lg shadow-md border border-slate-200 dark:border-slate-800">
+<div class="p-5 flex items-start gap-4 border-b border-slate-100 dark:border-slate-800">
+<div class="mt-1">
+<span class="material-symbols-outlined text-red-500">error</span>
+</div>
+<div class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+<div class="md:col-span-2">
+<code class="text-xs font-mono font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">HIPAA-AS-02</code>
+</div>
+<div class="md:col-span-4">
+<h4 class="font-bold text-slate-900 dark:text-slate-100">Risk Assessment &amp; Management</h4>
+<p class="text-xs text-slate-500 line-clamp-1">Conduct regular risk assessments and maintain mitigation plans.</p>
+</div>
+<div class="md:col-span-2 flex justify-center">
+<span class="px-2 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-500 text-[10px] font-bold rounded uppercase">High</span>
+</div>
+<div class="md:col-span-2">
+<select class="w-full text-xs font-semibold bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-500 border-none rounded px-2 py-1.5 focus:ring-0">
+<option>Gap</option>
+<option>Compliant</option>
+<option>In Progress</option>
+</select>
+</div>
+<div class="md:col-span-1 flex items-center justify-end gap-1 text-slate-400">
+<span class="material-symbols-outlined text-lg">attachment</span>
+<span class="text-xs font-bold">0</span>
+</div>
+<div class="md:col-span-1 flex justify-end">
+<button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded">
+<span class="material-symbols-outlined">expand_less</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Expanded Content -->
+<div class="p-6 bg-slate-50/50 dark:bg-slate-800/20">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left: Description & Evidence -->
+<div class="lg:col-span-2 space-y-6">
+<div>
+<h5 class="text-sm font-bold mb-2">Description</h5>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    A systematic process must be implemented to identify, assess, and manage risks to the confidentiality, integrity, and availability of electronic protected health information (ePHI). This includes documenting risk levels and mitigation strategies.
+                                </p>
+</div>
+<!-- AI Remediation Card -->
+<div class="bg-gradient-to-br from-primary text-white p-5 rounded-xl shadow-lg relative overflow-hidden to-purple-800">
+<div class="absolute -right-4 -top-4 opacity-20">
+<span class="material-symbols-outlined text-8xl">auto_awesome</span>
+</div>
+<div class="relative flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-xl">auto_awesome</span>
+<h5 class="font-bold">AI Remediation Suggestion</h5>
+</div>
+<p class="text-sm text-white/90 mb-4">We've identified that you are missing a formal Risk Register. Our AI can help you generate a compliant Risk Assessment template based on your HealthTrack app architecture.</p>
+<button class="bg-white text-primary px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-slate-100">
+                                    Get AI Remediation Plan
+                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Evidence Section -->
+<div>
+<div class="flex items-center justify-between mb-4">
+<h5 class="text-sm font-bold">Evidence</h5>
+<button class="text-primary text-xs font-bold flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-sm">upload</span>
+                                        Upload Evidence
+                                    </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+<div class="p-3 border border-slate-200 dark:border-slate-800 rounded-lg flex items-center gap-3 bg-white dark:bg-slate-900 group cursor-pointer hover:border-primary">
+<span class="material-symbols-outlined text-red-500">picture_as_pdf</span>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold truncate">Risk_Assessment_2023_Draft.pdf</p>
+<p class="text-[10px] text-slate-500">Added 2 days ago</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 hidden group-hover:block">download</span>
+</div>
+<div class="p-3 border border-dashed border-slate-300 dark:border-slate-700 rounded-lg flex items-center justify-center gap-2 text-slate-400 hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+<span class="text-xs font-bold">Attach new file</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: Comments -->
+<div class="space-y-4">
+<h5 class="text-sm font-bold">Collaboration &amp; History</h5>
+<div class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-500 text-sm">person</span>
+</div>
+<div class="flex-1">
+<div class="flex items-baseline gap-2">
+<p class="text-xs font-bold">Sarah Chen</p>
+<span class="text-[10px] text-slate-400">2h ago</span>
+</div>
+<p class="text-xs text-slate-600 dark:text-slate-400 mt-1">Starting the risk assessment. I'll need input from the DevOps team regarding infrastructure exposure.</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm">person</span>
+</div>
+<div class="flex-1">
+<div class="flex items-baseline gap-2">
+<p class="text-xs font-bold">You</p>
+<span class="text-[10px] text-slate-400">1h ago</span>
+</div>
+<p class="text-xs text-slate-600 dark:text-slate-400 mt-1">Uploaded the draft template for review. Let's aim to complete this by Friday.</p>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+<textarea class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs p-3 focus:ring-1 focus:ring-primary min-h-[80px]" placeholder="Add a comment..."></textarea>
+<button class="mt-2 w-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 py-2 rounded-lg text-xs font-bold">Post Comment</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Control Card 3 (Not Applicable) -->
+<div class="bg-white dark:bg-slate-900 border-l-4 border-l-slate-300 dark:border-l-slate-700 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="p-5 flex items-start gap-4">
+<div class="mt-1">
+<span class="material-symbols-outlined text-slate-300 dark:text-slate-600">block</span>
+</div>
+<div class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 items-center opacity-60">
+<div class="md:col-span-2">
+<code class="text-xs font-mono font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">HIPAA-AS-03</code>
+</div>
+<div class="md:col-span-4">
+<h4 class="font-bold text-slate-900 dark:text-slate-100">Workforce Clearance Procedure</h4>
+<p class="text-xs text-slate-500 line-clamp-1">Procedures to ensure workforce members have appropriate access.</p>
+</div>
+<div class="md:col-span-2 flex justify-center">
+<span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold rounded uppercase">Low</span>
+</div>
+<div class="md:col-span-2">
+<select class="w-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-500 border-none rounded px-2 py-1.5 focus:ring-0">
+<option>Not Applicable</option>
+<option>Compliant</option>
+</select>
+</div>
+<div class="md:col-span-1 flex items-center justify-end gap-1 text-slate-400">
+<span class="material-symbols-outlined text-lg">attachment</span>
+<span class="text-xs font-bold">0</span>
+</div>
+<div class="md:col-span-1 flex justify-end">
+<button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<footer class="mt-8 flex flex-col md:flex-row items-center justify-between gap-4 py-6 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-4">
+<p class="text-sm text-slate-500">Showing 1 to 10 of 42 controls</p>
+<div class="flex items-center gap-2">
+<p class="text-sm text-slate-500">Items per page:</p>
+<select class="bg-transparent border-none text-sm font-bold focus:ring-0">
+<option>10</option>
+<option>25</option>
+<option>50</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white font-bold text-sm">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</footer>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-transform group">
+<span class="material-symbols-outlined text-2xl">add</span>
+<span class="absolute right-full mr-4 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-xl">Quick Add Evidence</span>
+</button>
+</body></html>

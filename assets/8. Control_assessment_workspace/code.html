@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Control Assessment Workspace - HIPAA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "brand-purple": "#6d18ff",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen pb-24">
+<!-- Top Navigation -->
+<header class="bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 sticky top-0 z-40">
+<div class="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
+<div class="flex flex-col">
+<nav class="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-zinc-400 mb-1">
+<a class="hover:text-primary" href="#">Assessment</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-primary" href="#">HealthTrack App</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span>HIPAA Administrative Safeguards</span>
+</nav>
+<h1 class="text-xl font-bold text-slate-900 dark:text-white leading-tight">Control Assessment Workspace</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400 text-sm font-medium">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span>All changes saved ✓</span>
+</div>
+<div class="h-8 w-px bg-slate-200 dark:bg-zinc-800 mx-2"></div>
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold overflow-hidden border border-primary/30">
+<img alt="Sarah Chen profile" data-alt="Portrait of Sarah Chen professional headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_RM-g0MqUx2YxEUc3JJcI2SYyg4Rjf6W9HrLEn2OJ8_7DeG68UmLxq2fQlh8CP9CYwaLkyL7-jhhzupR_SYnkkxlQy9lSO3OG5MYpkqozMSrVw2A03MiVt1uF4-2Qd4jz4F5QsqucLyIN3rwnFB0LB1YGChOuhnzwQko2SHsf5wesc8etiko_oM9V1-NTuuget0KZZz2DD6BVXo3nTjpgdopJfODVeQ0u3CfnLEuMb4WQpYNnv2zf9KYp_JYmGxufTv8nK3SNHA"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-[1400px] mx-auto px-6 py-8">
+<!-- Section Progress Banner -->
+<div class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl p-6 mb-8 shadow-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="flex-1">
+<div class="flex justify-between items-end mb-3">
+<span class="text-sm font-semibold text-slate-700 dark:text-zinc-300">Section Progress: 15/20 controls completed</span>
+<span class="text-sm font-bold text-brand-purple">75%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-zinc-800 h-3 rounded-full overflow-hidden">
+<div class="bg-brand-purple h-full" style="width: 75%;"></div>
+</div>
+</div>
+<div class="flex flex-wrap gap-4 items-center md:border-l border-slate-200 dark:border-zinc-800 md:pl-8">
+<div class="flex items-center text-xs font-medium">
+<span class="status-dot bg-green-500"></span> 12 Green
+                    </div>
+<div class="flex items-center text-xs font-medium">
+<span class="status-dot bg-amber-400"></span> 3 Yellow
+                    </div>
+<div class="flex items-center text-xs font-medium">
+<span class="status-dot bg-red-500"></span> 5 Red
+                    </div>
+<div class="flex items-center text-xs font-medium">
+<span class="status-dot bg-slate-300"></span> 0 Gray
+                    </div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Column: Assessment Form (65%) -->
+<div class="lg:col-span-8 space-y-6">
+<div class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl shadow-sm overflow-hidden">
+<!-- Control Header -->
+<div class="p-6 border-b border-slate-100 dark:border-zinc-800">
+<div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+<div>
+<span class="text-xs font-bold tracking-wider text-slate-500 dark:text-zinc-500 uppercase">HIPAA-164.308(a)(3)(i)</span>
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">Workforce Security - Authorization/Supervision</h2>
+</div>
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20 uppercase tracking-wide">
+<span class="material-symbols-outlined text-[14px] mr-1">priority_high</span>
+                                High Severity
+                            </span>
+</div>
+<p class="text-slate-600 dark:text-zinc-400 leading-relaxed">
+                            Implement procedures for the authorization and/or supervision of workforce members who work with electronic protected health information (ePHI) or in locations where it might be accessed.
+                        </p>
+</div>
+<!-- Compliance Status Grid -->
+<div class="p-6 space-y-8">
+<div>
+<h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-4">Compliance Status</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Compliant -->
+<label class="relative flex flex-col p-4 border-2 border-slate-100 dark:border-zinc-800 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-all">
+<input class="sr-only" name="status" type="radio"/>
+<span class="material-symbols-outlined text-green-500 mb-2">check_circle</span>
+<span class="font-bold text-slate-900 dark:text-white">Compliant</span>
+<span class="text-xs text-slate-500 mt-1">Full adherence verified</span>
+</label>
+<!-- Partially Compliant (Selected) -->
+<label class="relative flex flex-col p-4 border-2 border-brand-purple bg-amber-50/30 dark:bg-amber-900/10 rounded-xl cursor-pointer transition-all">
+<input checked="" class="sr-only" name="status" type="radio"/>
+<span class="absolute top-2 right-2 text-brand-purple material-symbols-outlined">task_alt</span>
+<span class="material-symbols-outlined text-amber-500 mb-2">warning</span>
+<span class="font-bold text-slate-900 dark:text-white">Partially Compliant</span>
+<span class="text-xs text-slate-500 mt-1">Gaps identified in implementation</span>
+</label>
+<!-- Not Compliant -->
+<label class="relative flex flex-col p-4 border-2 border-slate-100 dark:border-zinc-800 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-all">
+<input class="sr-only" name="status" type="radio"/>
+<span class="material-symbols-outlined text-red-500 mb-2">cancel</span>
+<span class="font-bold text-slate-900 dark:text-white">Not Compliant</span>
+<span class="text-xs text-slate-500 mt-1">Critical gaps or no evidence</span>
+</label>
+<!-- N/A -->
+<label class="relative flex flex-col p-4 border-2 border-slate-100 dark:border-zinc-800 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-all">
+<input class="sr-only" name="status" type="radio"/>
+<span class="material-symbols-outlined text-slate-400 mb-2">do_not_disturb_on</span>
+<span class="font-bold text-slate-900 dark:text-white">Not Applicable</span>
+<span class="text-xs text-slate-500 mt-1">Outside of assessment scope</span>
+</label>
+</div>
+</div>
+<!-- Gap Details (Visible when Partially/Not Compliant) -->
+<div class="bg-primary/5 border border-primary/20 rounded-xl p-5">
+<div class="flex items-center gap-2 mb-3 text-primary">
+<span class="material-symbols-outlined">warning</span>
+<h3 class="text-sm font-bold">Compliance Gap Details</h3>
+</div>
+<textarea class="w-full bg-white dark:bg-zinc-900 border border-primary/20 focus:ring-primary focus:border-primary rounded-lg p-3 text-sm min-h-[100px]" placeholder="Describe the compliance gaps...">Authorization logs for remote contractors are currently reviewed quarterly instead of monthly as per internal policy.</textarea>
+</div>
+<!-- Implementation Notes -->
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<h3 class="text-sm font-semibold text-slate-900 dark:text-white">Implementation Notes</h3>
+<span class="text-[10px] text-slate-400 font-mono">562 / 1000 chars</span>
+</div>
+<div class="border border-slate-200 dark:border-zinc-800 rounded-lg overflow-hidden">
+<div class="bg-slate-50 dark:bg-zinc-800 px-3 py-2 flex gap-2 border-b border-slate-200 dark:border-zinc-800">
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded"><span class="material-symbols-outlined text-sm">format_bold</span></button>
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded"><span class="material-symbols-outlined text-sm">format_italic</span></button>
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded"><span class="material-symbols-outlined text-sm">format_list_bulleted</span></button>
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded ml-auto"><span class="material-symbols-outlined text-sm">link</span></button>
+</div>
+<textarea class="w-full bg-transparent border-0 focus:ring-0 p-4 text-sm min-h-[150px] leading-relaxed">Workforce supervision is handled via the OKTA provisioning workflow. Managers receive automated monthly reports of their direct reports' access levels. However, during our internal audit, we discovered that the "Offboarding" trigger was delayed for part-time contractors. 
+
+We are currently implementing a new web-hook to synchronize HRIS data directly with the security dashboard to ensure real-time supervision and authorization updates.</textarea>
+</div>
+</div>
+<!-- Supporting Evidence -->
+<div class="space-y-4">
+<h3 class="text-sm font-semibold text-slate-900 dark:text-white">Supporting Evidence</h3>
+<div class="border-2 border-dashed border-brand-purple/30 bg-brand-purple/5 hover:bg-brand-purple/10 transition-colors rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer">
+<span class="material-symbols-outlined text-brand-purple text-3xl mb-2">upload_file</span>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Drag &amp; drop files or <span class="text-brand-purple underline">browse</span></p>
+<p class="text-xs text-slate-500 mt-1">PDF, PNG, JPG, or XLSX up to 10MB</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+<div class="flex items-center justify-between p-3 border border-slate-200 dark:border-zinc-800 rounded-lg bg-slate-50/50 dark:bg-zinc-800/50">
+<div class="flex items-center gap-3 overflow-hidden">
+<div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 text-red-600 rounded flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div class="truncate">
+<p class="text-sm font-medium text-slate-900 dark:text-white truncate">Authorization_Workflow_v2.pdf</p>
+<p class="text-[10px] text-slate-500 uppercase font-bold tracking-tight">PDF • 1.2 MB • Uploaded Yesterday</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-red-500"><span class="material-symbols-outlined">delete</span></button>
+</div>
+<div class="flex items-center justify-between p-3 border border-slate-200 dark:border-zinc-800 rounded-lg bg-slate-50/50 dark:bg-zinc-800/50">
+<div class="flex items-center gap-3 overflow-hidden">
+<div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined">image</span>
+</div>
+<div class="truncate">
+<p class="text-sm font-medium text-slate-900 dark:text-white truncate">Okta_Audit_Log_Screenshot.png</p>
+<p class="text-[10px] text-slate-500 uppercase font-bold tracking-tight">PNG • 450 KB • Uploaded 2h ago</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-red-500"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+</div>
+<!-- Metadata Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100 dark:border-zinc-800">
+<div>
+<label class="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Assignee</label>
+<div class="relative">
+<select class="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg py-2 pl-3 pr-10 text-sm appearance-none">
+<option>Sarah Chen</option>
+<option>Michael Scott</option>
+<option>Jane Doe</option>
+</select>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Due Date</label>
+<div class="relative">
+<input class="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg py-2 pl-10 pr-3 text-sm" type="text" value="Feb 28, 2026"/>
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-[20px]">calendar_today</span>
+</div>
+</div>
+</div>
+<!-- Related Topics/Tags -->
+<div>
+<h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-3">Related Topics</h3>
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-purple/10 text-brand-purple text-xs font-semibold rounded-full">
+                                    Access Control
+                                    <button class="material-symbols-outlined text-[14px]">close</button>
+</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-purple/10 text-brand-purple text-xs font-semibold rounded-full">
+                                    Security Training
+                                    <button class="material-symbols-outlined text-[14px]">close</button>
+</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-purple/10 text-brand-purple text-xs font-semibold rounded-full">
+                                    Workforce Mgmt
+                                    <button class="material-symbols-outlined text-[14px]">close</button>
+</span>
+<button class="inline-flex items-center gap-1 px-3 py-1 border border-dashed border-slate-300 dark:border-zinc-700 text-slate-500 text-xs font-semibold rounded-full hover:bg-slate-50">
+<span class="material-symbols-outlined text-[14px]">add</span> Add Tag
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Sidebar (35%) -->
+<aside class="lg:col-span-4 space-y-6 sticky top-24">
+<!-- AI Assistant Card -->
+<div class="bg-gradient-to-br from-brand-purple to-brand-purple/80 p-5 rounded-xl shadow-md text-white">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-white">bolt</span>
+</div>
+<div>
+<h3 class="font-bold text-lg leading-none">AI Assistant</h3>
+<p class="text-white/80 text-xs mt-1">Get AI-powered guidance</p>
+</div>
+</div>
+<p class="text-sm text-white/90 leading-relaxed mb-5">
+                        I've analyzed your gap. Based on NIST 800-53, I can generate a corrective action plan for your workforce review process.
+                    </p>
+<button class="w-full bg-white text-brand-purple font-bold py-2.5 rounded-lg text-sm shadow-sm hover:bg-slate-50 active:scale-[0.98] transition-all">
+                        Get Remediation Plan
+                    </button>
+</div>
+<!-- Quick Reference -->
+<div class="bg-indigo-50/50 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-900/30 rounded-xl p-5">
+<h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-brand-purple text-[20px]">list_alt</span>
+                        Control Requirements
+                    </h3>
+<ul class="space-y-3">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-green-500 text-[18px] mt-0.5">check_box</span>
+<span class="text-sm text-slate-700 dark:text-zinc-300">Documented authorization process for ePHI</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-slate-300 text-[18px] mt-0.5">check_box_outline_blank</span>
+<span class="text-sm text-slate-700 dark:text-zinc-300">Monthly audit logs of supervisor reviews</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-slate-300 text-[18px] mt-0.5">check_box_outline_blank</span>
+<span class="text-sm text-slate-700 dark:text-zinc-300">Evidence of periodic workforce re-training</span>
+</li>
+</ul>
+</div>
+<!-- Related Controls -->
+<div class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl p-5">
+<h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4">Related Controls</h3>
+<div class="space-y-3">
+<a class="block text-sm text-brand-purple hover:underline flex items-center justify-between" href="#">
+                            HIPAA-164.308(a)(1)(ii)(D) - Info System Review
+                            <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</a>
+<a class="block text-sm text-brand-purple hover:underline flex items-center justify-between" href="#">
+                            GDPR Art. 32 - Security of Processing
+                            <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</a>
+<a class="block text-sm text-brand-purple hover:underline flex items-center justify-between" href="#">
+                            SOC 2 CC6.1 - Access Mgmt
+                            <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</a>
+</div>
+</div>
+<!-- Discussion Feed -->
+<div class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl p-5">
+<h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4">Discussion</h3>
+<div class="space-y-4 mb-5">
+<div class="flex gap-3">
+<img alt="Mike avatar" class="w-8 h-8 rounded-full border border-slate-200" data-alt="Profile photo of Mike wearing glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuBRGWiKYAn_Tl_eAdhR_hyGIGHyhr06BE-1oi1K5EPF7WdLsbeQDpfRwjByvTzAUNlohC_ZpqZExqz4DU4FjCCPYhn86DeWsckqMdFXX6W_K7XbOE4ZHTjRCXwjuZBgWG27ubyT0kFqDlw4SyM_ld1_53ym_DMGx6zktUz7o4Pew48SzwRtWv6XMp2kKLYAM--Jh_3poYkU1Est-CqTInNIqV7NcTQy21AsmKhM5oh7HhU_i0zAyiKNbZ7CvZZwZhPjmZgoy_Wg"/>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="text-xs font-bold text-slate-900 dark:text-white">Mike Ross</span>
+<span class="text-[10px] text-slate-400">2h ago</span>
+</div>
+<p class="text-xs text-slate-600 dark:text-zinc-400 leading-normal">
+                                    Sarah, the screenshots look good. Can we confirm if contractors are also included in the weekly delta report?
+                                </p>
+</div>
+</div>
+<div class="flex gap-3">
+<img alt="Sarah avatar" class="w-8 h-8 rounded-full border border-slate-200" data-alt="Portrait of Sarah Chen professional headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLQ-owLaMozNEbiZRRguWR1_XFju0s0EzSlb4YWnpUr5NjlSoSB5rCpUrLHoQAujKWPaEtKy0u53AdjAjiwUz6mE2aJM69X3JcrTH2wJbDfI65aLHCe0BJYavk2XPMDf3R9LtrpLIABO0L7uj8XYyq3bAFQaKCMvTNGTONRRg2g2IFBG1crQVZbdiTwMTdEvl2lRiny4jLfd_90SvAbQpxJXTnZzit_gAtsIN5xzjh0b825U_o4yBrVcqbv8aDug_SOdAL0Achbg"/>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="text-xs font-bold text-slate-900 dark:text-white">Sarah Chen</span>
+<span class="text-[10px] text-slate-400">45m ago</span>
+</div>
+<p class="text-xs text-slate-600 dark:text-zinc-400 leading-normal">
+                                    Checked with HR. Contractors are in a separate OKTA group. Adding them to the delta report now.
+                                </p>
+</div>
+</div>
+</div>
+<div class="relative">
+<textarea class="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg p-3 text-xs min-h-[80px]" placeholder="Post a comment..."></textarea>
+<button class="mt-2 text-xs font-bold text-brand-purple hover:text-brand-purple/80">Post Comment</button>
+</div>
+</div>
+<!-- History / Timeline -->
+<div class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl p-5">
+<h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4">Audit Trail</h3>
+<div class="space-y-4">
+<div class="relative pl-6 pb-4 border-l-2 border-slate-100 dark:border-zinc-800">
+<div class="absolute -left-[9px] top-0 w-4 h-4 bg-white dark:bg-zinc-900 border-2 border-brand-purple rounded-full"></div>
+<div class="text-[11px] font-bold text-slate-900 dark:text-white">Status Changed</div>
+<div class="text-[10px] text-slate-500">Sarah Chen changed to 'Partially Compliant'</div>
+<div class="text-[10px] text-slate-400 mt-1">Today, 2:15 PM</div>
+</div>
+<div class="relative pl-6 pb-4 border-l-2 border-slate-100 dark:border-zinc-800">
+<div class="absolute -left-[9px] top-0 w-4 h-4 bg-white dark:bg-zinc-900 border-2 border-slate-200 dark:border-zinc-700 rounded-full"></div>
+<div class="text-[11px] font-bold text-slate-900 dark:text-white">Evidence Uploaded</div>
+<div class="text-[10px] text-slate-500">Mike Ross uploaded Okta_Audit_Log_Screenshot.png</div>
+<div class="text-[10px] text-slate-400 mt-1">Today, 11:30 AM</div>
+</div>
+<div class="relative pl-6 border-l-2 border-transparent">
+<div class="absolute -left-[9px] top-0 w-4 h-4 bg-white dark:bg-zinc-900 border-2 border-slate-200 dark:border-zinc-700 rounded-full"></div>
+<div class="text-[11px] font-bold text-slate-900 dark:text-white">Control Created</div>
+<div class="text-[10px] text-slate-500">System generated via HIPAA template</div>
+<div class="text-[10px] text-slate-400 mt-1">Jan 12, 2026</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Bottom Action Bar -->
+<footer class="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 border-t border-slate-200 dark:border-zinc-800 h-20 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<div class="max-w-[1400px] mx-auto px-6 h-full flex items-center justify-between">
+<button class="flex items-center gap-2 px-4 py-2 text-slate-600 dark:text-zinc-400 font-semibold hover:bg-slate-50 dark:hover:bg-zinc-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+                Previous Control
+            </button>
+<div class="hidden md:flex flex-col items-center">
+<span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Progress</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">15 of 20 Controls</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-5 py-2.5 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-300 font-semibold rounded-lg hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors">
+                    Save Draft
+                </button>
+<button class="px-6 py-2.5 bg-brand-purple text-white font-bold rounded-lg shadow-lg shadow-brand-purple/20 hover:bg-brand-purple/90 flex items-center gap-2 transition-all active:scale-[0.98]">
+                    Save &amp; Next Control
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</footer>
+</body></html>
