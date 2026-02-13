@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cipherion | Compliance Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6d18ff", // Overriding per user specific request for #6d18ff while maintaining theme structure
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#0f0914",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .circular-progress {
+            background: radial-gradient(closest-side, white 79%, transparent 80% 100%),
+                        conic-gradient(#6d18ff 72%, #e5e7eb 0);
+        }
+        .circular-progress-sm {
+            background: radial-gradient(closest-side, white 70%, transparent 71% 100%),
+                        conic-gradient(#6d18ff 68%, #e5e7eb 0);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 antialiased">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md">
+<div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+<div class="flex items-center gap-2 text-primary">
+<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
+<span class="material-symbols-outlined text-xl">shield_lock</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-slate-900">Cipherion</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-semibold text-primary" href="#">Dashboard</a>
+<a class="text-sm font-medium text-slate-600 hover:text-primary transition-colors" href="#">Assessments</a>
+<a class="text-sm font-medium text-slate-600 hover:text-primary transition-colors" href="#">Frameworks</a>
+<a class="text-sm font-medium text-slate-600 hover:text-primary transition-colors" href="#">Reports</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined text-lg">add</span>
+<span>Create New Assessment</span>
+</button>
+<div class="h-9 w-9 rounded-full bg-slate-200 border-2 border-white shadow-sm overflow-hidden">
+<img alt="Sarah" class="h-full w-full object-cover" data-alt="User profile avatar Sarah" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByqKcLXfghHEZiMrbdtz1zXkcE7TpUjMEAMT2BDvoGKIWmGh3kVbgP04c_b0sUVutwah2PB63lIV35HNkI69qaaYvPHj1Ifkfb1XhFQkxLTKU03KMbtV69oMZLrLiNc8dK8XGv5AkxXk62GY38hsPDw1qf4vMEzRL6dTYw4ELAFUZmPLdgQjiJH-RtkkA3BkVzmGNVLPyYpo29fKz00zTpinyhK_Hlcfg0M1gAyMrCc0M-P_3Kz8fl_YjqORWcqMqPB_Sz0CHCnA"/>
+</div>
+</div>
+</div>
+</header>
+<main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+<!-- Hero Section -->
+<div class="mb-8">
+<h2 class="text-3xl font-extrabold tracking-tight text-slate-900">Dashboard</h2>
+<p class="text-slate-500">Welcome back, Sarah. Here is your compliance overview.</p>
+</div>
+<!-- Metrics Row -->
+<div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+<!-- Metric 1 -->
+<div class="rounded-xl bg-white p-6 shadow-sm border border-slate-100 flex items-start justify-between">
+<div>
+<p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Total Assessments</p>
+<h3 class="mt-1 text-3xl font-bold text-slate-900">3</h3>
+<div class="mt-2 flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full w-fit">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+10% trend</span>
+</div>
+</div>
+<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-2xl">assignment</span>
+</div>
+</div>
+<!-- Metric 2 -->
+<div class="rounded-xl bg-white p-6 shadow-sm border border-slate-100 flex items-start justify-between">
+<div>
+<p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Avg Compliance</p>
+<h3 class="mt-1 text-3xl font-bold text-slate-900">72%</h3>
+<p class="mt-2 text-xs text-slate-400">Stable from last month</p>
+</div>
+<div class="relative flex h-14 w-14 items-center justify-center">
+<div class="circular-progress absolute inset-0 rounded-full"></div>
+<span class="relative text-[10px] font-bold text-primary">72%</span>
+</div>
+</div>
+<!-- Metric 3 -->
+<div class="rounded-xl bg-white p-6 shadow-sm border border-slate-100 flex items-start justify-between">
+<div>
+<p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Critical Risks</p>
+<h3 class="mt-1 text-3xl font-bold text-red-600">4</h3>
+<div class="mt-2 flex items-center gap-1 text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-full w-fit">
+<span class="material-symbols-outlined text-sm">warning</span>
+<span>Immediate action</span>
+</div>
+</div>
+<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-red-100 text-red-600">
+<span class="material-symbols-outlined text-2xl">error</span>
+</div>
+</div>
+<!-- Metric 4 -->
+<div class="rounded-xl bg-white p-6 shadow-sm border border-slate-100 flex items-start justify-between">
+<div>
+<p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Reports Generated</p>
+<h3 class="mt-1 text-3xl font-bold text-slate-900">2</h3>
+<p class="mt-2 text-xs text-slate-400">Q3 Audit period</p>
+</div>
+<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+<span class="material-symbols-outlined text-2xl">description</span>
+</div>
+</div>
+</div>
+<!-- Main Content 70/30 Split -->
+<div class="grid grid-cols-1 gap-8 lg:grid-cols-10">
+<!-- Left Column (70%) -->
+<div class="lg:col-span-7 flex flex-col gap-8">
+<section>
+<div class="mb-4 flex items-center justify-between">
+<h2 class="text-xl font-bold text-slate-900">Active Assessments</h2>
+<button class="text-sm font-semibold text-primary hover:underline">View All</button>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Assessment Card: HIPAA -->
+<div class="rounded-xl bg-white p-6 shadow-sm border border-slate-100">
+<div class="flex flex-wrap items-start justify-between gap-4">
+<div class="flex gap-4">
+<div class="relative h-16 w-16">
+<div class="circular-progress-sm absolute inset-0 rounded-full"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-xs font-bold text-primary">68%</span>
+</div>
+</div>
+<div>
+<h4 class="text-lg font-bold text-slate-900">HIPAA Compliance Audit</h4>
+<p class="text-sm text-slate-500">Health &amp; Privacy • Last updated 2h ago</p>
+<div class="mt-2 flex items-center gap-4">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Technical</span>
+<div class="h-1.5 w-24 rounded-full bg-slate-100 overflow-hidden">
+<div class="h-full w-[80%] bg-primary"></div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Admin</span>
+<div class="h-1.5 w-24 rounded-full bg-slate-100 overflow-hidden">
+<div class="h-full w-[45%] bg-primary/40"></div>
+</div>
+</div>
+</div>
+<p class="text-sm font-medium text-slate-700">82/120 tasks completed</p>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors">View Report</button>
+<button class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white shadow-md shadow-primary/10 hover:bg-primary/90 transition-all">Continue Assessment</button>
+</div>
+</div>
+</div>
+<!-- Assessment Card: GDPR -->
+<div class="rounded-xl bg-white p-6 shadow-sm border border-slate-100">
+<div class="flex flex-wrap items-start justify-between gap-4">
+<div class="flex gap-4">
+<div class="relative h-16 w-16">
+<div class="circular-progress-sm absolute inset-0 rounded-full opacity-60"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-xs font-bold text-primary">42%</span>
+</div>
+</div>
+<div>
+<h4 class="text-lg font-bold text-slate-900">GDPR Data Privacy</h4>
+<p class="text-sm text-slate-500">EU Regulations • Last updated Yesterday</p>
+<div class="mt-2 flex items-center gap-4">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Legal</span>
+<div class="h-1.5 w-24 rounded-full bg-slate-100 overflow-hidden">
+<div class="h-full w-[30%] bg-primary"></div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Ops</span>
+<div class="h-1.5 w-24 rounded-full bg-slate-100 overflow-hidden">
+<div class="h-full w-[55%] bg-primary/40"></div>
+</div>
+</div>
+</div>
+<p class="text-sm font-medium text-slate-700">54/128 tasks completed</p>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors">View Report</button>
+<button class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white shadow-md shadow-primary/10 hover:bg-primary/90 transition-all">Continue Assessment</button>
+</div>
+</div>
+</div>
+<!-- Assessment Card: PCI-DSS -->
+<div class="rounded-xl bg-white p-6 shadow-sm border border-slate-100">
+<div class="flex flex-wrap items-start justify-between gap-4">
+<div class="flex gap-4">
+<div class="relative h-16 w-16">
+<div class="circular-progress-sm absolute inset-0 rounded-full opacity-80"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-xs font-bold text-primary">92%</span>
+</div>
+</div>
+<div>
+<h4 class="text-lg font-bold text-slate-900">PCI-DSS v4.0</h4>
+<p class="text-sm text-slate-500">Payment Security • Last updated 3 days ago</p>
+<div class="mt-2 flex items-center gap-4">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Network</span>
+<div class="h-1.5 w-24 rounded-full bg-slate-100 overflow-hidden">
+<div class="h-full w-[95%] bg-primary"></div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Policy</span>
+<div class="h-1.5 w-24 rounded-full bg-slate-100 overflow-hidden">
+<div class="h-full w-[88%] bg-primary/40"></div>
+</div>
+</div>
+</div>
+<p class="text-sm font-medium text-slate-700">210/228 tasks completed</p>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors">View Report</button>
+<button class="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white shadow-md shadow-primary/10 hover:bg-primary/90 transition-all">Continue Assessment</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Activity Timeline -->
+<section>
+<h2 class="mb-4 text-xl font-bold text-slate-900">Recent Activity</h2>
+<div class="rounded-xl bg-white p-6 shadow-sm border border-slate-100">
+<div class="relative space-y-8">
+<div class="absolute left-[11px] top-1 h-full w-0.5 bg-primary/20"></div>
+<!-- Activity Item 1 -->
+<div class="relative flex gap-4">
+<div class="z-10 h-6 w-6 rounded-full border-4 border-white bg-primary"></div>
+<div>
+<p class="text-sm font-bold text-slate-900">Evidence Uploaded</p>
+<p class="text-xs text-slate-500">Sarah uploaded "Server_Logs_Q3.pdf" to HIPAA Technical Controls.</p>
+<p class="mt-1 text-[10px] font-medium text-slate-400">14 minutes ago</p>
+</div>
+</div>
+<!-- Activity Item 2 -->
+<div class="relative flex gap-4">
+<div class="z-10 h-6 w-6 rounded-full border-4 border-white bg-primary"></div>
+<div>
+<p class="text-sm font-bold text-slate-900">Assessment Completed</p>
+<p class="text-xs text-slate-500">PCI-DSS Internal Audit was finalized and report generated.</p>
+<p class="mt-1 text-[10px] font-medium text-slate-400">2 hours ago</p>
+</div>
+</div>
+<!-- Activity Item 3 -->
+<div class="relative flex gap-4">
+<div class="z-10 h-6 w-6 rounded-full border-4 border-white bg-slate-300"></div>
+<div>
+<p class="text-sm font-bold text-slate-900">New Policy Drafted</p>
+<p class="text-xs text-slate-500">James created a new draft for the "Remote Access Policy".</p>
+<p class="mt-1 text-[10px] font-medium text-slate-400">Yesterday at 4:30 PM</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column (30%) -->
+<div class="lg:col-span-3 flex flex-col gap-6">
+<!-- Purple CTA Card -->
+<div class="rounded-xl bg-gradient-to-br from-primary to-primary/80 p-6 text-white shadow-lg shadow-primary/30">
+<h3 class="text-lg font-bold">Ready for a new framework?</h3>
+<p class="mt-2 text-sm text-primary-100 opacity-90">Start a guided assessment for SOC2, ISO 27001, or custom requirements.</p>
+<button class="mt-4 w-full rounded-lg bg-white py-2.5 text-sm font-bold text-primary hover:bg-slate-50 transition-colors">Start New Assessment</button>
+</div>
+<!-- Compliance Health Donut Chart -->
+<div class="rounded-xl bg-white p-6 shadow-sm border border-slate-100">
+<h3 class="text-sm font-bold text-slate-900 mb-6">Compliance Health</h3>
+<div class="flex flex-col items-center">
+<div class="relative h-40 w-40">
+<!-- Simple custom donut visualization -->
+<svg class="h-full w-full" viewbox="0 0 36 36">
+<path class="stroke-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
+<path class="stroke-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="72, 100" stroke-width="3"></path>
+<path class="stroke-orange-400" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="15, 100" stroke-dashoffset="-72" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-black text-slate-900">72%</span>
+<span class="text-[10px] font-bold text-slate-400 uppercase">Overall</span>
+</div>
+</div>
+<div class="mt-6 w-full space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-primary"></div>
+<span class="text-xs text-slate-600">Compliant</span>
+</div>
+<span class="text-xs font-bold text-slate-900">72%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-orange-400"></div>
+<span class="text-xs text-slate-600">Partial</span>
+</div>
+<span class="text-xs font-bold text-slate-900">15%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-red-400"></div>
+<span class="text-xs text-slate-600">Non-compliant</span>
+</div>
+<span class="text-xs font-bold text-slate-900">13%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Required -->
+<div class="rounded-xl bg-white p-6 shadow-sm border border-slate-100">
+<h3 class="text-sm font-bold text-slate-900 mb-4">Action Required</h3>
+<div class="space-y-4">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="text-xs font-bold text-red-600 uppercase tracking-tighter">Critical</span>
+<p class="text-sm font-medium text-slate-800">Review Access Logs</p>
+</div>
+<a class="text-xs font-bold text-primary hover:underline" href="#">Fix now</a>
+</div>
+<div class="flex items-start justify-between border-t border-slate-50 pt-4">
+<div class="flex flex-col">
+<span class="text-xs font-bold text-orange-600 uppercase tracking-tighter">Medium</span>
+<p class="text-sm font-medium text-slate-800">Update Encryption</p>
+</div>
+<a class="text-xs font-bold text-primary hover:underline" href="#">Fix now</a>
+</div>
+<div class="flex items-start justify-between border-t border-slate-50 pt-4">
+<div class="flex flex-col">
+<span class="text-xs font-bold text-red-600 uppercase tracking-tighter">Critical</span>
+<p class="text-sm font-medium text-slate-800">Firewall Misconfig</p>
+</div>
+<a class="text-xs font-bold text-primary hover:underline" href="#">Fix now</a>
+</div>
+</div>
+</div>
+<!-- Upcoming Tasks -->
+<div class="rounded-xl bg-white p-6 shadow-sm border border-slate-100">
+<h3 class="text-sm font-bold text-slate-900 mb-4">Upcoming Tasks</h3>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<input class="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<div class="flex flex-col">
+<p class="text-sm font-medium text-slate-800">Security Training</p>
+<p class="text-[10px] text-slate-400">Due Sep 12</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<input class="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<div class="flex flex-col">
+<p class="text-sm font-medium text-slate-800">Policy Renewal</p>
+<p class="text-[10px] text-slate-400">Due Sep 15</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<input checked="" class="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<div class="flex flex-col">
+<p class="text-sm font-medium text-slate-400 line-through text-slate-400">Vulnerability Scan</p>
+<p class="text-[10px] text-slate-400">Completed</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer for context -->
+<footer class="mt-12 border-t border-slate-200 bg-white py-8">
+<div class="mx-auto max-w-7xl px-4 text-center text-sm text-slate-400 sm:px-6 lg:px-8">
+<p>© 2024 Cipherion Compliance SaaS. All rights reserved.</p>
+</div>
+</footer>
+</body></html>
