@@ -1,10 +1,16 @@
 # AI-Assured Compliance Dashboard — Project Task Board
 
-> **Team**: 2 Frontend Devs (FE1, FE2) · 2 Backend Devs (BE1, BE2) · 2 Database/Infra Devs (DB1, DB2)
-> **Tech Stack**: Next.js 14 · TypeScript · Prisma · PostgreSQL · shadcn/ui · Tailwind CSS · Zustand · Vercel AI SDK
-> **Estimated Duration**: ~10 Sprints (2-week sprints, ~20 weeks total)
 
----
+
+
+| Category               | Details                                                                                                                |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Team**               | 2 Frontend Developers (FE1, FE2)<br>2 Backend Developers (BE1, BE2)<br>2 Database/Infrastructure Developers (DB1, DB2) |
+| **Tech Stack**         | Next.js 14<br>TypeScript<br>Prisma<br>PostgreSQL<br>shadcn/ui<br>Tailwind CSS<br>Zustand<br>Vercel AI SDK              |
+| **Estimated Duration** | ~10 Sprints                                                                                                            |
+| **Sprint Length**      | 1 Week per Sprint                                                                                                      |
+| **Total Timeline**     | ~10 Weeks                                                                                                              |
+
 
 ## Legend
 
@@ -20,7 +26,7 @@
 
 ---
 
-## Sprint 0 — Project Bootstrap & Environment Setup *(Week 1-2)*
+## Sprint 0 — Project Bootstrap & Environment Setup *(Week 1)*
 
 > **Goal**: All devs can run the project locally. CI/CD pipeline working. DB schema ready.
 > **All roles work in parallel.**
@@ -91,7 +97,10 @@
 
 ---
 
-### Task 0.4: Docker Compose & Local Dev Environment
+### Task 0.4: Docker Compose & Local Dev Environment (Optional)
+```Note
+Note: You can use Neon instance for the development purpose
+```
 **Assignee**: DB2
 **Branch**: `chore/db2/docker-setup`
 **Story Points**: 3
@@ -109,7 +118,7 @@
 
 ---
 
-### Task 0.5: CI/CD Pipeline Setup
+### Task 0.5: CI/CD Pipeline Setup (Optional | Skip)
 **Assignee**: DB2
 **Branch**: `chore/db2/ci-cd-pipeline`
 **Story Points**: 5
@@ -140,7 +149,7 @@
 - [ ] Create `prisma/seed.ts` with:
   - Admin user (admin@cipherion.com / Admin@123)
   - Test user (user@test.com / User@1234)
-  - 3 compliance frameworks with controls:
+  - 3 compliance frameworks with controls: (Get the required details from Arfa)
     - GDPR (15+ controls across categories)
     - HIPAA (15+ controls across categories)
     - PCI-DSS (10+ controls)
@@ -181,7 +190,7 @@
 **Story Points**: 5
 **Depends on**: Task 0.3, Task 0.7
 
-- [ ] Install BetterAuth (or NextAuth.js) + bcrypt + jose
+- [ ] Install **BetterAuth** (or NextAuth.js) + bcrypt + jose
 - [ ] Configure `lib/auth.ts` with:
   - Credentials provider (email/password)
   - JWT strategy (7-day expiration)
@@ -199,7 +208,7 @@
 
 ---
 
-## Sprint 1 — Authentication & Layout *(Week 3-4)*
+## Sprint 0 — Authentication & Layout *(Week 1)*
 
 > **Goal**: Users can register, login, see a layout shell. Auth flow complete end-to-end.
 > **Parallel streams**: FE does UI, BE does APIs, DB monitors.
@@ -351,7 +360,7 @@
 
 ---
 
-## Sprint 2 — Dashboard & Organization Onboarding *(Week 5-6)*
+## Sprint 1 — Dashboard & Organization Onboarding *(Week 2)*
 
 > **Goal**: Dashboard (empty + active states) + Organization onboarding form.
 > **Parallel**: FE builds UI, BE builds APIs, DB focuses on query optimization.
@@ -464,7 +473,7 @@
 
 ---
 
-## Sprint 3 — AI Framework Mapping & Framework Selection *(Week 7-8)*
+## Sprint 3 — AI Framework Mapping & Framework Selection *(Week 3)*
 
 > **Goal**: AI suggests compliance frameworks. User selects and creates assessment.
 
@@ -573,7 +582,7 @@
 
 ---
 
-## Sprint 4 — Assessment Checklist & Control Workspace *(Week 9-10)*
+## Sprint 4 — Assessment Checklist & Control Workspace *(Week 4)*
 
 > **Goal**: Users can view and update compliance checklist items. Score updates in real-time.
 
@@ -676,7 +685,7 @@
 
 ---
 
-## Sprint 5 — AI Remediation & Evidence Upload *(Week 11-12)*
+## Sprint 5 — AI Remediation & Evidence Upload *(Week 5)*
 
 > **Goal**: AI remediation plans. Evidence file upload/download.
 
@@ -761,7 +770,7 @@
 
 ---
 
-## Sprint 6 — Reporting & Analytics *(Week 13-14)*
+## Sprint 5 — Reporting & Analytics *(Week 6)*
 
 > **Goal**: PDF report generation. Analytics dashboard. Compliance readiness report.
 
@@ -842,7 +851,7 @@
 
 ---
 
-## Sprint 7 — Admin Portal *(Week 15-16)*
+## Sprint 6 — Admin Portal *(Week 7)*
 
 > **Goal**: Admin can manage frameworks, controls, and users.
 
@@ -898,7 +907,7 @@
 
 ---
 
-## Sprint 8 — Polish, Testing & Performance *(Week 17-18)*
+## Sprint 6 — Polish, Testing & Performance *(Week 7)*
 
 > **Goal**: Bug fixes, performance optimization, comprehensive testing.
 
@@ -971,7 +980,7 @@
 
 ---
 
-## Sprint 9 — Security Hardening & Monitoring *(Week 19)*
+## Sprint 7 — Security Hardening & Monitoring *(Week 8)*
 
 ### Task 9.1: Security Hardening
 **Assignee**: BE2 + DB1
@@ -1009,7 +1018,7 @@
 
 ---
 
-## Sprint 10 — Documentation, Deployment & Launch Prep *(Week 20)*
+## Sprint 8 — Documentation, Deployment & Launch Prep *(Week 8)*
 
 ### Task 10.1: Technical Documentation
 **Assignee**: DB1 *(role: documentation)*
@@ -1068,46 +1077,54 @@
 
 ## Parallel Work Streams Summary
 
-```
-Sprint  | FE1                  | FE2                  | BE1                  | BE2                  | DB1                  | DB2
---------|----------------------|----------------------|----------------------|----------------------|----------------------|-----
-  0     | Project Init         | Design System        | Folder Structure     | Auth Library Setup   | Prisma Schema        | Docker + CI/CD
-  1     | Login Page + Auth    | Signup + Layout      | Auth API Routes      | Health + Middleware   | Seed Data (cont.)    | API Docs (Auth)
-  2     | Dashboard Empty +    | Dashboard Active     | Organization API     | Dashboard API        | Query Optimization   | —
-        | Onboarding Form      |                      |                      |                      |                      |
-  3     | Onboarding Integrate | Framework Selection  | AI Mapping Service   | Framework CRUD API   | —                    | —
-  4     | Checklist Page +     | Control Workspace    | Assessment Items API | —                    | —                    | Redis Caching
-        | Integration          |                      |                      |                      |                      |
-  5     | —                    | AI Remediation UI +  | AI Remediation API   | Evidence Upload API  | —                    | —
-        |                      | Evidence Upload UI   |                      |                      |                      |
-  6     | Analytics Dashboard  | Report UI            | Report Generation    | —                    | —                    | —
-        | + Report Integration |                      | Service              |                      |                      |
-  7     | Admin Frameworks     | Admin Users          | —                    | User Mgmt API        | —                    | —
-  8     | E2E Tests            | UI Polish            | Unit Tests           | Integration Tests    | Perf Optimization    | Perf Optimization
-  9     | —                    | —                    | —                    | Security Harden      | Security Harden      | Monitoring Setup
- 10     | UAT                  | UAT                  | UAT                  | UAT                  | Tech Docs            | Prod Deployment
-```
+
+| Sprint | FE1                                      | FE2                                    | BE1                       | BE2                 | DB1                | DB2               |
+| ------ | ---------------------------------------- | -------------------------------------- | ------------------------- | ------------------- | ------------------ | ----------------- |
+| **0**  | Project Init                             | Design System                          | Folder Structure          | Auth Library Setup  | Prisma Schema      | Docker + CI/CD    |
+| **1**  | Login Page + Auth                        | Signup + Layout                        | Auth API Routes           | Health + Middleware | Seed Data (cont.)  | API Docs (Auth)   |
+| **2**  | Dashboard Empty + Onboarding Form        | Dashboard Active                       | Organization API          | Dashboard API       | Query Optimization | —                 |
+| **3**  | Onboarding Integrate                     | Framework Selection                    | AI Mapping Service        | Framework CRUD API  | —                  | —                 |
+| **4**  | Checklist Page + Integration             | Control Workspace                      | Assessment Items API      | —                   | —                  | Redis Caching     |
+| **5**  | —                                        | AI Remediation UI + Evidence Upload UI | AI Remediation API        | Evidence Upload API | —                  | —                 |
+| **6**  | Analytics Dashboard + Report Integration | Report UI                              | Report Generation Service | —                   | —                  | —                 |
+| **7**  | Admin Frameworks                         | Admin Users                            | —                         | User Mgmt API       | —                  | —                 |
+| **8**  | E2E Tests                                | UI Polish                              | Unit Tests                | Integration Tests   | Perf Optimization  | Perf Optimization |
+| **9**  | —                                        | —                                      | —                         | Security Harden     | Security Harden    | Monitoring Setup  |
+| **10** | UAT                                      | UAT                                    | UAT                       | UAT                 | Tech Docs          | Prod Deployment   |
+
+
 
 ---
 
 ## Dependency Graph (Critical Path)
 
-```
-Task 0.1 (Project Init) ──→ Task 0.2 (shadcn) ──→ Task 1.2 (Login UI) ──→ Task 1.4 (Auth Integration)
-     │                                                                            │
-     └──→ Task 0.7 (Structure) ──→ Task 0.8 (Auth Setup) ──→ Task 1.1 (Auth API)─┘
-                                        │                                         │
-Task 0.3 (Schema) ──→ Task 0.6 (Seed) ─┘                                         │
-                                                                                  ↓
-                                                           Task 2.4 (Onboarding) → Task 3.5 (Integration)
-                                                                                         │
-                                                           Task 3.1 (AI Service) ────────┘
-                                                                                         │
-                                                           Task 3.4 (Assessment API) ────┘
-                                                                                         ↓
-                                                           Task 4.1 (Checklist) → Task 4.4 (Checklist Integration)
-                                                                                         ↓
-                                                           Task 6.1 (Report Service) → Task 6.4 (Report Integration)
+
+```mermaid
+flowchart LR
+
+    T01["Task 0.1 (Project Init)"] --> T02["Task 0.2 (shadcn)"]
+    T02 --> T12["Task 1.2 (Login UI)"]
+    T12 --> T14["Task 1.4 (Auth Integration)"]
+
+    T01 --> T07["Task 0.7 (Structure)"]
+    T07 --> T08["Task 0.8 (Auth Setup)"]
+    T08 --> T11["Task 1.1 (Auth API)"]
+    T11 --> T14
+
+    T03["Task 0.3 (Schema)"] --> T06["Task 0.6 (Seed)"]
+    T06 --> T08
+
+    T11 --> T24["Task 2.4 (Onboarding)"]
+    T24 --> T35["Task 3.5 (Integration)"]
+
+    T31["Task 3.1 (AI Service)"] --> T35
+    T34["Task 3.4 (Assessment API)"] --> T35
+
+    T35 --> T41["Task 4.1 (Checklist)"]
+    T41 --> T44["Task 4.4 (Checklist Integration)"]
+
+    T44 --> T61["Task 6.1 (Report Service)"]
+    T61 --> T64["Task 6.4 (Report Integration)"]
 ```
 
 ---
