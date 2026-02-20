@@ -1100,7 +1100,7 @@ Note: You can use Neon instance for the development purpose
 
 
 ```mermaid
-flowchart LR
+flowchart TD
 
     T01["Task 0.1 (Project Init)"] --> T02["Task 0.2 (shadcn)"]
     T02 --> T12["Task 1.2 (Login UI)"]
