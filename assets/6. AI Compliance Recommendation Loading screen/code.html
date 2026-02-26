@@ -1,0 +1,171 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Cipherion - AI Framework Recommendation</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              cipherion: {
+                primary: "#6d18ff",
+                bgStart: "#e9ddff",
+              },
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+            animation: {
+              "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+              float: "float 6s ease-in-out infinite",
+              "progress-indeterminate": "progress-move 2s linear infinite",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0px)" },
+                "50%": { transform: "translateY(-10px)" },
+              },
+              "progress-move": {
+                "0%": { transform: "translateX(-100%)" },
+                "100%": { transform: "translateX(100%)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style data-purpose="custom-animations">
+      /* Sparkle effect animation */
+      @keyframes sparkle {
+        0%,
+        100% {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+      }
+      .sparkle {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        filter: blur(1px);
+        animation: sparkle 2s infinite ease-in-out;
+      }
+      /* Gradient Background Setup */
+      body {
+        background: linear-gradient(180deg, #e9ddff 0%, #ffffff 100%);
+        min-height: 100vh;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body class="flex items-center justify-center font-sans">
+    <!-- BEGIN: LoadingContainer -->
+    <main class="w-full max-w-md px-6 text-center" data-purpose="loading-interface">
+      <!-- BEGIN: IconSection -->
+      <div class="relative flex justify-center mb-12" data-purpose="visual-feedback">
+        <!-- Pulsing AI Brain Icon -->
+        <div class="relative w-32 h-32 text-cipherion-primary animate-float">
+          <svg
+            class="w-full h-full drop-shadow-2xl animate-pulse-slow"
+            fill="currentColor"
+            viewbox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M11.644 1.59a.75.75 0 01.712 0l9.75 5.25a.75.75 0 010 1.32l-9.75 5.25a.75.75 0 01-.712 0l-9.75-5.25a.75.75 0 010-1.32l9.75-5.25z"
+            ></path>
+            <path
+              d="M3.265 10.602l7.651 4.12a2.25 2.25 0 002.168 0l7.65-4.12v5.118a.75.75 0 01-.75.75h-15a.75.75 0 01-.75-.75v-5.118z"
+            ></path>
+            <path
+              d="M3.265 16.602l7.651 4.12a2.25 2.25 0 002.168 0l7.65-4.12v1.118a.75.75 0 01-.75.75h-15a.75.75 0 01-.75-.75v-1.118z"
+            ></path>
+          </svg>
+          <!-- Sparkle Overlays -->
+          <div class="sparkle w-1 h-1 top-2 right-4" style="animation-delay: 0.2s"></div>
+          <div class="sparkle w-2 h-2 top-10 left-0" style="animation-delay: 0.8s"></div>
+          <div class="sparkle w-1.5 h-1.5 bottom-4 right-2" style="animation-delay: 1.4s"></div>
+        </div>
+      </div>
+      <!-- END: IconSection -->
+      <!-- BEGIN: StatusTextSection -->
+      <div class="mb-8 h-8" data-purpose="status-messages">
+        <p
+          class="text-gray-700 text-lg font-medium transition-all duration-500 opacity-100"
+          id="loading-text"
+        >
+          Analyzing your business profile...
+        </p>
+      </div>
+      <!-- END: StatusTextSection -->
+      <!-- BEGIN: ProgressBarContainer -->
+      <div
+        class="w-full bg-white/50 rounded-full h-1.5 mb-4 overflow-hidden shadow-inner"
+        data-purpose="progress-tracker"
+      >
+        <div
+          class="bg-cipherion-primary h-full w-1/3 rounded-full animate-progress-indeterminate"
+        ></div>
+      </div>
+      <p
+        class="text-xs uppercase tracking-widest text-gray-400 font-semibold"
+        data-purpose="branding"
+      >
+        Cipherion Intelligence Engines
+      </p>
+      <!-- END: ProgressBarContainer -->
+    </main>
+    <!-- END: LoadingContainer -->
+    <!-- BEGIN: LogicScripts -->
+    <script data-purpose="status-cycling">
+      /**
+       * Cycles through the processing status messages to simulate
+       * AI analysis depth and progress.
+       */
+      const messages = [
+        "Analyzing your business profile...",
+        "Mapping to 250+ frameworks...",
+        "Identifying applicable regulations...",
+        "Calculating confidence scores...",
+      ];
+
+      let currentIndex = 0;
+      const textElement = document.getElementById("loading-text");
+
+      function updateText() {
+        // Fade out
+        textElement.style.opacity = "0";
+        textElement.style.transform = "translateY(5px)";
+
+        setTimeout(() => {
+          currentIndex = (currentIndex + 1) % messages.length;
+          textElement.innerText = messages[currentIndex];
+
+          // Fade in
+          textElement.style.opacity = "1";
+          textElement.style.transform = "translateY(0px)";
+        }, 500);
+      }
+
+      // Change text every 2.5 seconds
+      setInterval(updateText, 3000);
+    </script>
+    <!-- END: LogicScripts -->
+  </body>
+</html>

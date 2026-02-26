@@ -1,0 +1,380 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Compliance Assessment - Framework Selection</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;900&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#6d18ff",
+              "background-light": "#f8f6f6",
+              "background-dark": "#221610",
+            },
+            fontFamily: {
+              display: ["Public Sans", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Public Sans", sans-serif;
+      }
+      .framework-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col"
+  >
+    <!-- Top Navigation Bar -->
+    <header
+      class="sticky top-0 z-50 bg-white dark:bg-[#2a1d17] border-b border-slate-200 dark:border-slate-800 px-6 py-4"
+    >
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="bg-primary p-1.5 rounded-lg text-white">
+            <span class="material-symbols-outlined text-2xl">verified_user</span>
+          </div>
+          <h1 class="text-xl font-bold tracking-tight">Compliance Assessment</h1>
+        </div>
+        <!-- Progress Stepper -->
+        <div class="hidden md:flex items-center gap-8">
+          <div
+            class="flex items-center gap-2 text-green-600 dark:text-green-500 font-medium text-sm"
+          >
+            <span class="material-symbols-outlined text-lg">check_circle</span>
+            <span>Step 1: Business Profile</span>
+          </div>
+          <div class="flex items-center gap-2 text-primary font-bold text-sm">
+            <div
+              class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs"
+            >
+              2
+            </div>
+            <span>Step 2: Framework Selection</span>
+          </div>
+          <div
+            class="flex items-center gap-2 text-slate-400 dark:text-slate-600 font-medium text-sm"
+          >
+            <div
+              class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-xs"
+            >
+              3
+            </div>
+            <span>Step 3: Review &amp; Create</span>
+          </div>
+        </div>
+        <button
+          class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+        >
+          Save &amp; Exit
+        </button>
+      </div>
+    </header>
+    <main class="flex-grow max-w-7xl mx-auto w-full px-6 py-8 pb-32">
+      <!-- Progress Bar Mini -->
+      <div class="mb-10">
+        <div class="flex justify-between items-end mb-2">
+          <div>
+            <h2 class="text-3xl font-black text-slate-900 dark:text-white">
+              Select your compliance frameworks
+            </h2>
+            <p class="text-slate-500 dark:text-slate-400 mt-1 text-lg">
+              Choose the standards you want to be assessed against. You can add more later.
+            </p>
+          </div>
+          <div class="text-right hidden sm:block">
+            <span class="text-sm font-bold text-primary">66% Complete</span>
+          </div>
+        </div>
+        <div class="w-full bg-slate-200 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+          <div class="bg-primary h-full transition-all duration-500" style="width: 66.6%"></div>
+        </div>
+      </div>
+      <!-- Search and Filters -->
+      <div class="flex flex-col md:flex-row gap-4 mb-8">
+        <div class="relative flex-grow">
+          <span
+            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+            >search</span
+          >
+          <input
+            class="w-full pl-10 pr-4 py-3 bg-white dark:bg-[#2a1d17] border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+            placeholder="Search frameworks (e.g. SOC2, GDPR...)"
+            type="text"
+          />
+        </div>
+        <div class="flex gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+          <button
+            class="px-5 py-2.5 rounded-xl bg-primary text-white font-semibold whitespace-nowrap"
+          >
+            All
+          </button>
+          <button
+            class="px-5 py-2.5 rounded-xl bg-white dark:bg-[#2a1d17] border border-slate-200 dark:border-slate-800 hover:border-primary/50 text-slate-600 dark:text-slate-300 font-medium whitespace-nowrap transition-colors"
+          >
+            Security
+          </button>
+          <button
+            class="px-5 py-2.5 rounded-xl bg-white dark:bg-[#2a1d17] border border-slate-200 dark:border-slate-800 hover:border-primary/50 text-slate-600 dark:text-slate-300 font-medium whitespace-nowrap transition-colors"
+          >
+            Privacy
+          </button>
+          <button
+            class="px-5 py-2.5 rounded-xl bg-white dark:bg-[#2a1d17] border border-slate-200 dark:border-slate-800 hover:border-primary/50 text-slate-600 dark:text-slate-300 font-medium whitespace-nowrap transition-colors"
+          >
+            Industry-specific
+          </button>
+        </div>
+      </div>
+      <!-- Framework Grid -->
+      <div class="framework-grid">
+        <!-- SOC2 (Recommended) -->
+        <div
+          class="bg-white dark:bg-[#2a1d17] border-2 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow relative flex flex-col group border-primary"
+        >
+          <div
+            class="absolute top-4 right-4 bg-primary/10 text-primary text-[10px] uppercase font-black px-2 py-1 rounded"
+          >
+            Recommended
+          </div>
+          <div
+            class="absolute top-4 right-4 bg-primary/10 text-primary text-[10px] uppercase font-black px-2 py-1 rounded"
+          >
+            <span class="material-symbols-outlined text-3xl">security</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">SOC 2 Type II</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm flex-grow mb-6">
+            Security, Availability, Processing Integrity, Confidentiality, and Privacy controls for
+            service providers.
+          </p>
+          <button
+            class="w-full py-2.5 rounded-lg bg-primary text-white font-bold flex items-center justify-center gap-2"
+          >
+            <span class="material-symbols-outlined text-lg">check_circle</span>
+            Selected
+          </button>
+        </div>
+        <!-- ISO 27001 (Recommended) -->
+        <div
+          class="bg-white dark:bg-[#2a1d17] border-2 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow relative flex flex-col group border-primary"
+        >
+          <div
+            class="absolute top-4 right-4 bg-primary/10 text-primary text-[10px] uppercase font-black px-2 py-1 rounded"
+          >
+            Recommended
+          </div>
+          <div
+            class="absolute top-4 right-4 bg-primary/10 text-primary text-[10px] uppercase font-black px-2 py-1 rounded"
+          >
+            <span class="material-symbols-outlined text-3xl">language</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">ISO 27001</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm flex-grow mb-6">
+            International standard for managing information security risks through an ISMS.
+          </p>
+          <button
+            class="w-full py-2.5 rounded-lg bg-primary text-white font-bold flex items-center justify-center gap-2"
+          >
+            <span class="material-symbols-outlined text-lg">check_circle</span>
+            Selected
+          </button>
+        </div>
+        <!-- HIPAA -->
+        <div
+          class="bg-white dark:bg-[#2a1d17] border border-slate-200 dark:border-slate-800 p-6 rounded-xl shadow-sm hover:border-primary/50 transition-all flex flex-col"
+        >
+          <div
+            class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center text-blue-600 mb-4"
+          >
+            <span class="material-symbols-outlined text-3xl">health_and_safety</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">HIPAA</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm flex-grow mb-6">
+            US law providing data privacy and security provisions for safeguarding medical
+            information.
+          </p>
+          <button
+            class="w-full py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-primary hover:text-white transition-all"
+          >
+            Select
+          </button>
+        </div>
+        <!-- PCI DSS -->
+        <div
+          class="bg-white dark:bg-[#2a1d17] border border-slate-200 dark:border-slate-800 p-6 rounded-xl shadow-sm hover:border-primary/50 transition-all flex flex-col"
+        >
+          <div
+            class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center text-emerald-600 mb-4"
+          >
+            <span class="material-symbols-outlined text-3xl">credit_card</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">PCI DSS</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm flex-grow mb-6">
+            Security standard for organizations that handle branded credit cards from major card
+            schemes.
+          </p>
+          <button
+            class="w-full py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-primary hover:text-white transition-all"
+          >
+            Select
+          </button>
+        </div>
+        <!-- GDPR -->
+        <div
+          class="bg-white dark:bg-[#2a1d17] border border-slate-200 dark:border-slate-800 p-6 rounded-xl shadow-sm hover:border-primary/50 transition-all flex flex-col"
+        >
+          <div
+            class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center text-indigo-600 mb-4"
+          >
+            <span class="material-symbols-outlined text-3xl">policy</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">GDPR</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm flex-grow mb-6">
+            Regulation in EU law on data protection and privacy in the European Union and EEA.
+          </p>
+          <button
+            class="w-full py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-primary hover:text-white transition-all"
+          >
+            Select
+          </button>
+        </div>
+        <!-- CCPA -->
+        <div
+          class="bg-white dark:bg-[#2a1d17] border border-slate-200 dark:border-slate-800 p-6 rounded-xl shadow-sm hover:border-primary/50 transition-all flex flex-col"
+        >
+          <div
+            class="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center text-amber-600 mb-4"
+          >
+            <span class="material-symbols-outlined text-3xl">gavel</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">CCPA</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm flex-grow mb-6">
+            State statute intended to enhance privacy rights and consumer protection for residents
+            of California.
+          </p>
+          <button
+            class="w-full py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-primary hover:text-white transition-all"
+          >
+            Select
+          </button>
+        </div>
+        <!-- NIST CSF -->
+        <div
+          class="bg-white dark:bg-[#2a1d17] border border-slate-200 dark:border-slate-800 p-6 rounded-xl shadow-sm hover:border-primary/50 transition-all flex flex-col"
+        >
+          <div
+            class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center text-slate-600 mb-4"
+          >
+            <span class="material-symbols-outlined text-3xl">hub</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">NIST CSF</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm flex-grow mb-6">
+            Voluntary framework consisting of standards, guidelines, and best practices to manage
+            cybersecurity risk.
+          </p>
+          <button
+            class="w-full py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-primary hover:text-white transition-all"
+          >
+            Select
+          </button>
+        </div>
+        <!-- FedRAMP -->
+        <div
+          class="bg-white dark:bg-[#2a1d17] border border-slate-200 dark:border-slate-800 p-6 rounded-xl shadow-sm hover:border-primary/50 transition-all flex flex-col"
+        >
+          <div
+            class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center text-red-600 mb-4"
+          >
+            <span class="material-symbols-outlined text-3xl">account_balance</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">FedRAMP</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm flex-grow mb-6">
+            Government-wide program that provides a standardized approach to security assessment for
+            cloud products.
+          </p>
+          <button
+            class="w-full py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-primary hover:text-white transition-all"
+          >
+            Select
+          </button>
+        </div>
+        <!-- NIST 800-53 -->
+        <div
+          class="bg-white dark:bg-[#2a1d17] border border-slate-200 dark:border-slate-800 p-6 rounded-xl shadow-sm hover:border-primary/50 transition-all flex flex-col"
+        >
+          <div
+            class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center text-purple-600 mb-4"
+          >
+            <span class="material-symbols-outlined text-3xl">settings_input_component</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">NIST 800-53</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm flex-grow mb-6">
+            Catalog of security and privacy controls for federal information systems and
+            organizations.
+          </p>
+          <button
+            class="w-full py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-primary hover:text-white transition-all"
+          >
+            Select
+          </button>
+        </div>
+      </div>
+    </main>
+    <!-- Fixed Action Bar -->
+    <footer
+      class="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-[#2a1d17]/80 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 py-4 px-6 z-50"
+    >
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <button
+          class="flex items-center gap-2 text-slate-600 dark:text-slate-400 font-semibold hover:text-primary transition-colors"
+        >
+          <span class="material-symbols-outlined">save</span>
+          Save Draft
+        </button>
+        <div class="flex items-center gap-4">
+          <button
+            class="px-6 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+          >
+            Back
+          </button>
+          <button
+            class="bg-primary hover:bg-primary/90 text-white px-8 py-2.5 rounded-lg font-bold flex items-center gap-2 shadow-lg transition-all transform active:scale-95 shadow-[#6d18ff]/20"
+          >
+            Next: Review &amp; Create
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

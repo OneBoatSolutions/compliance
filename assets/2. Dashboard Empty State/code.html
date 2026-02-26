@@ -1,0 +1,308 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Cipherion | Compliance Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#6d18ff",
+              "background-light": "#f8f6f6",
+              "background-dark": "#221610",
+            },
+            fontFamily: {
+              display: ["Public Sans", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Public Sans", sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen"
+  >
+    <!-- Top Navigation Bar -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 h-16 px-6 flex items-center justify-between"
+    >
+      <div class="flex items-center gap-12">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
+            <span class="material-symbols-outlined text-xl">security</span>
+          </div>
+          <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Cipherion</h1>
+        </div>
+        <div class="hidden md:flex items-center gap-8">
+          <a
+            class="text-sm font-semibold text-primary border-b-2 border-primary h-16 flex items-center"
+            href="#"
+            >Dashboard</a
+          >
+          <a
+            class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white h-16 flex items-center transition-colors"
+            href="#"
+            >Assessments</a
+          >
+          <a
+            class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white h-16 flex items-center transition-colors"
+            href="#"
+            >Reports</a
+          >
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <button
+          class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-full transition-colors"
+        >
+          <span class="material-symbols-outlined" data-icon="help">help</span>
+        </button>
+        <button
+          class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-full transition-colors relative"
+        >
+          <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+          <span
+            class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-white dark:border-zinc-900"
+          ></span>
+        </button>
+        <div
+          class="h-8 w-8 rounded-full bg-slate-200 dark:bg-zinc-700 overflow-hidden ml-2 border border-slate-300 dark:border-zinc-600"
+        >
+          <img
+            class="w-full h-full object-cover"
+            data-alt="User avatar profile picture"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAGQLeWsoB-veneOmxSqooYi0fx9UedCdSuOmhkqSTUq2U63kGVo7iLAeysoNj8tYK71VeP464Mi6GiFJwO1k9nPrw85UFjRhIvlk_RWGSwagxSX6MMpMlCGs7apsaKKZxDCtE-fWQYql96re5pU1trCascQno1q1z1mX9W2apwrTTf0MP753lrVur9rVLDhspDKE54h0K-cFqvJUENg_lPMhfR9CwHs5SB7n1Lgh7XU_WTxnuRoymlADDumg1J4ujvm2drjBVUA"
+          />
+        </div>
+      </div>
+    </nav>
+    <!-- Main Content Area -->
+    <main class="pt-24 pb-16 px-6 max-w-6xl mx-auto">
+      <!-- Welcome Hero Section -->
+      <section
+        class="mb-8 relative overflow-hidden bg-gradient-to-br to-white dark:to-background-dark p-8 md:p-12 rounded-xl border border-primary/10 shadow-sm from-[#f1eaff] dark:from-[#1a0c3b]"
+      >
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div class="max-w-xl text-center md:text-left">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+              Welcome to Cipherion, Sarah! 👋
+            </h2>
+            <p class="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+              Automate your compliance journey and stay audit-ready with ease. We help you simplify
+              framework management so you can focus on building your business.
+            </p>
+          </div>
+          <div
+            class="w-full max-w-[320px] aspect-square bg-primary/5 rounded-full flex items-center justify-center border border-primary/10 relative"
+          >
+            <div class="absolute inset-0 bg-primary/10 animate-pulse rounded-full"></div>
+            <span
+              class="material-symbols-outlined text-[120px] text-primary/40"
+              data-icon="verified_user"
+              >verified_user</span
+            >
+          </div>
+        </div>
+      </section>
+      <!-- Empty State CTA Card -->
+      <section class="mb-12">
+        <div
+          class="bg-white dark:bg-zinc-900 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-12 text-center flex flex-col items-center"
+        >
+          <div
+            class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary"
+          >
+            <span class="material-symbols-outlined text-4xl" data-icon="checklist">checklist</span>
+          </div>
+          <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">No assessments yet</h3>
+          <p class="text-slate-500 dark:text-slate-400 max-w-md mb-8">
+            Start your compliance journey by creating your first assessment. We'll guide you through
+            selecting a framework and connecting your infrastructure.
+          </p>
+          <button
+            class="h-[52px] px-8 bg-primary hover:bg-primary/90 text-white rounded-lg font-bold flex items-center gap-2 transition-transform active:scale-95 shadow-lg shadow-primary/20"
+          >
+            Create Your First Assessment
+            <span class="material-symbols-outlined text-xl" data-icon="arrow_forward"
+              >arrow_forward</span
+            >
+          </button>
+          <div
+            class="mt-4 flex items-center justify-center gap-2 text-slate-400 dark:text-zinc-500"
+          >
+            <span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+            <span class="text-xs uppercase tracking-wider font-semibold">Takes only 5 minutes</span>
+          </div>
+        </div>
+      </section>
+      <!-- How it Works Section -->
+      <section class="mb-16">
+        <h4
+          class="text-sm font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-zinc-500 mb-8 text-center"
+        >
+          How it works
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Step 1 -->
+          <div
+            class="bg-white dark:bg-zinc-900/50 p-6 rounded-lg border border-slate-100 dark:border-zinc-800 transition-all hover:border-primary/30"
+          >
+            <div class="flex items-center justify-between mb-4">
+              <div
+                class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm"
+              >
+                1
+              </div>
+              <span class="material-symbols-outlined text-primary/40" data-icon="account_tree"
+                >account_tree</span
+              >
+            </div>
+            <h5 class="font-bold text-slate-900 dark:text-white mb-2">Select a framework</h5>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              Choose from industry standards like SOC2, ISO 27001, HIPAA, or PCI-DSS to begin.
+            </p>
+          </div>
+          <!-- Step 2 -->
+          <div
+            class="bg-white dark:bg-zinc-900/50 p-6 rounded-lg border border-slate-100 dark:border-zinc-800 transition-all hover:border-primary/30"
+          >
+            <div class="flex items-center justify-between mb-4">
+              <div
+                class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm"
+              >
+                2
+              </div>
+              <span class="material-symbols-outlined text-primary/40" data-icon="hub">hub</span>
+            </div>
+            <h5 class="font-bold text-slate-900 dark:text-white mb-2">Connect your stack</h5>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              Instantly integrate with cloud providers like AWS, Google Cloud, or Azure for
+              auto-evidence.
+            </p>
+          </div>
+          <!-- Step 3 -->
+          <div
+            class="bg-white dark:bg-zinc-900/50 p-6 rounded-lg border border-slate-100 dark:border-zinc-800 transition-all hover:border-primary/30"
+          >
+            <div class="flex items-center justify-between mb-4">
+              <div
+                class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm"
+              >
+                3
+              </div>
+              <span class="material-symbols-outlined text-primary/40" data-icon="monitoring"
+                >monitoring</span
+              >
+            </div>
+            <h5 class="font-bold text-slate-900 dark:text-white mb-2">Monitor in real-time</h5>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              Track your compliance health 24/7 with our automated live evidence collection
+              dashboard.
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- Footer Guidance Section -->
+      <section class="border-t border-slate-200 dark:border-zinc-800 pt-12">
+        <div class="flex flex-col md:flex-row items-center justify-between mb-8">
+          <h4 class="text-xl font-bold text-slate-900 dark:text-white">Need guidance?</h4>
+          <a class="text-primary text-sm font-semibold hover:underline mt-2 md:mt-0" href="#"
+            >View all resources</a
+          >
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <a
+            class="group p-4 bg-slate-50 dark:bg-zinc-800/50 rounded-lg hover:bg-primary/5 border border-transparent hover:border-primary/20 transition-all"
+            href="#"
+          >
+            <span
+              class="material-symbols-outlined text-slate-400 group-hover:text-primary mb-2 transition-colors"
+              data-icon="description"
+              >description</span
+            >
+            <p class="font-bold text-sm text-slate-900 dark:text-white">Documentation</p>
+          </a>
+          <a
+            class="group p-4 bg-slate-50 dark:bg-zinc-800/50 rounded-lg hover:bg-primary/5 border border-transparent hover:border-primary/20 transition-all"
+            href="#"
+          >
+            <span
+              class="material-symbols-outlined text-slate-400 group-hover:text-primary mb-2 transition-colors"
+              data-icon="video_library"
+              >video_library</span
+            >
+            <p class="font-bold text-sm text-slate-900 dark:text-white">Tutorials</p>
+          </a>
+          <a
+            class="group p-4 bg-slate-50 dark:bg-zinc-800/50 rounded-lg hover:bg-primary/5 border border-transparent hover:border-primary/20 transition-all"
+            href="#"
+          >
+            <span
+              class="material-symbols-outlined text-slate-400 group-hover:text-primary mb-2 transition-colors"
+              data-icon="support_agent"
+              >support_agent</span
+            >
+            <p class="font-bold text-sm text-slate-900 dark:text-white">Support</p>
+          </a>
+          <a
+            class="group p-4 bg-slate-50 dark:bg-zinc-800/50 rounded-lg hover:bg-primary/5 border border-transparent hover:border-primary/20 transition-all"
+            href="#"
+          >
+            <span
+              class="material-symbols-outlined text-slate-400 group-hover:text-primary mb-2 transition-colors"
+              data-icon="play_circle"
+              >play_circle</span
+            >
+            <p class="font-bold text-sm text-slate-900 dark:text-white">Book a Demo</p>
+          </a>
+        </div>
+      </section>
+    </main>
+    <!-- Footer Credit -->
+    <footer
+      class="py-12 border-t border-slate-200 dark:border-zinc-800 text-center text-slate-400 dark:text-zinc-600"
+    >
+      <div class="flex items-center justify-center gap-2 mb-4">
+        <span class="material-symbols-outlined text-sm" data-icon="copyright">copyright</span>
+        <p class="text-xs font-medium uppercase tracking-widest">
+          2024 Cipherion Inc. All rights reserved.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
