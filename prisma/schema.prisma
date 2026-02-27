@@ -1,0 +1,258 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- Enums ---
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum FrameworkStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AssessmentStatus {
+  DRAFT
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ItemStatus {
+  NOT_STARTED
+  COMPLIANT
+  PARTIALLY_COMPLIANT
+  NOT_COMPLIANT
+  NOT_APPLICABLE
+}
+
+enum ReportType {
+  COMPLIANCE_READINESS
+  EXECUTIVE_SUMMARY
+}
+
+enum ReportFormat {
+  PDF
+  WEB
+}
+
+enum AIType {
+  COMPLIANCE_MAPPING
+  REMEDIATION_PLAN
+  REPORT_NARRATIVE
+}
+
+// --- Users ---
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  password      String
+  role          Role      @default(USER)
+  emailVerified DateTime?
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  organizations Organization[]
+  assessments   Assessment[]
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+// --- Organizations ---
+
+model Organization {
+  id    String @id @default(cuid())
+  userId String // profile owner
+
+  // business profile
+  productName     String
+  description     String
+  services        String
+  targetCustomers String
+  problemSolved   String
+
+  // compliance scope — stored as postgres text arrays
+  dataHandled String[]
+  regions     String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id])
+  assessments Assessment[]
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("organizations")
+}
+
+// --- Frameworks & Controls ---
+
+model Framework {
+  id            String          @id @default(cuid())
+  code          String          @unique
+  name          String
+  description   String
+  region        String
+  category      String
+  version       String
+  effectiveDate DateTime
+  sourceLink    String?
+  status        FrameworkStatus @default(DRAFT)
+  publishedAt   DateTime?       // set when status transitions to PUBLISHED
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  controls Control[]
+
+  @@index([code])
+  @@index([region])
+  @@index([category])
+  @@index([status])
+  @@map("frameworks")
+}
+
+model Control {
+  id          String   @id @default(cuid())
+  frameworkId String
+  code        String   // unique per framework, e.g. GDPR-7.1
+  title       String
+  description String
+  category    String?
+  severity    Severity @default(MEDIUM)
+  weight      Float    @default(1.0) // scoring weight, range 0.1–10.0
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  framework       Framework        @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
+  assessmentItems AssessmentItem[]
+
+  @@unique([frameworkId, code])
+  @@index([frameworkId])
+  @@index([severity])
+  @@map("controls")
+}
+
+// --- Assessments ---
+
+model Assessment {
+  id             String           @id @default(cuid())
+  userId         String
+  organizationId String
+  status         AssessmentStatus @default(IN_PROGRESS)
+  score          Float?           // weighted 0–100; null until at least one item is evaluated
+  completedAt    DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  user           User             @relation(fields: [userId], references: [id])
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  items          AssessmentItem[]
+  reports        Report[]
+  aiInteractions AIInteraction[]
+
+  @@index([userId])
+  @@index([organizationId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("assessments")
+}
+
+model AssessmentItem {
+  id           String     @id @default(cuid())
+  assessmentId String
+  controlId    String
+  status       ItemStatus @default(NOT_STARTED)
+  comments     String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  control    Control    @relation(fields: [controlId], references: [id])
+  evidence   Evidence[]
+
+  @@unique([assessmentId, controlId])
+  @@index([assessmentId])
+  @@index([controlId])
+  @@index([status])
+  @@map("assessment_items")
+}
+
+// --- Evidence ---
+
+model Evidence {
+  id               String   @id @default(cuid())
+  assessmentItemId String
+  userId           String   // uploader — denormalized for audit queries
+  filename         String
+  originalName     String
+  fileUrl          String   // S3 object URL
+  fileSize         Int      // bytes
+  mimeType         String
+  description      String?
+  uploadedAt       DateTime @default(now())
+
+  assessmentItem AssessmentItem @relation(fields: [assessmentItemId], references: [id], onDelete: Cascade)
+
+  @@index([assessmentItemId])
+  @@index([uploadedAt])
+  @@map("evidence")
+}
+
+// --- Reports ---
+
+model Report {
+  id           String       @id @default(cuid())
+  assessmentId String
+  type         ReportType
+  format       ReportFormat
+  fileUrl      String?      // S3 URL; populated for PDF, null for WEB
+  generatedAt  DateTime     @default(now())
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  @@index([assessmentId])
+  @@index([generatedAt])
+  @@map("reports")
+}
+
+// --- AI Interactions ---
+
+model AIInteraction {
+  id           String    @id @default(cuid())
+  assessmentId String?   // nullable — framework mapping runs before an assessment is created
+  type         AIType
+  input        String    // JSON-stringified prompt payload
+  output       String    // JSON-stringified parsed LLM response
+  model        String
+  tokensUsed   Int?
+  durationMs   Int?
+  createdAt    DateTime  @default(now())
+
+  assessment Assessment? @relation(fields: [assessmentId], references: [id], onDelete: SetNull)
+
+  @@index([assessmentId])
+  @@index([type])
+  @@index([createdAt])
+  @@map("ai_interactions")
+}
