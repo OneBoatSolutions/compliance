@@ -19,7 +19,7 @@
       "jsx": true
     }
   },
-  "plugins": ["@typescript-eslint", "react", "react-hooks"],
+  "plugins": ["@typescript-eslint", "react"],
   "rules": {
     // TypeScript
     "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
