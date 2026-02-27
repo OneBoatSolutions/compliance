@@ -43,6 +43,7 @@ The **AI-Assured Compliance Dashboard** is a comprehensive SaaS platform designe
 - **Automated Reporting**: Generate audit-ready compliance reports in minutes
 
 ### Key Differentiators
+
 - 🤖 **AI-First Approach**: Leverages GPT-4/Claude for framework mapping and remediation guidance
 - 📊 **Real-Time Scoring**: Dynamic compliance score calculation as you complete assessments
 - 🎯 **Multi-Framework Support**: Assess against GDPR, HIPAA, PCI-DSS, SOC 2, ISO 27001, and more
@@ -54,6 +55,7 @@ The **AI-Assured Compliance Dashboard** is a comprehensive SaaS platform designe
 ## ✨ Features
 
 ### For Users (Compliance Managers)
+
 - ✅ **Organization Onboarding**: Input business details and receive AI-powered framework suggestions
 - ✅ **Assessment Management**: Create and manage compliance assessments across multiple frameworks
 - ✅ **Interactive Checklist**: Track compliance status for each control with comments and evidence upload
@@ -62,6 +64,7 @@ The **AI-Assured Compliance Dashboard** is a comprehensive SaaS platform designe
 - ✅ **Progress Tracking**: Real-time dashboard with compliance scores and risk summaries
 
 ### For Admins (Framework Managers)
+
 - ✅ **Framework Management**: CRUD operations for compliance frameworks
 - ✅ **Control Library**: Add, edit, and organize compliance controls
 - ✅ **Bulk Import**: Import controls via CSV for efficiency
@@ -69,6 +72,7 @@ The **AI-Assured Compliance Dashboard** is a comprehensive SaaS platform designe
 - ✅ **Version Control**: Maintain framework versions as regulations evolve
 
 ### Security & Compliance
+
 - 🔐 Role-Based Access Control (RBAC)
 - 🔐 Password hashing with bcrypt
 - 🔐 JWT-based authentication
@@ -82,6 +86,7 @@ The **AI-Assured Compliance Dashboard** is a comprehensive SaaS platform designe
 ## 🛠 Tech Stack
 
 ### Frontend
+
 - **Framework**: Next.js 14+ (App Router)
 - **Language**: TypeScript 5.4+
 - **UI Library**: React 18+
@@ -92,6 +97,7 @@ The **AI-Assured Compliance Dashboard** is a comprehensive SaaS platform designe
 - **Data Fetching**: TanStack Query (React Query)
 
 ### Backend
+
 - **Runtime**: Node.js 20 LTS
 - **Framework**: Next.js API Routes
 - **ORM**: Prisma 5+
@@ -101,18 +107,21 @@ The **AI-Assured Compliance Dashboard** is a comprehensive SaaS platform designe
 - **PDF Generation**: PDFKit
 
 ### Database & Storage
+
 - **Database**: PostgreSQL 16
 - **File Storage**: AWS S3 / MinIO (local dev)
 - **Cache**: Redis (AWS ElastiCache / local)
 - **Connection Pooling**: Prisma (10-50 connections)
 
 ### AI & External Services
+
 - **AI Provider**: OpenAI (GPT-4-Turbo) / Anthropic (Claude 3.5 Sonnet)
 - **AI SDK**: Vercel AI SDK
 - **Email**: SendGrid / Resend
 - **Monitoring**: Sentry (errors), Vercel Analytics (performance), CloudWatch (metrics)
 
 ### Infrastructure
+
 - **Hosting**: Vercel
 - **CDN**: Vercel Edge Network
 - **CI/CD**: GitHub Actions
@@ -155,18 +164,21 @@ The **AI-Assured Compliance Dashboard** is a comprehensive SaaS platform designe
 ### Key Components
 
 **Frontend (Next.js App Router)**
+
 - `/app/(auth)`: Authentication pages (login, register)
 - `/app/(user)`: User-facing dashboard and assessment tools
 - `/app/(admin)`: Admin portal for framework and user management
 - `/app/api`: API routes for backend logic
 
 **Backend Services**
+
 - **AI Service**: Framework mapping, remediation plan generation
 - **Assessment Service**: CRUD operations, score calculation
 - **Report Service**: PDF generation, report storage
 - **Framework Service**: Framework and control management
 
 **Database Schema**
+
 - Users & Organizations
 - Frameworks & Controls
 - Assessments & Assessment Items
@@ -174,6 +186,7 @@ The **AI-Assured Compliance Dashboard** is a comprehensive SaaS platform designe
 - AI Interactions (audit log)
 
 For detailed architecture diagrams and technical specifications, see:
+
 - [Product Requirements Document (PRD)](./docs/PRD.md)
 - [System Architecture Document](./docs/ARCHITECTURE.md)
 
@@ -182,7 +195,6 @@ For detailed architecture diagrams and technical specifications, see:
 ## 🎨 UI Design References
 
 All UI design assets, mockups, and style guides are located in the **`/assets`** folder in the root directory.
-
 
 ---
 
@@ -198,6 +210,7 @@ Before you begin, ensure you have the following installed:
 - **Docker** (optional): For running services locally
 
 ### Recommended Tools
+
 - **VS Code**: With ESLint, Prettier, Prisma extensions
 - **Postman** or **Insomnia**: For API testing
 - **pgAdmin** or **TablePlus**: For database management
@@ -330,15 +343,15 @@ ENABLE_EVIDENCE_UPLOAD="true"
 
 ### Environment Variables by Service
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `DATABASE_URL` | ✅ | PostgreSQL connection string |
-| `AUTH_SECRET` | ✅ | Secret for NextAuth.js (min 32 chars) |
-| `OPENAI_API_KEY` | ✅ | OpenAI API key for AI features |
-| `AWS_ACCESS_KEY_ID` | ✅ | AWS credentials for S3 |
-| `S3_BUCKET_NAME` | ✅ | S3 bucket for file storage |
-| `REDIS_URL` | ⚠️ | Redis for caching (optional in dev) |
-| `SENDGRID_API_KEY` | ⚠️ | Email service (optional in dev) |
+| Variable            | Required | Description                           |
+| ------------------- | -------- | ------------------------------------- |
+| `DATABASE_URL`      | ✅       | PostgreSQL connection string          |
+| `AUTH_SECRET`       | ✅       | Secret for NextAuth.js (min 32 chars) |
+| `OPENAI_API_KEY`    | ✅       | OpenAI API key for AI features        |
+| `AWS_ACCESS_KEY_ID` | ✅       | AWS credentials for S3                |
+| `S3_BUCKET_NAME`    | ✅       | S3 bucket for file storage            |
+| `REDIS_URL`         | ⚠️       | Redis for caching (optional in dev)   |
+| `SENDGRID_API_KEY`  | ⚠️       | Email service (optional in dev)       |
 
 ---
 
@@ -433,7 +446,7 @@ ai-compliance-dashboard/
 │   └── seed.ts
 ├── public/                       # Static assets
 ├── assets/                       # UI designs & brand assets
-│   
+│
 ├── docs/                         # Documentation
 │   ├── PRD.md
 │   ├── ARCHITECTURE.md
@@ -462,24 +475,28 @@ ai-compliance-dashboard/
 ### Coding Standards
 
 **TypeScript**
+
 - Use strict mode
 - Define explicit types (avoid `any`)
 - Use interfaces for object shapes
 - Use enums for constants
 
 **React**
+
 - Functional components with hooks
 - Use TypeScript for prop types
 - Extract reusable logic into custom hooks
 - Keep components small and focused
 
 **Naming Conventions**
+
 - Components: PascalCase (`UserDashboard.tsx`)
 - Utilities: camelCase (`calculateScore.ts`)
 - Constants: UPPER_SNAKE_CASE (`MAX_FILE_SIZE`)
 - Files: kebab-case for non-components (`api-client.ts`)
 
 **Code Quality**
+
 - ESLint: Enforced on pre-commit
 - Prettier: Auto-format on save
 - Husky: Git hooks for quality checks
@@ -528,6 +545,7 @@ pnpm test:watch
 ```
 
 ### Test Coverage Requirements
+
 - Overall coverage: > 80%
 - Critical paths: > 90%
 - Services: > 85%
@@ -540,6 +558,7 @@ pnpm test:watch
 ### Vercel Deployment (Recommended)
 
 1. **Connect to Vercel**
+
    ```bash
    vercel login
    vercel link
@@ -550,6 +569,7 @@ pnpm test:watch
    - Add all required variables from `.env.example`
 
 3. **Deploy**
+
    ```bash
    # Deploy to preview
    vercel
@@ -569,6 +589,7 @@ pnpm start
 ```
 
 ### Production Checklist
+
 - [ ] Environment variables configured
 - [ ] Database migrations applied
 - [ ] storage buckets created
@@ -621,20 +642,21 @@ We follow a strict naming convention for branches to maintain clarity and organi
 
 ### Branch Types
 
-| Type | Purpose | Example |
-|------|---------|---------|
-| `feat` | New feature development | `feat/john/ai-remediation-ui` |
-| `fix` | Bug fixes | `fix/sarah/login-validation-error` |
-| `refactor` | Code refactoring (no new features) | `refactor/mike/assessment-service` |
-| `docs` | Documentation updates | `docs/alice/api-documentation` |
-| `test` | Adding or updating tests | `test/bob/assessment-unit-tests` |
-| `chore` | Build process, dependencies, etc. | `chore/jane/update-dependencies` |
-| `hotfix` | Urgent production fixes | `hotfix/john/critical-security-patch` |
-| `perf` | Performance improvements | `perf/sarah/optimize-db-queries` |
+| Type       | Purpose                            | Example                               |
+| ---------- | ---------------------------------- | ------------------------------------- |
+| `feat`     | New feature development            | `feat/john/ai-remediation-ui`         |
+| `fix`      | Bug fixes                          | `fix/sarah/login-validation-error`    |
+| `refactor` | Code refactoring (no new features) | `refactor/mike/assessment-service`    |
+| `docs`     | Documentation updates              | `docs/alice/api-documentation`        |
+| `test`     | Adding or updating tests           | `test/bob/assessment-unit-tests`      |
+| `chore`    | Build process, dependencies, etc.  | `chore/jane/update-dependencies`      |
+| `hotfix`   | Urgent production fixes            | `hotfix/john/critical-security-patch` |
+| `perf`     | Performance improvements           | `perf/sarah/optimize-db-queries`      |
 
 ### Examples
 
 ✅ **Good Branch Names**
+
 ```
 feat/john/user-onboarding-flow
 fix/sarah/compliance-score-calculation
@@ -647,6 +669,7 @@ perf/sarah/optimize-report-generation
 ```
 
 ❌ **Bad Branch Names**
+
 ```
 new-feature          # No username or description
 john/fix             # No type prefix
@@ -656,11 +679,13 @@ FEAT/john/test       # Use lowercase
 ```
 
 ### Username Guidelines
+
 - Use your GitHub username or first name (lowercase)
 - Keep it consistent across all branches
 - Examples: `john`, `sarah-smith`, `mike123`
 
 ### Description Guidelines
+
 - Use lowercase with hyphens
 - Be descriptive but concise (2-5 words)
 - Focus on the "what" not the "how"
@@ -687,6 +712,7 @@ feature branches (feat/*, fix/*, etc.)
 ### Branch Descriptions
 
 #### 1. `main` - Production Branch
+
 - **Purpose**: Reflects production-ready code
 - **Protection**: 🔒 **Fully Protected**
 - **Merge Source**: Only from `stage` branch
@@ -699,6 +725,7 @@ feature branches (feat/*, fix/*, etc.)
   - Deployment must be approved
 
 #### 2. `stage` - Staging Branch
+
 - **Purpose**: Pre-production testing and QA
 - **Protection**: 🔒 **Protected**
 - **Merge Source**: Only from `dev` branch
@@ -711,6 +738,7 @@ feature branches (feat/*, fix/*, etc.)
   - QA testing required before merging to `main`
 
 #### 3. `dev` - Development Branch
+
 - **Purpose**: Integration branch for ongoing development
 - **Protection**: 🔒 **Protected**
 - **Merge Source**: From feature branches (`feat/*`, `fix/*`, etc.)
@@ -722,6 +750,7 @@ feature branches (feat/*, fix/*, etc.)
   - Conflicts must be resolved before merging
 
 #### 4. Feature Branches
+
 - **Purpose**: Individual feature development, bug fixes, etc.
 - **Protection**: ⚠️ **Unprotected** (can be deleted after merge)
 - **Naming**: Follow [Branch Nomenclature](#branch-nomenclature)
@@ -805,9 +834,11 @@ git push origin feat/john/ai-remediation-ui
 
 ```markdown
 ## Description
+
 <!-- Brief description of what this PR does -->
 
 ## Type of Change
+
 - [ ] feat: New feature
 - [ ] fix: Bug fix
 - [ ] refactor: Code refactoring
@@ -818,16 +849,21 @@ git push origin feat/john/ai-remediation-ui
 - [ ] hotfix: Urgent production fix
 
 ## Related Issues
+
 <!-- Link to related issues, e.g., Closes #123, Fixes #456 -->
 
 ## Changes Made
+
 <!-- List of changes made in this PR -->
+
 - Added AI remediation plan generation
 - Updated assessment service with score calculation
 - Created remediation UI components
 
 ## Testing
+
 <!-- How was this tested? -->
+
 - [ ] Unit tests added/updated
 - [ ] Integration tests added/updated
 - [ ] E2E tests added/updated
@@ -835,9 +871,11 @@ git push origin feat/john/ai-remediation-ui
 - [ ] Tested on dev environment
 
 ## Screenshots (if applicable)
+
 <!-- Add screenshots for UI changes -->
 
 ## Checklist
+
 - [ ] My code follows the project's coding standards
 - [ ] I have performed a self-review of my code
 - [ ] I have commented my code where necessary
@@ -848,6 +886,7 @@ git push origin feat/john/ai-remediation-ui
 - [ ] Any dependent changes have been merged
 
 ## Additional Notes
+
 <!-- Any additional information for reviewers -->
 ```
 
@@ -872,11 +911,11 @@ git push origin feat/john/ai-remediation-ui
 
 ### PR Approval Requirements
 
-| Target Branch | Required Approvals | Required Checks |
-|---------------|-------------------|-----------------|
-| `dev` | 1 peer approval | ✅ Lint, ✅ Type-check, ✅ Tests |
-| `stage` | 1 maintainer approval | ✅ All dev checks + ✅ Build |
-| `main` | 2 maintainer approvals | ✅ All stage checks + ✅ E2E tests |
+| Target Branch | Required Approvals     | Required Checks                    |
+| ------------- | ---------------------- | ---------------------------------- |
+| `dev`         | 1 peer approval        | ✅ Lint, ✅ Type-check, ✅ Tests   |
+| `stage`       | 1 maintainer approval  | ✅ All dev checks + ✅ Build       |
+| `main`        | 2 maintainer approvals | ✅ All stage checks + ✅ E2E tests |
 
 ### Merging a Pull Request
 
@@ -902,6 +941,7 @@ git push origin feat/john/ai-remediation-ui
 ```
 
 **Example:**
+
 ```
 feat(assessment): add AI remediation plan generation
 
@@ -913,6 +953,7 @@ Closes #123
 ```
 
 ### Commit Types
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -932,6 +973,7 @@ We welcome contributions from the community! Please read our [Contributing Guide
 ### Quick Start for Contributors
 
 1. **Fork the Repository**
+
    ```bash
    # Click "Fork" on GitHub
    git clone https://github.com/oneboatsolutions/compliance.git
@@ -939,11 +981,13 @@ We welcome contributions from the community! Please read our [Contributing Guide
    ```
 
 2. **Set Up Upstream Remote**
+
    ```bash
    git remote add upstream https://github.com/oneboatsolutions/compliance.git
    ```
 
 3. **Create a Feature Branch**
+
    ```bash
    git checkout dev
    git pull upstream dev
@@ -951,6 +995,7 @@ We welcome contributions from the community! Please read our [Contributing Guide
    ```
 
 4. **Make Changes and Commit**
+
    ```bash
    git add .
    git commit -m "feat(scope): your commit message"
@@ -976,10 +1021,12 @@ We accept the following types of contributions:
 
 ### Code of Conduct
 
-This project adheres to a [Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior 
+This project adheres to a [Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior
+
 ### Recognition
 
 Contributors will be recognized in:
+
 - `CONTRIBUTORS.md` file
 - GitHub contributors page
 - Release notes
@@ -990,7 +1037,6 @@ Contributors will be recognized in:
 ## 📄 License
 
 This project is licensed under the **Cipherion Proprietary Commercial License** - see the [LICENSE](./LICENSE) file for details.
-
 
 **Cipherion Proprietary License Summary**
 
@@ -1020,8 +1066,6 @@ FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
 
 Cipherion reserves all rights not expressly granted herein.
 
-
-
 ---
 
 ## 🆘 Support
@@ -1029,34 +1073,33 @@ Cipherion reserves all rights not expressly granted herein.
 ### Getting Help
 
 - 📖 **Documentation**: Check our [docs](./docs/) folder (Coming Soon)
-- 💬 **Discussions**: 
-- 🐛 **Bug Reports**: 
-- 💡 **Feature Requests**: 
+- 💬 **Discussions**:
+- 🐛 **Bug Reports**:
+- 💡 **Feature Requests**:
 - 📧 **Email**: official@cipherion.in (for commercial support)
 
 ### FAQ
 
-****Q: Questions are on the way****
+\***\*Q: Questions are on the way\*\***
 A: Yes, soon.
-
-
-
 
 ---
 
 ## 🗺 Roadmap
 
 ### v1.0 (Current) - MVP
--  User authentication and authorization
--  Organization onboarding with AI framework mapping
--  Multi-framework assessment engine
--  Real-time compliance scoring
--  AI remediation plan generation
--  PDF report generation
--  Admin framework management
-- 
+
+- User authentication and authorization
+- Organization onboarding with AI framework mapping
+- Multi-framework assessment engine
+- Real-time compliance scoring
+- AI remediation plan generation
+- PDF report generation
+- Admin framework management
+-
 
 ### v1.1 (Next Quarter)
+
 - 🔲 Advanced evidence management (templates, categories)
 - 🔲 Audit trail and change history
 - 🔲 Collaboration features (comments, assignments)
@@ -1065,6 +1108,7 @@ A: Yes, soon.
 - 🔲 Mobile responsiveness
 
 ### v2.0 (Future)
+
 - 🔲 Multi-tenant architecture
 - 🔲 SSO/SAML integration
 - 🔲 API for third-party integrations
@@ -1075,7 +1119,6 @@ A: Yes, soon.
 - 🔲 Localization (i18n) support
 
 ---
-
 
 ## 📞 Contact
 
