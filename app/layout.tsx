@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google"; // valid Google Fonts
 import "./globals.css";
-import { ThemeProvider as NextThemesProvider } from "next-themes"
-import { Toaster } from "sonner"
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { Toaster } from "sonner";
 // Replace Geist with Inter
 const inter = Inter({
   variable: "--font-inter",
@@ -21,26 +21,17 @@ export const metadata: Metadata = {
   description: "Compliance Dashboard",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${robotoMono.variable} font-sans antialiased bg-background text-foreground`}
       >
-        <NextThemesProvider
-         attribute="class"
-         defaultTheme="system"
-         enableSystem
-        >
+        <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           <Toaster richColors position="top-right" />
         </NextThemesProvider>
       </body>
     </html>
-  )
+  );
 }
-
