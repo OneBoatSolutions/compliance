@@ -46,7 +46,7 @@ const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: datasourceUrl }),
 });
 
-const pdfSourceOfTruth = "Task 0.6 Seed Data Content Pack.pdf";
+// (removed) pdfSourceOfTruth constant - no longer printed during seed
 
 const userSeeds = {
   admin: {
@@ -1137,7 +1137,6 @@ async function updateAssessmentScore(
 
 async function main() {
   console.log("Starting Task 0.6 seed...");
-  console.log(`Source of truth: ${pdfSourceOfTruth}`);
 
   const { testUser } = await upsertUsers();
   const { controlCodeToId, controlCodeToWeight } = await upsertFrameworksAndControls();
