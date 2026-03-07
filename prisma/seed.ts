@@ -1,5 +1,5 @@
 ﻿/* eslint-disable no-console */
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { PrismaPg } from "@prisma/adapter-pg";
 import {
   AIType,
@@ -912,7 +912,7 @@ async function upsertFrameworksAndControls() {
 }
 
 async function upsertOrganization(userId: string) {
-  const existing = await prisma.organizationSeed.findFirst({
+  const existing = await prisma.organization.findFirst({
     where: {
       userId,
       productName: organizationSeed.productName,
@@ -921,7 +921,7 @@ async function upsertOrganization(userId: string) {
   });
 
   if (existing) {
-    return prisma.organizationSeed.update({
+    return prisma.organization.update({
       where: { id: existing.id },
       data: {
         description: organizationSeed.description,
@@ -934,7 +934,7 @@ async function upsertOrganization(userId: string) {
     });
   }
 
-  return prisma.organizationSeed.create({
+  return prisma.organization.create({
     data: {
       userId,
       productName: organizationSeed.productName,
@@ -1142,13 +1142,13 @@ async function main() {
   const { testUser } = await upsertUsers();
   const { controlCodeToId, controlCodeToWeight } = await upsertFrameworksAndControls();
 
-  const organizationSeed = await upsertOrganization(testUser.id);
-  const assessment = await replaceSeedAssessment(testUser.id, organizationSeed.id);
+  const orgRecord = await upsertOrganization(testUser.id);
+  const assessment = await replaceSeedAssessment(testUser.id, orgRecord.id);
 
   const controlCodeToAssessmentItemId = await seedAssessmentItems(assessment.id, controlCodeToId);
 
   await seedEvidence(testUser.id, controlCodeToAssessmentItemId);
-  await seedAiInteractions(assessment.id, organizationSeed.id);
+  await seedAiInteractions(assessment.id, orgRecord.id);
 
   const score = await updateAssessmentScore(assessment.id, controlCodeToWeight);
 
