@@ -5,7 +5,6 @@ export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
-    seed: "pnpm exec tsx prisma/seed.ts",
   },
   datasource: {
     // Use the direct (non-pooled) URL for Prisma CLI commands (migrate, studio, etc.)
