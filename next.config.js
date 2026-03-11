@@ -14,8 +14,8 @@ const nextConfig = {
           {
             //key: "Content-Security-Policy",
             //value:
-            //"default-src 'self'; img-src 'self' https://example.com https://images.unsplash.com;",
-
+              //"default-src 'self'; img-src 'self' https://example.com https://images.unsplash.com;",
+              
             key: "Content-Security-Policy",
             value: `
                default-src 'self';
@@ -24,6 +24,7 @@ const nextConfig = {
                img-src 'self' https://example.com https://images.unsplash.com data:;
               font-src 'self' data:;
               `.replace(/\n/g, ""),
+
           },
           {
             key: "Strict-Transport-Security",

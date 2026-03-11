@@ -29,7 +29,7 @@
     // Naming conventions
     "@typescript-eslint/naming-convention": [
       "error",
-      { "selector": "variableLike", "format": ["camelCase", "PascalCase"] },
+      { "selector": "variableLike", "format": ["camelCase"] },
       { "selector": "function", "format": ["camelCase", "PascalCase"] }, // allow React components
       { "selector": "typeLike", "format": ["PascalCase"] },
       { "selector": "enumMember", "format": ["UPPER_CASE"] }
