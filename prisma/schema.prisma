@@ -80,7 +80,7 @@ model User {
 // --- Organizations ---
 
 model Organization {
-  id    String @id @default(cuid())
+  id     String @id @default(cuid())
   userId String // profile owner
 
   // business profile
@@ -118,7 +118,7 @@ model Framework {
   effectiveDate DateTime
   sourceLink    String?
   status        FrameworkStatus @default(DRAFT)
-  publishedAt   DateTime?       // set when status transitions to PUBLISHED
+  publishedAt   DateTime? // set when status transitions to PUBLISHED
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
 
@@ -134,17 +134,21 @@ model Framework {
 model Control {
   id          String   @id @default(cuid())
   frameworkId String
-  code        String   // unique per framework, e.g. GDPR-7.1
+  code        String // unique per framework, e.g. GDPR-7.1
   title       String
   description String
   category    String?
   severity    Severity @default(MEDIUM)
   weight      Float    @default(1.0) // scoring weight, range 0.1–10.0
+  metadata    Json?
+  isGateway   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  framework       Framework        @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
-  assessmentItems AssessmentItem[]
+  framework           Framework           @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
+  assessmentItems     AssessmentItem[]
+  gatewayDependencies ControlDependency[] @relation("GatewayDependencies")
+  subDependencies     ControlDependency[] @relation("SubControlDependencies")
 
   @@unique([frameworkId, code])
   @@index([frameworkId])
@@ -159,7 +163,7 @@ model Assessment {
   userId         String
   organizationId String
   status         AssessmentStatus @default(IN_PROGRESS)
-  score          Float?           // weighted 0–100; null until at least one item is evaluated
+  score          Float? // weighted 0–100; null until at least one item is evaluated
   completedAt    DateTime?
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
@@ -178,13 +182,17 @@ model Assessment {
 }
 
 model AssessmentItem {
-  id           String     @id @default(cuid())
-  assessmentId String
-  controlId    String
-  status       ItemStatus @default(NOT_STARTED)
-  comments     String?
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id            String     @id @default(cuid())
+  assessmentId  String
+  controlId     String
+  status        ItemStatus @default(NOT_STARTED)
+  comments      String?
+  owner         String?
+  targetDate    DateTime?
+  remarks       String?
+  evidenceNotes String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 
   assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
   control    Control    @relation(fields: [controlId], references: [id])
@@ -197,16 +205,32 @@ model AssessmentItem {
   @@map("assessment_items")
 }
 
+model ControlDependency {
+  id              String @id @default(cuid())
+  parentControlId String
+  childControlId  String
+  triggerValue    String
+  effect          String
+
+  parentControl Control @relation("GatewayDependencies", fields: [parentControlId], references: [id], onDelete: Cascade)
+  childControl  Control @relation("SubControlDependencies", fields: [childControlId], references: [id], onDelete: Cascade)
+
+  @@unique([parentControlId, childControlId])
+  @@index([parentControlId])
+  @@index([childControlId])
+  @@map("control_dependencies")
+}
+
 // --- Evidence ---
 
 model Evidence {
   id               String   @id @default(cuid())
   assessmentItemId String
-  userId           String   // uploader — denormalized for audit queries
+  userId           String // uploader — denormalized for audit queries
   filename         String
   originalName     String
-  fileUrl          String   // S3 object URL
-  fileSize         Int      // bytes
+  fileUrl          String // S3 object URL
+  fileSize         Int // bytes
   mimeType         String
   description      String?
   uploadedAt       DateTime @default(now())
@@ -225,7 +249,7 @@ model Report {
   assessmentId String
   type         ReportType
   format       ReportFormat
-  fileUrl      String?      // S3 URL; populated for PDF, null for WEB
+  fileUrl      String? // S3 URL; populated for PDF, null for WEB
   generatedAt  DateTime     @default(now())
 
   assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
@@ -238,15 +262,15 @@ model Report {
 // --- AI Interactions ---
 
 model AIInteraction {
-  id           String    @id @default(cuid())
-  assessmentId String?   // nullable — framework mapping runs before an assessment is created
+  id           String   @id @default(cuid())
+  assessmentId String? // nullable — framework mapping runs before an assessment is created
   type         AIType
-  input        String    // JSON-stringified prompt payload
-  output       String    // JSON-stringified parsed LLM response
+  input        String // JSON-stringified prompt payload
+  output       String // JSON-stringified parsed LLM response
   model        String
   tokensUsed   Int?
   durationMs   Int?
-  createdAt    DateTime  @default(now())
+  createdAt    DateTime @default(now())
 
   assessment Assessment? @relation(fields: [assessmentId], references: [id], onDelete: SetNull)
 
