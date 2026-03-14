@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import {
   CircleCheckIcon,
