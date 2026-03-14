@@ -208,7 +208,7 @@ Note: You can use Neon instance for the development purpose
 
 ---
 
-## Sprint 0 — Authentication & Layout *(Week 1)*
+## Sprint 1 — Authentication & Layout *(Week 1)*
 
 > **Goal**: Users can register, login, see a layout shell. Auth flow complete end-to-end.
 > **Parallel streams**: FE does UI, BE does APIs, DB monitors.
@@ -360,7 +360,7 @@ Note: You can use Neon instance for the development purpose
 
 ---
 
-## Sprint 1 — Dashboard & Organization Onboarding *(Week 2)*
+## Sprint 2 — Dashboard & Organization Onboarding *(Week 2)*
 
 > **Goal**: Dashboard (empty + active states) + Organization onboarding form.
 > **Parallel**: FE builds UI, BE builds APIs, DB focuses on query optimization.
@@ -770,7 +770,7 @@ Note: You can use Neon instance for the development purpose
 
 ---
 
-## Sprint 5 — Reporting & Analytics *(Week 6)*
+## Sprint 6 — Reporting & Analytics *(Week 6)*
 
 > **Goal**: PDF report generation. Analytics dashboard. Compliance readiness report.
 
@@ -851,7 +851,7 @@ Note: You can use Neon instance for the development purpose
 
 ---
 
-## Sprint 6 — Admin Portal *(Week 7)*
+## Sprint 7 — Admin Portal *(Week 7)*
 
 > **Goal**: Admin can manage frameworks, controls, and users.
 
@@ -907,7 +907,7 @@ Note: You can use Neon instance for the development purpose
 
 ---
 
-## Sprint 6 — Polish, Testing & Performance *(Week 7)*
+## Sprint 8 — Polish, Testing & Performance *(Week 8)*
 
 > **Goal**: Bug fixes, performance optimization, comprehensive testing.
 
@@ -980,7 +980,7 @@ Note: You can use Neon instance for the development purpose
 
 ---
 
-## Sprint 7 — Security Hardening & Monitoring *(Week 8)*
+## Sprint 9 — Security Hardening & Monitoring *(Week 9)*
 
 ### Task 9.1: Security Hardening
 **Assignee**: BE2 + DB1
@@ -1018,7 +1018,7 @@ Note: You can use Neon instance for the development purpose
 
 ---
 
-## Sprint 8 — Documentation, Deployment & Launch Prep *(Week 8)*
+## Sprint 10 — Documentation, Deployment & Launch Prep *(Week 10)*
 
 ### Task 10.1: Technical Documentation
 **Assignee**: DB1 *(role: documentation)*
