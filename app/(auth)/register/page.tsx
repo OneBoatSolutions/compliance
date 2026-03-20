@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { Eye, EyeOff } from "lucide-react";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -83,10 +84,22 @@ export default function RegisterPage() {
   const onSubmit = (data: RegisterFormValues) => {
     console.log("Signup Data:", data);
   };
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
-    <Form {...form}>
-      <form
+    <div className="w-full max-w-md bg-foreground rounded-xl shadow-md backdrop-blur-md p-6 space-y-6 mt-4">
+      <div className="text-left align space-y-1 mb-6">
+         <h2 className="text-2xl font-bold tracking-tight text-accent foreground">
+               Get started with Cipherion
+         </h2>
+         <p className="mt-2 text-muted-foreground">
+         Create your account to continue
+         </p>
+         </div>
+         
+         <Form {...form}>
+         <form
         
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-6 max-w-md mx-auto"
@@ -98,7 +111,7 @@ export default function RegisterPage() {
           name="companyName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Company Name</FormLabel>
+              <FormLabel className="text-sm font-medium text-accent foreground">Company Name</FormLabel>
               <FormControl>
                 <Input placeholder="Enter company name" {...field} />
               </FormControl>
@@ -113,9 +126,11 @@ export default function RegisterPage() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Work Email</FormLabel>
+              <FormLabel className="text-sm font-medium text-accent foreground">Work Email</FormLabel>
               <FormControl>
-                <Input type="email" {...field} />
+                <Input type="email" {...field}  className="pr-10 text-muted-foreground" placeholder="Enter work email" 
+                
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -128,26 +143,42 @@ export default function RegisterPage() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-sm font-medium text-accent foreground">Password</FormLabel>
 
               <FormControl>
+                <div className="relative">
                 <Input
-                  type="password"
-                  {...field}
-                  value={password}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    handlePasswordChange(e.target.value);
-                  }}
-                />
+            type={showPassword ? "text" : "password"}
+            {...field}
+            onChange={(e) => {
+              field.onChange(e);
+              handlePasswordChange(e.target.value); // ONLY HERE
+            }}
+            className="pr-10 text-muted-foreground caret-muted-foreground bg-background border border-border focus-visible:ring-2 focus-visible:ring-ring"
+            placeholder="Eg. Abc@123"
+          />
+
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground"
+            
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+                </div>
               </FormControl>
 
-              <PasswordStrength strength={strength} />
-              {getPasswordStrength(password).suggestions.map((s) => (
-                <p key={s} className="text-xs text-muted-foreground">
+              {password.length>0 &&
+              <PasswordStrength strength={strength} />}
+
+              {password.length>0 &&
+              getPasswordStrength(password).suggestions.map((s) => (
+                <p key={s} className="text-xs text-accent foreground">
                {s}
                </p>
               ))}
+              
 
               <FormMessage />
             </FormItem>
@@ -160,9 +191,26 @@ export default function RegisterPage() {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel className="text-sm font-medium text-accent foreground">Confirm Password</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <div className="relative">
+                  <Input
+                  type={showConfirmPassword ? "text" : "password"}
+                       {...field}
+                   className="text-muted-foreground caret-muted-foreground"    
+                  />
+
+                   {/* Toggle Button */}
+                  <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground "
+                         >
+                      {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                   </button>
+                   
+                   </div>
+
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -174,21 +222,23 @@ export default function RegisterPage() {
           control={form.control}
           name="terms"
           render={({ field }) => (
-            <FormItem className="flex items-center space-x-2">
+            <FormItem className="flex items-center space-x-2 color-accent foreground">
               <FormControl>
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
+                  className="bg-muted-foreground"
+                  
                 />
               </FormControl>
 
-              <FormLabel className="text-sm font-normal">
+              <FormLabel className="text-sm font-medium text-accent foreground">
                 I agree to the{" "}
-                <Link href="/terms" className="underline">
+                <Link href="/terms" className="underline text-primary">
                   Terms
                 </Link>{" "}
                 and{" "}
-                <Link href="/privacy" className="underline">
+                <Link href="/privacy" className="underline text-primary">
                   Privacy Policy
                 </Link>
               </FormLabel>
@@ -200,22 +250,26 @@ export default function RegisterPage() {
 
         {/* Submit */}
         <Button
-          type="submit"
-          className="w-full"
-          disabled={!form.formState.isValid}
-        >
-          Create Account
-        </Button>
+        type="submit"
+         className="w-full h-11 text-sm font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md"
+         //disabled={loading || !form.formState.isValid}
+>
+         Create Account
+          </Button>
 
         {/* Login */}
-        <p className="text-center text-sm">
+        <p className="text-center text-sm text-accent foreground mt-4">
           Already have an account?{" "}
-          <Link href="/login" className="underline">
+          <Link href="/login" className="underline text-primary">
             Sign in
           </Link>
         </p>
 
       </form>
     </Form>
+    <p className="mt-6 text-center text-xs text-accent foreground-400">
+        © 2026 Cipherion. All rights reserved.
+      </p>
+    </div>
   );
 }
