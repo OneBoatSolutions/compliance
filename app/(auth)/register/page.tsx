@@ -113,7 +113,7 @@ export default function RegisterPage() {
             <FormItem>
               <FormLabel className="text-sm font-medium text-accent foreground">Company Name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter company name" {...field} />
+                <Input className="text-accent foreground" placeholder="Enter company name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -128,7 +128,7 @@ export default function RegisterPage() {
             <FormItem>
               <FormLabel className="text-sm font-medium text-accent foreground">Work Email</FormLabel>
               <FormControl>
-                <Input type="email" {...field}  className="pr-10 text-muted-foreground" placeholder="Enter work email" 
+                <Input type="email"   className="pr-10 text-accent foreground" placeholder="Enter work email" {...field}
                 
                 />
               </FormControl>
@@ -154,7 +154,7 @@ export default function RegisterPage() {
               field.onChange(e);
               handlePasswordChange(e.target.value); // ONLY HERE
             }}
-            className="pr-10 text-muted-foreground caret-muted-foreground bg-background border border-border focus-visible:ring-2 focus-visible:ring-ring"
+            className="pr-10 text-accent foreground caret-accent foreground bg-background border border-border focus-visible:ring-2 focus-visible:ring-ring"
             placeholder="Eg. Abc@123"
           />
 
@@ -197,7 +197,7 @@ export default function RegisterPage() {
                   <Input
                   type={showConfirmPassword ? "text" : "password"}
                        {...field}
-                   className="text-muted-foreground caret-muted-foreground"    
+                   className="text-accent foreground caret-accent foreground"    
                   />
 
                    {/* Toggle Button */}
