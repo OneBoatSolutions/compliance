@@ -2,10 +2,47 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/*@custom-variant dark (&:is(.dark *));
+
 
 /* Root variables for light mode */
 :root {
+  /* 🎨 BRAND COLORS */
+  --primary: #6d18ff;
+  --primary-dark: #5412cc;
+  --primary-light: #8f4dff;
+  --primary-pale: #e9ddff;
+
+  /* 🎯 SECONDARY */
+  --accent-purple: #a855f7;
+  --deep-indigo: #4c1d95;
+
+  /* ✅ SEMANTIC */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #8b5cf6;
+  --not-applicable: #3b82f6;
+
+  /* ⚪ NEUTRALS */
+  --background: #fafafa;
+  --card: #ffffff;
+  --sidebar: #ffffff;
+
+  --foreground: #171717;
+  --muted-foreground: #525252;
+
+  --border: #e5e5e5;
+}
+
+:root {
+
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.2 0.02 260);
+  
+
+  --primary: oklch(0.56 0.26 295);
+  --muted-foreground: oklch(0.5 0.02 260);
+
   --font-sans: var(--font-inter);
   --font-mono: var(--font-roboto-mono);
   --radius: 0.625rem;
@@ -33,7 +70,7 @@
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
+  --sidebar: oklch(0.94 0.01 295);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -51,6 +88,16 @@
   --info-foreground: oklch(1 0 0);
 
   --primary-pale: oklch(0.93 0.05 295); /* #E9DDFF */
+  /*--background: oklch(0.97 0.02 90); /* cream / beige */
+  --foreground: oklch(0.2 0.02 260);
+
+  --card: oklch(1 0 0);
+  --sidebar: oklch(1 0 0);
+
+  --primary: oklch(0.6 0.2 300); /* purple */
+  --primary-foreground: oklch(1 0 0);
+
+  --muted-foreground: oklch(0.5 0.02 260);
 }
 
 /* Theme inline mapping for Tailwind (optional if using custom variables) */
@@ -178,4 +225,10 @@ html.dark {
   --warning: oklch(0.7 0.16 85);
   --info: oklch(0.6 0.18 280);
   --primary-pale: oklch(0.3 0.08 295);
+}
+:root {
+  --sidebar-width: 240px;
+}
+* {
+  transition: all 0.2s ease;
 }
