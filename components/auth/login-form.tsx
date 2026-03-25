@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +30,7 @@ export default function LoginForm() {
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
+    void data;
 
     await new Promise((r) => setTimeout(r, 1500));
 
@@ -47,7 +49,7 @@ export default function LoginForm() {
           <input
             {...register("email")}
             placeholder="name@company.com"
-            className="w-full pl-10 pr-10 py-3 text-slate-400 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6d18ff]/40 focus:border-[#6d18ff] transition-all"
+            className="w-full pl-10 pr-10 py-3 text-slate-900 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6d18ff]/40 focus:border-[#6d18ff] transition-all"
           />
         </div>
 
@@ -65,13 +67,13 @@ export default function LoginForm() {
             {...register("password")}
             type={showPassword ? "text" : "password"}
             placeholder="••••••••"
-            className="w-full pl-10 pr-10 py-3 text-slate-400 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6d18ff]/40 focus:border-[#6d18ff] transition-all"
+            className="w-full pl-10 pr-10 py-3 text-slate-900 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6d18ff]/40 focus:border-[#6d18ff] transition-all"
           />
 
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-3 text-slate-400"
+            className="absolute right-3 top-3 text-slate-400 hover:text-[#6d18ff] transition-colors"
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
@@ -85,16 +87,20 @@ export default function LoginForm() {
           Remember me
         </label>
 
-        <a href="#" className="text-[#6d18ff] hover:text-[#5412cc]">
+        <Link
+          href="/forgot-password"
+          className="text-[#6d18ff] hover:text-[#5412cc] transition-colors"
+        >
           Forgot password?
-        </a>
+        </Link>
       </div>
 
       {/* SIGN IN BUTTON */}
 
       <button
         type="submit"
-        className="w-full h-11 bg-[#6d18ff] hover:bg-[#5412cc] text-white font-semibold rounded-md flex items-center justify-center"
+        disabled={loading}
+        className="w-full h-11 bg-[#6d18ff] hover:bg-[#5412cc] text-white font-semibold rounded-md flex items-center justify-center transition-all duration-200 hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-[#6d18ff] focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed"
       >
         {loading ? (
           <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>

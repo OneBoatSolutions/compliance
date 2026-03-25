@@ -1,5 +1,6 @@
-// app/(admin)/layout.tsx
+"use client";
 
+import { useState } from "react";
 import Sidebar from "@/components/layout/sidebar";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
@@ -7,9 +8,9 @@ import Footer from "@/components/layout/footer";
 //  Icons
 import { Layers, Users } from "lucide-react";
 
-type LayoutProps = {
+interface LayoutProps {
   children: React.ReactNode;
-};
+}
 
 //  ADMIN NAV ITEMS
 const adminNavItems = [
@@ -26,20 +27,22 @@ const adminNavItems = [
 ];
 
 export default function AdminLayout({ children }: LayoutProps) {
-  return (
-    <div className="flex h-screen overflow-hidden">
+  const [collapsed, setCollapsed] = useState(false);
 
+  return (
+    <div className="flex h-screen overflow-hidden bg-background">
       {/*  Sidebar */}
-      <Sidebar items={adminNavItems} />
+      <Sidebar items={adminNavItems} collapsed={collapsed} setCollapsed={setCollapsed} />
 
       {/*  Main Content */}
-      <div className="flex flex-col flex-1 ml-60">
-        
-        <Header />
+      <div
+        className={`flex flex-col flex-1 transition-all duration-300 ${
+          collapsed ? "md:ml-20" : "md:ml-60"
+        }`}
+      >
+        <Header items={adminNavItems} />
 
-        <main className="flex-1 overflow-auto p-4 pt-20">
-          {children}
-        </main>
+        <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8 xl:p-10 pt-20">{children}</main>
 
         <Footer />
       </div>

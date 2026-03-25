@@ -221,7 +221,7 @@ function deriveTitle(description: string): string {
 
   const sourceWords = cleanedDescription.split(" ");
   const meaningfulWords = sourceWords.filter(
-    (word) => word && !TITLE_STOPWORDS.has(word.toLowerCase()),
+    (word) => word && !titleStopwords.has(word.toLowerCase()),
   );
   const titleWords = (meaningfulWords.length >= 3 ? meaningfulWords : sourceWords)
     .map(formatTitleWord)
@@ -317,7 +317,7 @@ const rawControls = loadRawControls();
 
 export const gdprControls: SeedControl[] = rawControls.map((control) => {
   const gatewayKey = control.code.replace(/^GDPR-/, "");
-  const gatewayConfig = GATEWAY_CONFIG[gatewayKey];
+  const gatewayConfig = gatewayConfigMap[gatewayKey];
   const title = control.isGateway ? gatewayConfig.title : deriveTitle(control.description);
 
   return {

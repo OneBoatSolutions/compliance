@@ -2,8 +2,6 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-
-
 /* Root variables for light mode */
 :root {
   /* 🎨 BRAND COLORS */
@@ -35,10 +33,8 @@
 }
 
 :root {
-
   --background: oklch(1 0 0);
   --foreground: oklch(0.2 0.02 260);
-  
 
   --primary: oklch(0.56 0.26 295);
   --muted-foreground: oklch(0.5 0.02 260);
@@ -231,4 +227,37 @@ html.dark {
 }
 * {
   transition: all 0.2s ease;
+}
+
+@keyframes authFadeSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes authFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(8px, -10px, 0);
+  }
+}
+
+.auth-route-enter {
+  animation: authFadeSlide 280ms ease-out;
+}
+
+.auth-float {
+  animation: authFloat 10s ease-in-out infinite;
+}
+
+.auth-float-delayed {
+  animation: authFloat 14s ease-in-out infinite;
 }

@@ -1,33 +1,39 @@
 "use client";
 
+import type { ComponentType, Dispatch, SetStateAction } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  ChevronLeft,
-  ChevronRight,
-  LifeBuoy,
-  ShieldCheck,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, LifeBuoy, ShieldCheck } from "lucide-react";
+
+interface SidebarItem {
+  label: string;
+  href: string;
+  icon?: ComponentType<{ className?: string }>;
+}
+
+interface SidebarProps {
+  items?: SidebarItem[];
+  collapsed?: boolean;
+  setCollapsed?: Dispatch<SetStateAction<boolean>>;
+  isMobile?: boolean;
+}
 
 export default function Sidebar({
   items = [],
-  collapsed,
+  collapsed = false,
   setCollapsed,
   isMobile = false,
-}: any) {
+}: SidebarProps) {
   const pathname = usePathname();
 
   return (
     <aside
       className={`fixed top-16 left-0 h-[calc(100vh-4rem)] border-r border-gray-200 flex flex-col transition-all duration-300 ${
         collapsed ? "w-20" : "w-60"
-      } ${
-        isMobile ? "flex w-60" : "hidden md:flex"
-      } bg-primary/5`}   /*  light purple tint */
+      } ${isMobile ? "flex w-60" : "hidden md:flex"} bg-gray-50`}
     >
       {/*  TOP */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-gray-200">
-
         {/*  LOGO ONLY ON MOBILE */}
         {isMobile && (
           <div className="flex items-center gap-2">
@@ -41,7 +47,7 @@ export default function Sidebar({
         {/* Collapse button only desktop */}
         {!isMobile && (
           <button
-            onClick={() => setCollapsed(!collapsed)}
+            onClick={() => setCollapsed?.(!collapsed)}
             className="text-gray-600 hover:text-primary transition"
           >
             {collapsed ? <ChevronRight /> : <ChevronLeft />}
@@ -51,7 +57,7 @@ export default function Sidebar({
 
       {/*  NAV */}
       <nav className="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
-        {items.map((item: any) => {
+        {items.map((item) => {
           const isActive = pathname.startsWith(item.href);
           const Icon = item.icon;
 
@@ -67,9 +73,7 @@ export default function Sidebar({
             >
               {Icon && <Icon className="w-5 h-5" />}
 
-              {(!collapsed || isMobile) && (
-                <span>{item.label}</span>
-              )}
+              {(!collapsed || isMobile) && <span>{item.label}</span>}
             </Link>
           );
         })}
@@ -79,12 +83,9 @@ export default function Sidebar({
       {!collapsed && (
         <div className="p-4">
           <div className="rounded-xl border border-gray-200 bg-white p-4 text-sm shadow-sm">
-            
             <div className="flex items-center gap-2 mb-2">
               <LifeBuoy className="w-4 h-4 text-primary" />
-              <span className="font-medium text-gray-800">
-                Need help?
-              </span>
+              <span className="font-medium text-gray-800">Need help?</span>
             </div>
 
             <p className="text-gray-600 text-xs mb-3">
