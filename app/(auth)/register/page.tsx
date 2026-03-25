@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, Lock, Mail, Building2, User } from "lucide-react";
+import { toast } from "sonner";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,8 +24,10 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import PasswordStrength from "@/components/auth/PasswordStrength";
+import { ApiClientError } from "@/lib/api-client";
 import { getPasswordStrength } from "@/lib/passwordStrength";
 import { registerSchema } from "@/lib/validations/auth";
+import { useAuthStore } from "@/stores/auth-store";
 
 const registerFormSchema = registerSchema
   .extend({
@@ -41,6 +45,10 @@ const registerFormSchema = registerSchema
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const registerAuth = useAuthStore((state) => state.register);
+  const isLoading = useAuthStore((state) => state.isLoading);
+
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
     mode: "onChange",
@@ -54,7 +62,6 @@ export default function RegisterPage() {
     },
   });
 
-  const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [strength, setStrength] = useState<"weak" | "medium" | "strong">("weak");
 
@@ -65,12 +72,28 @@ export default function RegisterPage() {
   };
 
   const onSubmit = async (data: RegisterFormValues) => {
-    setLoading(true);
-    void data;
+    try {
+      await registerAuth({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
 
-    await new Promise((resolve) => setTimeout(resolve, 1200));
+      toast.success("Account created successfully");
+      router.push("/login");
+    } catch (error) {
+      if (error instanceof ApiClientError) {
+        if (error.code === "SERVER_ERROR") {
+          toast.error("Server error. Please try again shortly.");
+          return;
+        }
 
-    setLoading(false);
+        toast.error(error.message || "Unable to create account. Please try again.");
+        return;
+      }
+
+      toast.error("Unable to create account. Please try again.");
+    }
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -267,10 +290,10 @@ export default function RegisterPage() {
           {/* Submit */}
           <Button
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
             className="w-full h-11 text-sm font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            {loading ? (
+            {isLoading ? (
               <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
             ) : (
               "Create account"

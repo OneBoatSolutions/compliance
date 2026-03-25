@@ -1,8 +1,9 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import MobileSidebar from "./mobile-sidebar";
 import { HelpCircle, Bell, ShieldCheck } from "lucide-react";
+import { toast } from "sonner";
 
 import {
   DropdownMenu,
@@ -10,21 +11,38 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { useAuthStore } from "@/stores/auth-store";
 
-export default function Header({ items = [] }: any) {
+interface HeaderItem {
+  label: string;
+  href: string;
+}
+
+interface HeaderProps {
+  items?: HeaderItem[];
+}
+
+export default function Header({ items = [] }: HeaderProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const logout = useAuthStore((state) => state.logout);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push("/login");
+    } catch {
+      toast.error("Unable to log out. Please try again.");
+    }
+  };
 
   // Remove Settings from header
-  const headerItems = items.filter(
-    (item: any) => item.label !== "Settings"
-  );
+  const headerItems = items.filter((item) => item.label !== "Settings");
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 px-6 flex items-center justify-between bg-white border-b border-gray-200">
-
       {/*  LEFT */}
       <div className="flex items-center gap-6">
-        
         <MobileSidebar items={items} />
 
         {/* Logo (desktop only) */}
@@ -33,15 +51,13 @@ export default function Header({ items = [] }: any) {
             <ShieldCheck className="w-5 h-5" />
           </div>
 
-          <span className="font-semibold text-base">
-            Cipherion
-          </span>
+          <span className="font-semibold text-base">Cipherion</span>
         </div>
       </div>
 
       {/*  CENTER NAV */}
       <nav className="hidden md:flex items-center gap-8">
-        {headerItems.map((item: any) => {
+        {headerItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
 
           return (
@@ -62,7 +78,14 @@ export default function Header({ items = [] }: any) {
 
       {/*  RIGHT */}
       <div className="flex items-center gap-4">
-        
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="hidden md:inline-flex items-center rounded-md border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:border-primary hover:text-primary"
+        >
+          Logout
+        </button>
+
         {/* Help */}
         <button className="text-gray-600 hover:text-primary hover:scale-110 transition-all duration-200">
           <HelpCircle className="w-5 h-5" />
@@ -84,7 +107,7 @@ export default function Header({ items = [] }: any) {
 
           <DropdownMenuContent align="end" className="w-40">
             <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem className="text-destructive" onClick={handleLogout}>
               Logout
             </DropdownMenuItem>
           </DropdownMenuContent>
