@@ -3,6 +3,7 @@ import { Inter, Roboto_Mono } from "next/font/google"; // valid Google Fonts
 import "./globals.css";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Toaster } from "sonner";
+import { AuthProvider } from "@/components/providers/auth-provider";
 // Replace Geist with Inter
 const inter = Inter({
   variable: "--font-inter",
@@ -19,13 +20,12 @@ const robotoMono = Roboto_Mono({
 export const metadata: Metadata = {
   title: "Compliance",
   description: "Compliance Dashboard",
- icons: [],
+  icons: [],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-   <html lang="en" suppressHydrationWarning>
-    
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${robotoMono.variable} font-sans antialiased bg-background text-foreground`}
       >
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         />
         <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
+          <AuthProvider>{children}</AuthProvider>
           <Toaster richColors position="top-right" />
         </NextThemesProvider>
       </body>
