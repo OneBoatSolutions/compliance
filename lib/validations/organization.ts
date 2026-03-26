@@ -22,14 +22,22 @@ const regionsEnum = z.enum([
   "Other",
 ]);
 
-export const createOrganizationSchema = z.object({
-  productName: z.string().trim().min(1).max(100),
-  description: z.string().trim().min(1).max(500),
-  services: z.string().trim().min(1).max(300),
-  targetCustomers: z.string().trim().min(1).max(200),
-  problemSolved: z.string().trim().min(1).max(300),
-  dataHandled: z.array(dataHandledEnum).min(1),
-  regions: z.array(regionsEnum).min(1),
-});
+export const createOrganizationSchema = z
+  .object({
+    productName: z.string().trim().min(1).max(100),
+    description: z.string().trim().min(1).max(500),
+    services: z.string().trim().min(1).max(300),
+    targetCustomers: z.string().trim().min(1).max(200),
+    problemSolved: z.string().trim().min(1).max(300),
+    dataHandled: z.array(dataHandledEnum).min(1),
+    regions: z.array(regionsEnum).min(1),
+  })
+  .strict();
 
 export type CreateOrganizationInput = z.infer<typeof createOrganizationSchema>;
+
+export const updateOrganizationSchema = createOrganizationSchema
+  .partial()
+  .refine((value) => Object.keys(value).length > 0, {
+    message: "At least one field must be provided",
+  });
