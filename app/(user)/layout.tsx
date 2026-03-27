@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { LayoutDashboard, ClipboardList, FileText, Settings } from "lucide-react";
+/* eslint-disable @typescript-eslint/no-require-imports */
 
-import Header from "@/components/layout/header";
 import Sidebar from "@/components/layout/sidebar";
+import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 
 interface LayoutProps {
