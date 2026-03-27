@@ -1,4 +1,6 @@
 "use client";
+// app/(admin)/layout.tsx
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 
 import { useState } from "react";
 import Sidebar from "@/components/layout/sidebar";

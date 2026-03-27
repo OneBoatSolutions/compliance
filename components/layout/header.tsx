@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
@@ -51,7 +52,7 @@ export default function Header({ items = [] }: HeaderProps) {
             <ShieldCheck className="w-5 h-5" />
           </div>
 
-          <span className="font-semibold text-base">Cipherion</span>
+          <span className="font-semibold text-black">Cipherion</span>
         </div>
       </div>
 
