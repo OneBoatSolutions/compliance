@@ -12,7 +12,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky install",
-    "test": "vitest"
+    "test": "vitest",
+    "test:perf:db": "tsx scripts/perf/check-nfr.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
