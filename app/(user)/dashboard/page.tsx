@@ -1,5 +1,5 @@
-import EmptyDashboard from "./components/empty-dashboard";
+import ActiveDashboard from "./components/active-dashboard";
 
 export default function DashboardPage() {
-  return <EmptyDashboard />;
+  return <ActiveDashboard />;
 }

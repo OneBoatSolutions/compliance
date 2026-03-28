@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores/auth-store";
 import {
   ShieldCheck,
   ListChecks,
@@ -18,58 +19,63 @@ function EmptyState() {
 
   return (
     <section className="mb-12">
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-12 text-center flex flex-col items-center">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-xl shadow-gray-200/50 p-12 text-center flex flex-col items-center">
         {/* Icon */}
-        <div className="w-20 h-20 bg-[#6d18ff]/10 rounded-full flex items-center justify-center mb-6">
+        <div className="w-20 h-20 bg-[#6d18ff]/10 rounded-full flex items-center justify-center mb-6 text-[#6d18ff]">
           <ListChecks className="w-10 h-10 text-purple-600" />
         </div>
 
         {/* Text */}
-        <h2 className="text-2xl font-semibold text-gray-900 mb-3">No assessments yet</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-3">No assessments yet</h2>
 
-        <p className="text-gray-600 max-w-md mb-8">
-          Create your first compliance assessment to discover which regulatory frameworks apply to
-          your business and start tracking your compliance readiness.
+        <p className="text-slate-500 max-w-md mb-8">
+          Start your compliance journey by creating your first assessment. We&apos;ll guide you
+          through selecting a framework and connecting your infrastructure.
         </p>
 
         {/* CTA */}
         <button
           onClick={() => router.push("/onboarding")}
-          className="h-[52px] px-8 bg-[#6d18ff] hover:bg-[#5412cc] text-white rounded-lg font-semibold flex items-center gap-2 shadow-lg transition"
+          className="h-[52px] px-8 bg-[#6d18ff] hover:bg-[#5412cc] text-white rounded-lg font-bold flex items-center gap-2 shadow-lg shadow-[#6d18ff]/20 transition-transform active:scale-95"
         >
           Create Your First Assessment
-          <MoveRight className="w-10 h-7" />
+          <MoveRight className="w-5 h-5" />
         </button>
 
         {/* Info */}
-        <div className="mt-4 text-gray-500 text-sm font-semibold flex items-center gap-2">
-          <Clock4 className="w-5 h-5 " />
-          TAKES ONLY 5 MINUTES
+        <div className="mt-4 flex items-center justify-center gap-2 text-slate-400">
+          <Clock4 className="w-4 h-4" />
+          <span className="text-xs uppercase tracking-wider font-semibold">
+            Takes only 5 minutes
+          </span>
         </div>
       </div>
     </section>
   );
 }
 function HeroSection() {
+  const userName = useAuthStore((state) => state.user?.name?.trim());
+  const displayName = userName || "Sarah";
+
   return (
-    <section className="mb-8 bg-linear-to-br from-[#e9ddff] to-white p-8 md:p-12 rounded-xl border border-[#6d18ff]/10 shadow-sm">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+    <section className="mb-8 relative overflow-hidden bg-gradient-to-br from-[#f1eaff] to-white p-8 md:p-12 rounded-xl border border-[#6d18ff]/10 shadow-sm">
+      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
         {/* Text */}
-        <div className="max-w-xl">
-          <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-            Welcome to Cipherion! 👋
+        <div className="max-w-xl text-center md:text-left">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Welcome to Cipherion, {displayName}! 👋
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-slate-600 text-lg leading-relaxed">
             Automate your compliance journey and stay audit-ready with ease. We help you simplify
             framework management so you can focus on building your business.
           </p>
         </div>
 
         {/* Illustration */}
-        <div className="relative w-full max-w-[320px] aspect-square bg-[#6d18ff]/10 rounded-full flex items-center justify-center">
+        <div className="relative w-full max-w-[320px] aspect-square bg-[#6d18ff]/5 rounded-full border border-[#6d18ff]/10 flex items-center justify-center">
           {/* Glow effect */}
           <div className="absolute inset-0 rounded-full bg-[#6d18ff]/10 animate-pulse"></div>
-          <ShieldCheck className="w-25 h-25 text-purple-600" />
+          <ShieldCheck className="w-28 h-28 text-[#6d18ff]/40" />
         </div>
       </div>
     </section>
@@ -78,43 +84,43 @@ function HeroSection() {
 function HowItWorks() {
   const steps = [
     {
-      title: "Describe Your Business",
-      desc: "Tell us about your product, services, and data handling",
-      icon: <File />,
+      title: "Select a framework",
+      desc: "Choose from industry standards like SOC2, ISO 27001, HIPAA, or PCI-DSS to begin.",
+      icon: <File className="w-5 h-5 text-[#6d18ff]/40" />,
     },
     {
-      title: "AI Analyzes Requirements",
-      desc: "Our AI suggests applicable compliance frameworks for you",
-      icon: <Sparkles />,
+      title: "Connect your stack",
+      desc: "Instantly integrate with cloud providers like AWS, Google Cloud, or Azure for auto-evidence.",
+      icon: <Sparkles className="w-5 h-5 text-[#6d18ff]/40" />,
     },
     {
-      title: "Complete Assessment",
-      desc: "Work through controls and track your compliance progress",
-      icon: <SquareCheckBig />,
+      title: "Monitor in real-time",
+      desc: "Track your compliance health 24/7 with our automated live evidence collection dashboard.",
+      icon: <SquareCheckBig className="w-5 h-5 text-[#6d18ff]/40" />,
     },
   ];
 
   return (
     <section className="mb-16">
-      <h3 className="text-center text-sm font-semibold tracking-widest text-gray-400 mb-8">
+      <h3 className="text-center text-sm font-bold uppercase tracking-[0.2em] text-slate-400 mb-8">
         HOW IT WORKS
       </h3>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {steps.map((step, i) => (
           <div
             key={i}
-            className="bg-white p-6 rounded-lg border hover:border-[#6d18ff]/30 transition"
+            className="bg-white p-6 rounded-lg border border-slate-100 hover:border-[#6d18ff]/30 transition-all"
           >
             <div className="flex justify-between mb-4">
               <div className="w-8 h-8 bg-[#6d18ff] text-white flex items-center justify-center rounded-full text-sm font-bold">
                 {i + 1}
               </div>
-              <span className="material-symbols-outlined text-[#6d18ff]/40">{step.icon}</span>
+              {step.icon}
             </div>
 
-            <h4 className="font-semibold text-gray-900 mb-2">{step.title}</h4>
-            <p className="text-sm text-gray-600">{step.desc}</p>
+            <h4 className="font-bold text-gray-900 mb-2">{step.title}</h4>
+            <p className="text-sm text-slate-500 leading-relaxed">{step.desc}</p>
           </div>
         ))}
       </div>
@@ -123,28 +129,50 @@ function HowItWorks() {
 }
 function HelpResources() {
   const items = [
-    { title: "Documentation", icon: <FileText /> },
-    { title: "Tutorials", icon: <MonitorPlay /> },
-    { title: "Support", icon: <Headset /> },
-    { title: "Book a Demo", icon: <Play /> },
+    {
+      title: "Documentation",
+      icon: (
+        <FileText className="w-5 h-5 text-slate-400 group-hover:text-[#6d18ff] transition-colors" />
+      ),
+    },
+    {
+      title: "Tutorials",
+      icon: (
+        <MonitorPlay className="w-5 h-5 text-slate-400 group-hover:text-[#6d18ff] transition-colors" />
+      ),
+    },
+    {
+      title: "Support",
+      icon: (
+        <Headset className="w-5 h-5 text-slate-400 group-hover:text-[#6d18ff] transition-colors" />
+      ),
+    },
+    {
+      title: "Book a Demo",
+      icon: (
+        <Play className="w-5 h-5 text-slate-400 group-hover:text-[#6d18ff] transition-colors" />
+      ),
+    },
   ];
 
   return (
-    <section className="border-t border-gray-200 pt-10">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Need guidance?</h3>
-        <span className="text-[#6d18ff] text-sm cursor-pointer">View all resources</span>
+    <section className="border-t border-slate-200 pt-12">
+      <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+        <h3 className="text-xl font-bold text-gray-900">Need guidance?</h3>
+        <span className="text-[#6d18ff] text-sm font-semibold cursor-pointer mt-2 md:mt-0">
+          View all resources
+        </span>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {items.map((item, i) => (
           <div
             key={i}
-            className="p-4 bg-white rounded-lg hover:bg-[#6d18ff]/5 transition cursor-pointer"
+            className="group p-4 bg-slate-50 rounded-lg border border-transparent hover:bg-[#6d18ff]/5 hover:border-[#6d18ff]/20 transition-all cursor-pointer"
           >
-            <span className="material-symbols-outlined text-gray-400 mb-2">{item.icon}</span>
+            {item.icon}
 
-            <p className="text-sm mt-2 font-semibold text-gray-900">{item.title}</p>
+            <p className="text-sm mt-2 font-bold text-gray-900">{item.title}</p>
           </div>
         ))}
       </div>
@@ -154,7 +182,7 @@ function HelpResources() {
 export default function EmptyDashboard() {
   return (
     <div className="flex flex-col bg-background min-h-screen">
-      <main className="flex-1 pt-20 px-6 lg:p-10">
+      <main className="flex-1 pt-24 pb-16 px-6 w-full max-w-6xl mx-auto">
         <HeroSection />
         <EmptyState />
         <HowItWorks />
