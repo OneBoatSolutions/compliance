@@ -20,6 +20,19 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
 
   const organization = await prisma.organization.findUnique({
     where: { id },
+    select: {
+      id: true,
+      userId: true,
+      productName: true,
+      description: true,
+      services: true,
+      targetCustomers: true,
+      problemSolved: true,
+      dataHandled: true,
+      regions: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 
   if (!organization) {
@@ -39,6 +52,10 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
 
   const organization = await prisma.organization.findUnique({
     where: { id },
+    select: {
+      id: true,
+      userId: true,
+    },
   });
 
   if (!organization) {

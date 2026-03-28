@@ -178,6 +178,7 @@ model Assessment {
   @@index([organizationId])
   @@index([status])
   @@index([createdAt])
+  @@index([userId, createdAt(sort: Desc)], map: "assessments_userId_createdAt_desc_idx")
   @@map("assessments")
 }
 
@@ -202,6 +203,7 @@ model AssessmentItem {
   @@index([assessmentId])
   @@index([controlId])
   @@index([status])
+  @@index([assessmentId, status], map: "assessment_items_assessmentId_status_idx")
   @@map("assessment_items")
 }
 
