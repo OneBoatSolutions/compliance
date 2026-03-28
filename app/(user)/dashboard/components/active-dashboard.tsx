@@ -17,6 +17,7 @@ import {
 import { ComplianceHealthDonut } from "@/components/ui/compliance-health-donut";
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { FrameworkBadge, type FrameworkVariant } from "@/components/ui/framework-badge";
+import { StackedMiniBar, type StackedMiniBarSegment } from "@/components/ui/stacked-mini-bar";
 
 type TrendDirection = "up" | "down" | "neutral";
 type Urgency = "high" | "medium" | "low";
@@ -43,6 +44,9 @@ interface AssessmentItem {
   completion: number;
   lastUpdated: string;
   owner: string;
+  segments: StackedMiniBarSegment[];
+  completedTasks: number;
+  totalTasks: number;
 }
 
 interface PriorityRiskItem {
@@ -95,6 +99,13 @@ const activeAssessments: AssessmentItem[] = [
     completion: 92,
     lastUpdated: "2 hours ago",
     owner: "Risk Team",
+    segments: [
+      { label: "Technical", value: 48, color: "#6d18ff" },
+      { label: "Admin", value: 32, color: "#8b5cf6" },
+      { label: "Legal", value: 20, color: "#c4b5fd" },
+    ],
+    completedTasks: 99,
+    totalTasks: 108,
   },
   {
     name: "Cloud Security Baseline Audit",
@@ -102,6 +113,13 @@ const activeAssessments: AssessmentItem[] = [
     completion: 81,
     lastUpdated: "Yesterday",
     owner: "Platform Ops",
+    segments: [
+      { label: "Network", value: 41, color: "#6d18ff" },
+      { label: "Policy", value: 29, color: "#8b5cf6" },
+      { label: "Ops", value: 30, color: "#c4b5fd" },
+    ],
+    completedTasks: 170,
+    totalTasks: 210,
   },
   {
     name: "PHI Data Handling Controls",
@@ -109,6 +127,13 @@ const activeAssessments: AssessmentItem[] = [
     completion: 74,
     lastUpdated: "Today, 08:40 AM",
     owner: "Security Office",
+    segments: [
+      { label: "Legal", value: 38, color: "#6d18ff" },
+      { label: "Ops", value: 36, color: "#8b5cf6" },
+      { label: "Training", value: 26, color: "#c4b5fd" },
+    ],
+    completedTasks: 154,
+    totalTasks: 208,
   },
 ];
 
@@ -293,6 +318,19 @@ export default function ActiveDashboard() {
                           <Clock3 className="size-3.5" />
                           Last Updated: {assessment.lastUpdated}
                         </p>
+
+                        <div className="mt-3 max-w-[280px]">
+                          <StackedMiniBar
+                            segments={assessment.segments}
+                            height={7}
+                            showLegend={false}
+                            className="w-full"
+                            barClassName="bg-slate-200"
+                          />
+                          <p className="mt-2 text-[11px] font-semibold text-slate-600">
+                            {assessment.completedTasks}/{assessment.totalTasks} tasks completed
+                          </p>
+                        </div>
                       </div>
 
                       <CircularProgress
