@@ -1,4 +1,5 @@
 # Product Requirements Document (PRD)
+
 ## AI-Assured Compliance Dashboard
 
 **Version:** 1.0  
@@ -40,6 +41,7 @@ Build a comprehensive, AI-powered compliance management platform that helps orga
 ### 1.2 Product Mission
 
 Democratize compliance management by providing an intelligent, self-service platform that:
+
 - Automatically identifies applicable regulatory frameworks
 - Guides organizations through structured compliance assessments
 - Generates actionable remediation plans using AI
@@ -48,12 +50,14 @@ Democratize compliance management by providing an intelligent, self-service plat
 ### 1.3 Strategic Alignment
 
 **Market Opportunity:**
+
 - Growing regulatory complexity (250+ compliance frameworks globally)
 - SMBs spend 25% of their budget on compliance-related activities
 - 73% of organizations struggle to understand which regulations apply to them
 - Compliance automation market expected to reach $45B by 2027
 
 **Competitive Advantage:**
+
 - AI-driven framework discovery (unique differentiator)
 - No-code compliance assessment platform
 - Integrated remediation guidance
@@ -75,19 +79,19 @@ The AI-Assured Compliance Dashboard is a web-based SaaS platform that enables or
 
 ### 2.2 Key Features
 
-| Feature | Description | Priority |
-|---------|-------------|----------|
-| AI Framework Mapping | Intelligent matching of business profile to compliance frameworks | P0 (Must Have) |
-| Assessment Engine | Structured checklist-based compliance evaluation | P0 (Must Have) |
-| Real-time Scoring | Dynamic compliance score calculation | P0 (Must Have) |
-| AI Remediation | Automated remediation plan generation | P0 (Must Have) |
-| Report Generation | PDF/Web compliance readiness reports | P0 (Must Have) |
-| Framework Admin | CRUD operations for compliance frameworks (Admin) | P0 (Must Have) |
-| User Management | Role-based access control (Admin/User) | P0 (Must Have) |
-| Multi-Framework Assessment | Assess against multiple frameworks simultaneously | P1 (Should Have) |
-| Evidence Templates | Pre-built evidence requirement templates | P1 (Should Have) |
-| Audit Trail | Complete history of assessment changes | P2 (Nice to Have) |
-| Collaboration | Comments and task assignment | P2 (Nice to Have) |
+| Feature                    | Description                                                       | Priority          |
+| -------------------------- | ----------------------------------------------------------------- | ----------------- |
+| AI Framework Mapping       | Intelligent matching of business profile to compliance frameworks | P0 (Must Have)    |
+| Assessment Engine          | Structured checklist-based compliance evaluation                  | P0 (Must Have)    |
+| Real-time Scoring          | Dynamic compliance score calculation                              | P0 (Must Have)    |
+| AI Remediation             | Automated remediation plan generation                             | P0 (Must Have)    |
+| Report Generation          | PDF/Web compliance readiness reports                              | P0 (Must Have)    |
+| Framework Admin            | CRUD operations for compliance frameworks (Admin)                 | P0 (Must Have)    |
+| User Management            | Role-based access control (Admin/User)                            | P0 (Must Have)    |
+| Multi-Framework Assessment | Assess against multiple frameworks simultaneously                 | P1 (Should Have)  |
+| Evidence Templates         | Pre-built evidence requirement templates                          | P1 (Should Have)  |
+| Audit Trail                | Complete history of assessment changes                            | P2 (Nice to Have) |
+| Collaboration              | Comments and task assignment                                      | P2 (Nice to Have) |
 
 ### 2.3 What This Product Is NOT
 
@@ -133,6 +137,7 @@ The AI-Assured Compliance Dashboard is a web-based SaaS platform that enables or
 ### 3.2 Market Gaps
 
 Current solutions are either:
+
 - **Too Complex** - Enterprise GRC platforms (too expensive, require dedicated teams)
 - **Too Generic** - Spreadsheet templates (no intelligence, manual)
 - **Too Narrow** - Single-framework tools (don't scale)
@@ -151,6 +156,7 @@ Current solutions are either:
 ### 4.1 Primary Target Market
 
 **Industry Segments:**
+
 1. **SaaS/Technology Companies** (30-500 employees)
    - Handling customer data
    - Expanding to regulated markets (EU, healthcare)
@@ -176,40 +182,43 @@ Current solutions are either:
 
 ### 4.3 User Roles
 
-| Role | Description | Percentage of Users |
-|------|-------------|---------------------|
-| Compliance Manager | Primary user, runs assessments | 40% |
-| IT/Security Lead | Technical implementation | 30% |
-| Operations Manager | Process owner | 15% |
-| Executive/CFO | Report consumer | 10% |
-| Admin (Internal) | Platform administrator | 5% |
+| Role               | Description                    | Percentage of Users |
+| ------------------ | ------------------------------ | ------------------- |
+| Compliance Manager | Primary user, runs assessments | 40%                 |
+| IT/Security Lead   | Technical implementation       | 30%                 |
+| Operations Manager | Process owner                  | 15%                 |
+| Executive/CFO      | Report consumer                | 10%                 |
+| Admin (Internal)   | Platform administrator         | 5%                  |
 
 ---
-
 
 ## 5. User Personas
 
 ### Persona 1: Sarah - Compliance Manager
 
 **Demographics:**
+
 - Age: 32
 - Title: Compliance Manager
 - Company: SaaS startup (150 employees)
 - Location: San Francisco, CA
 
 **Background:**
+
 - MBA, 5 years in operations/compliance
 - Responsible for SOC 2, GDPR compliance
 - Reports to CFO/COO
 - Works with IT and Security teams
 
 **Goals:**
+
 - Pass SOC 2 Type II audit this year
 - Demonstrate GDPR compliance to EU customers
 - Reduce time spent on compliance admin work
 - Build scalable compliance processes
 
 **Pain Points:**
+
 - Drowning in spreadsheets and documentation
 - Doesn't have legal/technical background
 - Uncertain about regulatory requirements
@@ -217,6 +226,7 @@ Current solutions are either:
 - Manual report creation takes weeks
 
 **Technology Comfort:**
+
 - High - comfortable with SaaS tools
 - Uses: Jira, Confluence, Google Workspace
 - Prefers: Clean UI, automation, integrations
@@ -229,24 +239,28 @@ Current solutions are either:
 ### Persona 2: Mike - IT Security Lead
 
 **Demographics:**
+
 - Age: 38
 - Title: Director of IT Security
 - Company: Healthcare startup (80 employees)
 - Location: Boston, MA
 
 **Background:**
+
 - Computer Science degree, CISSP certified
 - 12 years in IT/Security
 - Responsible for HIPAA compliance
 - Manages team of 5 engineers
 
 **Goals:**
+
 - Achieve HIPAA compliance certification
 - Implement technical security controls
 - Pass security audits
 - Reduce security incidents
 
 **Pain Points:**
+
 - Legal/regulatory text is confusing
 - Unsure which technical controls map to HIPAA
 - Limited budget for consulting
@@ -254,6 +268,7 @@ Current solutions are either:
 - Compliance feels like "checkbox exercise"
 
 **Technology Comfort:**
+
 - Very High - technical background
 - Uses: AWS, Docker, Terraform, GitHub
 - Prefers: API access, automation, integrations
@@ -266,24 +281,28 @@ Current solutions are either:
 ### Persona 3: Rachel - Operations Manager
 
 **Demographics:**
+
 - Age: 45
 - Title: VP of Operations
 - Company: E-commerce retailer (200 employees)
 - Location: Austin, TX
 
 **Background:**
+
 - Business Administration degree
 - 15 years in operations management
 - Responsible for PCI-DSS compliance
 - Works with payment processors
 
 **Goals:**
+
 - Maintain PCI-DSS certification
 - Streamline payment processing operations
 - Reduce compliance costs
 - Ensure business continuity
 
 **Pain Points:**
+
 - Compliance feels overwhelming
 - Annual audits are stressful
 - Hard to keep track of all requirements
@@ -291,6 +310,7 @@ Current solutions are either:
 - Difficult to get executive budget approval
 
 **Technology Comfort:**
+
 - Medium - comfortable with common tools
 - Uses: Excel, Shopify, QuickBooks
 - Prefers: Simple, guided workflows
@@ -303,24 +323,28 @@ Current solutions are either:
 ### Persona 4: David - CFO/Executive
 
 **Demographics:**
+
 - Age: 50
 - Title: Chief Financial Officer
 - Company: FinTech startup (120 employees)
 - Location: New York, NY
 
 **Background:**
+
 - CPA, MBA
 - 20 years in finance/executive roles
 - Board member responsibilities
 - Oversees compliance budget
 
 **Goals:**
+
 - Ensure regulatory compliance (avoid fines)
 - Demonstrate due diligence to investors/board
 - Optimize compliance spend
 - Enable business growth into regulated markets
 
 **Pain Points:**
+
 - Limited visibility into compliance status
 - Concerned about regulatory risk
 - Doesn't understand technical details
@@ -328,6 +352,7 @@ Current solutions are either:
 - Compliance feels like cost center
 
 **Technology Comfort:**
+
 - Medium - uses business tools
 - Uses: Excel, Salesforce, Tableau
 - Prefers: Dashboards, summaries, ROI metrics
@@ -340,30 +365,35 @@ Current solutions are either:
 ### Persona 5: Alex - Admin (Internal - Cipherion)
 
 **Demographics:**
+
 - Age: 28
 - Title: Compliance Content Manager
 - Company: Cipherion (product company)
 - Location: Remote
 
 **Background:**
+
 - Legal background, paralegal experience
 - Subject matter expert in compliance frameworks
 - Maintains regulatory content
 - Works with legal/compliance consultants
 
 **Goals:**
+
 - Keep framework content up-to-date
 - Ensure accuracy of control mappings
 - Support customer success
 - Scale content operations
 
 **Pain Points:**
+
 - Regulations change frequently
 - Manual content updates are time-consuming
 - Need version control for frameworks
 - Customer questions about framework accuracy
 
 **Technology Comfort:**
+
 - High - comfortable with CMS systems
 - Uses: Notion, Airtable, GitHub
 - Prefers: Structured workflows, bulk operations
@@ -378,11 +408,13 @@ Current solutions are either:
 ### 6.1 Epic 1: Organization Onboarding & Framework Discovery
 
 #### User Story 1.1: Business Profile Creation
+
 **As a** Compliance Manager  
 **I want to** input my organization's business details  
 **So that** the system can identify which compliance frameworks apply to us
 
 **Acceptance Criteria:**
+
 - [ ] Form accepts: product name, description, services, target customers, problem solved
 - [ ] Form accepts data types: checkboxes for PII, PHI, Financial, Payment, Biometric, etc.
 - [ ] Form accepts regions: multi-select for US, EU, UK, Canada, APAC, etc.
@@ -391,6 +423,7 @@ Current solutions are either:
 - [ ] Can edit profile after submission
 
 **User Flow:**
+
 ```
 1. User clicks "Start Assessment"
 2. System displays onboarding form (Step 1/2)
@@ -414,11 +447,13 @@ Current solutions are either:
 ---
 
 #### User Story 1.2: AI Framework Suggestions
+
 **As a** Compliance Manager  
 **I want to** receive AI-powered suggestions for applicable frameworks  
 **So that** I don't miss any regulatory requirements
 
 **Acceptance Criteria:**
+
 - [ ] AI processes business profile within 10 seconds
 - [ ] AI returns ranked list of frameworks (max 8)
 - [ ] Each suggestion includes:
@@ -432,22 +467,23 @@ Current solutions are either:
 - [ ] System explains why each framework was suggested
 
 **User Flow:**
+
 ```
 1. System shows "Analyzing your business..." (loading state)
 2. AI returns suggestions:
-   
+
    ✓ HIPAA (95% confidence)
-   "Your app processes health data for US consumers. HIPAA applies to 
+   "Your app processes health data for US consumers. HIPAA applies to
    apps handling protected health information."
-   
+
    ✓ GDPR (90% confidence)
-   "You operate in the EU and process personal data. GDPR is mandatory 
+   "You operate in the EU and process personal data. GDPR is mandatory
    for EU data processing."
-   
+
    ✓ PCI-DSS (85% confidence)
-   "You process payment card data for subscriptions. PCI-DSS compliance 
+   "You process payment card data for subscriptions. PCI-DSS compliance
    is required by payment processors."
-   
+
    ◯ SOC 2 (75% confidence)
    "As a SaaS provider, SOC 2 demonstrates security controls to customers."
 
@@ -462,11 +498,13 @@ Current solutions are either:
 ### 6.2 Epic 2: Compliance Assessment
 
 #### User Story 2.1: View Assessment Checklist
+
 **As a** Compliance Manager  
 **I want to** see a structured checklist of all required controls  
 **So that** I know exactly what needs to be evaluated
 
 **Acceptance Criteria:**
+
 - [ ] Checklist displays all controls from selected frameworks
 - [ ] Controls are grouped by framework
 - [ ] Each control shows:
@@ -484,12 +522,13 @@ Current solutions are either:
 - [ ] Checklist is sortable
 
 **User Flow:**
+
 ```
 1. User opens assessment
 2. System displays dashboard:
-   
+
    Overall Progress: 35% (42/120 items completed)
-   
+
    Frameworks:
    - HIPAA: 40% (20/50 items)
    - GDPR: 30% (15/50 items)
@@ -510,11 +549,13 @@ Current solutions are either:
 ---
 
 #### User Story 2.2: Update Control Status
+
 **As an** IT Security Lead  
 **I want to** mark controls as compliant/non-compliant  
 **So that** we can track our compliance progress
 
 **Acceptance Criteria:**
+
 - [ ] User can set status to:
   - Not Started (default)
   - Compliant
@@ -529,18 +570,19 @@ Current solutions are either:
 - [ ] UI shows visual feedback (loading, success)
 
 **User Flow:**
+
 ```
 1. User clicks control "HIPAA-164.312(a)(1) - Access Control"
 2. System displays control details panel:
-   
+
    Control: Access Control
-   Description: Implement technical policies and procedures for 
-   electronic information systems that maintain electronic protected 
+   Description: Implement technical policies and procedures for
+   electronic information systems that maintain electronic protected
    health information to allow access only to authorized persons.
-   
+
    Current Status: Not Started
    Severity: High
-   
+
 3. User clicks status dropdown
 4. User selects "Compliant"
 5. User adds comment: "Implemented role-based access control using Auth0"
@@ -552,12 +594,14 @@ Current solutions are either:
 
 ---
 
-#### User Story 2.3: Upload Evidence  (Future Consideration)
+#### User Story 2.3: Upload Evidence (Future Consideration)
+
 **As a** Compliance Manager  
 **I want to** attach evidence documents to controls  
 **So that** we have proof of compliance for auditors
 
 **Acceptance Criteria:**
+
 - [ ] User can upload multiple files per control
 - [ ] Supported file types: PDF, DOCX, XLSX, PNG, JPG, CSV
 - [ ] Max file size: 10MB per file
@@ -569,6 +613,7 @@ Current solutions are either:
 - [ ] System generates secure download links
 
 **User Flow:**
+
 ```
 1. User clicks "Add Evidence" on control
 2. System displays upload modal
@@ -579,7 +624,7 @@ Current solutions are either:
 7. System uploads to S3
 8. System saves evidence record
 9. System displays evidence in control:
-   
+
    Evidence:
    📄 access-control-policy.pdf
       Uploaded by: Sarah Chen
@@ -593,11 +638,13 @@ Current solutions are either:
 ### 6.3 Epic 3: AI Remediation
 
 #### User Story 3.1: Request Remediation Plan
+
 **As a** Compliance Manager  
 **I want to** get AI-generated remediation guidance for non-compliant controls  
 **So that** I know exactly how to fix compliance gaps
 
 **Acceptance Criteria:**
+
 - [ ] "Get Remediation Plan" button visible on non-compliant items
 - [ ] AI generates plan within 10 seconds
 - [ ] Plan includes:
@@ -611,6 +658,7 @@ Current solutions are either:
 - [ ] User can request regeneration
 
 **User Flow:**
+
 ```
 1. User identifies non-compliant control
 2. User clicks "Get Remediation Plan"
@@ -619,9 +667,9 @@ Current solutions are either:
 
    REMEDIATION PLAN
    Control: HIPAA-164.312(a)(1) - Access Control
-   
+
    PRIORITY ACTIONS:
-   
+
    1. Implement Role-Based Access Control (RBAC)
       Priority: HIGH
       Owner: IT Security Team
@@ -631,7 +679,7 @@ Current solutions are either:
       - Implement RBAC in application (recommend Auth0, Okta)
       - Document role matrix
       Estimated Effort: 40 hours
-   
+
    2. Enable Multi-Factor Authentication (MFA)
       Priority: HIGH
       Owner: IT Security Team
@@ -640,7 +688,7 @@ Current solutions are either:
       - Require MFA for administrative access
       - Configure MFA policies (TOTP, SMS, hardware token)
       Estimated Effort: 16 hours
-   
+
    3. Implement Access Logging
       Priority: MEDIUM
       Owner: DevOps Team
@@ -650,13 +698,13 @@ Current solutions are either:
       - Configure alerts for suspicious access patterns
       - Retain logs for 6+ years (HIPAA requirement)
       Estimated Effort: 24 hours
-   
+
    POLICY RECOMMENDATIONS:
    - Access Control Policy
    - Password Policy
    - MFA Policy
    - User Provisioning/Deprovisioning Procedures
-   
+
    TECHNICAL CONTROLS:
    - Identity Provider (Auth0, Okta, Azure AD)
    - Logging Platform (Datadog, Splunk, ELK)
@@ -672,11 +720,13 @@ Current solutions are either:
 ### 6.4 Epic 4: Reporting
 
 #### User Story 4.1: Generate Compliance Report
+
 **As a** CFO  
 **I want to** generate a comprehensive compliance readiness report  
 **So that** I can share our compliance status with the board and auditors
 
 **Acceptance Criteria:**
+
 - [ ] "Generate Report" button enabled when assessment > 50% complete
 - [ ] Report generation completes within 5 seconds
 - [ ] Report includes:
@@ -696,6 +746,7 @@ Current solutions are either:
 - [ ] Report is shareable via link
 
 **User Flow:**
+
 ```
 1. User completes assessment (80% complete)
 2. User clicks "Generate Report"
@@ -708,33 +759,33 @@ Current solutions are either:
    │   HealthTrack App                           │
    │   Generated: February 12, 2026              │
    └─────────────────────────────────────────────┘
-   
+
    EXECUTIVE SUMMARY
-   
+
    Overall Compliance Score: 72%
    Compliance Status: Partially Compliant
    Critical Risks: 2
-   
-   This report summarizes the compliance readiness of 
+
+   This report summarizes the compliance readiness of
    HealthTrack App across HIPAA, GDPR, and PCI-DSS frameworks...
-   
+
    FRAMEWORK SCORES
    - HIPAA: 75% (38/50 controls compliant)
    - GDPR: 70% (35/50 controls compliant)
    - PCI-DSS: 65% (13/20 controls compliant)
-   
+
    RISK SUMMARY
    Total Gaps: 34 controls
    - Critical: 2 controls
    - High: 8 controls
    - Medium: 15 controls
    - Low: 9 controls
-   
+
    TOP PRIORITY REMEDIATIONS
    1. Implement encryption at rest (HIPAA-164.312(a)(2)(iv))
    2. Enable audit logging (GDPR Art. 30)
    3. Implement PCI cardholder data encryption (PCI-3.4)
-   
+
    [... detailed sections continue ...]
 
 6. System displays report preview
@@ -748,11 +799,13 @@ Current solutions are either:
 ### 6.5 Epic 5: Admin - Framework Management
 
 #### User Story 5.1: Add New Compliance Framework
+
 **As an** Admin  
 **I want to** add new compliance frameworks to the system  
 **So that** users can assess against the latest regulations
 
 **Acceptance Criteria:**
+
 - [ ] Admin can access "Framework Management" section
 - [ ] Admin can create new framework with:
   - Code (unique identifier)
@@ -770,6 +823,7 @@ Current solutions are either:
 - [ ] Version history is maintained
 
 **User Flow:**
+
 ```
 1. Admin navigates to "Admin → Frameworks"
 2. Admin clicks "Add Framework"
@@ -790,11 +844,13 @@ Current solutions are either:
 ---
 
 #### User Story 5.2: Add Controls to Framework
+
 **As an** Admin  
 **I want to** add individual controls to a compliance framework  
 **So that** users have a complete checklist to assess
 
 **Acceptance Criteria:**
+
 - [ ] Admin can add multiple controls to framework
 - [ ] Each control requires:
   - Control ID (unique within framework)
@@ -810,13 +866,14 @@ Current solutions are either:
 - [ ] Changes are versioned
 
 **User Flow:**
+
 ```
 1. Admin opens framework "CCPA"
 2. Admin clicks "Add Control"
 3. Admin fills form:
    - Control ID: CCPA-1798.100
    - Title: Right to Know
-   - Description: Consumers have the right to request information 
+   - Description: Consumers have the right to request information
      about personal data collected about them
    - Category: Consumer Rights
    - Severity: High
@@ -834,11 +891,13 @@ Current solutions are either:
 ### 7.1 Authentication & Authorization
 
 #### FR-AUTH-001: User Registration
+
 **Priority:** P0 (Must Have)
 
 **Description:** Users must be able to create accounts with email/password.
 
 **Requirements:**
+
 - System shall accept email and password during registration
 - System shall validate email format
 - System shall enforce password requirements:
@@ -853,6 +912,7 @@ Current solutions are either:
 - System shall create user with default role "USER"
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I am on the registration page
 When I enter valid email and password
@@ -865,11 +925,13 @@ And I can log in after verification
 ---
 
 #### FR-AUTH-002: User Login
+
 **Priority:** P0 (Must Have)
 
 **Description:** Users must be able to authenticate with email/password.
 
 **Requirements:**
+
 - System shall accept email and password
 - System shall validate credentials against database
 - System shall generate JWT session token (expires in 7 days)
@@ -878,6 +940,7 @@ And I can log in after verification
 - System shall log all authentication attempts
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I am on the login page
 When I enter valid credentials
@@ -889,25 +952,27 @@ And my session is maintained for 7 days
 ---
 
 #### FR-AUTH-003: Role-Based Access Control
+
 **Priority:** P0 (Must Have)
 
 **Description:** System must enforce role-based permissions.
 
 **Requirements:**
 
-| Action | Admin | User |
-|--------|-------|------|
-| View frameworks | ✓ | ✓ |
-| Create framework | ✓ | ✗ |
-| Edit framework | ✓ | ✗ |
-| Delete framework | ✓ | ✗ |
-| Create assessment | ✓ | ✓ |
-| Edit own assessment | ✓ | ✓ |
-| Edit others' assessment | ✓ | ✗ |
-| Generate report | ✓ | ✓ |
-| Manage users | ✓ | ✗ |
+| Action                  | Admin | User |
+| ----------------------- | ----- | ---- |
+| View frameworks         | ✓     | ✓    |
+| Create framework        | ✓     | ✗    |
+| Edit framework          | ✓     | ✗    |
+| Delete framework        | ✓     | ✗    |
+| Create assessment       | ✓     | ✓    |
+| Edit own assessment     | ✓     | ✓    |
+| Edit others' assessment | ✓     | ✗    |
+| Generate report         | ✓     | ✓    |
+| Manage users            | ✓     | ✗    |
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I am logged in as a User
 When I attempt to access admin routes
@@ -920,11 +985,13 @@ And I cannot perform admin actions
 ### 7.2 Organization Onboarding
 
 #### FR-ORG-001: Business Profile Input
+
 **Priority:** P0 (Must Have)
 
 **Description:** Users must be able to input organization details.
 
 **Requirements:**
+
 - System shall provide form with fields:
   - Product/Service name (required, max 100 chars)
   - Business description (required, max 500 chars)
@@ -954,6 +1021,7 @@ And I cannot perform admin actions
 - System shall allow editing after submission
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I am creating an organization profile
 When I fill all required fields
@@ -966,11 +1034,13 @@ And I proceed to framework suggestions
 ---
 
 #### FR-ORG-002: AI Framework Mapping
+
 **Priority:** P0 (Must Have)
 
 **Description:** System must use AI to suggest applicable frameworks.
 
 **Requirements:**
+
 - System shall send organization profile to AI service
 - System shall receive AI response within 10 seconds
 - AI response shall include:
@@ -990,6 +1060,7 @@ And I proceed to framework suggestions
 - System shall log AI interaction for audit
 
 **AI Prompt Template:**
+
 ```
 Analyze this organization and suggest applicable compliance frameworks:
 
@@ -1016,6 +1087,7 @@ Return JSON:
 ```
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I have submitted my organization profile
 When the AI analyzes my information
@@ -1028,11 +1100,13 @@ And suggestions are ranked by confidence
 ---
 
 #### FR-ORG-003: Framework Selection
+
 **Priority:** P0 (Must Have)
 
 **Description:** Users must be able to select/deselect suggested frameworks.
 
 **Requirements:**
+
 - System shall display AI-suggested frameworks as pre-selected
 - System shall allow user to deselect suggestions
 - System shall allow user to manually add frameworks (searchable dropdown)
@@ -1046,6 +1120,7 @@ And suggestions are ranked by confidence
 - System shall proceed to assessment creation
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I am viewing framework suggestions
 When I select HIPAA and GDPR
@@ -1060,11 +1135,13 @@ And I can proceed to assessment creation
 ### 7.3 Assessment Management
 
 #### FR-ASMT-001: Create Assessment
+
 **Priority:** P0 (Must Have)
 
 **Description:** System must create assessment instance from selected frameworks.
 
 **Requirements:**
+
 - System shall create Assessment record with:
   - Unique ID
   - User ID
@@ -1083,11 +1160,13 @@ And I can proceed to assessment creation
 - System shall send email notification to user
 
 **Business Rules:**
+
 - 1 organization can have multiple assessments
 - 1 assessment can include multiple frameworks
 - Each control creates 1 assessment item
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I have selected HIPAA and GDPR frameworks
 When I click "Create Assessment"
@@ -1100,11 +1179,13 @@ And I receive a confirmation email
 ---
 
 #### FR-ASMT-002: View Assessment Dashboard
+
 **Priority:** P0 (Must Have)
 
 **Description:** Users must see overview of assessment progress.
 
 **Requirements:**
+
 - System shall display:
   - Overall compliance score (0-100%)
   - Progress percentage (items completed / total items)
@@ -1120,6 +1201,7 @@ And I receive a confirmation email
 - System shall highlight critical gaps
 
 **Dashboard Layout:**
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  Assessment: HealthTrack Compliance                     │
@@ -1157,6 +1239,7 @@ And I receive a confirmation email
 ```
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I am viewing my assessment dashboard
 Then I see my overall compliance score
@@ -1168,11 +1251,13 @@ And metrics update when I complete items
 ---
 
 #### FR-ASMT-003: View Assessment Checklist
+
 **Priority:** P0 (Must Have)
 
 **Description:** Users must see complete list of assessment items.
 
 **Requirements:**
+
 - System shall display all assessment items
 - System shall group items by framework (collapsible sections)
 - System shall sub-group by control category
@@ -1199,6 +1284,7 @@ And metrics update when I complete items
 - System shall show filter/sort applied count
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I am viewing the checklist
 Then I see all assessment items grouped by framework
@@ -1211,11 +1297,13 @@ And critical items appear first
 ---
 
 #### FR-ASMT-004: Update Assessment Item Status
+
 **Priority:** P0 (Must Have)
 
 **Description:** Users must be able to update item status and add comments.
 
 **Requirements:**
+
 - System shall provide status options:
   - Not Started (gray)
   - Compliant (green)
@@ -1232,11 +1320,13 @@ And critical items appear first
 - System shall log change in audit trail (if enabled)
 
 **Status Change Rules:**
+
 - Not Applicable items are excluded from score calculation
 - Partially Compliant counts as 50% compliant
 - Status can be changed at any time (not locked)
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I am viewing an assessment item
 When I change status from "Not Started" to "Compliant"
@@ -1249,11 +1339,13 @@ And the item shows as updated
 ---
 
 #### FR-ASMT-005: Real-Time Scoring
+
 **Priority:** P0 (Must Have)
 
 **Description:** System must calculate compliance score dynamically.
 
 **Requirements:**
+
 - System shall recalculate score on every status change
 - System shall use weighted scoring formula:
 
@@ -1280,6 +1372,7 @@ Compliance Score = (Weighted Score / Total Weight) × 100
 - System shall broadcast score update to UI (if multiple tabs open)
 
 **Example Calculation:**
+
 ```
 HIPAA Controls:
 1. Access Control (weight: 1.5) - Compliant = 1.5 points
@@ -1293,6 +1386,7 @@ Compliance Score: (2.5 / 4.5) × 100 = 55.6%
 ```
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I have an assessment with 10 items
 And 5 items are Compliant
@@ -1308,11 +1402,13 @@ And the score updates when I change any item status
 ### 7.4 Evidence Management
 
 #### FR-EVID-001: Upload Evidence Files
+
 **Priority:** P0 (Must Have)
 
 **Description:** Users must be able to upload files as evidence.
 
 **Requirements:**
+
 - System shall accept file uploads for any assessment item
 - System shall support file types:
   - Documents: PDF, DOCX, XLSX, TXT
@@ -1330,6 +1426,7 @@ And the score updates when I change any item status
 - System shall handle upload failures gracefully
 
 **Evidence Metadata:**
+
 - Filename
 - File size
 - MIME type
@@ -1340,6 +1437,7 @@ And the score updates when I change any item status
 - Download URL
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I am viewing an assessment item
 When I click "Add Evidence"
@@ -1354,11 +1452,13 @@ And I can download the file
 ---
 
 #### FR-EVID-002: View and Manage Evidence (Future Scope)
+
 **Priority:** P2 (Future Scope)
 
 **Description:** Users must be able to view and delete evidence.
 
 **Requirements:**
+
 - System shall display all evidence for an item
 - Each evidence shall show:
   - File icon (based on type)
@@ -1375,6 +1475,7 @@ And I can download the file
 - System shall maintain evidence count on item
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I have uploaded evidence
 When I view the assessment item
@@ -1389,11 +1490,13 @@ And the file is removed from S3
 ### 7.5 AI Remediation
 
 #### FR-AI-001: Generate Remediation Plan
+
 **Priority:** P0 (Must Have)
 
 **Description:** System must generate AI-powered remediation guidance.
 
 **Requirements:**
+
 - System shall show "Get Remediation Plan" button on:
   - Not Compliant items
   - Partially Compliant items
@@ -1419,6 +1522,7 @@ And the file is removed from S3
 - System shall log AI interaction
 
 **AI Prompt Template:**
+
 ```
 You are a compliance expert. Generate a remediation plan.
 
@@ -1447,6 +1551,7 @@ Make recommendations specific and actionable.
 ```
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I have a non-compliant item
 When I click "Get Remediation Plan"
@@ -1461,16 +1566,19 @@ And I can save or export the plan
 ### 7.6 Reporting
 
 #### FR-RPT-001: Generate Compliance Report
+
 **Priority:** P0 (Must Have)
 
 **Description:** System must generate comprehensive PDF report.
 
 **Requirements:**
+
 - System shall allow report generation when assessment > 50% complete
 - System shall generate report within 5 seconds
 - Report shall include:
 
 **Cover Page:**
+
 - Report title
 - Organization name
 - Frameworks assessed
@@ -1478,6 +1586,7 @@ And I can save or export the plan
 - Report version
 
 **Executive Summary (1-2 pages):**
+
 - Overall compliance score (large, prominent)
 - Status indicator (Compliant / Partially Compliant / Non-Compliant)
 - Key findings (3-5 bullets)
@@ -1485,22 +1594,26 @@ And I can save or export the plan
 - Top recommendations (3-5)
 
 **Organization Profile:**
+
 - Product/service name
 - Business description
 - Data types handled
 - Regions of operation
 
 **Framework Scores:**
+
 - Table with framework name, score, status
 - Visual score indicators
 - Control completion counts
 
 **Risk Summary:**
+
 - Risk distribution (Critical/High/Medium/Low)
 - Risk heatmap visualization
 - Non-compliant items by severity
 
 **Control Status Breakdown:**
+
 - Table of all controls with:
   - Framework
   - Control ID
@@ -1512,16 +1625,19 @@ And I can save or export the plan
 - Color-coded by status
 
 **Evidence Inventory:**
+
 - List of all uploaded evidence
 - Grouped by control
 - Includes filename, upload date
 
 **Remediation Recommendations:**
+
 - Top 10 priority actions
 - Based on severity and status
 - Includes brief guidance
 
 **Appendices:**
+
 - Glossary of terms
 - Framework descriptions
 - Compliance methodology
@@ -1532,6 +1648,7 @@ And I can save or export the plan
 - System shall log report generation
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I have completed 80% of my assessment
 When I click "Generate Report"
@@ -1544,11 +1661,13 @@ And the PDF is professionally formatted
 ---
 
 #### FR-RPT-002: Web Report View
+
 **Priority:** P1 (Should Have)
 
 **Description:** System should provide web-based report view.
 
 **Requirements:**
+
 - System shall generate HTML version of report
 - System shall display in-app (no download required)
 - System shall provide print stylesheet
@@ -1557,6 +1676,7 @@ And the PDF is professionally formatted
 - Web view shall load within 2 seconds
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I have generated a report
 When I click "View Report"
@@ -1570,11 +1690,13 @@ And I can share a link to the report
 ### 7.7 Admin - Framework Management
 
 #### FR-ADM-001: Create Framework
+
 **Priority:** P0 (Must Have)
 
 **Description:** Admin must be able to create compliance frameworks.
 
 **Requirements:**
+
 - System shall provide framework creation form
 - System shall require fields:
   - Code (unique, uppercase, max 20 chars, no spaces)
@@ -1591,6 +1713,7 @@ And I can share a link to the report
 - System shall redirect to control management
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I am an admin
 When I create a new framework with code "CCPA"
@@ -1602,11 +1725,13 @@ And the framework is not yet visible to users
 ---
 
 #### FR-ADM-002: Add Controls to Framework
+
 **Priority:** P0 (Must Have)
 
 **Description:** Admin must be able to add controls to frameworks.
 
 **Requirements:**
+
 - System shall provide control creation form
 - System shall require fields:
   - Control ID (unique within framework, e.g., CCPA-1798.100)
@@ -1625,6 +1750,7 @@ And the framework is not yet visible to users
 - System shall show control count
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I am editing a framework
 When I add a control with ID "CCPA-1798.100"
@@ -1636,11 +1762,13 @@ And I can import controls via CSV
 ---
 
 #### FR-ADM-003: Publish Framework
+
 **Priority:** P0 (Must Have)
 
 **Description:** Admin must be able to publish frameworks.
 
 **Requirements:**
+
 - System shall validate framework before publishing:
   - Has at least 1 control
   - All required fields filled
@@ -1652,6 +1780,7 @@ And I can import controls via CSV
 - System shall prevent editing published frameworks (version instead)
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I have a framework with 10 controls
 When I click "Publish"
@@ -1663,11 +1792,13 @@ And I cannot edit the published version
 ---
 
 #### FR-ADM-004: Version Framework
+
 **Priority:** P1 (Should Have)
 
 **Description:** Admin should be able to create new framework versions.
 
 **Requirements:**
+
 - System shall allow creating new version of published framework
 - System shall copy all controls from previous version
 - System shall increment version number (e.g., 1.0.0 → 1.1.0)
@@ -1676,6 +1807,7 @@ And I cannot edit the published version
 - System shall allow users to upgrade assessments to new version
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I have published framework GDPR v1.0
 When I create version 1.1
@@ -1687,11 +1819,13 @@ And I can modify controls before publishing
 ---
 
 #### FR-ADM-005: Manage Users
+
 **Priority:** P0 (Must Have)
 
 **Description:** Admin must be able to manage user accounts.
 
 **Requirements:**
+
 - System shall display user list with:
   - Name
   - Email
@@ -1710,6 +1844,7 @@ And I can modify controls before publishing
 - System shall require at least 1 active admin
 
 **Acceptance Criteria:**
+
 ```gherkin
 Given I am an admin
 When I view the user list
@@ -1726,11 +1861,13 @@ And I can deactivate users
 ### 8.1 Performance Requirements
 
 #### NFR-PERF-001: API Response Time
+
 **Priority:** P0
 
 **Requirement:** 95th percentile (p95) API response time must be < 500ms for standard operations.
 
 **Operations:**
+
 - GET requests (list, retrieve): < 300ms
 - POST/PATCH requests (create, update): < 500ms
 - DELETE requests: < 300ms
@@ -1742,14 +1879,17 @@ And I can deactivate users
 ---
 
 #### NFR-PERF-002: AI Response Time
+
 **Priority:** P0
 
 **Requirement:** AI operations must complete within acceptable timeframes:
+
 - Framework mapping: < 10 seconds (95th percentile)
 - Remediation plan: < 10 seconds (95th percentile)
 - Report narrative: < 15 seconds (95th percentile)
 
 **Mitigation for timeouts:**
+
 - Show progress indicator
 - Allow cancellation
 - Provide fallback response
@@ -1757,6 +1897,7 @@ And I can deactivate users
 ---
 
 #### NFR-PERF-003: Report Generation Time
+
 **Priority:** P0
 
 **Requirement:** PDF report generation must complete within 5 seconds for typical assessment (100-150 controls).
@@ -1766,9 +1907,11 @@ And I can deactivate users
 ---
 
 #### NFR-PERF-004: Page Load Time
+
 **Priority:** P0
 
-**Requirement:** 
+**Requirement:**
+
 - First Contentful Paint (FCP): < 1.5 seconds
 - Largest Contentful Paint (LCP): < 2.5 seconds
 - Time to Interactive (TTI): < 3.5 seconds
@@ -1778,14 +1921,17 @@ And I can deactivate users
 ---
 
 #### NFR-PERF-005: Database Query Performance
+
 **Priority:** P0
 
-**Requirement:** 
+**Requirement:**
+
 - Simple queries (single table): < 50ms
 - Complex queries (joins, aggregations): < 200ms
 - Assessment score calculation: < 100ms
 
 **Strategy:**
+
 - Proper indexing
 - Query optimization
 - Connection pooling (10-50 connections)
@@ -1795,6 +1941,7 @@ And I can deactivate users
 ### 8.2 Scalability Requirements
 
 #### NFR-SCALE-001: Concurrent Users
+
 **Priority:** P1
 
 **Requirement:** System must support 100 concurrent users (v1.0 target).
@@ -1804,9 +1951,11 @@ And I can deactivate users
 ---
 
 #### NFR-SCALE-002: Data Volume
+
 **Priority:** P0
 
 **Requirement:** System must handle:
+
 - 100 organizations
 - 500 assessments
 - 50,000 assessment items
@@ -1817,9 +1966,11 @@ And I can deactivate users
 ---
 
 #### NFR-SCALE-003: Horizontal Scaling
+
 **Priority:** P1
 
 **Requirement:** System architecture must support horizontal scaling:
+
 - Stateless API (no server-side sessions)
 - Database read replicas
 - CDN for static assets
@@ -1830,6 +1981,7 @@ And I can deactivate users
 ### 8.3 Availability Requirements
 
 #### NFR-AVAIL-001: Uptime
+
 **Priority:** P0
 
 **Requirement:** System must maintain 99.5% uptime (monthly).
@@ -1837,15 +1989,18 @@ And I can deactivate users
 **Downtime allowance:** ~3.6 hours per month
 
 **Exclusions:**
+
 - Scheduled maintenance (with 48h notice)
 - Force majeure events
 
 ---
 
 #### NFR-AVAIL-002: Disaster Recovery
+
 **Priority:** P0
 
 **Requirement:**
+
 - Database backups: Daily, retained 30 days
 - Point-in-time recovery: Within 5 minutes
 - Recovery Time Objective (RTO): 4 hours
@@ -1854,9 +2009,11 @@ And I can deactivate users
 ---
 
 #### NFR-AVAIL-003: Monitoring & Alerting
+
 **Priority:** P0
 
 **Requirement:** System must monitor:
+
 - API availability (uptime checks every 1 min)
 - Error rates (alert if > 1% of requests)
 - Response times (alert if p95 > 1s)
@@ -1870,9 +2027,11 @@ And I can deactivate users
 ### 8.4 Security Requirements
 
 #### NFR-SEC-001: Authentication
+
 **Priority:** P0
 
 **Requirement:**
+
 - Passwords must be hashed using bcrypt (cost factor 12)
 - Session tokens must be JWT with 7-day expiration
 - Must implement rate limiting (5 failed login attempts = 15 min lockout)
@@ -1881,9 +2040,11 @@ And I can deactivate users
 ---
 
 #### NFR-SEC-002: Authorization
+
 **Priority:** P0
 
 **Requirement:**
+
 - Must implement Role-Based Access Control (RBAC)
 - Must enforce least privilege principle
 - Must validate permissions on every API request
@@ -1892,11 +2053,13 @@ And I can deactivate users
 ---
 
 #### NFR-SEC-003: Data Encryption
+
 **Priority:** P0
 
 **Requirement:**
+
 - **In Transit:** TLS 1.3 for all connections
-- **At Rest:** 
+- **At Rest:**
   - Database: Cipherion's encryption
   - Files: S3 server-side encryption (AES-256)
   - Backups: Encrypted
@@ -1905,9 +2068,11 @@ And I can deactivate users
 ---
 
 #### NFR-SEC-004: Input Validation
+
 **Priority:** P0
 
 **Requirement:**
+
 - Must validate all user inputs (client & server-side)
 - Must sanitize inputs to prevent XSS
 - Must use parameterized queries to prevent SQL injection
@@ -1916,9 +2081,11 @@ And I can deactivate users
 ---
 
 #### NFR-SEC-005: Security Headers
+
 **Priority:** P0
 
 **Requirement:** Must implement security headers:
+
 ```
 Content-Security-Policy: default-src 'self'
 X-Frame-Options: DENY
@@ -1927,12 +2094,12 @@ Strict-Transport-Security: max-age=31536000
 X-XSS-Protection: 1; mode=block
 ```
 
-
-
 #### NFR-SEC-006: Audit Logging
+
 **Priority:** P1
 
 **Requirement:** Must log security events:
+
 - Authentication attempts (success/failure)
 - Authorization failures
 - Data modifications (admin actions)
@@ -1946,9 +2113,11 @@ X-XSS-Protection: 1; mode=block
 ### 8.5 Compliance Requirements
 
 #### NFR-COMP-001: Data Privacy
+
 **Priority:** P0
 
 **Requirement:**
+
 - Must comply with GDPR (EU data protection)
 - Must provide data deletion capability
 - Must provide data export capability
@@ -1957,9 +2126,11 @@ X-XSS-Protection: 1; mode=block
 ---
 
 #### NFR-COMP-002: SOC 2 Type II
+
 **Priority:** P1 (Future)
 
 **Requirement:** System must be SOC 2 Type II compliant by v2.0:
+
 - Security controls
 - Availability controls
 - Confidentiality controls
@@ -1970,9 +2141,11 @@ X-XSS-Protection: 1; mode=block
 ### 8.6 Usability Requirements
 
 #### NFR-USE-001: Browser Support
+
 **Priority:** P0
 
 **Requirement:** Must support modern browsers:
+
 - Chrome (last 2 versions)
 - Firefox (last 2 versions)
 - Safari (last 2 versions)
@@ -1981,9 +2154,11 @@ X-XSS-Protection: 1; mode=block
 ---
 
 #### NFR-USE-002: Mobile Responsiveness
+
 **Priority:** P1
 
 **Requirement:** Must be usable on mobile devices (tablet+):
+
 - Responsive design (breakpoints: 768px, 1024px, 1280px)
 - Touch-friendly controls
 - Readable text (min 14px)
@@ -1991,9 +2166,11 @@ X-XSS-Protection: 1; mode=block
 ---
 
 #### NFR-USE-003: Accessibility
+
 **Priority:** P1
 
 **Requirement:** Must meet WCAG 2.1 Level AA:
+
 - Keyboard navigation
 - Screen reader compatibility
 - Color contrast ratios (4.5:1 minimum)
@@ -2003,9 +2180,11 @@ X-XSS-Protection: 1; mode=block
 ---
 
 #### NFR-USE-004: Internationalization
+
 **Priority:** P2 (Future)
 
 **Requirement:** Must support localization (v2.0):
+
 - English (default)
 - Spanish
 - French
@@ -2016,9 +2195,11 @@ X-XSS-Protection: 1; mode=block
 ### 8.7 Maintainability Requirements
 
 #### NFR-MAINT-001: Code Quality
+
 **Priority:** P1
 
 **Requirement:**
+
 - Must use TypeScript for type safety
 - Must maintain test coverage > 80%
 - Must pass linting (ESLint)
@@ -2028,9 +2209,11 @@ X-XSS-Protection: 1; mode=block
 ---
 
 #### NFR-MAINT-002: Deployment
+
 **Priority:** P1
 
 **Requirement:**
+
 - Must use CI/CD pipeline (GitHub Actions)
 - Must run tests before deployment
 - Must use blue-green deployment
@@ -2039,9 +2222,11 @@ X-XSS-Protection: 1; mode=block
 ---
 
 #### NFR-MAINT-003: Monitoring
+
 **Priority:** P1
 
 **Requirement:**
+
 - Must collect application metrics (Vercel Analytics)
 - Must collect error logs (Sentry)
 - Must collect infrastructure metrics (CloudWatch)
@@ -2081,36 +2266,38 @@ X-XSS-Protection: 1; mode=block
 
 ---
 
-### 9.2 Visual Design System 
+### 9.2 Visual Design System
 
 #### Color Palette (yet to decide)
+
 ```
 Primary:
 Secondary:
-Accent: 
+Accent:
 
 Semantic:
 Success:
-Warning: 
-Error: 
-Info: 
+Warning:
+Error:
+Info:
 
 Neutral:
-Gray-50: 
+Gray-50:
 Gray-100:
-Gray-200: 
-Gray-500: 
-Gray-900: 
+Gray-200:
+Gray-500:
+Gray-900:
 
 Status Colors:
-Compliant: 
+Compliant:
 Partially:
 Not Compliant:
-Not Started: 
-Not Applicable: 
+Not Started:
+Not Applicable:
 ```
 
 #### Typography
+
 ```
 Font Family: Inter (system-ui fallback)
 
@@ -2128,6 +2315,7 @@ Tiny: 0.75rem (12px)
 ```
 
 #### Spacing
+
 ```
 4px increments (Tailwind scale):
 0.5 = 2px
@@ -2146,6 +2334,7 @@ Tiny: 0.75rem (12px)
 ### 9.3 Key UI Components
 
 #### Navigation
+
 - **Top Navigation Bar**
   - Logo (left)
   - Main navigation (center)
@@ -2161,12 +2350,13 @@ Tiny: 0.75rem (12px)
   - Settings
 
 #### Forms
+
 - **Input Fields**
   - Label above input
   - Placeholder text (example)
   - Helper text below (optional)
   - Error message (red, with icon)
-  - Required indicator (*)
+  - Required indicator (\*)
 
 - **Buttons**
   - Primary: Filled, blue
@@ -2180,6 +2370,7 @@ Tiny: 0.75rem (12px)
   - Clear button
 
 #### Data Display
+
 - **Tables**
   - Sortable columns
   - Filterable
@@ -2198,6 +2389,7 @@ Tiny: 0.75rem (12px)
   - Step indicators (wizard)
 
 #### Feedback
+
 - **Toasts** (top-right)
   - Success (green, checkmark)
   - Error (red, X)
@@ -2219,6 +2411,7 @@ Tiny: 0.75rem (12px)
 ### 9.4 Key User Flows
 
 #### Flow 1: New User Onboarding
+
 ```
 1. Register
    ├─ Enter email, password, name
@@ -2241,6 +2434,7 @@ Tiny: 0.75rem (12px)
 ```
 
 #### Flow 2: Complete Assessment
+
 ```
 1. View Dashboard
    └─ See overall progress
@@ -2267,6 +2461,7 @@ Tiny: 0.75rem (12px)
 ```
 
 #### Flow 3: Get Remediation Guidance
+
 ```
 1. Identify Non-Compliant Item
    └─ Filter checklist by "Not Compliant"
@@ -2292,6 +2487,7 @@ Tiny: 0.75rem (12px)
 ### 9.5 Wireframes (Text-Based)
 
 #### Dashboard (User)
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ [Logo]  Dashboard  Assessments           [Notifications] [▾]│
@@ -2327,6 +2523,7 @@ Tiny: 0.75rem (12px)
 ```
 
 #### Checklist View
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ [Logo]  Dashboard  Assessments           [Notifications] [▾]│
@@ -2363,6 +2560,7 @@ Tiny: 0.75rem (12px)
 ```
 
 #### Control Detail (Modal)
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  HIPAA-164.312(a)(1) - Access Control                    [X]│
@@ -2415,6 +2613,7 @@ Tiny: 0.75rem (12px)
 **Deployment Model:** Single-tenant (v1.0), Multi-tenant (v2.0)
 
 **Stack:**
+
 - **Frontend:** Next.js 14+ (React, TypeScript)
 - **Backend:** Next.js API Routes (Node.js)
 - **Database:** PostgreSQL 16 (AWS RDS)
@@ -2429,6 +2628,7 @@ Tiny: 0.75rem (12px)
 ### 10.2 Technology Stack
 
 #### Frontend
+
 ```
 Framework: Next.js 14.2+
 Language: TypeScript 5.4+
@@ -2441,18 +2641,20 @@ Data Fetching: TanStack Query (React Query)
 ```
 
 #### Backend
+
 ```
 Runtime: Node.js 20 LTS
 Framework: Next.js API Routes
 ORM: Prisma 5+
 Validation: Zod
-Authentication: BetterAuth / NextAuth.js 
+Authentication: BetterAuth / NextAuth.js
 File Processing: Multer, Sharp
 PDF Generation: PDFKit
 CSV Parsing: PapaParse
 ```
 
 #### Database
+
 ```
 RDBMS: PostgreSQL 16
 Hosting: Neon Instance or a Shared instance will be provided
@@ -2461,16 +2663,18 @@ Backups: Automated daily, 30-day retention
 ```
 
 #### Infrastructure
+
 ```
 Hosting: Vercel
 CDN: Vercel Edge Network
-File Storage: Cloudflare 
-Cache: Redis 
+File Storage: Cloudflare
+Cache: Redis
 Secrets:  Vercel Environment Variables
 CI/CD: GitHub Actions
 ```
 
 #### External Services
+
 ```
 AI Provider: OpenAI (GPT-4-Turbo) / Anthropic (Claude 3.5 Sonnet)
 Email: SendGrid / Resend / SMTP
@@ -2495,12 +2699,14 @@ See Section 1q (Data Model) for draft Prisma schema.
 **Base URL:** `https://app.cipherion.com/api`
 
 **Common Headers:**
+
 ```
 Authorization: Bearer {jwt_token}
 Content-Type: application/json
 ```
 
 **Standard Responses:**
+
 ```json
 // Success
 {
@@ -2517,6 +2723,7 @@ Content-Type: application/json
 ```
 
 **Pagination:**
+
 ```json
 {
   "data": [...],
@@ -2534,6 +2741,7 @@ Content-Type: application/json
 ### 10.5 Security Architecture
 
 **Layers:**
+
 1. Network (TLS, WAF, DDoS protection)
 2. Application (Auth, RBAC, input validation)
 3. Data (Encryption at rest/in transit)
@@ -2567,16 +2775,16 @@ model User {
   name          String
   password      String        // Hashed with bcrypt
   role          Role          @default(USER)
-  
+
   emailVerified DateTime?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   lastLoginAt   DateTime?
-  
+
   // Relations
   organizations Organization[]
   assessments   Assessment[]
-  
+
   @@index([email])
   @@index([role])
   @@map("users")
@@ -2592,25 +2800,25 @@ enum Role {
 model Organization {
   id              String        @id @default(cuid())
   userId          String        // Creator
-  
+
   // Business details
   productName     String
   description     String
   services        String
   targetCustomers String
   problemSolved   String
-  
+
   // Compliance context
   dataHandled     String[]      // ["PII", "PHI", "Financial"]
   regions         String[]      // ["US", "EU", "UK"]
-  
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  
+
   // Relations
   user            User          @relation(fields: [userId], references: [id])
   assessments     Assessment[]
-  
+
   @@index([userId])
   @@index([createdAt])
   @@map("organizations")
@@ -2620,7 +2828,7 @@ model Organization {
 
 model Framework {
   id              String        @id @default(cuid())
-  
+
   code            String        @unique   // "GDPR", "HIPAA"
   name            String                  // "General Data Protection Regulation"
   description     String
@@ -2629,16 +2837,16 @@ model Framework {
   version         String                  // "1.0.0"
   effectiveDate   DateTime
   sourceLink      String?
-  
+
   status          FrameworkStatus @default(DRAFT)
   publishedAt     DateTime?
-  
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  
+
   // Relations
   controls        Control[]
-  
+
   @@index([code])
   @@index([region])
   @@index([category])
@@ -2655,21 +2863,21 @@ enum FrameworkStatus {
 model Control {
   id              String        @id @default(cuid())
   frameworkId     String
-  
+
   code            String                  // "GDPR-7.1"
   title           String
   description     String
   category        String?
   severity        Severity      @default(MEDIUM)
   weight          Float         @default(1.0)
-  
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  
+
   // Relations
   framework       Framework     @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
   assessmentItems AssessmentItem[]
-  
+
   @@unique([frameworkId, code])
   @@index([frameworkId])
   @@index([severity])
@@ -2689,21 +2897,21 @@ model Assessment {
   id              String        @id @default(cuid())
   userId          String
   organizationId  String
-  
+
   status          AssessmentStatus @default(IN_PROGRESS)
   score           Float?                   // 0-100
-  
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   completedAt     DateTime?
-  
+
   // Relations
   user            User          @relation(fields: [userId], references: [id])
   organization    Organization  @relation(fields: [organizationId], references: [id])
   items           AssessmentItem[]
   reports         Report[]
   aiInteractions  AIInteraction[]
-  
+
   @@index([userId])
   @@index([organizationId])
   @@index([status])
@@ -2721,18 +2929,18 @@ model AssessmentItem {
   id              String        @id @default(cuid())
   assessmentId    String
   controlId       String
-  
+
   status          ItemStatus    @default(NOT_STARTED)
   comments        String?
-  
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  
+
   // Relations
   assessment      Assessment    @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
   control         Control       @relation(fields: [controlId], references: [id])
   evidence        Evidence[]
-  
+
   @@unique([assessmentId, controlId])
   @@index([assessmentId])
   @@index([controlId])
@@ -2754,19 +2962,19 @@ model Evidence {
   id                String        @id @default(cuid())
   assessmentItemId  String
   userId            String        // Uploader
-  
+
   filename          String
   originalName      String
   fileUrl           String                 // S3 URL
   fileSize          Int
   mimeType          String
   description       String?
-  
+
   uploadedAt        DateTime      @default(now())
-  
+
   // Relations
   assessmentItem    AssessmentItem @relation(fields: [assessmentItemId], references: [id], onDelete: Cascade)
-  
+
   @@index([assessmentItemId])
   @@index([uploadedAt])
   @@map("evidence")
@@ -2777,16 +2985,16 @@ model Evidence {
 model Report {
   id              String        @id @default(cuid())
   assessmentId    String
-  
+
   type            ReportType
   format          ReportFormat
   fileUrl         String?                  // S3 URL for PDF
-  
+
   generatedAt     DateTime      @default(now())
-  
+
   // Relations
   assessment      Assessment    @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
-  
+
   @@index([assessmentId])
   @@index([generatedAt])
   @@map("reports")
@@ -2807,19 +3015,19 @@ enum ReportFormat {
 model AIInteraction {
   id              String        @id @default(cuid())
   assessmentId    String?
-  
+
   type            AIType
   input           String                   // JSON stringified
   output          String                   // JSON stringified
   model           String                   // "gpt-4-turbo"
   tokensUsed      Int?
   durationMs      Int?
-  
+
   createdAt       DateTime      @default(now())
-  
+
   // Relations
   assessment      Assessment?   @relation(fields: [assessmentId], references: [id], onDelete: SetNull)
-  
+
   @@index([assessmentId])
   @@index([type])
   @@index([createdAt])
@@ -2840,6 +3048,7 @@ enum AIType {
 ### 12.1 AI Use Cases
 
 **Use Case 1: Compliance Framework Mapping**
+
 - **Input:** Organization profile (business details, data types, regions)
 - **Output:** Ranked list of applicable frameworks with confidence scores
 - **Model:** GPT-4-Turbo / Claude 3.5 Sonnet
@@ -2847,12 +3056,14 @@ enum AIType {
 - **Accuracy Target:** 90% (measured by manual review)
 
 **Use Case 2: Remediation Plan Generation**
+
 - **Input:** Control details, current status
 - **Output:** Step-by-step remediation plan with priorities
 - **Model:** GPT-4-Turbo / Claude 3.5 Sonnet
 - **Latency:** < 10 seconds
 
 **Use Case 3: Report Narrative Generation**
+
 - **Input:** Assessment data, scores, risks
 - **Output:** Executive summary text
 - **Model:** GPT-4-Turbo / Claude 3.5 Sonnet
@@ -2865,11 +3076,13 @@ enum AIType {
 **Approach:** Direct LLM calls (no RAG in v1.0)
 
 **Flow:**
+
 ```
 User Input → Prompt Template → LLM API → Response Parsing → User Display
 ```
 
 **Prompt Engineering Strategy:**
+
 - Use few-shot examples
 - Specify output format (JSON)
 - Provide clear constraints
@@ -2880,18 +3093,21 @@ User Input → Prompt Template → LLM API → Response Parsing → User Display
 ### 12.3 AI Safety & Quality
 
 **Hallucination Mitigation:**
+
 - Use temperature 0.3-0.4 (lower = more deterministic)
 - Request citations/sources
 - Add confidence scores
 - Flag low-confidence outputs for review
 
 **Quality Assurance:**
+
 - Manual review of sample outputs (10% of generations)
 - A/B testing of prompt variations
 - User feedback mechanism ("Was this helpful?")
 - Track acceptance rate of AI suggestions
 
 **Bias & Fairness:**
+
 - Avoid biased training examples
 - Review outputs for legal/compliance accuracy
 - Provide disclaimer: "AI-generated, not legal advice"
@@ -2901,12 +3117,14 @@ User Input → Prompt Template → LLM API → Response Parsing → User Display
 ### 12.4 AI Cost Management
 
 **Cost Controls:**
+
 - Cache responses (24-hour TTL)
 - Rate limit per user (10 requests/hour)
 - Use cheaper models for simple tasks
 - Monitor token usage
 
 **Cost Estimation:**
+
 ```
 GPT-4-Turbo Pricing (as of 2026):
 - Input: $10 / 1M tokens
@@ -2927,6 +3145,7 @@ Monthly estimate (100 users, 5 requests/user):
 ### 13.1 Security Measures
 
 **Authentication:** (Better Auth)
+
 - Email/password with bcrypt hashing
 - JWT session tokens (7-day expiration)
 - Rate limiting (5 failed attempts = 15 min lockout)
@@ -2934,19 +3153,22 @@ Monthly estimate (100 users, 5 requests/user):
 - Password reset via secure token
 
 **Authorization:**
+
 - Role-Based Access Control (RBAC)
 - Admin vs. User roles
 - Permission checks on every API request
 - Principle of least privilege
 
 **Data Protection:**
+
 - TLS 1.3 for all connections
-- Database encryption at rest 
-- File encryption at rest 
+- Database encryption at rest
+- File encryption at rest
 - No plain-text storage of sensitive data
 - PII handling minimization
 
 **Input Validation:**
+
 - Client-side validation (React Hook Form + Zod)
 - Server-side validation (Zod schemas)
 - SQL injection prevention (Prisma ORM)
@@ -2954,6 +3176,7 @@ Monthly estimate (100 users, 5 requests/user):
 - File upload validation (type, size, virus scan)
 
 **Security Headers:**
+
 ```
 Content-Security-Policy: default-src 'self'
 X-Frame-Options: DENY
@@ -2964,6 +3187,7 @@ Referrer-Policy: strict-origin-when-cross-origin
 ```
 
 **Secrets Management:**
+
 - Secrets Manager for production
 - Vercel Environment Variables
 - No secrets in code repository
@@ -2974,10 +3198,12 @@ Referrer-Policy: strict-origin-when-cross-origin
 ### 13.2 Compliance Certifications (Roadmap)
 
 **v1.0:**
+
 - GDPR compliant (data privacy)
 - Basic security controls
 
 **v2.0:**
+
 - SOC 2 Type II certification
 - ISO 27001 certification (optional)
 - HIPAA-ready infrastructure (for healthcare customers)
@@ -2987,6 +3213,7 @@ Referrer-Policy: strict-origin-when-cross-origin
 ### 13.3 Data Privacy
 
 **User Data:**
+
 - Collect only necessary data
 - Obtain explicit consent
 - Provide data export (JSON)
@@ -2994,7 +3221,8 @@ Referrer-Policy: strict-origin-when-cross-origin
 - Honor "Do Not Track"
 
 **Data Retention:**
+
 - Active assessments: Indefinite
 - Deleted assessments: 30-day soft delete
 - Audit logs: 1 year
-- Backups: No 
+- Backups: No

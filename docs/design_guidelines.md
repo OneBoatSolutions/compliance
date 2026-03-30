@@ -1,12 +1,14 @@
 # Comprehensive UI Design Prompt for Cipherion Compliance Dashboard
 
 ## Brand Identity
+
 - **Brand Name**: Cipherion
 - **Primary Color**: #6d18ff (Vibrant Purple)
 - **Industry**: B2B SaaS - AI-Powered Compliance Management Platform
 - **Design Philosophy**: Modern, trustworthy, intelligent, enterprise-grade
 
 ## Color Palette Extension
+
 ```
 Primary: #6d18ff (Vibrant Purple) - Main brand color
 Primary Dark: #5412cc (Darker Purple) - Hover states, headings
@@ -42,12 +44,14 @@ Neutrals:
 Create a split-screen authentication experience that balances professionalism with modern design. The Cipherion brand should feel intelligent, secure, and forward-thinking.
 
 **Layout:**
+
 - **Desktop**: 60/40 split layout
   - Left side (60%): Brand experience area
   - Right side (40%): Authentication form
 - **Mobile**: Single column, stacked layout
 
 **Left Side - Brand Experience:**
+
 - **Background**: Subtle gradient from #6d18ff to #4c1d95 with abstract geometric patterns or animated particles
 - **Content**:
   - Cipherion logo (white/light) - top left (32px padding)
@@ -64,6 +68,7 @@ Create a split-screen authentication experience that balances professionalism wi
 **Right Side - Authentication Form:**
 
 **Login View:**
+
 - **Background**: White (#ffffff)
 - **Container**: Centered card with 48px padding
 - **Header**:
@@ -81,17 +86,18 @@ Create a split-screen authentication experience that balances professionalism wi
     - Show/hide password toggle (right side)
   - "Remember me" checkbox (left)
   - "Forgot password?" link (right, purple #6d18ff)
-- **Primary CTA**: 
+- **Primary CTA**:
   - "Sign in" button (full width, purple #6d18ff, white text, 44px height)
   - Hover state: #5412cc
   - Loading state: Spinner animation
 - **Divider**: "OR" with horizontal lines
-- **Secondary Action**: 
+- **Secondary Action**:
   - "Don't have an account? Sign up" (Gray-600 text, purple link)
-- **Footer**: 
+- **Footer**:
   - "© 2026 Cipherion. All rights reserved" (small, Gray-400)
 
 **Signup View:**
+
 - **Similar layout to login**
 - **Header**:
   - "Create your account" (24px, Gray-900, semi-bold)
@@ -107,12 +113,13 @@ Create a split-screen authentication experience that balances professionalism wi
     - Strong: Green, "Strong password"
   - Confirm Password input
   - Checkbox: "I agree to Cipherion's Terms of Service and Privacy Policy" (with links in purple)
-- **Primary CTA**: 
+- **Primary CTA**:
   - "Create account" button (full width, purple, white text)
-- **Secondary Action**: 
+- **Secondary Action**:
   - "Already have an account? Sign in" (Gray-600 text, purple link)
 
 **Microinteractions:**
+
 - Input focus: Purple border (#6d18ff) with subtle glow
 - Button hover: Darker purple with slight elevation
 - Password strength bar animates as user types
@@ -129,18 +136,20 @@ Create an inviting, non-intimidating first experience that guides new users towa
 **Layout:**
 
 **Top Navigation Bar** (Fixed):
+
 - **Background**: White with subtle bottom border (Gray-200)
 - **Left**: Cipherion logo (purple version) + "Dashboard" text
 - **Center**: Navigation links
   - "Dashboard" (active - purple text with underline)
   - "Assessments" (Gray-600)
   - "Reports" (Gray-600)
-- **Right**: 
+- **Right**:
   - Help icon button (Gray-600)
   - Notifications bell (with badge if needed)
   - User avatar with dropdown (hover shows menu)
 
 **Sidebar Navigation** (Optional, left side):
+
 - **Width**: 240px
 - **Background**: Gray-50
 - **Items**:
@@ -153,6 +162,7 @@ Create an inviting, non-intimidating first experience that guides new users towa
 **Main Content Area:**
 
 **Hero Section** (Top):
+
 - **Background**: Gradient card from #e9ddff to white (subtle)
 - **Padding**: 48px
 - **Content**:
@@ -161,41 +171,44 @@ Create an inviting, non-intimidating first experience that guides new users towa
   - Illustration: Abstract dashboard illustration with compliance icons (charts, checkmarks, shields) in purple tones
 
 **Empty State Card** (Center, large):
+
 - **Background**: White with subtle border
 - **Padding**: 64px
 - **Icon**: Large illustration or icon (compliance checklist, shield with checkmark) in purple (#6d18ff) and light purple tones
 - **Heading**: "No assessments yet" (24px, Gray-900, semi-bold)
 - **Description**: "Create your first compliance assessment to discover which regulatory frameworks apply to your business and start tracking your compliance readiness." (16px, Gray-600, max-width: 500px, centered)
-- **Primary CTA**: 
+- **Primary CTA**:
   - "Create Your First Assessment" button (large, purple, white text with arrow icon →)
   - Size: 52px height, prominent
   - Hover: Darker purple with slight elevation
-- **Secondary Info**: 
+- **Secondary Info**:
   - "Takes about 5 minutes to complete" (14px, Gray-500, with clock icon)
 
 **Quick Start Guide** (Below empty state):
+
 - **Section Title**: "How it works" (20px, Gray-900, semi-bold)
 - **3-Column Card Layout**:
-  
-  **Card 1**: 
+
+  **Card 1**:
   - Number badge: "1" (in purple circle)
   - Icon: Document/form icon
   - Title: "Describe Your Business" (16px, semi-bold)
   - Description: "Tell us about your product, services, and data handling" (14px, Gray-600)
-  
-  **Card 2**: 
+
+  **Card 2**:
   - Number badge: "2" (in purple circle)
   - Icon: AI/sparkle icon
   - Title: "AI Analyzes Requirements" (16px, semi-bold)
   - Description: "Our AI suggests applicable compliance frameworks for you" (14px, Gray-600)
-  
-  **Card 3**: 
+
+  **Card 3**:
   - Number badge: "3" (in purple circle)
   - Icon: Checklist icon
   - Title: "Complete Assessment" (16px, semi-bold)
   - Description: "Work through controls and track your compliance progress" (14px, Gray-600)
 
 **Help Resources** (Bottom section):
+
 - **Heading**: "Need guidance?" (18px, semi-bold)
 - **Resource Cards** (2-column):
   - "📚 View Documentation" (card with icon, title, link)
@@ -204,6 +217,7 @@ Create an inviting, non-intimidating first experience that guides new users towa
   - "📅 Schedule Demo" (card with icon, title, link)
 
 **Visual Style:**
+
 - Use purple accents throughout (#6d18ff)
 - Ample whitespace
 - Soft shadows on cards (subtle)
@@ -223,6 +237,7 @@ Transform the dashboard into a powerful overview showing compliance status, prog
 **Same Top Navigation & Sidebar as Empty State**
 
 **Page Header:**
+
 - **Title**: "Dashboard" (28px, Gray-900, semi-bold)
 - **Subtitle**: "Welcome back, [User Name]. Here's your compliance overview." (16px, Gray-600)
 - **Right aligned**: "Create New Assessment" button (purple, medium size)
@@ -230,24 +245,28 @@ Transform the dashboard into a powerful overview showing compliance status, prog
 **Key Metrics Row** (Top, 4-column grid):
 
 **Card 1 - Total Assessments:**
+
 - Large number: "3" (32px, Gray-900, bold)
 - Label: "Active Assessments" (14px, Gray-600)
 - Icon: Clipboard checklist (purple)
 - Trend: "+1 this month" (12px, green text with up arrow)
 
 **Card 2 - Average Compliance Score:**
+
 - Large number: "72%" (32px, Purple #6d18ff, bold)
 - Label: "Avg. Compliance Score" (14px, Gray-600)
 - Mini circular progress indicator (purple)
 - Trend: "+5% from last month" (12px, green text)
 
 **Card 3 - Critical Risks:**
+
 - Large number: "4" (32px, Red #ef4444, bold)
 - Label: "Critical Gaps" (14px, Gray-600)
 - Icon: Warning triangle (red)
 - Action: "View details →" (12px, purple link)
 
 **Card 4 - Reports Generated:**
+
 - Large number: "2" (32px, Gray-900, bold)
 - Label: "Reports Generated" (14px, Gray-600)
 - Icon: Document (purple)
@@ -258,9 +277,10 @@ Transform the dashboard into a powerful overview showing compliance status, prog
 **Left Column (70%):**
 
 **Section 1: Active Assessments**
+
 - **Header**: "Your Assessments" (20px, semi-bold) with "View all →" link
 - **Assessment Cards** (stacked, max 3 visible):
-  
+
   **Each Assessment Card:**
   - **Background**: White with border, hover: slight elevation
   - **Layout**: Left-to-right
@@ -283,6 +303,7 @@ Transform the dashboard into a powerful overview showing compliance status, prog
     - More options (three dots menu)
 
 **Section 2: Recent Activity**
+
 - **Header**: "Recent Activity" (20px, semi-bold)
 - **Timeline view**:
   - Purple vertical line connecting items
@@ -296,6 +317,7 @@ Transform the dashboard into a powerful overview showing compliance status, prog
 **Right Column (30%):**
 
 **Section 1: Quick Actions Card**
+
 - **Background**: Purple gradient (#6d18ff to #5412cc)
 - **Text**: White
 - **Content**:
@@ -305,9 +327,10 @@ Transform the dashboard into a powerful overview showing compliance status, prog
   - Button: "Get Started →" (white button with purple text)
 
 **Section 2: Compliance Health**
+
 - **Card background**: White
 - **Heading**: "Compliance Health" (16px, semi-bold)
-- **Donut Chart**: 
+- **Donut Chart**:
   - Center: Overall score "72%"
   - Segments:
     - Compliant (green)
@@ -317,6 +340,7 @@ Transform the dashboard into a powerful overview showing compliance status, prog
   - Legend below with counts
 
 **Section 3: Top Priority Risks**
+
 - **Heading**: "Action Required" (16px, semi-bold)
 - **List items** (max 3):
   - Severity badge (Critical/High)
@@ -325,6 +349,7 @@ Transform the dashboard into a powerful overview showing compliance status, prog
   - "Fix now →" link (purple)
 
 **Section 4: Upcoming Tasks**
+
 - **Heading**: "Upcoming" (16px, semi-bold)
 - **List**:
   - "Complete HIPAA assessment (Due: 3 days)"
@@ -332,6 +357,7 @@ Transform the dashboard into a powerful overview showing compliance status, prog
   - Each with checkbox and due date badge
 
 **Visual Enhancements:**
+
 - All cards have subtle shadows
 - Purple accents on interactive elements
 - Smooth hover states with transitions
@@ -349,6 +375,7 @@ Create a guided, multi-step form experience that feels conversational and not ov
 **Layout:**
 
 **Progress Indicator** (Top, fixed):
+
 - **Background**: White with bottom border
 - **Step indicators**: Horizontal stepper
   - Step 1: "Business Profile" (active - purple circle with checkmark or number)
@@ -358,56 +385,66 @@ Create a guided, multi-step form experience that feels conversational and not ov
 - **Exit**: "Save & Exit" button (top right, ghost style)
 
 **Page Header:**
+
 - **Title**: "Tell us about your business" (32px, Gray-900, semi-bold)
 - **Subtitle**: "Help our AI understand your compliance needs by providing some basic information" (16px, Gray-600)
 - **Time estimate**: "⏱ About 5 minutes" (14px, Gray-500, in badge)
 
 **Main Form Container** (Centered, max-width: 800px):
+
 - **Background**: White card with padding
 - **Shadow**: Soft elevation
 
 **Form Sections** (Progressive, well-spaced):
 
 **Section 1: Product Information**
+
 - **Section heading**: "Product Information" (20px, semi-bold, with number badge "1")
 - **Divider**: Thin purple line
 
 **Field 1 - Product/Service Name:**
+
 - Label: "Product or Service Name" (14px, Gray-700, semi-bold)
 - Helper text: "What do you call your product?" (12px, Gray-500)
 - Input: Text field with placeholder "e.g., HealthTrack App"
 - Character count: "0/100" (bottom right, small)
 
 **Field 2 - Business Description:**
+
 - Label: "Business Description" (14px, Gray-700, semi-bold)
 - Helper text: "Briefly describe what your product/service does" (12px, Gray-500)
 - Input: Textarea (4 rows) with placeholder "e.g., A mobile application that helps users track their fitness goals and nutrition..."
 - Character count: "0/500"
 
 **Field 3 - Services Offered:**
+
 - Label: "Services Offered" (14px, Gray-700, semi-bold)
 - Helper text: "What specific services do you provide?" (12px, Gray-500)
 - Input: Textarea (3 rows) with placeholder "e.g., Data analytics, personalized recommendations, meal planning..."
 - Character count: "0/300"
 
 **Field 4 - Target Customers:**
+
 - Label: "Target Customers" (14px, Gray-700, semi-bold)
 - Helper text: "Who uses your product?" (12px, Gray-500)
 - Input: Textarea (2 rows) with placeholder "e.g., Individual consumers, fitness enthusiasts, health-conscious adults..."
 - Character count: "0/200"
 
 **Field 5 - Problem Being Solved:**
+
 - Label: "Problem Being Solved" (14px, Gray-700, semi-bold)
 - Helper text: "What problem does your product solve?" (12px, Gray-500)
 - Input: Textarea (3 rows) with placeholder "e.g., Difficulty tracking health metrics consistently, lack of personalized nutrition guidance..."
 - Character count: "0/300"
 
 **Section 2: Data Handling** (Spacing above: 48px)
+
 - **Section heading**: "Data Handling" (20px, semi-bold, with number badge "2")
 - **Divider**: Thin purple line
 - **Description**: "Select all types of data your business collects or processes" (14px, Gray-600)
 
 **Data Type Checkboxes** (Grid layout, 2 columns):
+
 - Each checkbox item:
   - Large checkbox (purple when checked)
   - Icon representing data type
@@ -416,81 +453,73 @@ Create a guided, multi-step form experience that feels conversational and not ov
   - Examples in tooltip (info icon)
 
 **Options:**
+
 1. ✓ PII (Personally Identifiable Information)
    - Icon: User icon
    - Helper: "Names, emails, addresses..."
-   
 2. ✓ PHI (Protected Health Information)
    - Icon: Heart/medical icon
    - Helper: "Health records, medical data..."
-   
 3. ✓ Financial Data
    - Icon: Dollar sign
    - Helper: "Bank accounts, financial statements..."
-   
 4. ✓ Payment Card Data
    - Icon: Credit card
    - Helper: "Card numbers, CVV, billing info..."
-   
 5. ☐ Biometric Data
    - Icon: Fingerprint
    - Helper: "Fingerprints, facial recognition..."
-   
 6. ☐ Children's Data
    - Icon: Baby/child icon
    - Helper: "Data from users under 13/16..."
-   
 7. ✓ Employee Data
    - Icon: Briefcase
    - Helper: "Employee records, HR data..."
-   
 8. ☐ Other
    - Icon: Plus icon
    - Opens text field if checked
 
 **Section 3: Regions of Operation** (Spacing above: 48px)
+
 - **Section heading**: "Regions of Operation" (20px, semi-bold, with number badge "3")
 - **Divider**: Thin purple line
 - **Description**: "Select all regions where your business operates" (14px, Gray-600)
 
 **Region Checkboxes** (Grid layout, 2 columns):
+
 - Similar style to data types
 
 **Options:**
+
 1. ✓ United States
    - Icon: US flag
-   
 2. ✓ European Union
    - Icon: EU flag
-   
 3. ☐ United Kingdom
    - Icon: UK flag
-   
 4. ☐ Canada
    - Icon: Canada flag
-   
 5. ☐ Australia
    - Icon: Australia flag
-   
 6. ☐ APAC (Asia-Pacific)
    - Icon: Globe-Asia
-   
 7. ☐ Latin America
    - Icon: Globe
-   
 8. ☐ Other
    - Opens text field
 
 **Auto-save Indicator** (Floating, top-right of form):
+
 - "All changes saved" (12px, Green text with checkmark)
 - Or "Saving..." (with spinner)
 
 **Form Actions** (Bottom of card, fixed):
+
 - **Background**: White with subtle top border
 - **Padding**: 24px
 - **Layout**: Flex, space-between
 - **Left**: "Save Draft" button (ghost, gray)
-- **Right**: 
+- **Right**:
   - "Back" button (outlined, gray) - disabled on first step
   - "Next: Framework Selection →" button (solid purple, large)
     - Disabled until required fields filled
@@ -498,12 +527,14 @@ Create a guided, multi-step form experience that feels conversational and not ov
     - Hover: darker purple with elevation
 
 **Validation:**
+
 - Real-time validation as user types
 - Error messages appear below fields (red text with icon)
 - Success checkmarks for completed fields (green)
 - Required field indicator (red asterisk)
 
 **Helper Features:**
+
 - Tooltips on info icons (purple on hover)
 - Example chips that user can click to auto-fill
 - Character counters turn red when limit reached
@@ -511,6 +542,7 @@ Create a guided, multi-step form experience that feels conversational and not ov
 - Smooth scroll to first error on "Next" click
 
 **Visual Style:**
+
 - Purple accents throughout
 - Clean, generous spacing (24px between sections)
 - Rounded inputs (6px border radius)
@@ -527,19 +559,21 @@ Create an exciting reveal moment where AI "thinks" and then presents intelligent
 **Layout:**
 
 **Progress Indicator** (Top):
+
 - Step 1: Complete (green checkmark)
 - Step 2: Active (purple, "Framework Selection")
 - Step 3: Inactive (gray)
 - Progress: 66%
 
 **Loading State** (Initial, 3-5 seconds):
+
 - **Full-screen overlay**: Light purple gradient background (#e9ddff)
 - **Center content**:
   - **Animation**: Pulsing AI brain icon or abstract network visualization
     - Purple (#6d18ff) and light purple elements
     - Smooth, professional animation (not too playful)
   - **Text sequence** (changes every 1.5 seconds):
-    - "Analyzing your business profile..." 
+    - "Analyzing your business profile..."
     - "Mapping to 250+ compliance frameworks..."
     - "Identifying applicable regulations..."
     - "Calculating confidence scores..."
@@ -549,15 +583,17 @@ Create an exciting reveal moment where AI "thinks" and then presents intelligent
 **Results View** (After loading):
 
 **Page Header:**
+
 - **Transition**: Fade in from loading state
 - **Title**: "AI Compliance Recommendations" (32px, Gray-900, semi-bold)
 - **Subtitle**: "Based on your business profile, we've identified the following compliance frameworks" (16px, Gray-600)
 - **Summary badge**: "8 frameworks analyzed • 4 recommended" (purple badge)
 
 **Confidence Explanation Card** (Top):
+
 - **Background**: Light purple (#e9ddff) with purple left border
 - **Icon**: Info icon (purple)
-- **Content**: 
+- **Content**:
   - "How we calculate confidence"
   - Expandable section explaining:
     - 90-100%: Very High (your business strongly matches this framework)
@@ -566,6 +602,7 @@ Create an exciting reveal moment where AI "thinks" and then presents intelligent
     - Below 60%: Not shown (low relevance)
 
 **Framework Cards** (Main content):
+
 - **Layout**: Stacked cards with spacing
 - **Max visible**: 8 frameworks
 - **Sorted by**: Confidence score (highest first)
@@ -573,6 +610,7 @@ Create an exciting reveal moment where AI "thinks" and then presents intelligent
 **Individual Framework Card** (Pre-selected if confidence > 85%):
 
 **Card Structure:**
+
 - **Background**: White with border
 - **Border**: 2px solid purple (#6d18ff) if selected, gray if not
 - **Padding**: 24px
@@ -580,6 +618,7 @@ Create an exciting reveal moment where AI "thinks" and then presents intelligent
 - **Click**: Toggles selection
 
 **Card Header:**
+
 - **Left side**:
   - Large checkbox (purple, animated check on select)
   - Framework icon/illustration (compliance-related, in purple tones)
@@ -598,8 +637,9 @@ Create an exciting reveal moment where AI "thinks" and then presents intelligent
   - **Confidence label**: "Very High" (12px, below circle)
 
 **Card Body:**
+
 - **Why this applies**: (16px, semi-bold)
-- **Explanation text**: 
+- **Explanation text**:
   - "Your application processes personal data of EU residents. GDPR mandates strict data protection and privacy requirements for any organization handling EU citizen data, regardless of where your business is located." (14px, Gray-700)
   - Well-written, specific to user's input
   - 2-3 sentences
@@ -613,11 +653,12 @@ Create an exciting reveal moment where AI "thinks" and then presents intelligent
     - "Breach notification (72 hours)"
   - Each with icon
 
-- **Relevance tags**: 
+- **Relevance tags**:
   - Purple pill badges at bottom
   - Examples: "Personal Data", "EU Operations", "B2C", "Data Processing"
 
 **Card Footer:**
+
 - **Control count**: "50 controls" (12px, Gray-500 with checklist icon)
 - **Typical completion time**: "~3-4 hours" (12px, Gray-500 with clock icon)
 - **Learn more** link (purple, small)
@@ -625,37 +666,44 @@ Create an exciting reveal moment where AI "thinks" and then presents intelligent
 **Example Cards:**
 
 **Card 1 - GDPR (Pre-selected):**
+
 - Checkbox: ✓ (checked)
 - Confidence: 95% (green ring, "Very High")
 - Border: Purple (selected)
 - Explanation: Mentions EU operations, personal data processing
 
 **Card 2 - HIPAA (Pre-selected):**
+
 - Checkbox: ✓ (checked)
 - Confidence: 90% (green ring, "Very High")
 - Explanation: Mentions health data (PHI), US operations
 
 **Card 3 - PCI-DSS (Pre-selected):**
+
 - Checkbox: ✓ (checked)
 - Confidence: 88% (blue ring, "High")
 - Explanation: Mentions payment card data processing
 
 **Card 4 - SOC 2:**
+
 - Checkbox: ☐ (unchecked)
 - Confidence: 78% (blue ring, "High")
 - Explanation: SaaS security controls recommendation
 
 **Card 5 - ISO 27001:**
+
 - Checkbox: ☐ (unchecked)
 - Confidence: 72% (yellow ring, "Medium")
 - Explanation: General information security
 
 **Card 6 - CCPA:**
+
 - Checkbox: ☐ (unchecked)
 - Confidence: 68% (yellow ring, "Medium")
 - Explanation: California privacy law applicability
 
 **Manual Addition Section:**
+
 - **Divider**: "Or add frameworks manually" with horizontal lines
 - **Dropdown**: Searchable select
   - Placeholder: "Search for a framework..."
@@ -664,6 +712,7 @@ Create an exciting reveal moment where AI "thinks" and then presents intelligent
 - **Helper text**: "Don't see what you need? You can manually search our library of 250+ frameworks"
 
 **Selection Summary Sidebar** (Sticky, right side):
+
 - **Background**: Light purple card
 - **Heading**: "Selected Frameworks" (16px, semi-bold)
 - **Count**: "3 selected" (badge)
@@ -677,15 +726,17 @@ Create an exciting reveal moment where AI "thinks" and then presents intelligent
 - **CTA**: "Continue to Assessment →" (purple button, full width)
 
 **Form Actions** (Bottom, fixed):
-- **Left**: 
+
+- **Left**:
   - "← Back" button (outlined, gray)
-- **Right**: 
+- **Right**:
   - "Skip AI suggestions" link (gray text, small)
   - "Create Assessment" button (solid purple, large)
     - Shows selected count: "Create Assessment (3 selected)"
     - Disabled if none selected
 
 **Microinteractions:**
+
 - Card select: Border animates to purple, checkbox fills with smooth animation
 - Confidence ring: Animates in on load (circular progress animation)
 - Hover states: Cards lift slightly
@@ -694,6 +745,7 @@ Create an exciting reveal moment where AI "thinks" and then presents intelligent
 - Smooth scroll to top when results appear
 
 **Visual Polish:**
+
 - Purple gradients on selected cards (very subtle background)
 - AI "sparkle" icon next to recommendations
 - Smooth animations throughout
@@ -711,12 +763,14 @@ Create a comprehensive, scannable interface for working through compliance contr
 **Top Navigation**: Same as dashboard
 
 **Page Header:**
+
 - **Breadcrumb**: "Assessments / HealthTrack App Compliance" (gray, with purple on hover)
 - **Title**: "HealthTrack App Compliance" (28px, Gray-900, semi-bold)
 - **Status badge**: "In Progress" (yellow/amber badge)
 - **Last updated**: "Last updated: 2 hours ago by Sarah Chen" (14px, Gray-500)
 
 **Action Bar** (Below header):
+
 - **Left**:
   - "← Back to Dashboard" link (gray)
 - **Right**:
@@ -727,15 +781,18 @@ Create a comprehensive, scannable interface for working through compliance contr
     - Delete assessment
 
 **Key Metrics Bar** (Sticky below header):
+
 - **Background**: White card with bottom shadow
 - **4-column layout**:
 
 **Metric 1 - Overall Progress:**
+
 - Circular progress: 68% (large, purple)
 - Label: "Overall Compliance"
 - Sub-text: "82/120 items"
 
 **Metric 2 - Framework Breakdown:**
+
 - Mini progress bars (stacked):
   - HIPAA: 72% (with icon)
   - GDPR: 65%
@@ -743,6 +800,7 @@ Create a comprehensive, scannable interface for working through compliance contr
 - Click to filter by framework
 
 **Metric 3 - Status Distribution:**
+
 - Horizontal stacked bar:
   - Compliant: 52 (green segment)
   - Partial: 30 (yellow segment)
@@ -751,30 +809,33 @@ Create a comprehensive, scannable interface for working through compliance contr
 - Hover shows exact counts
 
 **Metric 4 - Critical Gaps:**
+
 - Large number: "2" (red, 32px)
 - Label: "Critical Issues"
 - Icon: Warning triangle
 - Click to filter
 
 **Filter & Search Bar:**
+
 - **Background**: Light gray bar (Gray-50)
 - **Layout**: Horizontal, left-aligned
 
 **Search Input:**
+
 - Placeholder: "Search controls by ID or title..."
 - Icon: Search magnifying glass (left)
 - Clear button (X on right when typing)
 - Width: 300px
 
 **Filter Dropdowns:**
-- **Framework filter**: 
+
+- **Framework filter**:
   - Button: "Framework: All" (with dropdown icon)
   - Multi-select dropdown:
     - ☑ HIPAA (52 items)
     - ☑ GDPR (50 items)
     - ☑ PCI-DSS (18 items)
   - Shows count of selected
-  
 - **Status filter**:
   - Button: "Status: All"
   - Multi-select with status colors:
@@ -782,7 +843,6 @@ Create a comprehensive, scannable interface for working through compliance contr
     - ☐ Partially Compliant (30) - yellow
     - ☐ Not Compliant (8) - red
     - ☐ Not Started (30) - gray
-  
 - **Severity filter**:
   - Button: "Severity: All"
   - Multi-select:
@@ -792,11 +852,13 @@ Create a comprehensive, scannable interface for working through compliance contr
     - ☐ Low (25) - blue badge
 
 **Applied Filters Display:**
+
 - Pills showing active filters
 - Example: "HIPAA ×", "Not Compliant ×"
 - "Clear all" link (purple)
 
 **Sort Dropdown:**
+
 - Button: "Sort by: Severity ↓"
 - Options:
   - Severity (High to Low)
@@ -809,6 +871,7 @@ Create a comprehensive, scannable interface for working through compliance contr
 **Grouped by Framework** (Collapsible sections):
 
 **Section Header** (HIPAA):
+
 - **Layout**: Full-width, clickable
 - **Left**:
   - Expand/collapse chevron icon
@@ -822,6 +885,7 @@ Create a comprehensive, scannable interface for working through compliance contr
 - **Border**: Left purple accent (4px)
 
 **Sub-section** (Collapsible):
+
 - "Access Control" category
 - "(8/15 items)"
 - Lighter background than main section
@@ -829,6 +893,7 @@ Create a comprehensive, scannable interface for working through compliance contr
 **Individual Control Card:**
 
 **Card Layout:**
+
 - **Background**: White
 - **Border**: Left accent based on status:
   - Compliant: Green (4px)
@@ -840,8 +905,9 @@ Create a comprehensive, scannable interface for working through compliance contr
 - **Click**: Expands detail view
 
 **Card Header** (Collapsed view):
+
 - **Left side** (70%):
-  - **Status icon**: 
+  - **Status icon**:
     - Compliant: Green checkmark circle
     - Partial: Yellow half-circle
     - Non-compliant: Red X circle
@@ -849,7 +915,6 @@ Create a comprehensive, scannable interface for working through compliance contr
   - **Control ID**: "HIPAA-164.308(a)(1)" (14px, Gray-900, mono font)
   - **Control title**: "Security Management Process" (16px, Gray-900, semi-bold)
   - **Severity badge**: "HIGH" (orange, small badge)
-  
 - **Middle** (20%):
   - **Status dropdown** (inline):
     - Current status as button
@@ -857,7 +922,6 @@ Create a comprehensive, scannable interface for working through compliance contr
     - Click to change (dropdown appears)
     - Options: Not Started, Compliant, Partially Compliant, Not Compliant, Not Applicable
     - Each with icon and color
-  
 - **Right side** (10%):
   - **Last updated**: "2d ago" (small, gray)
   - **Evidence count**: "2 files" (badge with document icon)
@@ -865,19 +929,23 @@ Create a comprehensive, scannable interface for working through compliance contr
     - Dropdown: View details, Get remediation, Add evidence, Add comment
 
 **Card Expanded View** (Click to toggle):
+
 - **Smooth expand animation**
 - **Additional sections visible**:
 
 **Description:**
+
 - "Implement policies and procedures to prevent, detect, contain, and correct security violations." (14px, Gray-700)
 - Well-formatted, readable
 
 **Current Status Info:**
+
 - Status: Compliant (with green checkmark)
 - Updated: 2 days ago by Sarah Chen
 - Link: "View history →"
 
 **Comments Section:**
+
 - **Header**: "Comments (1)" (collapsible)
 - **Comment card**:
   - User avatar + name
@@ -889,6 +957,7 @@ Create a comprehensive, scannable interface for working through compliance contr
   - "Post" button (purple)
 
 **Evidence Section:**
+
 - **Header**: "Evidence (2)" (collapsible)
 - **File list**:
   - **File 1**:
@@ -898,11 +967,12 @@ Create a comprehensive, scannable interface for working through compliance contr
     - Uploaded: "Feb 10, 2026 by Sarah Chen"
     - Actions: View, Download, Delete
   - **File 2**: Similar layout
-- **Add evidence button**: 
+- **Add evidence button**:
   - "Upload Evidence" (outlined purple)
   - Click opens upload modal
 
 **AI Remediation CTA** (if not compliant):
+
 - **Background**: Purple gradient card
 - **Icon**: AI sparkle icon (white)
 - **Text**: "Need help fixing this?" (white, bold)
@@ -910,17 +980,20 @@ Create a comprehensive, scannable interface for working through compliance contr
 - **Prominent placement** in expanded view
 
 **Quick Actions** (Bottom of expanded card):
+
 - "Mark as Compliant" button (if not compliant)
 - "Request Help" button
 - "Copy Link" button
 
 **Pagination** (Bottom of page):
+
 - "Showing 1-50 of 120 items"
 - Page numbers: [1] 2 3 ... 10
 - Next/Previous buttons
 - Items per page dropdown: "Show: 50 per page"
 
 **Floating Action Button** (Bottom right):
+
 - **Button**: Purple circle with + icon
 - **Label**: "Quick Add Evidence" (on hover)
 - **Click**: Opens evidence upload drawer
@@ -928,18 +1001,21 @@ Create a comprehensive, scannable interface for working through compliance contr
 **Empty States:**
 
 **If no items match filters:**
+
 - Icon: Search with magnifying glass (purple)
 - "No controls match your filters"
 - "Try adjusting your filters or search term"
 - "Clear all filters" button
 
 **If assessment just created:**
+
 - Illustration of empty checklist
 - "Ready to start your assessment!"
 - "Begin by reviewing each control and updating its status"
 - Guide card: "Click any control to expand and see details"
 
 **Visual Enhancements:**
+
 - Purple accents on interactive elements
 - Status colors consistently applied
 - Smooth expand/collapse animations
@@ -959,15 +1035,17 @@ Create a comprehensive analytics view that provides executive-level insights and
 **Layout:**
 
 **Page Header:**
+
 - **Title**: "Compliance Analytics" (28px, Gray-900, semi-bold)
 - **Subtitle**: "HealthTrack App Compliance • Last updated: 5 minutes ago" (16px, Gray-600)
-- **Time range selector**: 
+- **Time range selector**:
   - Dropdown: "Last 30 days", "Last 90 days", "All time", "Custom range"
 - **Export button**: "Export Dashboard" (PDF/CSV options)
 
 **Key Metrics Overview** (Top section - 4 cards):
 
 **Card 1 - Overall Compliance Score:**
+
 - **Large gauge/speedometer visualization**:
   - Center: 72% (48px, Purple)
   - Needle points to 72 on 0-100 scale
@@ -980,6 +1058,7 @@ Create a comprehensive analytics view that provides executive-level insights and
 - **Action**: "View breakdown ↓"
 
 **Card 2 - Controls Status:**
+
 - **Donut chart**:
   - Center: "120 Total"
   - Segments:
@@ -991,6 +1070,7 @@ Create a comprehensive analytics view that provides executive-level insights and
 - **Clickable**: Filters main view
 
 **Card 3 - Risk Summary:**
+
 - **Stacked bar chart** (horizontal):
   - Critical: 2 (red segment)
   - High: 8 (orange)
@@ -1001,6 +1081,7 @@ Create a comprehensive analytics view that provides executive-level insights and
 - **Action**: "View all risks →"
 
 **Card 4 - Assessment Progress:**
+
 - **Progress metrics**:
   - Items completed: 82/120
   - Completion rate: 68%
@@ -1012,10 +1093,12 @@ Create a comprehensive analytics view that provides executive-level insights and
 **Framework Comparison Section:**
 
 **Section Header:**
+
 - "Framework Performance" (20px, semi-bold)
 - "Compare compliance across different frameworks"
 
 **Visualization - Grouped Bar Chart:**
+
 - **X-axis**: Frameworks (HIPAA, GDPR, PCI-DSS)
 - **Y-axis**: Compliance % (0-100%)
 - **Bars for each framework**:
@@ -1028,9 +1111,9 @@ Create a comprehensive analytics view that provides executive-level insights and
 **Data Table below chart:**
 | Framework | Score | Compliant | Partial | Non-Compliant | Not Started | Critical Gaps |
 |-----------|-------|-----------|---------|---------------|-------------|---------------|
-| HIPAA     | 72%   | 36/50     | 10/50   | 2/50          | 2/50        | 1             |
-| GDPR      | 65%   | 33/50     | 12/50   | 3/50          | 2/50        | 1             |
-| PCI-DSS   | 68%   | 13/20     | 5/20    | 1/20          | 1/20        | 0             |
+| HIPAA | 72% | 36/50 | 10/50 | 2/50 | 2/50 | 1 |
+| GDPR | 65% | 33/50 | 12/50 | 3/50 | 2/50 | 1 |
+| PCI-DSS | 68% | 13/20 | 5/20 | 1/20 | 1/20 | 0 |
 
 - **Sortable columns**
 - **Row colors**: Subtle purple tint on hover
@@ -1039,10 +1122,12 @@ Create a comprehensive analytics view that provides executive-level insights and
 **Compliance Trend Section:**
 
 **Section Header:**
+
 - "Compliance Trend" (20px, semi-bold)
 - "Track your progress over time"
 
 **Line Chart:**
+
 - **X-axis**: Time (last 30 days)
 - **Y-axis**: Compliance % (0-100%)
 - **Lines**:
@@ -1058,10 +1143,12 @@ Create a comprehensive analytics view that provides executive-level insights and
 **Risk Heatmap Section:**
 
 **Section Header:**
+
 - "Risk Heatmap" (20px, semi-bold)
 - "Identify high-impact, high-severity gaps"
 
 **2D Grid Visualization:**
+
 - **Y-axis**: Impact (Critical, High, Medium, Low)
 - **X-axis**: Framework (HIPAA, GDPR, PCI-DSS)
 - **Cells**: Color intensity based on count
@@ -1076,9 +1163,11 @@ Create a comprehensive analytics view that provides executive-level insights and
 **Control Category Breakdown:**
 
 **Section Header:**
+
 - "Top Areas Requiring Attention" (20px, semi-bold)
 
 **Horizontal Bar Chart:**
+
 - **Categories** (Y-axis):
   - Access Control
   - Encryption
@@ -1094,10 +1183,12 @@ Create a comprehensive analytics view that provides executive-level insights and
 **Activity Timeline:**
 
 **Section Header:**
+
 - "Recent Activity" (20px, semi-bold)
 - "Last 7 days"
 
 **Timeline visualization:**
+
 - **Vertical timeline** (left side, purple line)
 - **Events**:
   - Each event has:
@@ -1116,12 +1207,14 @@ Create a comprehensive analytics view that provides executive-level insights and
 **Remediation Progress Tracker:**
 
 **Section Header:**
+
 - "Remediation Progress" (20px, semi-bold)
 
 **Card grid** (2-3 columns):
 Each card shows a remediation initiative:
 
 **Card structure:**
+
 - **Header**:
   - Control ID: "HIPAA-164.312(a)(1)"
   - Title: "Access Control Implementation"
@@ -1139,6 +1232,7 @@ Each card shows a remediation initiative:
 **Header**: "AI Insights" (18px, semi-bold)
 
 **Insights list:**
+
 1. **Insight card**:
    - Icon: Lightbulb (purple)
    - "Focus on encryption controls"
@@ -1157,7 +1251,8 @@ Each card shows a remediation initiative:
    - "View controls →" link
 
 **Export & Share Section** (Bottom right):
-- **Button**: "Schedule Report" 
+
+- **Button**: "Schedule Report"
   - Opens modal to set up automated reporting
   - Frequency: Daily, Weekly, Monthly
   - Recipients: Email addresses
@@ -1166,6 +1261,7 @@ Each card shows a remediation initiative:
   - Access control options
 
 **Visual Design Enhancements:**
+
 - All charts use purple as primary color
 - Smooth animations on load (charts draw in)
 - Interactive tooltips on hover
@@ -1176,6 +1272,7 @@ Each card shows a remediation initiative:
 - Consistent spacing and alignment
 
 **Mobile Considerations** (if responsive):
+
 - Stack cards vertically
 - Simplify charts (fewer data points)
 - Collapsible sections
@@ -1191,16 +1288,19 @@ Create an intelligent, actionable remediation guide that feels like having a com
 **Layout:**
 
 **Page Context Bar** (Top, subtle):
+
 - **Breadcrumb**: "Assessment / Checklist / HIPAA-164.312(a)(1)"
 - **Control reference**: "Access Control"
 
 **Page Header:**
+
 - **Icon**: AI sparkle icon (purple, large)
 - **Title**: "AI Remediation Plan" (28px, Gray-900, semi-bold)
 - **Subtitle**: "Actionable steps to achieve compliance for this control" (16px, Gray-600)
 - **Generated**: "Generated just now" (12px, Gray-500, with timestamp)
 
 **Control Context Card** (Top):
+
 - **Background**: Light purple (#e9ddff)
 - **Layout**: Horizontal
 - **Left side**:
@@ -1213,15 +1313,17 @@ Create an intelligent, actionable remediation guide that feels like having a com
   - **Impact**: "Addressing this will improve your HIPAA score by ~4%"
 
 **Control Description** (Expandable):
+
 - "Implement technical policies and procedures for electronic information systems..." (14px, Gray-700)
 - "Show full description ↓" (if long)
 
 **Loading State** (Initial, 3-5 seconds):
+
 - **Background**: White card with purple border
-- **Animation**: 
+- **Animation**:
   - Pulsing AI brain icon or animated dots
   - Purple gradient animation
-- **Text**: 
+- **Text**:
   - "Analyzing compliance requirements..." (16px)
   - "Reviewing best practices..." (fades in)
   - "Generating customized plan..." (fades in)
@@ -1232,6 +1334,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 **Action Items Section:**
 
 **Section Header:**
+
 - **Icon**: Checklist icon (purple)
 - **Title**: "Priority Actions" (22px, semi-bold)
 - **Subtitle**: "Complete these steps to achieve compliance" (14px, Gray-600)
@@ -1240,18 +1343,21 @@ Create an intelligent, actionable remediation guide that feels like having a com
 **Action Cards** (Numbered, prioritized):
 
 **Card 1 - Highest Priority:**
+
 - **Background**: White with left purple accent (4px)
 - **Priority badge**: "HIGH PRIORITY" (red badge, top-right)
 - **Number**: Large "1" (purple circle, left)
 
 **Card Header:**
+
 - **Title**: "Implement Role-Based Access Control (RBAC)" (18px, semi-bold)
 - **Checkbox**: Large checkbox (right) - user can mark as done
   - Checked: Purple with animation
   - Shows checkmark and completion date
 
 **Card Body:**
-- **Owner chip**: 
+
+- **Owner chip**:
   - Icon: User/team icon
   - Text: "IT Security Team"
   - Purple background
@@ -1279,7 +1385,6 @@ Create an intelligent, actionable remediation guide that feels like having a com
        - **Template button**: "Download Policy Template" (purple link)
     5. "Test RBAC implementation with sample users from each role"
        - Checkbox
-  
 - **Resources** (expandable section):
   - **Icon**: Document icon
   - **Links**:
@@ -1298,7 +1403,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
         if (allowedRoles.includes(req.user.role)) {
           next();
         } else {
-          res.status(403).send('Forbidden');
+          res.status(403).send("Forbidden");
         }
       };
     }
@@ -1306,6 +1411,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
   - **Copy button**: Copies code to clipboard
 
 **Card Footer:**
+
 - **Notes section** (expandable):
   - **Icon**: Note icon
   - **User can add notes**: "Add implementation notes..."
@@ -1318,6 +1424,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 ---
 
 **Card 2 - High Priority:**
+
 - Similar structure to Card 1
 - **Number**: "2"
 - **Title**: "Enable Multi-Factor Authentication (MFA)"
@@ -1337,6 +1444,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 ---
 
 **Card 3 - Medium Priority:**
+
 - **Number**: "3"
 - **Title**: "Implement Access Logging and Monitoring"
 - **Priority**: "MEDIUM" (yellow badge)
@@ -1352,6 +1460,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 ---
 
 **Card 4 - Medium Priority:**
+
 - **Number**: "4"
 - **Title**: "Create Access Control Policy Document"
 - **Priority**: "MEDIUM" (yellow badge)
@@ -1367,6 +1476,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 ---
 
 **Card 5 - Low Priority:**
+
 - **Number**: "5"
 - **Title**: "Conduct Quarterly Access Reviews"
 - **Priority**: "LOW" (blue badge)
@@ -1384,6 +1494,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 **Policy Recommendations Section:**
 
 **Section Header:**
+
 - **Icon**: Document icon (purple)
 - **Title**: "Required Policy Documents" (22px, semi-bold)
 - **Subtitle**: "Create these policies to support this control"
@@ -1391,6 +1502,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 **Policy Cards** (Grid, 2-column):
 
 **Each Policy Card:**
+
 - **Icon**: Document icon
 - **Policy name**: "Access Control Policy" (16px, semi-bold)
 - **Description**: "Defines who can access what data and under what circumstances" (14px, Gray-600)
@@ -1401,6 +1513,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
   - "Mark as Complete" checkbox
 
 **Policies listed:**
+
 1. Access Control Policy
 2. Password Policy
 3. Multi-Factor Authentication Policy
@@ -1412,6 +1525,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 **Technical Controls Section:**
 
 **Section Header:**
+
 - **Icon**: Settings/gear icon (purple)
 - **Title**: "Recommended Technical Controls" (22px, semi-bold)
 - **Subtitle**: "Implement these systems and tools"
@@ -1419,6 +1533,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 **Control Cards** (Grid, 2-column):
 
 **Each Control Card:**
+
 - **Icon**: Tool/system icon
 - **Control name**: "Identity Provider (IdP)" (16px, semi-bold)
 - **Purpose**: "Centralized authentication and authorization" (14px, Gray-600)
@@ -1430,6 +1545,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 - **Action**: "Learn More →" button
 
 **Controls listed:**
+
 1. Identity Provider (Auth0, Okta, Azure AD)
 2. Logging Platform (Datadog, Splunk, ELK Stack)
 3. Secrets Management (AWS Secrets Manager, Vault)
@@ -1441,10 +1557,12 @@ Create an intelligent, actionable remediation guide that feels like having a com
 **Implementation Timeline:**
 
 **Section Header:**
+
 - **Icon**: Calendar icon (purple)
 - **Title**: "Suggested Implementation Timeline" (22px, semi-bold)
 
 **Gantt-style visualization:**
+
 - **Timeline**: 12 weeks
 - **Bars** for each action:
   - Week 1-4: Implement RBAC (purple bar)
@@ -1463,6 +1581,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 **Cost Estimate:**
 
 **Section Header:**
+
 - **Icon**: Dollar sign icon
 - **Title**: "Estimated Implementation Cost" (22px, semi-bold)
 
@@ -1477,6 +1596,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 ---
 
 **Actions Panel** (Sticky bottom or top-right):
+
 - **Background**: Purple gradient card
 - **Icon**: Rocket icon (white)
 - **Text**: "Ready to implement?" (white, 16px, semi-bold)
@@ -1487,6 +1607,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 - **Save status**: "Plan auto-saved" (white, small, with checkmark)
 
 **Feedback Section** (Bottom):
+
 - **Background**: Light purple card
 - **Icon**: Thumbs up/down icons
 - **Text**: "Was this remediation plan helpful?" (16px)
@@ -1497,6 +1618,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 - **Link**: "Request custom guidance from compliance expert →"
 
 **Regeneration Option:**
+
 - **Button**: "Regenerate Plan" (ghost button, bottom-left)
   - Icon: Refresh icon
   - Tooltip: "Get a new AI-generated plan"
@@ -1505,6 +1627,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 ---
 
 **Visual Enhancements:**
+
 - Purple accent colors throughout
 - Priority badges color-coded (red/orange/yellow/blue)
 - Progress indicators for checked items
@@ -1518,6 +1641,7 @@ Create an intelligent, actionable remediation guide that feels like having a com
 - Sticky action panel on scroll
 
 **Microinteractions:**
+
 - Check animation when marking steps complete
 - Progress bar updates in header as steps completed
 - Confetti animation when all steps checked (optional)
@@ -1536,6 +1660,7 @@ Create a professional, executive-ready report preview that can be shared with st
 **Layout:**
 
 **Page Header** (Action bar):
+
 - **Left**:
   - "← Back to Assessment" link
   - Report title: "Compliance Readiness Report" (20px, semi-bold)
@@ -1551,6 +1676,7 @@ Create a professional, executive-ready report preview that can be shared with st
     - Export as Word/Excel
 
 **Report Preview Container:**
+
 - **Background**: Gray-50 (page background)
 - **Report "page"**: White card, centered, max-width 1000px
 - **Padding**: Generous (like a real document page)
@@ -1565,20 +1691,23 @@ Create a professional, executive-ready report preview that can be shared with st
 **Layout**: Centered content
 
 **Top section** (30% of page):
-- **Company logo area**: 
+
+- **Company logo area**:
   - Placeholder: "Your Logo Here" or uploaded logo
   - Left-aligned or centered
 
 **Center section** (40% of page):
-- **Report title**: 
+
+- **Report title**:
   - "COMPLIANCE READINESS REPORT" (36px, Gray-900, bold, uppercase, letter-spacing)
 - **Decorative line**: Purple horizontal line (2px)
-- **Assessment name**: 
+- **Assessment name**:
   - "HealthTrack App" (28px, semi-bold)
 - **Frameworks covered**:
   - Badge pills: HIPAA | GDPR | PCI-DSS (purple backgrounds)
 
 **Bottom section** (30% of page):
+
 - **Generation date**:
   - "Generated on February 13, 2026" (16px, Gray-700)
 - **Prepared for**:
@@ -1590,6 +1719,7 @@ Create a professional, executive-ready report preview that can be shared with st
   - "CONFIDENTIAL - Internal Use Only" (12px, Gray-500, italic)
 
 **Visual elements**:
+
 - Abstract geometric pattern (very subtle, purple/gray)
 - Shield or compliance icon (large, watermark-style, purple tint)
 
@@ -1598,27 +1728,31 @@ Create a professional, executive-ready report preview that can be shared with st
 **Page 2 - Executive Summary:**
 
 **Page header** (all subsequent pages):
+
 - **Top**: Thin purple line
 - **Left**: "HealthTrack App | Compliance Readiness Report"
 - **Right**: "Page 2"
 - **Bottom**: Thin gray line
 
 **Section: Executive Summary**
+
 - **Heading**: "EXECUTIVE SUMMARY" (24px, Purple #6d18ff, bold)
 
 **Overall Status Card:**
+
 - **Background**: Light purple (#e9ddff)
 - **Layout**: Centered
 - **Content**:
-  - **Compliance score**: 
+  - **Compliance score**:
     - Huge "72%" (72px, Purple, bold)
     - Circular gauge behind number (purple arc)
-  - **Status badge**: 
+  - **Status badge**:
     - "PARTIALLY COMPLIANT" (yellow badge, 16px)
   - **Status description**:
     - "Your organization has achieved 72% compliance readiness across assessed frameworks. While significant progress has been made, critical gaps require immediate attention." (16px, Gray-800)
 
 **Key Findings** (Bullet section):
+
 - **Subheading**: "Key Findings" (18px, semi-bold)
 - **Bullets** (with icons):
   - ✅ "82 of 120 controls have been assessed (68% completion)"
@@ -1628,9 +1762,10 @@ Create a professional, executive-ready report preview that can be shared with st
   - 🎯 "Estimated 14 days to reach 80% compliance at current pace"
 
 **Critical Risks Identified:**
+
 - **Subheading**: "Critical Risks" (18px, semi-bold, red accent)
 - **Risk cards** (2 critical items):
-  
+
   **Risk 1:**
   - **Background**: Light red tint
   - **Badge**: "CRITICAL" (red)
@@ -1638,7 +1773,7 @@ Create a professional, executive-ready report preview that can be shared with st
   - **Control**: "HIPAA-164.312(a)(2)(iv) - Encryption at Rest"
   - **Issue**: "Protected health information is not encrypted in database storage"
   - **Impact**: "High risk of data breach, HIPAA violation fines up to $1.5M"
-  
+
   **Risk 2:**
   - Similar layout
   - Control: "GDPR Art. 30 - Records of Processing Activities"
@@ -1646,6 +1781,7 @@ Create a professional, executive-ready report preview that can be shared with st
   - Impact: "GDPR non-compliance, potential fines up to 4% of global revenue"
 
 **Top Recommendations:**
+
 - **Subheading**: "Immediate Action Items" (18px, semi-bold)
 - **Numbered list** (top 3):
   1. "Implement database encryption at rest for all PHI (Target: 2 weeks)"
@@ -1657,6 +1793,7 @@ Create a professional, executive-ready report preview that can be shared with st
 **Page 3 - Organization Profile:**
 
 **Section: Organization Overview**
+
 - **Heading**: "ORGANIZATION PROFILE" (24px, Purple)
 
 **Details table:**
@@ -1669,6 +1806,7 @@ Create a professional, executive-ready report preview that can be shared with st
 | **Problem Solved** | Difficulty tracking health metrics consistently, lack of personalized nutrition guidance |
 
 **Data Handling:**
+
 - **Subheading**: "Data Types Processed" (16px, semi-bold)
 - **Badge grid**:
   - PII (Personally Identifiable Information)
@@ -1678,6 +1816,7 @@ Create a professional, executive-ready report preview that can be shared with st
 - **Description for each** in small text
 
 **Regions of Operation:**
+
 - **Subheading**: "Geographic Scope" (16px, semi-bold)
 - **Map visualization** (optional):
   - World map with highlighted regions
@@ -1691,15 +1830,18 @@ Create a professional, executive-ready report preview that can be shared with st
 **Page 4 - Framework Scores:**
 
 **Section: Framework Assessment Results**
+
 - **Heading**: "FRAMEWORK COMPLIANCE SCORES" (24px, Purple)
 
 **Framework cards** (one per framework):
 
 **HIPAA Card:**
+
 - **Background**: White with left purple accent
 - **Layout**: Left-to-right
 
 **Left side** (30%):
+
 - Framework icon (medical cross)
 - "HIPAA" (24px, bold)
 - "Health Insurance Portability and Accountability Act"
@@ -1707,11 +1849,13 @@ Create a professional, executive-ready report preview that can be shared with st
 - Category badge: "Healthcare"
 
 **Center** (30%):
+
 - **Large score**: "72%" (48px, purple)
 - **Circular progress**: 72% filled (purple ring)
 - **Status**: "Partially Compliant" (yellow badge)
 
 **Right side** (40%):
+
 - **Control breakdown**:
   - Total controls: 50
   - ✅ Compliant: 36 (72%)
@@ -1721,12 +1865,14 @@ Create a professional, executive-ready report preview that can be shared with st
 - **Mini progress bars** for each status
 
 **Key gaps**:
+
 - "Critical: Encryption at rest"
 - "High: Breach notification procedures"
 
 ---
 
 **GDPR Card:**
+
 - Similar layout
 - Score: 65%
 - Controls: 50 total
@@ -1736,6 +1882,7 @@ Create a professional, executive-ready report preview that can be shared with st
 ---
 
 **PCI-DSS Card:**
+
 - Score: 68%
 - Controls: 20 total
 - Key gaps: "Cardholder data encryption", "Access logs"
@@ -1743,6 +1890,7 @@ Create a professional, executive-ready report preview that can be shared with st
 ---
 
 **Comparison visualization:**
+
 - **Horizontal bar chart**:
   - X-axis: 0-100%
   - Bars for each framework (color-coded)
@@ -1756,9 +1904,11 @@ Create a professional, executive-ready report preview that can be shared with st
 **Page 5 - Risk Summary:**
 
 **Section: Risk Analysis**
+
 - **Heading**: "RISK SUMMARY & ANALYSIS" (24px, Purple)
 
 **Risk Distribution Chart:**
+
 - **Pie or donut chart**:
   - Critical: 2 (red segment, 6%)
   - High: 8 (orange, 24%)
@@ -1768,6 +1918,7 @@ Create a professional, executive-ready report preview that can be shared with st
 - **Legend** with counts and percentages
 
 **Risk Heatmap:**
+
 - **2D grid**:
   - Y-axis: Framework (HIPAA, GDPR, PCI-DSS)
   - X-axis: Severity (Critical, High, Medium, Low)
@@ -1776,6 +1927,7 @@ Create a professional, executive-ready report preview that can be shared with st
 - **Title**: "Risk Distribution by Framework and Severity"
 
 **Detailed Risk Table:**
+
 - **Heading**: "Top 10 Priority Risks" (18px, semi-bold)
 - **Table columns**:
   - Rank (#1, #2, etc.)
@@ -1789,6 +1941,7 @@ Create a professional, executive-ready report preview that can be shared with st
 - **Row highlighting**: Critical rows in light red background
 
 **Example rows:**
+
 1. HIPAA-164.312(a)(2)(iv) | Encryption at Rest | HIPAA | CRITICAL | Non-Compliant | High financial/reputational risk
 2. GDPR Art. 30 | Processing Records | GDPR | CRITICAL | Non-Compliant | Regulatory fines up to 4% revenue
 3. PCI-3.4 | Cardholder Encryption | PCI-DSS | HIGH | Partially Compliant | Payment processor penalties
@@ -1798,11 +1951,13 @@ Create a professional, executive-ready report preview that can be shared with st
 **Page 6 - Control Status Breakdown:**
 
 **Section: Detailed Control Assessment**
+
 - **Heading**: "CONTROL STATUS BREAKDOWN" (24px, Purple)
 
 **By Framework sections:**
 
 **HIPAA - Administrative Safeguards (20 controls):**
+
 - **Subheading** with completion: "(18/20 completed, 90%)"
 - **Table**:
   - Columns: Control ID | Title | Severity | Status | Comments | Evidence
@@ -1812,11 +1967,13 @@ Create a professional, executive-ready report preview that can be shared with st
   - Evidence count badge
 
 **Example rows:**
+
 - ✅ HIPAA-164.308(a)(1) | Security Management | High | Compliant | "RBAC implemented..." | 2 files
 - ⚠️ HIPAA-164.308(a)(3) | Workforce Security | Medium | Partial | "Background checks..." | 1 file
 - ❌ HIPAA-164.312(a)(2)(iv) | Encryption | Critical | Non-Compliant | "Not implemented" | 0 files
 
 **Repeat for**:
+
 - HIPAA - Physical Safeguards
 - HIPAA - Technical Safeguards
 - GDPR - Lawfulness of Processing
@@ -1825,6 +1982,7 @@ Create a professional, executive-ready report preview that can be shared with st
 - Etc.
 
 **Status legend** (bottom of page):
+
 - ✅ Compliant: Control fully implemented and documented
 - ⚠️ Partially Compliant: Control partially implemented, gaps exist
 - ❌ Non-Compliant: Control not implemented or significant gaps
@@ -1836,14 +1994,17 @@ Create a professional, executive-ready report preview that can be shared with st
 **Page 7 - Evidence Inventory:**
 
 **Section: Evidence Documentation**
+
 - **Heading**: "EVIDENCE INVENTORY" (24px, Purple)
 
 **Summary stats:**
+
 - Total evidence files: 42
 - Total file size: 85.6 MB
 - Most recent upload: 2 hours ago
 
 **Evidence table** (grouped by control):
+
 - **Columns**:
   - Control ID
   - Control Title
@@ -1854,11 +2015,13 @@ Create a professional, executive-ready report preview that can be shared with st
   - Uploaded By
 
 **Example rows:**
+
 - HIPAA-164.308(a)(1) | Security Management | HIPAA | access-control-policy.pdf | PDF | Feb 10, 2026 | Sarah Chen
 - HIPAA-164.308(a)(1) | Security Management | HIPAA | rbac-implementation.docx | DOCX | Feb 11, 2026 | Mike Johnson
 - GDPR Art. 5 | Principles | GDPR | data-processing-agreement.pdf | PDF | Feb 8, 2026 | Sarah Chen
 
 **Visual indicators:**
+
 - File type icons (PDF, DOCX, etc.)
 - Recent uploads highlighted (light purple background)
 
@@ -1867,9 +2030,11 @@ Create a professional, executive-ready report preview that can be shared with st
 **Page 8 - Remediation Roadmap:**
 
 **Section: Remediation Recommendations**
+
 - **Heading**: "REMEDIATION ROADMAP" (24px, Purple)
 
 **Timeline visualization:**
+
 - **Gantt chart** showing suggested remediation schedule
 - **12-week timeline**
 - **Color-coded bars** for each initiative:
@@ -1882,6 +2047,7 @@ Create a professional, executive-ready report preview that can be shared with st
 **Priority action cards:**
 
 **For each top 10 remediation:**
+
 - **Card layout**:
   - **Header**:
     - Priority badge (Critical/High/Medium/Low)
@@ -1894,7 +2060,7 @@ Create a professional, executive-ready report preview that can be shared with st
   - **Expected impact**: "Will improve HIPAA score by ~4%"
 
 **Summary table:**
-| Priority | Count | Estimated Hours | Estimated Cost* |
+| Priority | Count | Estimated Hours | Estimated Cost\* |
 |----------|-------|-----------------|-----------------|
 | Critical | 2 | 60 | $9,000 |
 | High | 8 | 180 | $27,000 |
@@ -1902,16 +2068,18 @@ Create a professional, executive-ready report preview that can be shared with st
 | Low | 9 | 40 | $6,000 |
 | **Total** | **34** | **400** | **$60,000** |
 
-*Assuming $150/hour internal labor cost
+\*Assuming $150/hour internal labor cost
 
 ---
 
 **Page 9 - Appendices:**
 
 **Section: Appendix A - Methodology**
+
 - **Heading**: "APPENDIX A: ASSESSMENT METHODOLOGY" (20px, Purple)
 
 **Content**:
+
 - Explanation of assessment approach
 - Scoring methodology:
   - Compliant = 100% (1.0 weight)
@@ -1923,9 +2091,11 @@ Create a professional, executive-ready report preview that can be shared with st
 - Timeframe of assessment
 
 **Section: Appendix B - Framework Descriptions**
+
 - **Heading**: "APPENDIX B: FRAMEWORK DESCRIPTIONS"
 
 **For each framework:**
+
 - **Framework name** (16px, semi-bold)
 - **Official name**
 - **Governing body**
@@ -1935,9 +2105,11 @@ Create a professional, executive-ready report preview that can be shared with st
 - **Penalties for non-compliance**
 
 **Section: Appendix C - Glossary**
+
 - **Heading**: "APPENDIX C: GLOSSARY OF TERMS"
 
 **Alphabetical list:**
+
 - **Compliance**: The state of adhering to regulatory requirements...
 - **Control**: A safeguard or countermeasure to...
 - **Framework**: A structured set of guidelines...
@@ -1950,6 +2122,7 @@ Create a professional, executive-ready report preview that can be shared with st
 **Final Page - Footer:**
 
 **Company information:**
+
 - Cipherion logo
 - "Powered by Cipherion AI Compliance Platform"
 - Contact information
@@ -1957,9 +2130,11 @@ Create a professional, executive-ready report preview that can be shared with st
 - Support: support@cipherion.com
 
 **Disclaimer:**
+
 - "This report is generated by Cipherion's AI-powered compliance platform and is intended for informational purposes only. It does not constitute legal advice. Organizations should consult with qualified legal and compliance professionals before making decisions based on this report."
 
 **Copyright:**
+
 - "© 2026 Cipherion. All rights reserved. Confidential and proprietary."
 
 ---
@@ -1967,33 +2142,39 @@ Create a professional, executive-ready report preview that can be shared with st
 **Interactive Features** (Web preview only):
 
 **Floating action bar** (bottom of page):
+
 - "Download PDF" (purple, prominent)
 - "Share via email" (outlined)
 - "Print" (outlined)
 - "Schedule automated reports" (link)
 
 **Table of contents sidebar** (left, collapsible):
+
 - Clickable links to each section
 - Current section highlighted in purple
 - Smooth scroll to section on click
 
 **Interactive charts:**
+
 - Hover to see exact values
 - Click to filter/drill down
 - Expandable for full-screen view
 
 **Annotations** (admin/user):
+
 - Ability to add notes to specific sections (comment icon)
 - "Add note" button appears on hover
 - Notes saved separately, visible in web view
 
 **Export options:**
+
 - PDF (formatted for print)
 - Word (editable)
 - Excel (data tables only)
 - PowerPoint (summary slides)
 
 **Sharing options:**
+
 - Generate shareable link (with expiration, password protection)
 - Email directly (with customizable message)
 - Integrate with Google Drive/Dropbox
@@ -2003,11 +2184,13 @@ Create a professional, executive-ready report preview that can be shared with st
 **Visual Design Guidelines:**
 
 **Typography:**
+
 - Headings: Inter Bold
 - Body: Inter Regular
 - Mono font for control IDs: "Roboto Mono"
 
 **Colors:**
+
 - Headings: Purple #6d18ff
 - Body text: Gray-900 (#171717)
 - Secondary text: Gray-600 (#525252)
@@ -2015,24 +2198,28 @@ Create a professional, executive-ready report preview that can be shared with st
 - Semantic colors for status (green/yellow/red/gray)
 
 **Spacing:**
+
 - Generous margins (1 inch equivalent in web)
 - Section breaks: 48px
 - Card padding: 24px
 - Line height: 1.6 for readability
 
 **Charts and Graphs:**
+
 - Use brand purple as primary color
 - Professional, clean styling
 - Data labels clearly visible
 - Legends with clear iconography
 
 **Page layout:**
+
 - Mimic printed document
 - Clean, professional aesthetic
 - Print-friendly CSS
 - Page breaks at logical sections (for PDF)
 
 **Branding:**
+
 - Cipherion logo on cover and footer
 - Purple accent color throughout
 - Professional, trustworthy appearance
