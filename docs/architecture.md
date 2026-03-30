@@ -1,9 +1,5 @@
 # Complete System Architecture for AI-Assured Compliance Dashboard
 
-
-
-
-
 ## 1. SYSTEM ARCHITECTURE OVERVIEW
 
 ```
@@ -182,7 +178,7 @@
 
 Step 1: Organization Onboarding
 ┌──────┐     ┌─────────┐    ┌────────────┐     ┌────────────┐
-│ User │───▶  Next.js  ───▶│ API Route  │───▶ │ AI Service 
+│ User │───▶  Next.js  ───▶│ API Route  │───▶ │ AI Service
 └──────┘     │   UI    │    │ /api/org/  │     │  (OpenAI)  │
              └─────────┘    │  onboard   │     └────────────┘
                             └────────────┘          │
@@ -202,32 +198,32 @@ Step 2: Framework Selection
 
 Step 3: Checklist Completion
 ┌──────┐    ┌─────────┐    ┌────────────┐     ┌──────────┐
-│ User │───▶ Checklist ───▶ Assessment  ───▶  Database 
+│ User │───▶ Checklist ───▶ Assessment  ───▶  Database
 │Update│    │   UI    │    │  Service   │     │  Update  │
 │Status│    │         │    │ + Scoring  │     └──────────┘
 └──────┘    └─────────┘    └────────────┘
 
 Step 4: Report Generation
 ┌──────┐    ┌─────────┐    ┌────────────┐    ┌──────────┐
-│ User │───▶ Report   ───▶    Report    ───▶   PDF    
+│ User │───▶ Report   ───▶    Report    ───▶   PDF
 │Click │    │  Button │    │  Service   │    │ Generator│
 └──────┘    └─────────┘    └────────────┘    └──────────┘
                                   │                │
                                   ▼                ▼
                            ┌────────────┐    ┌──────────┐
-                           │     S3     │◀───   File   
+                           │     S3     │◀───   File
                            │  Storage   │    │   Save   │
                            └────────────┘    └──────────┘
 
 Step 5: AI Remediation
 ┌──────┐    ┌─────────┐     ┌────────────┐     ┌──────────┐
-│ User │───▶   Get   ───▶  AI Service ───▶   OpenAI  
+│ User │───▶   Get   ───▶  AI Service ───▶   OpenAI
 │Click │    │Remediate│     │            │     │   API    │
 └──────┘    └─────────┘     └────────────┘     └──────────┘
                                   │                │
                                   ▼                ▼
                            ┌────────────┐    ┌──────────┐
-                           │  Display   │◀───  Parse  
+                           │  Display   │◀───  Parse
                            │   Plan     │    │ Response │
                            └────────────┘    └──────────┘
 ```
@@ -383,8 +379,8 @@ Step 5: AI Remediation
 
 ```typescript
 // stores/assessment-store.ts
-import { create } from 'zustand';
-import { Assessment, AssessmentItem, ItemStatus } from '@/types';
+import { create } from "zustand";
+import { Assessment, AssessmentItem, ItemStatus } from "@/types";
 
 interface AssessmentState {
   // State
@@ -393,7 +389,7 @@ interface AssessmentState {
   complianceScore: number | null;
   isLoading: boolean;
   error: string | null;
-  
+
   // Actions
   loadAssessment: (id: string) => Promise<void>;
   updateItemStatus: (itemId: string, status: ItemStatus, comments?: string) => Promise<void>;
@@ -407,51 +403,49 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
   complianceScore: null,
   isLoading: false,
   error: null,
-  
+
   loadAssessment: async (id: string) => {
     set({ isLoading: true, error: null });
     try {
       const response = await fetch(`/api/assessments/${id}`);
       const data = await response.json();
-      set({ 
-        currentAssessment: data.assessment, 
+      set({
+        currentAssessment: data.assessment,
         items: data.items,
-        isLoading: false 
+        isLoading: false,
       });
     } catch (error) {
       set({ error: error.message, isLoading: false });
     }
   },
-  
+
   updateItemStatus: async (itemId: string, status: ItemStatus, comments?: string) => {
     try {
       const response = await fetch(
         `/api/assessments/${get().currentAssessment?.id}/items/${itemId}`,
         {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status, comments }),
-        }
+        },
       );
       const updatedItem = await response.json();
-      
-      set(state => ({
-        items: state.items.map(item => 
-          item.id === itemId ? updatedItem : item
-        )
+
+      set((state) => ({
+        items: state.items.map((item) => (item.id === itemId ? updatedItem : item)),
       }));
-      
+
       // Recalculate score
       await get().calculateScore();
     } catch (error) {
       set({ error: error.message });
     }
   },
-  
+
   calculateScore: async () => {
     const assessmentId = get().currentAssessment?.id;
     if (!assessmentId) return;
-    
+
     try {
       const response = await fetch(`/api/assessments/${assessmentId}/score`);
       const { score } = await response.json();
@@ -460,14 +454,15 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
       set({ error: error.message });
     }
   },
-  
-  reset: () => set({
-    currentAssessment: null,
-    items: [],
-    complianceScore: null,
-    isLoading: false,
-    error: null,
-  }),
+
+  reset: () =>
+    set({
+      currentAssessment: null,
+      items: [],
+      complianceScore: null,
+      isLoading: false,
+      error: null,
+    }),
 }));
 ```
 
@@ -477,42 +472,42 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
 
 ```typescript
 // app/api/assessments/[id]/items/[itemId]/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { prisma } from '@/lib/prisma';
-import { authOptions } from '@/lib/auth';
-import { ItemStatus } from '@prisma/client';
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/lib/auth";
+import { ItemStatus } from "@prisma/client";
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string; itemId: string } }
+  { params }: { params: { id: string; itemId: string } },
 ) {
   try {
     // 1. Authentication
     const session = await getServerSession(authOptions);
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    
+
     // 2. Parse request body
     const body = await request.json();
     const { status, comments } = body;
-    
+
     // 3. Validation
     if (!Object.values(ItemStatus).includes(status)) {
-      return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
+      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
-    
+
     // 4. Authorization check
     const assessment = await prisma.assessment.findUnique({
       where: { id: params.id },
       include: { user: true },
     });
-    
-    if (assessment.userId !== session.user.id && session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+    if (assessment.userId !== session.user.id && session.user.role !== "ADMIN") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
-    
+
     // 5. Update item
     const updatedItem = await prisma.assessmentItem.update({
       where: { id: params.itemId },
@@ -525,19 +520,15 @@ export async function PATCH(
         control: true,
       },
     });
-    
+
     // 6. Recalculate assessment score
     await recalculateAssessmentScore(params.id);
-    
+
     // 7. Return updated item
     return NextResponse.json(updatedItem);
-    
   } catch (error) {
-    console.error('Error updating assessment item:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Error updating assessment item:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
@@ -546,11 +537,9 @@ async function recalculateAssessmentScore(assessmentId: string) {
     where: { assessmentId },
     include: { control: true },
   });
-  
-  const applicableItems = items.filter(
-    item => item.status !== ItemStatus.NOT_APPLICABLE
-  );
-  
+
+  const applicableItems = items.filter((item) => item.status !== ItemStatus.NOT_APPLICABLE);
+
   if (applicableItems.length === 0) {
     await prisma.assessment.update({
       where: { id: assessmentId },
@@ -558,20 +547,17 @@ async function recalculateAssessmentScore(assessmentId: string) {
     });
     return;
   }
-  
-  const totalWeight = applicableItems.reduce(
-    (sum, item) => sum + (item.control.weight || 1.0),
-    0
-  );
-  
+
+  const totalWeight = applicableItems.reduce((sum, item) => sum + (item.control.weight || 1.0), 0);
+
   const weightedScore = applicableItems.reduce((sum, item) => {
     const itemScore = getItemScore(item.status);
     const weight = item.control.weight || 1.0;
-    return sum + (itemScore * weight);
+    return sum + itemScore * weight;
   }, 0);
-  
+
   const score = (weightedScore / totalWeight) * 100;
-  
+
   await prisma.assessment.update({
     where: { id: assessmentId },
     data: { score },
@@ -593,8 +579,8 @@ function getItemScore(status: ItemStatus): number {
 
 ```typescript
 // services/ai-service.ts
-import { generateText } from 'ai';
-import { openai } from '@ai-sdk/openai';
+import { generateText } from "ai";
+import { openai } from "@ai-sdk/openai";
 
 export class AIService {
   /**
@@ -617,12 +603,12 @@ export class AIService {
     }>;
   }> {
     const prompt = this.buildMappingPrompt(input);
-    
+
     const { text } = await generateText({
-      model: openai('gpt-4-turbo'),
+      model: openai("gpt-4-turbo"),
       messages: [
         {
-          role: 'system',
+          role: "system",
           content: `You are a compliance expert. Analyze the organization details and suggest applicable compliance frameworks.
           
 Return a JSON array with this exact structure:
@@ -647,21 +633,21 @@ Available frameworks to consider:
 - NIST CSF (Cybersecurity framework)`,
         },
         {
-          role: 'user',
+          role: "user",
           content: prompt,
         },
       ],
       temperature: 0.3,
     });
-    
+
     try {
       const parsed = JSON.parse(text);
       return parsed;
     } catch (error) {
-      throw new Error('Failed to parse AI response');
+      throw new Error("Failed to parse AI response");
     }
   }
-  
+
   private static buildMappingPrompt(input: any): string {
     return `
 Analyze this organization:
@@ -671,13 +657,13 @@ Description: ${input.description}
 Services Offered: ${input.services}
 Target Customers: ${input.targetCustomers}
 Problem Being Solved: ${input.problemSolved}
-Data Handled: ${input.dataHandled.join(', ')}
-Regions of Operation: ${input.regions.join(', ')}
+Data Handled: ${input.dataHandled.join(", ")}
+Regions of Operation: ${input.regions.join(", ")}
 
 Suggest the most applicable compliance frameworks with confidence scores and explanations.
 `;
   }
-  
+
   /**
    * Generate remediation plan for non-compliant items
    */
@@ -690,7 +676,7 @@ Suggest the most applicable compliance frameworks with confidence scores and exp
     steps: Array<{
       title: string;
       description: string;
-      priority: 'HIGH' | 'MEDIUM' | 'LOW';
+      priority: "HIGH" | "MEDIUM" | "LOW";
       owner: string;
     }>;
     policySuggestions: string[];
@@ -721,101 +707,98 @@ Return as JSON:
   "technicalControls": ["...", "..."]
 }
 `;
-    
+
     const { text } = await generateText({
-      model: openai('gpt-4-turbo'),
+      model: openai("gpt-4-turbo"),
       messages: [
         {
-          role: 'system',
-          content: 'You are a compliance remediation expert. Provide actionable, specific guidance.',
+          role: "system",
+          content:
+            "You are a compliance remediation expert. Provide actionable, specific guidance.",
         },
         {
-          role: 'user',
+          role: "user",
           content: prompt,
         },
       ],
       temperature: 0.4,
     });
-    
+
     return JSON.parse(text);
   }
 }
 
 // services/assessment-service.ts
-import { prisma } from '@/lib/prisma';
-import { ItemStatus } from '@prisma/client';
+import { prisma } from "@/lib/prisma";
+import { ItemStatus } from "@prisma/client";
 
 export class AssessmentService {
   /**
    * Create a new assessment from selected frameworks
    */
-  static async createAssessment(
-    userId: string,
-    organizationId: string,
-    frameworkIds: string[]
-  ) {
+  static async createAssessment(userId: string, organizationId: string, frameworkIds: string[]) {
     return await prisma.$transaction(async (tx) => {
       // 1. Create assessment
       const assessment = await tx.assessment.create({
         data: {
           userId,
           organizationId,
-          status: 'IN_PROGRESS',
+          status: "IN_PROGRESS",
           score: 0,
         },
       });
-      
+
       // 2. Get all controls for selected frameworks
       const controls = await tx.control.findMany({
         where: {
           frameworkId: { in: frameworkIds },
         },
       });
-      
+
       // 3. Create assessment items for each control
       const items = await Promise.all(
-        controls.map(control =>
+        controls.map((control) =>
           tx.assessmentItem.create({
             data: {
               assessmentId: assessment.id,
               controlId: control.id,
               status: ItemStatus.NOT_STARTED,
             },
-          })
-        )
+          }),
+        ),
       );
-      
+
       return { assessment, items };
     });
   }
-  
+
   /**
    * Calculate compliance score
    */
-  static calculateScore(items: Array<{
-    status: ItemStatus;
-    control: { weight?: number };
-  }>): number {
-    const applicableItems = items.filter(
-      item => item.status !== ItemStatus.NOT_APPLICABLE
-    );
-    
+  static calculateScore(
+    items: Array<{
+      status: ItemStatus;
+      control: { weight?: number };
+    }>,
+  ): number {
+    const applicableItems = items.filter((item) => item.status !== ItemStatus.NOT_APPLICABLE);
+
     if (applicableItems.length === 0) return 0;
-    
+
     const totalWeight = applicableItems.reduce(
       (sum, item) => sum + (item.control.weight || 1.0),
-      0
+      0,
     );
-    
+
     const weightedScore = applicableItems.reduce((sum, item) => {
       const itemScore = this.getItemScore(item.status);
       const weight = item.control.weight || 1.0;
-      return sum + (itemScore * weight);
+      return sum + itemScore * weight;
     }, 0);
-    
+
     return (weightedScore / totalWeight) * 100;
   }
-  
+
   private static getItemScore(status: ItemStatus): number {
     const scoreMap: Record<ItemStatus, number> = {
       COMPLIANT: 1.0,
@@ -825,31 +808,33 @@ export class AssessmentService {
     };
     return scoreMap[status];
   }
-  
+
   /**
    * Get risk summary
    */
-  static getRiskSummary(items: Array<{
-    status: ItemStatus;
-    control: { severity: string };
-  }>) {
+  static getRiskSummary(
+    items: Array<{
+      status: ItemStatus;
+      control: { severity: string };
+    }>,
+  ) {
     const nonCompliantItems = items.filter(
-      item => item.status === ItemStatus.NOT_COMPLIANT ||
-              item.status === ItemStatus.PARTIALLY_COMPLIANT
+      (item) =>
+        item.status === ItemStatus.NOT_COMPLIANT || item.status === ItemStatus.PARTIALLY_COMPLIANT,
     );
-    
+
     const riskDistribution = {
       CRITICAL: 0,
       HIGH: 0,
       MEDIUM: 0,
       LOW: 0,
     };
-    
-    nonCompliantItems.forEach(item => {
+
+    nonCompliantItems.forEach((item) => {
       const severity = item.control.severity as keyof typeof riskDistribution;
       riskDistribution[severity]++;
     });
-    
+
     return {
       totalRisks: nonCompliantItems.length,
       distribution: riskDistribution,
@@ -859,14 +844,14 @@ export class AssessmentService {
 }
 
 // services/report-service.ts
-import PDFDocument from 'pdfkit';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import PDFDocument from "pdfkit";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 export class ReportService {
   private static s3Client = new S3Client({
     region: process.env.AWS_REGION!,
   });
-  
+
   /**
    * Generate compliance readiness report
    */
@@ -888,20 +873,20 @@ export class ReportService {
         },
       },
     });
-    
-    if (!assessment) throw new Error('Assessment not found');
-    
+
+    if (!assessment) throw new Error("Assessment not found");
+
     // 2. Calculate metrics
     const score = AssessmentService.calculateScore(assessment.items);
     const riskSummary = AssessmentService.getRiskSummary(assessment.items);
-    
+
     // 3. Generate PDF
     const pdfBuffer = await this.generatePDF({
       assessment,
       score,
       riskSummary,
     });
-    
+
     // 4. Upload to S3
     const key = `reports/${assessmentId}-${Date.now()}.pdf`;
     await this.s3Client.send(
@@ -909,61 +894,61 @@ export class ReportService {
         Bucket: process.env.S3_BUCKET_NAME!,
         Key: key,
         Body: pdfBuffer,
-        ContentType: 'application/pdf',
-      })
+        ContentType: "application/pdf",
+      }),
     );
-    
+
     // 5. Save report record
     await prisma.report.create({
       data: {
         assessmentId,
-        type: 'COMPLIANCE_READINESS',
-        format: 'PDF',
+        type: "COMPLIANCE_READINESS",
+        format: "PDF",
         fileUrl: `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${key}`,
       },
     });
-    
+
     return key;
   }
-  
+
   private static async generatePDF(data: any): Promise<Buffer> {
     return new Promise((resolve, reject) => {
       const doc = new PDFDocument();
       const chunks: Buffer[] = [];
-      
-      doc.on('data', chunk => chunks.push(chunk));
-      doc.on('end', () => resolve(Buffer.concat(chunks)));
-      doc.on('error', reject);
-      
+
+      doc.on("data", (chunk) => chunks.push(chunk));
+      doc.on("end", () => resolve(Buffer.concat(chunks)));
+      doc.on("error", reject);
+
       // Header
-      doc.fontSize(20).text('Compliance Readiness Report', { align: 'center' });
+      doc.fontSize(20).text("Compliance Readiness Report", { align: "center" });
       doc.moveDown();
-      
+
       // Organization details
-      doc.fontSize(14).text('Organization Details');
+      doc.fontSize(14).text("Organization Details");
       doc.fontSize(10).text(`Name: ${data.assessment.organization.name}`);
       doc.text(`Description: ${data.assessment.organization.description}`);
       doc.moveDown();
-      
+
       // Compliance score
-      doc.fontSize(14).text('Compliance Score');
-      doc.fontSize(24).text(`${data.score.toFixed(1)}%`, { align: 'center' });
+      doc.fontSize(14).text("Compliance Score");
+      doc.fontSize(24).text(`${data.score.toFixed(1)}%`, { align: "center" });
       doc.moveDown();
-      
+
       // Risk summary
-      doc.fontSize(14).text('Risk Summary');
+      doc.fontSize(14).text("Risk Summary");
       doc.fontSize(10).text(`Total Risks: ${data.riskSummary.totalRisks}`);
       doc.text(`Critical: ${data.riskSummary.distribution.CRITICAL}`);
       doc.text(`High: ${data.riskSummary.distribution.HIGH}`);
       doc.text(`Medium: ${data.riskSummary.distribution.MEDIUM}`);
       doc.text(`Low: ${data.riskSummary.distribution.LOW}`);
       doc.moveDown();
-      
+
       // Controls breakdown
       doc.addPage();
-      doc.fontSize(14).text('Controls Breakdown');
+      doc.fontSize(14).text("Controls Breakdown");
       doc.moveDown();
-      
+
       data.assessment.items.forEach((item: any) => {
         doc.fontSize(10);
         doc.text(`${item.control.title}`);
@@ -974,7 +959,7 @@ export class ReportService {
         }
         doc.moveDown(0.5);
       });
-      
+
       doc.end();
     });
   }
@@ -1003,13 +988,13 @@ model User {
   name          String
   password      String        // Hashed
   role          Role          @default(USER)
-  
+
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
-  
+
   // Relations
   assessments   Assessment[]
-  
+
   @@index([email])
   @@index([role])
 }
@@ -1023,24 +1008,24 @@ enum Role {
 
 model Organization {
   id              String        @id @default(cuid())
-  
+
   // Basic details
   productName     String
   description     String
   services        String
   targetCustomers String
   problemSolved   String
-  
+
   // Data & compliance
   dataHandled     String[]      // ["PII", "PHI", "Financial"]
   regions         String[]      // ["US", "EU", "APAC"]
-  
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  
+
   // Relations
   assessments     Assessment[]
-  
+
   @@index([createdAt])
 }
 
@@ -1048,7 +1033,7 @@ model Organization {
 
 model Framework {
   id              String        @id @default(cuid())
-  
+
   code            String        @unique   // "GDPR", "HIPAA", "PCI-DSS"
   name            String                  // "General Data Protection Regulation"
   description     String
@@ -1056,13 +1041,13 @@ model Framework {
   category        String                  // "Privacy", "Security", "Healthcare"
   version         String
   effectiveDate   DateTime
-  
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  
+
   // Relations
   controls        Control[]
-  
+
   @@index([code])
   @@index([region])
   @@index([category])
@@ -1071,21 +1056,21 @@ model Framework {
 model Control {
   id              String        @id @default(cuid())
   frameworkId     String
-  
+
   code            String                  // "GDPR-7.1", "HIPAA-164.308"
   title           String
   description     String
   category        String?                 // "Access Control", "Encryption"
   severity        Severity      @default(MEDIUM)
   weight          Float         @default(1.0)
-  
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  
+
   // Relations
   framework       Framework     @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
   assessmentItems AssessmentItem[]
-  
+
   @@unique([frameworkId, code])
   @@index([frameworkId])
   @@index([severity])
@@ -1104,20 +1089,20 @@ model Assessment {
   id              String        @id @default(cuid())
   userId          String
   organizationId  String
-  
+
   status          AssessmentStatus @default(IN_PROGRESS)
   score           Float?                   // 0-100
-  
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   completedAt     DateTime?
-  
+
   // Relations
   user            User          @relation(fields: [userId], references: [id])
   organization    Organization  @relation(fields: [organizationId], references: [id])
   items           AssessmentItem[]
   reports         Report[]
-  
+
   @@index([userId])
   @@index([organizationId])
   @@index([status])
@@ -1134,18 +1119,18 @@ model AssessmentItem {
   id              String        @id @default(cuid())
   assessmentId    String
   controlId       String
-  
+
   status          ItemStatus    @default(NOT_STARTED)
   comments        String?
-  
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  
+
   // Relations
   assessment      Assessment    @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
   control         Control       @relation(fields: [controlId], references: [id])
   evidence        Evidence[]
-  
+
   @@unique([assessmentId, controlId])
   @@index([assessmentId])
   @@index([controlId])
@@ -1165,17 +1150,17 @@ enum ItemStatus {
 model Evidence {
   id                String        @id @default(cuid())
   assessmentItemId  String
-  
+
   filename          String
   fileUrl           String                 // S3 URL
   fileSize          Int
   mimeType          String
-  
+
   uploadedAt        DateTime      @default(now())
-  
+
   // Relations
   assessmentItem    AssessmentItem @relation(fields: [assessmentItemId], references: [id], onDelete: Cascade)
-  
+
   @@index([assessmentItemId])
   @@index([uploadedAt])
 }
@@ -1185,16 +1170,16 @@ model Evidence {
 model Report {
   id              String        @id @default(cuid())
   assessmentId    String
-  
+
   type            ReportType
   format          ReportFormat
   fileUrl         String?                  // S3 URL for PDF
-  
+
   generatedAt     DateTime      @default(now())
-  
+
   // Relations
   assessment      Assessment    @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
-  
+
   @@index([assessmentId])
   @@index([generatedAt])
 }
@@ -1213,15 +1198,15 @@ enum ReportFormat {
 
 model AIInteraction {
   id              String        @id @default(cuid())
-  
+
   type            AIType
   input           String                   // JSON stringified
   output          String                   // JSON stringified
   model           String                   // "gpt-4-turbo"
   tokensUsed      Int?
-  
+
   createdAt       DateTime      @default(now())
-  
+
   @@index([type])
   @@index([createdAt])
 }
@@ -1237,7 +1222,7 @@ enum AIType {
 
 ```yaml
 # docker-compose.yml (Local Development)
-version: '3.8'
+version: "3.8"
 
 services:
   # PostgreSQL Database
@@ -1382,39 +1367,36 @@ volumes:
 
 ```typescript
 // lib/auth.ts (NextAuth configuration)
-import { NextAuthOptions } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { compare } from 'bcryptjs';
-import { prisma } from './prisma';
+import { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { compare } from "bcryptjs";
+import { prisma } from "./prisma";
 
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: 'Credentials',
+      name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" }
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error('Invalid credentials');
+          throw new Error("Invalid credentials");
         }
 
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
+          where: { email: credentials.email },
         });
 
         if (!user) {
-          throw new Error('User not found');
+          throw new Error("User not found");
         }
 
-        const isPasswordValid = await compare(
-          credentials.password,
-          user.password
-        );
+        const isPasswordValid = await compare(credentials.password, user.password);
 
         if (!isPasswordValid) {
-          throw new Error('Invalid password');
+          throw new Error("Invalid password");
         }
 
         return {
@@ -1423,8 +1405,8 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           role: user.role,
         };
-      }
-    })
+      },
+    }),
   ],
   callbacks: {
     async jwt({ token, user }) {
@@ -1440,63 +1422,60 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
       }
       return session;
-    }
+    },
   },
   pages: {
-    signIn: '/login',
+    signIn: "/login",
   },
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
 
 // middleware.ts (Route protection)
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { getToken } from 'next-auth/jwt';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request });
-  const isAuthPage = request.nextUrl.pathname.startsWith('/login') ||
-                     request.nextUrl.pathname.startsWith('/register');
-  const isAdminPage = request.nextUrl.pathname.startsWith('/admin');
-  const isUserPage = request.nextUrl.pathname.startsWith('/user');
+  const isAuthPage =
+    request.nextUrl.pathname.startsWith("/login") ||
+    request.nextUrl.pathname.startsWith("/register");
+  const isAdminPage = request.nextUrl.pathname.startsWith("/admin");
+  const isUserPage = request.nextUrl.pathname.startsWith("/user");
 
   // Redirect to login if not authenticated
   if (!token && !isAuthPage) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   // Redirect authenticated users away from auth pages
   if (token && isAuthPage) {
     const role = token.role as string;
-    const redirectUrl = role === 'ADMIN' ? '/admin/dashboard' : '/user/dashboard';
+    const redirectUrl = role === "ADMIN" ? "/admin/dashboard" : "/user/dashboard";
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
 
   // Check admin access
-  if (isAdminPage && token?.role !== 'ADMIN') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (isAdminPage && token?.role !== "ADMIN") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   // Check user access
-  if (isUserPage && token?.role !== 'USER') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (isUserPage && token?.role !== "USER") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    '/admin/:path*',
-    '/user/:path*',
-    '/login',
-    '/register',
-  ],
+  matcher: ["/admin/:path*", "/user/:path*", "/login", "/register"],
 };
 ```
+
 ---
 
 ## 4. SECURITY ARCHITECTURE
@@ -1522,7 +1501,7 @@ Layer 2: Application Security
 
 Layer 3: Data Security
 ├─ Password hashing (bcrypt)
-├─ Encryption at rest 
+├─ Encryption at rest
 ├─ Encryption in transit (TLS)
 ├─ Secure file upload (signed URLs)
 └─ PII handling (minimal storage)
@@ -1550,32 +1529,32 @@ Layer 5: Infrastructure Security
 const cachingLayers = {
   // 1. Browser caching
   static: {
-    maxAge: '1 year',
-    assets: ['CSS', 'JS', 'Images'],
+    maxAge: "1 year",
+    assets: ["CSS", "JS", "Images"],
   },
-  
+
   // 2. CDN caching (Vercel Edge)
   edge: {
-    duration: '1 hour',
+    duration: "1 hour",
     revalidate: true,
   },
-  
+
   // 3. Redis caching
   redis: {
-    session: 3600,      // 1 hour
-    aiResponse: 86400,  // 24 hours
-    frameworks: 3600,   // 1 hour
+    session: 3600, // 1 hour
+    aiResponse: 86400, // 24 hours
+    frameworks: 3600, // 1 hour
   },
-  
+
   // 4. Database query optimization
   database: {
     indexes: [
-      'user.email',
-      'assessment.userId',
-      'assessmentItem.assessmentId',
-      'control.frameworkId',
+      "user.email",
+      "assessment.userId",
+      "assessmentItem.assessmentId",
+      "control.frameworkId",
     ],
-    queryOptimization: 'Prisma select optimization',
+    queryOptimization: "Prisma select optimization",
   },
 };
 
@@ -1586,8 +1565,8 @@ const prismaClientOptions = {
       url: process.env.DATABASE_URL,
     },
   },
-  log: ['query', 'error', 'warn'],
-  errorFormat: 'pretty',
+  log: ["query", "error", "warn"],
+  errorFormat: "pretty",
   // Connection pool
   connection: {
     poolSize: 10,
@@ -1606,4 +1585,3 @@ This comprehensive architecture provides:
 4. **Maintainability**: Clean separation of concerns, type safety, testing
 5. **Reliability**: Health checks, monitoring, automated backups
 6. **Cost-efficiency**: Pay-per-use serverless, auto-scaling
-
