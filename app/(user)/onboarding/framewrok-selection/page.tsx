@@ -179,7 +179,7 @@ export default function Page() {
 
         {/* Stepper */}
         <Stepper currentStep={2} />
-        <div className="max-w-7xl mx-auto p-6 space-y-8">
+        <div className="max-w-7xl mx-auto p-6 space-y-6">
           {/* ✅ THIS is the Top Section (greeting line) */}
           <TopSection />
 

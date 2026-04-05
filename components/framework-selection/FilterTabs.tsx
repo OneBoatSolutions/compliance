@@ -14,7 +14,7 @@ export default function FilterTabs({ active, setActive }: Props) {
         <button
           key={tab}
           onClick={() => setActive(tab)}
-          className={`px-4 py-1 rounded-full text-sm transition ${
+          className={`px-5 py-2.5 rounded-full text-sm transition ${
             active === tab ? "bg-purple-600 text-white" : "bg-gray-100 text-gray-600"
           }`}
         >
