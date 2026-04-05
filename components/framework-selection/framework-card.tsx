@@ -74,7 +74,7 @@ export default function FrameworkCard({ framework, selected, onToggle }: Props) 
       </div>
 
       {/* Description */}
-      <p className="text-sm text-gray-500 mt-2">{framework.description}</p>
+      <p className="text-sm text-gray-600 mt-2">{framework.description}</p>
 
       {/* Accordion */}
       <div className="mt-3">
