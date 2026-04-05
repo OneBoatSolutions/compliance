@@ -8,6 +8,8 @@ export const onboardingSchema = z.object({
   problem: z.string().min(1, "Problem is required").max(300, "Max 300 characters"),
 
   dataTypes: z.array(z.string()).min(1, "Select at least one"),
+  otherDataType: z.string().optional(),
   regions: z.array(z.string()).min(1, "Select at least one"),
+  otherRegion: z.string().optional(),
 });
 export type OnboardingFormValues = z.infer<typeof onboardingSchema>;
