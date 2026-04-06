@@ -1,9 +1,10 @@
 "use client";
 
-import { useForm, UseFormRegisterReturn, FieldErrors } from "react-hook-form";
+import { useForm, UseFormRegisterReturn, FieldErrors, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { onboardingSchema, OnboardingFormValues } from "@/lib/validations/onboarding";
 import { useEffect, useState, ReactNode } from "react";
+import { useRef } from "react";
 import {
   User,
   Heart,
@@ -19,6 +20,139 @@ import {
   CircleCheck,
   CircleAlert,
 } from "lucide-react";
+const mapToBackend = (values: OnboardingFormValues) => ({
+  productName: values.productName,
+  description: values.description,
+  services: values.services,
+  targetCustomers: values.customers,
+  problemSolved: values.problem,
+
+  dataHandled: (values.dataTypes ?? []).map((val) => {
+    switch (val) {
+      case "PII":
+        return "PII (Personally Identifiable Information)";
+      case "PHI":
+        return "PHI (Protected Health Information)";
+      case "Financial":
+        return "Financial data";
+      case "Payment":
+        return "Payment card data";
+      case "Biometric":
+        return "Biometric data";
+      case "Children":
+        return "Children data";
+      case "Employee":
+        return "Employee data";
+      default:
+        return values.otherDataType || "Other";
+    }
+  }),
+
+  regions: (values.regions ?? []).map((r) => {
+    switch (r) {
+      case "US":
+        return "United States";
+      case "EU":
+        return "European Union";
+      case "UK":
+        return "United Kingdom";
+      case "Canada":
+        return "Canada";
+      case "Australia":
+        return "Australia";
+      case "APAC":
+        return "APAC";
+      case "LATAM":
+        return "Latin America";
+      default:
+        return values.otherRegion || "Other";
+    }
+  }),
+});
+interface BackendOrganization {
+  productName: string;
+  description: string;
+  services: string;
+  targetCustomers: string;
+  problemSolved: string;
+  dataHandled: string[];
+  regions: string[];
+}
+const mapFromBackend = (data: BackendOrganization): OnboardingFormValues => ({
+  productName: data.productName || "",
+  description: data.description || "",
+  services: data.services || "",
+  customers: data.targetCustomers || "",
+  problem: data.problemSolved || "",
+
+  dataTypes: (data.dataHandled || []).map((val) => {
+    if (val.includes("PII")) {
+      return "PII";
+    }
+    if (val.includes("PHI")) {
+      return "PHI";
+    }
+    if (val.includes("Financial")) {
+      return "Financial";
+    }
+    if (val.includes("Payment")) {
+      return "Payment";
+    }
+    if (val.includes("Biometric")) {
+      return "Biometric";
+    }
+    if (val.includes("Children")) {
+      return "Children";
+    }
+    if (val.includes("Employee")) {
+      return "Employee";
+    }
+    return "Other";
+  }),
+  otherDataType:
+    (data.dataHandled || []).find((val) => {
+      return !["PII", "PHI", "Financial", "Payment", "Biometric", "Children", "Employee"].some(
+        (known) => val.includes(known),
+      );
+    }) || "",
+
+  regions: (data.regions || []).map((r) => {
+    if (r.includes("United States")) {
+      return "US";
+    }
+    if (r.includes("European Union")) {
+      return "EU";
+    }
+    if (r.includes("United Kingdom")) {
+      return "UK";
+    }
+    if (r.includes("Canada")) {
+      return "Canada";
+    }
+    if (r.includes("Australia")) {
+      return "Australia";
+    }
+    if (r.includes("APAC")) {
+      return "APAC";
+    }
+    if (r.includes("Latin America")) {
+      return "LATAM";
+    }
+    return "Other";
+  }),
+  otherRegion:
+    (data.regions || []).find((r) => {
+      return ![
+        "United States",
+        "European Union",
+        "United Kingdom",
+        "Canada",
+        "Australia",
+        "APAC",
+        "Latin America",
+      ].some((known) => r.includes(known));
+    }) || "",
+});
 function Stepper({ currentStep }: { currentStep: number }) {
   const steps = [
     { id: 1, label: "Business Profile" },
@@ -26,7 +160,7 @@ function Stepper({ currentStep }: { currentStep: number }) {
     { id: 3, label: "Review & Create" },
   ];
 
-  // ✅ 33% per step
+  // 33% per step
   const progressPercent = (currentStep / steps.length) * 100;
 
   return (
@@ -89,6 +223,7 @@ export default function OnboardingPage() {
   } = useForm<OnboardingFormValues>({
     resolver: zodResolver(onboardingSchema),
     mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
       productName: "",
       description: "",
@@ -97,46 +232,210 @@ export default function OnboardingPage() {
       problem: "",
       dataTypes: [],
       regions: [],
+      otherDataType: "",
+      otherRegion: "",
     },
   });
 
   const values = watch();
   const isStep1Valid =
-    values.productName &&
-    values.description &&
-    values.services &&
-    values.customers &&
-    values.problem;
+    !!values.productName &&
+    !!values.description &&
+    !!values.services &&
+    !!values.customers &&
+    !!values.problem;
+
+  const isReadyForSave = isStep1Valid && values.dataTypes.length > 0 && values.regions.length > 0;
+
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [orgId, setOrgId] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [hasFetched, setHasFetched] = useState(false);
+  const [lastSavedValues, setLastSavedValues] = useState<string>("");
+  const abortRef = useRef<AbortController | null>(null);
 
-  // 🔥 STEP STATE (DYNAMIC)
+  const createOrganization = async (values: OnboardingFormValues) => {
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    const res = await fetch("/api/organizations", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(mapToBackend(values)),
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      throw new Error("Failed to create organization");
+    }
+
+    const data = await res.json();
+    setOrgId(data.id);
+  };
+
+  const updateOrganization = async (values: OnboardingFormValues) => {
+    if (!orgId) {
+      return;
+    }
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    const res = await fetch(`/api/organizations/${orgId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(mapToBackend(values)),
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      throw new Error("Failed to update organization");
+    }
+  };
+
+  // STEP STATE (DYNAMIC)
   const [currentStep, setCurrentStep] = useState(1);
 
   // AUTO SAVE
   useEffect(() => {
-    setSaving(true);
-    setSaved(false);
+    if (!isReadyForSave || !hasFetched) {
+      return;
+    }
 
-    const timer = setTimeout(() => {
-      console.log("Saved:", values); // replace with API later
-      setSaving(false);
-      setSaved(true);
-    }, 1000);
+    const handler = setTimeout(async () => {
+      const mapped = mapToBackend(values);
+      const current = JSON.stringify(mapped);
 
-    return () => clearTimeout(timer);
-  }, [values]);
+      if (current === lastSavedValues) {
+        return;
+      }
+
+      // ✅ MOVE GUARD BEFORE setting saving
+      if (!orgId && creating) {
+        return;
+      }
+      const minSavingTime = 500;
+
+      try {
+        const start = Date.now();
+        setSaving(true);
+        setSaved(false);
+
+        abortRef.current?.abort();
+
+        if (!orgId) {
+          if (!isReadyForSave) {
+            return;
+          }
+          try {
+            setCreating(true);
+            await createOrganization(values);
+          } finally {
+            setCreating(false);
+          }
+        } else {
+          await updateOrganization(values);
+        }
+        const elapsed = Date.now() - start;
+        const remaining = minSavingTime - elapsed;
+
+        if (remaining > 0) {
+          await new Promise((res) => setTimeout(res, remaining));
+        }
+        setLastSavedValues(current);
+
+        // ✅ keep "saved" visible
+        setSaving(false);
+        setSaved(true);
+        console.log("SAVED TRIGGERED");
+      } catch (error: unknown) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+        console.error("Auto-save failed", error);
+      }
+    }, 2000);
+
+    return () => clearTimeout(handler);
+  }, [values, orgId, hasFetched, lastSavedValues, creating, isReadyForSave]);
+
+  //FETCH EXISTING DATA
+  useEffect(() => {
+    //Don't fetch if orgId is not available
+    if (!orgId) {
+      setHasFetched(true); //allow autosave
+      return;
+    }
+    const fetchOrg = async () => {
+      try {
+        const res = await fetch(`/api/organizations/${orgId}`, {
+          method: "GET", // optional (default is GET)
+          headers: { "Content-Type": "application/json" },
+          credentials: "include", // ADD THIS
+        }); // get existing org
+        if (!res.ok) {
+          throw new Error("Failed to fetch organization");
+        }
+
+        const data: BackendOrganization & { id: string } = await res.json();
+
+        if (data) {
+          // ✅ map backend → frontend
+          const mapped = mapFromBackend(data);
+
+          // ✅ fill form
+          setValue("productName", mapped.productName, { shouldValidate: true });
+          setValue("description", mapped.description, { shouldValidate: true });
+          setValue("services", mapped.services, { shouldValidate: true });
+          setValue("customers", mapped.customers, { shouldValidate: true });
+          setValue("problem", mapped.problem, { shouldValidate: true });
+          setValue("dataTypes", mapped.dataTypes, { shouldValidate: true });
+          setValue("regions", mapped.regions, { shouldValidate: true });
+          setValue("otherDataType", mapped.otherDataType, { shouldValidate: true });
+          setValue("otherRegion", mapped.otherRegion, { shouldValidate: true });
+
+          // ✅ prevent autosave firing immediately
+          setLastSavedValues(JSON.stringify(mapToBackend(mapped)));
+        }
+      } catch (err) {
+        console.error("Fetch failed", err);
+      } finally {
+        // ✅ ALWAYS allow autosave after fetch attempt
+        setHasFetched(true);
+      }
+    };
+
+    fetchOrg();
+  }, [orgId]);
 
   // CHECKBOX HANDLER
   const handleCheckbox = (field: "dataTypes" | "regions", value: string) => {
     const current = values[field] || [];
+
     if (current.includes(value)) {
-      setValue(
-        field,
-        current.filter((v) => v !== value),
-      );
+      // REMOVE value
+      const updated = current.filter((v) => v !== value);
+
+      setValue(field, updated, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+
+      // ✅ CLEAR "Other" input when unchecked
+      if (value === "Other") {
+        if (field === "dataTypes") {
+          setValue("otherDataType", "", { shouldDirty: true });
+        }
+        if (field === "regions") {
+          setValue("otherRegion", "", { shouldDirty: true });
+        }
+      }
     } else {
-      setValue(field, [...current, value]);
+      // ADD value
+      setValue(field, [...current, value], {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
     }
   };
 
@@ -175,9 +474,11 @@ export default function OnboardingPage() {
           onSubmit={handleSubmit(onSubmit, onError)}
           className="bg-white p-6 rounded-lg shadow space-y-8"
         >
-          <div className="text-right text-sm">
-            {saving && <span className="text-gray-500 animate-pulse">Saving...</span>}
-            {saved && <span className="text-green-600">✔ All changes saved</span>}
+          <div className="text-right text-sm min-h-[24px]">
+            <span className="text-gray-500 min-h-[24px] inline-block">
+              {saving && "Saving..."}
+              {!saving && saved && "✔ All changes saved"}
+            </span>
           </div>
 
           <Section title="Product Information" number={1}>
@@ -312,6 +613,7 @@ export default function OnboardingPage() {
             <DataCheckboxGrid
               selected={values.dataTypes || []}
               onChange={(val) => handleCheckbox("dataTypes", val)}
+              register={register}
             />
             {errors.dataTypes && <p className="text-red-500 text-sm">{errors.dataTypes.message}</p>}
           </Section>
@@ -323,6 +625,7 @@ export default function OnboardingPage() {
             <RegionCheckboxGrid
               selected={values.regions || []}
               onChange={(val: string) => handleCheckbox("regions", val)}
+              register={register}
             />
             {errors.regions && <p className="text-red-500 text-sm">{errors.regions.message}</p>}
           </Section>
@@ -589,10 +892,9 @@ const dataTypeOptions: DataTypeOption[] = [
 interface DataCheckboxGridProps {
   selected: string[];
   onChange: (val: string) => void;
+  register: UseFormRegister<OnboardingFormValues>;
 }
-export function DataCheckboxGrid({ selected, onChange }: DataCheckboxGridProps) {
-  const [otherText, setOtherText] = useState<string>("");
-
+export function DataCheckboxGrid({ selected, onChange, register }: DataCheckboxGridProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       {dataTypeOptions.map((opt) => {
@@ -653,9 +955,7 @@ export function DataCheckboxGrid({ selected, onChange }: DataCheckboxGridProps) 
               {/* OTHER INPUT */}
               {opt.id === "Other" && isSelected && (
                 <input
-                  type="text"
-                  value={otherText}
-                  onChange={(e) => setOtherText(e.target.value)}
+                  {...register("otherDataType")}
                   placeholder="Specify other data type"
                   className="mt-3 w-full border border-gray-200 p-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                   onClick={(e) => e.stopPropagation()}
@@ -700,10 +1000,9 @@ const regionOptions = [
 interface RegionCheckboxGridProps {
   selected: string[];
   onChange: (val: string) => void;
+  register: UseFormRegister<OnboardingFormValues>;
 }
-export function RegionCheckboxGrid({ selected, onChange }: RegionCheckboxGridProps) {
-  const [otherText, setOtherText] = useState("");
-
+export function RegionCheckboxGrid({ selected, onChange, register }: RegionCheckboxGridProps) {
   return (
     <div className="grid grid-cols-2 gap-5">
       {regionOptions.map((opt) => {
@@ -742,9 +1041,7 @@ export function RegionCheckboxGrid({ selected, onChange }: RegionCheckboxGridPro
             {/* Other input */}
             {opt.id === "Other" && isSelected && (
               <input
-                type="text"
-                value={otherText}
-                onChange={(e) => setOtherText(e.target.value)}
+                {...register("otherRegion")}
                 placeholder="Specify region"
                 className="mt-3 w-full border border-gray-200 p-2 rounded text-sm"
                 onClick={(e) => e.stopPropagation()}
