@@ -1,14 +1,21 @@
 "use client";
 
 import { ArrowLeft, ArrowRight, Save, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-export default function BottomNavigation() {
+interface BottomNavigationProps {
+  onNext: () => void | Promise<void>;
+}
+
+export default function BottomNavigation({ onNext }: BottomNavigationProps) {
+  const router = useRouter();
   return (
     <div className="flex justify-between items-center mt-12 pt-6 border-t">
       {/* LEFT: Exit + Save Draft */}
       <div className="flex items-center gap-3">
         {/* Exit */}
         <button
+          onClick={onNext}
           className="
             flex items-center gap-2 
             px-4 py-2 
@@ -45,6 +52,7 @@ export default function BottomNavigation() {
       {/* RIGHT: Back + Next */}
       <div className="flex items-center gap-4">
         <button
+          onClick={() => router.back()}
           className="
             flex items-center gap-2 
             px-4 py-2 

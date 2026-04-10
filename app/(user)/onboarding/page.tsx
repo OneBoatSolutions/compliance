@@ -1,9 +1,10 @@
 "use client";
-
 import { useForm, UseFormRegisterReturn, FieldErrors, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { onboardingSchema, OnboardingFormValues } from "@/lib/validations/onboarding";
 import { useEffect, useState, ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { useAssessmentStore } from "@/stores/assessment-store";
 import { useRef } from "react";
 import {
   User,
@@ -20,6 +21,18 @@ import {
   CircleCheck,
   CircleAlert,
 } from "lucide-react";
+import { fa } from "zod/v4/locales";
+function mapToAI(data: OnboardingFormValues) {
+  return {
+    name: data.productName,
+    description: data.description,
+    services: data.services,
+    customers: data.customers,
+    problem: data.problem,
+    dataHandled: data.dataTypes,
+    regions: data.regions,
+  };
+}
 const mapToBackend = (values: OnboardingFormValues) => ({
   productName: values.productName,
   description: values.description,
@@ -214,8 +227,10 @@ function Stepper({ currentStep }: { currentStep: number }) {
 }
 
 export default function OnboardingPage() {
+  const { organizationId, onboardingData, setOnboardingData } = useAssessmentStore();
   const {
     register,
+    reset,
     handleSubmit,
     watch,
     setValue,
@@ -224,7 +239,7 @@ export default function OnboardingPage() {
     resolver: zodResolver(onboardingSchema),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {
+    defaultValues: onboardingData || {
       productName: "",
       description: "",
       services: "",
@@ -254,6 +269,9 @@ export default function OnboardingPage() {
   const [hasFetched, setHasFetched] = useState(false);
   const [lastSavedValues, setLastSavedValues] = useState<string>("");
   const abortRef = useRef<AbortController | null>(null);
+  const [loadingAI, setLoadingAI] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [cachedFormData, setCachedFormData] = useState<OnboardingFormValues | null>(null);
 
   const createOrganization = async (values: OnboardingFormValues) => {
     const controller = new AbortController();
@@ -295,10 +313,24 @@ export default function OnboardingPage() {
 
   // STEP STATE (DYNAMIC)
   const [currentStep, setCurrentStep] = useState(1);
+  useEffect(() => {
+    if (organizationId && !orgId) {
+      setOrgId(organizationId);
+    }
+  }, [organizationId, orgId]);
+  //Onboarding data
+  useEffect(() => {
+    if (onboardingData) {
+      reset(onboardingData);
+    }
+  }, [onboardingData, reset]);
 
   // AUTO SAVE
   useEffect(() => {
-    if (!isReadyForSave || !hasFetched) {
+    if (!isReadyForSave) {
+      return;
+    }
+    if (orgId && !hasFetched) {
       return;
     }
 
@@ -361,67 +393,43 @@ export default function OnboardingPage() {
 
   //FETCH EXISTING DATA
   useEffect(() => {
-    //Don't fetch if orgId is not available
     if (!orgId) {
-      setHasFetched(true); //allow autosave
       return;
     }
+
     const fetchOrg = async () => {
       try {
-        const res = await fetch(`/api/organizations/${orgId}`, {
-          method: "GET", // optional (default is GET)
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // ADD THIS
-        }); // get existing org
-        if (!res.ok) {
-          throw new Error("Failed to fetch organization");
-        }
+        const res = await fetch(`/api/organizations/${orgId}`);
+        const data = await res.json();
 
-        const data: BackendOrganization & { id: string } = await res.json();
-
-        if (data) {
-          // ✅ map backend → frontend
-          const mapped = mapFromBackend(data);
-
-          // ✅ fill form
-          setValue("productName", mapped.productName, { shouldValidate: true });
-          setValue("description", mapped.description, { shouldValidate: true });
-          setValue("services", mapped.services, { shouldValidate: true });
-          setValue("customers", mapped.customers, { shouldValidate: true });
-          setValue("problem", mapped.problem, { shouldValidate: true });
-          setValue("dataTypes", mapped.dataTypes, { shouldValidate: true });
-          setValue("regions", mapped.regions, { shouldValidate: true });
-          setValue("otherDataType", mapped.otherDataType, { shouldValidate: true });
-          setValue("otherRegion", mapped.otherRegion, { shouldValidate: true });
-
-          // ✅ prevent autosave firing immediately
-          setLastSavedValues(JSON.stringify(mapToBackend(mapped)));
+        if (data.success) {
+          reset(mapFromBackend(data.data));
+          setHasFetched(true);
         }
       } catch (err) {
-        console.error("Fetch failed", err);
-      } finally {
-        // ✅ ALWAYS allow autosave after fetch attempt
-        setHasFetched(true);
+        console.error(err);
       }
     };
 
     fetchOrg();
-  }, [orgId]);
+  }, [orgId, creating]);
 
   // CHECKBOX HANDLER
   const handleCheckbox = (field: "dataTypes" | "regions", value: string) => {
     const current = values[field] || [];
+    let updated;
 
     if (current.includes(value)) {
       // REMOVE value
-      const updated = current.filter((v) => v !== value);
+      updated = current.filter((v) => v !== value);
 
       setValue(field, updated, {
         shouldValidate: true,
         shouldDirty: true,
+        shouldTouch: true, // ✅ ADD THIS
       });
 
-      // ✅ CLEAR "Other" input when unchecked
+      // CLEAR "Other" input when unchecked
       if (value === "Other") {
         if (field === "dataTypes") {
           setValue("otherDataType", "", { shouldDirty: true });
@@ -435,18 +443,160 @@ export default function OnboardingPage() {
       setValue(field, [...current, value], {
         shouldValidate: true,
         shouldDirty: true,
+        shouldTouch: true, // ✅ ADD THIS
       });
     }
   };
+  const router = useRouter();
+  const { setOrganizationId, setSuggestions } = useAssessmentStore();
 
-  const onSubmit = (data: OnboardingFormValues) => {
-    if (currentStep < 3) {
-      setCurrentStep((prev) => prev + 1);
+  interface OrgResponse {
+    id?: string;
+    data?: {
+      id?: string;
+    };
+  }
+
+  const onSubmit = async (data: OnboardingFormValues) => {
+    setCachedFormData(data);
+    setAiError(null);
+
+    if (creating) {
       return;
     }
+
+    setHasFetched(false);
+
+    console.log("SUBMIT TRIGGERED", currentStep);
+    console.log("FINAL STEP HIT ✅", data);
+
+    try {
+      setCreating(true);
+
+      let finalOrgId: string | null = orgId;
+
+      // 1. Ensure organization exists
+      if (!finalOrgId) {
+        const res = await fetch("/api/organizations", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(mapToBackend(data)),
+        });
+
+        if (!res.ok) {
+          throw new Error("ORG_CREATION_FAILED");
+        }
+
+        const orgRes: OrgResponse = await res.json();
+
+        const id = orgRes.id ?? orgRes.data?.id;
+
+        if (!id) {
+          throw new Error("ORG_ID_MISSING");
+        }
+
+        finalOrgId = id;
+        setOrgId(id);
+      }
+
+      // 2. Store globally
+      setOrganizationId(finalOrgId);
+
+      // 3. Call AI mapping API (with timeout)
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10000);
+
+      try {
+        setLoadingAI(true); // ✅ ONLY here
+
+        const aiRes = await fetch("/api/ai/map-compliance", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(mapToAI(data)),
+          signal: controller.signal,
+        });
+
+        if (!aiRes.ok) {
+          throw new Error("AI_FAILED");
+        }
+
+        const aiResJson: { data?: unknown } = await aiRes.json();
+
+        const frameworks = aiResJson.data;
+
+        if (!frameworks || !Array.isArray(frameworks)) {
+          throw new Error("NO_FRAMEWORKS");
+        }
+
+        // 4. Store AI results
+        setSuggestions(frameworks);
+        setHasFetched(true);
+        setOnboardingData(data);
+
+        // 5. Redirect
+        router.push("/onboarding/suggested-frameworks");
+      } catch (error: unknown) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          setAiError("AI request timed out. Please try again.");
+          return;
+        }
+
+        if (error instanceof Error) {
+          switch (error.message) {
+            case "AI_FAILED":
+              setAiError("AI failed. Please try again.");
+              break;
+            case "NO_FRAMEWORKS":
+              setAiError("No frameworks returned.");
+              break;
+            default:
+              setAiError("Something went wrong. Please try again.");
+          }
+        } else {
+          setAiError("Unexpected error occurred.");
+        }
+
+        return;
+      } finally {
+        clearTimeout(timeout);
+        setLoadingAI(false); // ✅ single place
+      }
+    } catch (error: unknown) {
+      // ✅ ONLY ONE error handler (NO duplicate alerts)
+      console.error(error);
+
+      if (error instanceof Error) {
+        switch (error.message) {
+          case "ORG_CREATION_FAILED":
+            setAiError("Failed to create organization.");
+            break;
+          case "ORG_ID_MISSING":
+            setAiError("Organization ID missing.");
+            break;
+          default:
+            setAiError("Something went wrong. Please try again.");
+        }
+      } else {
+        setAiError("Unexpected error occurred.");
+      }
+    } finally {
+      setCreating(false);
+    }
+
     console.log("FINAL:", data);
   };
+
+  // Retry
+  const retryAI = () => {
+    if (!cachedFormData) {
+      return;
+    }
+    onSubmit(cachedFormData);
+  };
   const onError = (errors: FieldErrors<OnboardingFormValues>) => {
+    console.log("FORM ERRORS", errors);
     const firstError = Object.keys(errors)[0] as keyof OnboardingFormValues;
 
     const el = document.querySelector(`[name="${firstError}"]`) as HTMLElement | null;
@@ -469,6 +619,20 @@ export default function OnboardingPage() {
             Help us understand your compliance needs by providing some basic information.
           </p>
         </div>
+
+        {/* ✅ ADD HERE */}
+        {aiError && (
+          <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-md mb-4">
+            <p>{aiError}</p>
+            <button
+              type="button"
+              onClick={retryAI}
+              className="mt-2 text-sm underline text-blue-600"
+            >
+              Retry
+            </button>
+          </div>
+        )}
 
         <form
           onSubmit={handleSubmit(onSubmit, onError)}
@@ -662,7 +826,11 @@ export default function OnboardingPage() {
                 {/* Next */}
                 <button
                   type="submit"
-                  disabled={!isStep1Valid}
+                  disabled={
+                    (currentStep === 1 && !isStep1Valid) ||
+                    (currentStep === 2 && values.dataTypes.length === 0) ||
+                    (currentStep === 3 && values.regions.length === 0)
+                  }
                   className={`
           px-6 py-2.5 rounded-md text-sm font-semibold text-white transition-all
           flex items-center gap-2
