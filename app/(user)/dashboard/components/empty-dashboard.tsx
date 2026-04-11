@@ -168,7 +168,7 @@ function HelpResources() {
         {items.map((item, i) => (
           <div
             key={i}
-            className="group p-4 bg-slate-50 rounded-lg border border-transparent hover:bg-[#6d18ff]/5 hover:border-[#6d18ff]/20 transition-all cursor-pointer"
+            className="group p-4 bg-slate-100 rounded-lg border border-transparent hover:bg-[#6d18ff]/5 hover:border-[#6d18ff]/20 transition-all cursor-pointer"
           >
             {item.icon}
 

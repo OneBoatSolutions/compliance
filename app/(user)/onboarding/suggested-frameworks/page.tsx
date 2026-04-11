@@ -74,7 +74,6 @@ export default function Page() {
       return;
     }
 
-    reset();
     router.push("/dashboard");
   };
 
