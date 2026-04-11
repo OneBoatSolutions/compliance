@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 
 interface BottomNavigationProps {
   onNext: () => void | Promise<void>;
+  loading?: boolean;
 }
 
-export default function BottomNavigation({ onNext }: BottomNavigationProps) {
+export default function BottomNavigation({ onNext, loading = false }: BottomNavigationProps) {
   const router = useRouter();
   return (
     <div className="flex justify-between items-center mt-12 pt-6 border-t">
@@ -15,7 +16,8 @@ export default function BottomNavigation({ onNext }: BottomNavigationProps) {
       <div className="flex items-center gap-3">
         {/* Exit */}
         <button
-          onClick={onNext}
+          type="button"
+          onClick={() => router.push("/dashboard")}
           className="
             flex items-center gap-2 
             px-4 py-2 
@@ -52,6 +54,7 @@ export default function BottomNavigation({ onNext }: BottomNavigationProps) {
       {/* RIGHT: Back + Next */}
       <div className="flex items-center gap-4">
         <button
+          type="button"
           onClick={() => router.back()}
           className="
             flex items-center gap-2 
@@ -69,17 +72,19 @@ export default function BottomNavigation({ onNext }: BottomNavigationProps) {
         </button>
 
         <button
-          className="
-            flex items-center gap-2 
-            px-5 py-2 
-            rounded-xl 
-            bg-purple-600 
-            text-white 
-            hover:bg-purple-700 
+          type="button"
+          onClick={onNext}
+          disabled={loading}
+          className={`
+            flex items-center gap-2
+            px-5 py-2
+            rounded-xl
+            text-white
             transition
-          "
+            ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-purple-600 hover:bg-purple-700"}
+          `}
         >
-          Next: Review & Create
+          {loading ? "Creating Assessment..." : "Next: Review & Create"}
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

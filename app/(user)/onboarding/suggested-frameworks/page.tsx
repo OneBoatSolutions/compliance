@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import TopSection from "@/components/framework-selection/TopSection";
 import FrameworkCard from "@/components/framework-selection/framework-card";
@@ -12,180 +12,162 @@ import Stepper from "@/components/framework-selection/Stepper";
 import { useAssessmentStore } from "@/stores/assessment-store";
 import BottomNavigation from "@/components/framework-selection/bottomNavigation";
 import { useRouter } from "next/navigation";
-import { includes } from "zod";
 
 /* ---------------- PAGE ---------------- */
 
+interface FrameworkCardModel {
+  id: string;
+  code: string;
+  name: string;
+  description: string;
+  category: string;
+  confidence: number;
+  why: string;
+  requirements: string[];
+  controls: number;
+  recommended?: boolean;
+}
+
+function getCategoryFromTags(tags: string[]) {
+  const normalized = tags.map((tag) => tag.toLowerCase());
+
+  if (normalized.includes("privacy") || normalized.includes("pii")) {
+    return "Privacy";
+  }
+
+  if (normalized.includes("finance") || normalized.includes("payment")) {
+    return "Industry";
+  }
+
+  if (normalized.includes("security") || normalized.includes("cybersecurity")) {
+    return "Security";
+  }
+
+  return "Security";
+}
+
 export default function Page() {
   const router = useRouter();
+  const {
+    suggestions,
+    selectedFrameworkIds,
+    toggleFramework,
+    createAssessment,
+    retryLastAction,
+    phase,
+    error: flowError,
+    clearError,
+    reset,
+  } = useAssessmentStore();
 
-  const [creatingAssessment, setCreatingAssessment] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleNext = async () => {
-    const { organizationId, selectedFrameworkIds } = useAssessmentStore.getState();
-
-    if (!organizationId) {
-      setError("Organization ID missing");
-      return;
-    }
-
-    if (selectedFrameworkIds.length === 0) {
-      setError("Select at least one framework");
-      return;
-    }
-
-    try {
-      setCreatingAssessment(true);
-      setError(null);
-
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-
-      const res = await fetch("/api/assessments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          organizationId,
-          frameworkIds: selectedFrameworkIds,
-        }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeout);
-
-      if (!res.ok) {
-        throw new Error("FAILED");
-      }
-
-      const data = await res.json();
-
-      // ✅ IMPORTANT: extract assessmentId
-      const assessmentId = data.data?.assessmentId;
-
-      if (!assessmentId) {
-        throw new Error("NO_ID");
-      }
-
-      // ✅ OPTIONAL: reset store (clean state)
-      useAssessmentStore.getState().reset();
-
-      // ✅ REDIRECT TO DASHBOARD
-      router.push(`/assessment/${assessmentId}/checklist`);
-    } catch (err: unknown) {
-      if (err instanceof DOMException && err.name === "AbortError") {
-        setError("Request timed out. Try again.");
-        return;
-      }
-
-      setError("Failed to create assessment");
-    } finally {
-      setCreatingAssessment(false);
-    }
-  };
-  const { suggestions, selectedFrameworkIds, toggleFramework } = useAssessmentStore();
-  const getCategoryFromTags = (tags: string[]) => {
-    const t = tags.map((tag) => tag.toLowerCase());
-
-    if (t.includes("privacy") || t.includes("pii")) {
-      return "Privacy";
-    }
-    if (t.includes("finance") || t.includes("payment")) {
-      return "Industry";
-    }
-    if (t.includes("security") || t.includes("cybersecurity")) {
-      return "Security";
-    }
-
-    return "Security"; // default fallback
-  };
-  const mappedFrameworks = (suggestions || []).map((f) => ({
-    code: f.code,
-    name: f.name,
-    description: f.explanation, // fallback
-    category: getCategoryFromTags(f.tags || []),
-    confidence: f.confidence,
-    why: f.explanation,
-    requirements: [], // empty for now
-    controls: 0, //backend does not give this
-  }));
-
-  interface Framework {
-    name: string;
-    description: string;
-    category: string;
-    confidence: number;
-    why: string;
-    requirements: string[];
-    controls: number;
-    recommended?: boolean;
-  }
-  const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState("All");
-  const [confidenceFilter, setConfidenceFilter] = useState("All");
-
-  useEffect(() => {
-    if (!suggestions) {
-      return;
-    }
-
-    suggestions.forEach((f) => {
-      if (f.confidence > 85 && !selectedFrameworkIds.includes(f.code)) {
-        toggleFramework(f.code);
-      }
-    });
-  }, [suggestions]);
-  useEffect(() => {
-    console.log(" SUGGESTIONS UPDATED:", suggestions);
-  }, [suggestions]);
-  /* Filter logic */
-  const filteredFrameworks = mappedFrameworks
-    .filter((f) => {
-      const matchesSearch = f.name.toLowerCase().includes(search.toLowerCase());
-
-      const matchesTab = activeTab === "All" || f.category === activeTab;
-
-      const matchesConfidence =
-        confidenceFilter === "All" ||
-        (confidenceFilter === "High" && f.confidence > 80) ||
-        (confidenceFilter === "Medium" && f.confidence > 50 && f.confidence <= 80) ||
-        (confidenceFilter === "Low" && f.confidence <= 50);
-      console.log("FINAL RENDER DATA:", mappedFrameworks);
-
-      return matchesSearch && matchesTab && matchesConfidence;
-    })
-    .sort((a, b) => b.confidence - a.confidence);
-
-  /* Loading screen */
+  const creatingAssessment = phase === "creating";
   const [isHydrated, setIsHydrated] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
+  const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState("All");
+
+  const handleNext = async () => {
+    clearError();
+
+    const result = await createAssessment();
+    if (!result.ok) {
+      return;
+    }
+
+    reset();
+    router.push("/dashboard");
+  };
+
+  const handleRetry = async () => {
+    const didRetrySucceed = await retryLastAction();
+    if (!didRetrySucceed) {
+      return;
+    }
+
+    if (useAssessmentStore.getState().phase === "success") {
+      useAssessmentStore.getState().reset();
+      router.push("/dashboard");
+    }
+  };
+
+  const mappedFrameworks = useMemo<FrameworkCardModel[]>(
+    () =>
+      (suggestions || []).map((suggestion) => ({
+        id: suggestion.frameworkId,
+        code: suggestion.code,
+        name: suggestion.name,
+        description: suggestion.explanation,
+        category: getCategoryFromTags(suggestion.tags || []),
+        confidence: suggestion.confidence,
+        why: suggestion.explanation,
+        requirements: [],
+        controls: suggestion.controls ?? 0,
+      })),
+    [suggestions],
+  );
+
+  /* Filter logic */
+  const filteredFrameworks = useMemo(
+    () =>
+      mappedFrameworks
+        .filter((framework) => {
+          const matchesSearch = framework.name.toLowerCase().includes(search.toLowerCase());
+
+          const matchesTab = activeTab === "All" || framework.category === activeTab;
+
+          return matchesSearch && matchesTab;
+        })
+        .sort((a, b) => b.confidence - a.confidence),
+    [mappedFrameworks, search, activeTab],
+  );
+
+  useEffect(() => {
+    if (!isHydrated || showLoader) {
+      return;
+    }
+
+    if (suggestions.length === 0) {
+      router.replace("/onboarding");
+    }
+  }, [isHydrated, router, showLoader, suggestions.length]);
 
   useEffect(() => {
     setIsHydrated(true);
-    //  force loader to stay for at least 500ms
+    // Force loader to stay for a short duration for smooth transition.
     const timer = setTimeout(() => {
       setShowLoader(false);
     }, 600);
     return () => clearTimeout(timer);
   }, []);
 
-  if (!isHydrated || showLoader || !suggestions) {
+  if (!isHydrated || showLoader) {
+    return <LoadingScreen />;
+  }
+
+  if (suggestions.length === 0) {
     return <LoadingScreen />;
   }
 
   return (
     <div className="p-6 space-y-6">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-md">{error}</div>
+      {flowError && (
+        <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-md">
+          <p>{flowError.message}</p>
+          {flowError.retryable && (
+            <button
+              type="button"
+              onClick={handleRetry}
+              className="mt-2 text-sm underline text-blue-600"
+            >
+              Retry
+            </button>
+          )}
+        </div>
       )}
       <>
-        {/* Top Section */}
-
         {/* Stepper */}
         <Stepper currentStep={2} />
         <div className="max-w-7xl mx-auto p-6 space-y-6">
-          {/* ✅ THIS is the Top Section (greeting line) */}
           <TopSection />
 
           {/* Search + Filters */}
@@ -202,7 +184,7 @@ export default function Page() {
             <div className="lg:col-span-2 grid sm:grid-cols-2 gap-4">
               {filteredFrameworks.map((framework, index) => (
                 <div
-                  key={framework.code}
+                  key={framework.id}
                   className="animate-fadeIn"
                   style={{
                     animationDelay: `${index * 100}ms`,
@@ -210,8 +192,8 @@ export default function Page() {
                 >
                   <FrameworkCard
                     framework={framework}
-                    selected={selectedFrameworkIds.includes(framework.code)}
-                    onToggle={() => toggleFramework(framework.code)}
+                    selected={selectedFrameworkIds.includes(framework.id)}
+                    onToggle={() => toggleFramework(framework.id)}
                   />
                 </div>
               ))}
@@ -219,15 +201,17 @@ export default function Page() {
 
             {/* RIGHT: Sidebar */}
             <SidebarSummary
-              selected={mappedFrameworks.filter((f) => selectedFrameworkIds.includes(f.code))}
+              selected={mappedFrameworks.filter((framework) =>
+                selectedFrameworkIds.includes(framework.id),
+              )}
               onContinue={handleNext}
               loading={creatingAssessment}
             />
-            <div></div>
+            <div />
           </div>
         </div>
       </>
-      <BottomNavigation onNext={handleNext} />
+      <BottomNavigation onNext={handleNext} loading={creatingAssessment} />
     </div>
   );
 }
