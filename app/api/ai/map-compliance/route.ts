@@ -85,9 +85,11 @@ export async function POST(req: NextRequest) {
     }
 
     if (err instanceof Error && err.message === "Timeout") {
+      const fallback = await getComplianceFallback();
+
       return NextResponse.json({
         success: true,
-        data: getComplianceFallback(),
+        data: fallback,
       });
     }
 
