@@ -384,6 +384,11 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
       set({
         organizationId,
         phase: "aiLoading",
+        lastRetryContext: {
+          action: "submitOnboarding",
+          payload: data,
+          organizationId,
+        },
       });
 
       const suggestions = await executeWithRetry(() =>
