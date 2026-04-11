@@ -8,9 +8,6 @@ const groq = createOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const cache = new Map<string, { data: FrameworkSuggestion[]; expiry: number }>();
-const cacheTtl = 24 * 60 * 60 * 1000; // 24 hours
-
 interface OrgProfile {
   name: string;
   description: string;
@@ -21,7 +18,7 @@ interface OrgProfile {
   regions: string[];
 }
 
-interface FrameworkSuggestion {
+interface AIFrameworkSuggestion {
   code: string;
   name: string;
   confidence: number;
@@ -29,19 +26,151 @@ interface FrameworkSuggestion {
   tags: string[];
 }
 
-//TODO: fallback to be improved later (include multiple frameworks)
-const fallbackSuggestions: FrameworkSuggestion[] = [
+export interface FrameworkSuggestion extends AIFrameworkSuggestion {
+  frameworkId: string;
+  controls: number;
+}
+
+interface FrameworkCatalogEntry {
+  id: string;
+  code: string;
+  name: string;
+  controls: number;
+}
+
+const cache = new Map<string, { data: FrameworkSuggestion[]; expiry: number }>();
+const cacheTtl = 24 * 60 * 60 * 1000; // 24 hours
+const frameworkCatalogCacheTtl = 5 * 60 * 1000; // 5 minutes
+
+let frameworkCatalogCache: { data: FrameworkCatalogEntry[]; expiry: number } = {
+  data: [],
+  expiry: 0,
+};
+
+const fallbackSuggestions: AIFrameworkSuggestion[] = [
   {
-    code: "ISO27001",
-    name: "ISO 27001",
-    confidence: 70,
-    explanation: "Fallback recommendation due to AI failure",
-    tags: ["security"],
+    code: "GDPR",
+    name: "General Data Protection Regulation",
+    confidence: 82,
+    explanation:
+      "GDPR is commonly applicable when personal data is collected or processed for users in EU regions.",
+    tags: ["privacy", "pii", "eu"],
+  },
+  {
+    code: "HIPAA",
+    name: "Health Insurance Portability and Accountability Act",
+    confidence: 76,
+    explanation:
+      "HIPAA is relevant for products handling protected health information or serving healthcare workflows in the US.",
+    tags: ["healthcare", "phi", "security"],
+  },
+  {
+    code: "PCI-DSS",
+    name: "Payment Card Industry Data Security Standard",
+    confidence: 74,
+    explanation:
+      "PCI-DSS is applicable for systems storing, processing, or transmitting cardholder payment information.",
+    tags: ["payments", "finance", "security"],
   },
 ];
 
-export function getComplianceFallback(): FrameworkSuggestion[] {
-  return fallbackSuggestions;
+function normalizeLookupValue(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+function dedupeSuggestions(suggestions: FrameworkSuggestion[]): FrameworkSuggestion[] {
+  const byFrameworkId = new Map<string, FrameworkSuggestion>();
+
+  for (const suggestion of suggestions) {
+    const existing = byFrameworkId.get(suggestion.frameworkId);
+    if (!existing || suggestion.confidence > existing.confidence) {
+      byFrameworkId.set(suggestion.frameworkId, suggestion);
+    }
+  }
+
+  return [...byFrameworkId.values()].sort((a, b) => b.confidence - a.confidence).slice(0, 8);
+}
+
+async function getFrameworkCatalog(): Promise<FrameworkCatalogEntry[]> {
+  const now = Date.now();
+  if (frameworkCatalogCache.expiry > now && frameworkCatalogCache.data.length > 0) {
+    return frameworkCatalogCache.data;
+  }
+
+  const frameworks = await prisma.framework.findMany({
+    where: {
+      status: "PUBLISHED",
+    },
+    select: {
+      id: true,
+      code: true,
+      name: true,
+      _count: {
+        select: {
+          controls: true,
+        },
+      },
+    },
+  });
+
+  const catalog = frameworks.map((framework) => ({
+    id: framework.id,
+    code: framework.code,
+    name: framework.name,
+    controls: framework._count.controls,
+  }));
+
+  frameworkCatalogCache = {
+    data: catalog,
+    expiry: now + frameworkCatalogCacheTtl,
+  };
+
+  return catalog;
+}
+
+async function enrichFrameworkSuggestions(
+  suggestions: AIFrameworkSuggestion[],
+): Promise<FrameworkSuggestion[]> {
+  if (suggestions.length === 0) {
+    return [];
+  }
+
+  const frameworkCatalog = await getFrameworkCatalog();
+  const byCode = new Map<string, FrameworkCatalogEntry>();
+  const byName = new Map<string, FrameworkCatalogEntry>();
+
+  for (const framework of frameworkCatalog) {
+    byCode.set(normalizeLookupValue(framework.code), framework);
+    byName.set(normalizeLookupValue(framework.name), framework);
+  }
+
+  const mapped = suggestions
+    .map((suggestion) => {
+      const matchByCode = byCode.get(normalizeLookupValue(suggestion.code));
+      const match = matchByCode ?? byName.get(normalizeLookupValue(suggestion.name));
+
+      if (!match) {
+        return null;
+      }
+
+      return {
+        ...suggestion,
+        code: match.code,
+        name: match.name,
+        frameworkId: match.id,
+        controls: match.controls,
+      };
+    })
+    .filter((suggestion): suggestion is FrameworkSuggestion => suggestion !== null);
+
+  return dedupeSuggestions(mapped);
+}
+
+export async function getComplianceFallback(): Promise<FrameworkSuggestion[]> {
+  return enrichFrameworkSuggestions(fallbackSuggestions);
 }
 
 function buildPrompt(org: OrgProfile): string {
@@ -84,27 +213,34 @@ Regions: ${org.regions.join(", ")}
 `;
 }
 
-async function parseAIResponse(text: string): Promise<FrameworkSuggestion[]> {
+async function parseAIResponse(text: string): Promise<AIFrameworkSuggestion[]> {
   try {
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error("No JSON found");
     }
 
-    const parsed = JSON.parse(jsonMatch[0]);
+    const parsed = JSON.parse(jsonMatch[0]) as {
+      frameworks?: Array<Partial<AIFrameworkSuggestion>>;
+    };
 
     if (!parsed.frameworks || !Array.isArray(parsed.frameworks)) {
       throw new Error("Invalid format");
     }
 
-    // validation
-    return parsed.frameworks.map((f: Partial<FrameworkSuggestion>) => ({
-      code: f.code ?? "UNKNOWN",
-      name: f.name ?? "Unknown",
-      confidence: Math.min(100, Math.max(0, f.confidence ?? 50)),
-      explanation: f.explanation ?? "",
-      tags: Array.isArray(f.tags) ? f.tags : [],
-    }));
+    const validated: AIFrameworkSuggestion[] = parsed.frameworks.map(
+      (f: Partial<AIFrameworkSuggestion>) => ({
+        code: typeof f.code === "string" ? f.code.trim() : "UNKNOWN",
+        name: typeof f.name === "string" ? f.name.trim() : "Unknown",
+        confidence: Math.min(100, Math.max(0, f.confidence ?? 50)),
+        explanation: typeof f.explanation === "string" ? f.explanation : "",
+        tags: Array.isArray(f.tags) ? f.tags : [],
+      }),
+    );
+
+    return validated
+      .sort((a: AIFrameworkSuggestion, b: AIFrameworkSuggestion) => b.confidence - a.confidence)
+      .slice(0, 8);
   } catch {
     throw new Error("Failed to parse AI response");
   }
@@ -132,9 +268,14 @@ export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestio
       // console.log("AI RAW:", result.text);
 
       const parsed = await parseAIResponse(result.text);
+      const mappedSuggestions = await enrichFrameworkSuggestions(parsed);
+
+      if (mappedSuggestions.length === 0) {
+        throw new Error("No mapped frameworks found in AI response");
+      }
 
       cache.set(key, {
-        data: parsed,
+        data: mappedSuggestions,
         expiry: Date.now() + cacheTtl,
       });
 
@@ -143,7 +284,7 @@ export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestio
           data: {
             type: "COMPLIANCE_MAPPING",
             input: JSON.stringify(org),
-            output: JSON.stringify(parsed),
+            output: JSON.stringify(mappedSuggestions),
             model: "llama-3.3-70b",
             tokensUsed: result.usage?.totalTokens ?? 0,
           },
@@ -152,7 +293,7 @@ export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestio
           console.error("Failed to log AI interaction", logError);
         });
 
-      return parsed;
+      return mappedSuggestions;
     } catch (err) {
       console.error(`AI attempt ${attempt} failed`, err);
       if (attempt === maxRetries) {
@@ -161,7 +302,12 @@ export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestio
     }
   }
 
-  const fallback = getComplianceFallback();
+  const fallback = await getComplianceFallback();
+
+  cache.set(key, {
+    data: fallback,
+    expiry: Date.now() + cacheTtl,
+  });
 
   prisma.aIInteraction
     .create({

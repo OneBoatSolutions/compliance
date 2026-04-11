@@ -84,18 +84,18 @@ function HeroSection() {
 function HowItWorks() {
   const steps = [
     {
-      title: "Select a framework",
-      desc: "Choose from industry standards like SOC2, ISO 27001, HIPAA, or PCI-DSS to begin.",
+      title: "Describe",
+      desc: "Tell us about your business profile, target regions, and specific data handling requirements.",
       icon: <File className="w-5 h-5 text-[#6d18ff]/40" />,
     },
     {
-      title: "Connect your stack",
-      desc: "Instantly integrate with cloud providers like AWS, Google Cloud, or Azure for auto-evidence.",
+      title: "AI Analyzes",
+      desc: "Our AI engine automatically maps your profile to security frameworks and identifies critical gaps.",
       icon: <Sparkles className="w-5 h-5 text-[#6d18ff]/40" />,
     },
     {
-      title: "Monitor in real-time",
-      desc: "Track your compliance health 24/7 with our automated live evidence collection dashboard.",
+      title: "Complete",
+      desc: "Follow the guided remediation steps and seamlessly track your journey to full compliance.",
       icon: <SquareCheckBig className="w-5 h-5 text-[#6d18ff]/40" />,
     },
   ];
@@ -168,7 +168,7 @@ function HelpResources() {
         {items.map((item, i) => (
           <div
             key={i}
-            className="group p-4 bg-slate-50 rounded-lg border border-transparent hover:bg-[#6d18ff]/5 hover:border-[#6d18ff]/20 transition-all cursor-pointer"
+            className="group p-4 bg-slate-100 rounded-lg border border-transparent hover:bg-[#6d18ff]/5 hover:border-[#6d18ff]/20 transition-all cursor-pointer"
           >
             {item.icon}
 

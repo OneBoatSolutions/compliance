@@ -1,9 +1,10 @@
 "use client";
-
 import { useForm, UseFormRegisterReturn, FieldErrors, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { onboardingSchema, OnboardingFormValues } from "@/lib/validations/onboarding";
 import { useEffect, useState, ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { useAssessmentStore } from "@/stores/assessment-store";
 import { useRef } from "react";
 import {
   User,
@@ -20,6 +21,7 @@ import {
   CircleCheck,
   CircleAlert,
 } from "lucide-react";
+
 const mapToBackend = (values: OnboardingFormValues) => ({
   productName: values.productName,
   description: values.description,
@@ -215,16 +217,27 @@ function Stepper({ currentStep }: { currentStep: number }) {
 
 export default function OnboardingPage() {
   const {
+    organizationId,
+    onboardingData,
+    submitOnboarding,
+    retryLastAction,
+    phase,
+    error: flowError,
+    clearError,
+  } = useAssessmentStore();
+
+  const {
     register,
+    reset,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<OnboardingFormValues>({
     resolver: zodResolver(onboardingSchema),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {
+    defaultValues: onboardingData || {
       productName: "",
       description: "",
       services: "",
@@ -254,6 +267,7 @@ export default function OnboardingPage() {
   const [hasFetched, setHasFetched] = useState(false);
   const [lastSavedValues, setLastSavedValues] = useState<string>("");
   const abortRef = useRef<AbortController | null>(null);
+  const isSubmitting = phase === "savingOrg" || phase === "aiLoading";
 
   const createOrganization = async (values: OnboardingFormValues) => {
     const controller = new AbortController();
@@ -270,8 +284,17 @@ export default function OnboardingPage() {
       throw new Error("Failed to create organization");
     }
 
-    const data = await res.json();
-    setOrgId(data.id);
+    const data = (await res.json()) as {
+      id?: string;
+      data?: { id?: string };
+    };
+
+    const id = data.data?.id ?? data.id;
+    if (!id) {
+      throw new Error("Failed to create organization");
+    }
+
+    setOrgId(id);
   };
 
   const updateOrganization = async (values: OnboardingFormValues) => {
@@ -295,10 +318,24 @@ export default function OnboardingPage() {
 
   // STEP STATE (DYNAMIC)
   const [currentStep, setCurrentStep] = useState(1);
+  useEffect(() => {
+    if (organizationId && !orgId) {
+      setOrgId(organizationId);
+    }
+  }, [organizationId, orgId]);
+  //Onboarding data
+  useEffect(() => {
+    if (onboardingData) {
+      reset(onboardingData);
+    }
+  }, [onboardingData, reset]);
 
   // AUTO SAVE
   useEffect(() => {
-    if (!isReadyForSave || !hasFetched) {
+    if (!isReadyForSave) {
+      return;
+    }
+    if (orgId && !hasFetched) {
       return;
     }
 
@@ -361,67 +398,43 @@ export default function OnboardingPage() {
 
   //FETCH EXISTING DATA
   useEffect(() => {
-    //Don't fetch if orgId is not available
     if (!orgId) {
-      setHasFetched(true); //allow autosave
       return;
     }
+
     const fetchOrg = async () => {
       try {
-        const res = await fetch(`/api/organizations/${orgId}`, {
-          method: "GET", // optional (default is GET)
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // ADD THIS
-        }); // get existing org
-        if (!res.ok) {
-          throw new Error("Failed to fetch organization");
-        }
+        const res = await fetch(`/api/organizations/${orgId}`);
+        const data = await res.json();
 
-        const data: BackendOrganization & { id: string } = await res.json();
-
-        if (data) {
-          // ✅ map backend → frontend
-          const mapped = mapFromBackend(data);
-
-          // ✅ fill form
-          setValue("productName", mapped.productName, { shouldValidate: true });
-          setValue("description", mapped.description, { shouldValidate: true });
-          setValue("services", mapped.services, { shouldValidate: true });
-          setValue("customers", mapped.customers, { shouldValidate: true });
-          setValue("problem", mapped.problem, { shouldValidate: true });
-          setValue("dataTypes", mapped.dataTypes, { shouldValidate: true });
-          setValue("regions", mapped.regions, { shouldValidate: true });
-          setValue("otherDataType", mapped.otherDataType, { shouldValidate: true });
-          setValue("otherRegion", mapped.otherRegion, { shouldValidate: true });
-
-          // ✅ prevent autosave firing immediately
-          setLastSavedValues(JSON.stringify(mapToBackend(mapped)));
+        if (data.success) {
+          reset(mapFromBackend(data.data));
+          setHasFetched(true);
         }
       } catch (err) {
-        console.error("Fetch failed", err);
-      } finally {
-        // ✅ ALWAYS allow autosave after fetch attempt
-        setHasFetched(true);
+        console.error(err);
       }
     };
 
     fetchOrg();
-  }, [orgId]);
+  }, [orgId, creating]);
 
   // CHECKBOX HANDLER
   const handleCheckbox = (field: "dataTypes" | "regions", value: string) => {
     const current = values[field] || [];
+    let updated;
 
     if (current.includes(value)) {
       // REMOVE value
-      const updated = current.filter((v) => v !== value);
+      updated = current.filter((v) => v !== value);
 
       setValue(field, updated, {
         shouldValidate: true,
         shouldDirty: true,
+        shouldTouch: true, // ✅ ADD THIS
       });
 
-      // ✅ CLEAR "Other" input when unchecked
+      // CLEAR "Other" input when unchecked
       if (value === "Other") {
         if (field === "dataTypes") {
           setValue("otherDataType", "", { shouldDirty: true });
@@ -435,18 +448,38 @@ export default function OnboardingPage() {
       setValue(field, [...current, value], {
         shouldValidate: true,
         shouldDirty: true,
+        shouldTouch: true, // ✅ ADD THIS
       });
     }
   };
+  const router = useRouter();
 
-  const onSubmit = (data: OnboardingFormValues) => {
-    if (currentStep < 3) {
-      setCurrentStep((prev) => prev + 1);
+  const onSubmit = async (data: OnboardingFormValues) => {
+    if (creating || isSubmitting) {
       return;
     }
-    console.log("FINAL:", data);
+
+    clearError();
+    setHasFetched(false);
+
+    const result = await submitOnboarding(data, orgId);
+    if (!result.ok) {
+      return;
+    }
+
+    setHasFetched(true);
+    router.push("/onboarding/suggested-frameworks");
   };
+
+  const retryAI = async () => {
+    const didRetrySucceed = await retryLastAction();
+    if (didRetrySucceed) {
+      router.push("/onboarding/suggested-frameworks");
+    }
+  };
+
   const onError = (errors: FieldErrors<OnboardingFormValues>) => {
+    console.log("FORM ERRORS", errors);
     const firstError = Object.keys(errors)[0] as keyof OnboardingFormValues;
 
     const el = document.querySelector(`[name="${firstError}"]`) as HTMLElement | null;
@@ -469,6 +502,21 @@ export default function OnboardingPage() {
             Help us understand your compliance needs by providing some basic information.
           </p>
         </div>
+
+        {flowError && (
+          <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-md mb-4">
+            <p>{flowError.message}</p>
+            {flowError.retryable && (
+              <button
+                type="button"
+                onClick={retryAI}
+                className="mt-2 text-sm underline text-blue-600"
+              >
+                Retry
+              </button>
+            )}
+          </div>
+        )}
 
         <form
           onSubmit={handleSubmit(onSubmit, onError)}
@@ -662,7 +710,12 @@ export default function OnboardingPage() {
                 {/* Next */}
                 <button
                   type="submit"
-                  disabled={!isStep1Valid}
+                  disabled={
+                    isSubmitting ||
+                    (currentStep === 1 && !isStep1Valid) ||
+                    (currentStep === 2 && values.dataTypes.length === 0) ||
+                    (currentStep === 3 && values.regions.length === 0)
+                  }
                   className={`
           px-6 py-2.5 rounded-md text-sm font-semibold text-white transition-all
           flex items-center gap-2
@@ -673,7 +726,11 @@ export default function OnboardingPage() {
           }
         `}
                 >
-                  Next: Framework Selection →
+                  {phase === "savingOrg"
+                    ? "Saving organization..."
+                    : phase === "aiLoading"
+                      ? "Generating AI suggestions..."
+                      : "Next: Framework Selection →"}
                 </button>
               </div>
             </div>
@@ -894,7 +951,7 @@ interface DataCheckboxGridProps {
   onChange: (val: string) => void;
   register: UseFormRegister<OnboardingFormValues>;
 }
-export function DataCheckboxGrid({ selected, onChange, register }: DataCheckboxGridProps) {
+function DataCheckboxGrid({ selected, onChange, register }: DataCheckboxGridProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       {dataTypeOptions.map((opt) => {
@@ -1002,7 +1059,7 @@ interface RegionCheckboxGridProps {
   onChange: (val: string) => void;
   register: UseFormRegister<OnboardingFormValues>;
 }
-export function RegionCheckboxGrid({ selected, onChange, register }: RegionCheckboxGridProps) {
+function RegionCheckboxGrid({ selected, onChange, register }: RegionCheckboxGridProps) {
   return (
     <div className="grid grid-cols-2 gap-5">
       {regionOptions.map((opt) => {

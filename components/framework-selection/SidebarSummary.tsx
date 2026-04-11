@@ -11,9 +11,11 @@ interface Framework {
 
 interface Props {
   selected: Framework[];
+  onContinue: () => void;
+  loading?: boolean;
 }
 
-export default function SidebarSummary({ selected }: Props) {
+export default function SidebarSummary({ selected, onContinue, loading }: Props) {
   const totalControls = selected.reduce((sum, f) => sum + (f.controls || 0), 0);
 
   // simple estimation logic (you can tweak later)
@@ -80,8 +82,14 @@ export default function SidebarSummary({ selected }: Props) {
           </div>
 
           {/* CTA */}
-          <button className="w-full px-4 py-2 rounded-xl bg-purple-600 text-white hover:bg-purple-700 transition">
-            Continue to Assessment →
+          <button
+            onClick={onContinue}
+            disabled={loading}
+            className={`w-full py-3 rounded-md text-white font-semibold transition-all
+    ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-purple-600 hover:bg-purple-700"}
+  `}
+          >
+            {loading ? "Creating Assessment..." : "Continue to Assessment →"}
           </button>
         </div>
 
