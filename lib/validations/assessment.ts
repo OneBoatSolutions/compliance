@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Severity } from "@prisma/client";
 
 export const createAssessmentSchema = z.object({
   organizationId: z.cuid(),
@@ -28,3 +29,16 @@ export const updateAssessmentItemSchema = z
   .refine((value) => Object.keys(value).length > 0, {
     message: "At least one field must be provided",
   });
+
+export const assessmentItemsListQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+  status: assessmentItemStatusSchema.optional(),
+  framework: z.cuid().optional(),
+  severity: z.nativeEnum(Severity).optional(),
+  search: z.string().trim().max(200).optional(),
+  sortBy: z.enum(["severity", "updatedAt", "createdAt", "status", "code"]).default("severity"),
+  sortOrder: z.enum(["asc", "desc"]).default("desc"),
+});
+
+export type AssessmentItemsListQuery = z.infer<typeof assessmentItemsListQuerySchema>;
