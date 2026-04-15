@@ -5,10 +5,20 @@ import {
 } from "@/app/(user)/assessments/[id]/checklist/types";
 import { TriangleAlert } from "lucide-react";
 
+interface StatusDistribution {
+  total: number;
+  compliant: number;
+  partial: number;
+  gap: number;
+  notStarted: number;
+}
+
 interface Props {
   controls: Control[];
   overallScore?: number | null;
   frameworkScores?: FrameworkScore[];
+  statusDistribution?: StatusDistribution;
+  isUpdating?: boolean;
   onFilterFramework?: (fw: string) => void;
   onFilterStatus?: (status: Status) => void;
 }
@@ -17,15 +27,22 @@ export default function MetricsBar({
   controls,
   overallScore,
   frameworkScores,
+  statusDistribution,
+  isUpdating = false,
   onFilterFramework,
   onFilterStatus,
 }: Props) {
-  const total = controls.length;
+  const fallbackTotal = controls.length;
+  const fallbackCompliant = controls.filter((c) => c.status === "COMPLIANT").length;
+  const fallbackPartial = controls.filter((c) => c.status === "PARTIALLY_COMPLIANT").length;
+  const fallbackGap = controls.filter((c) => c.status === "NOT_COMPLIANT").length;
+  const fallbackNotStarted = controls.filter((c) => c.status === "NOT_STARTED").length;
 
-  const compliant = controls.filter((c) => c.status === "COMPLIANT").length;
-  const partial = controls.filter((c) => c.status === "PARTIALLY_COMPLIANT").length;
-  const gap = controls.filter((c) => c.status === "NOT_COMPLIANT").length;
-  const notStarted = controls.filter((c) => !c.status || c.status === "NOT_STARTED").length;
+  const total = statusDistribution?.total ?? fallbackTotal;
+  const compliant = statusDistribution?.compliant ?? fallbackCompliant;
+  const partial = statusDistribution?.partial ?? fallbackPartial;
+  const gap = statusDistribution?.gap ?? fallbackGap;
+  const notStarted = statusDistribution?.notStarted ?? fallbackNotStarted;
 
   const percent =
     typeof overallScore === "number"
@@ -65,7 +82,11 @@ export default function MetricsBar({
   };
 
   return (
-    <div className="sticky top-[80px] z-40 bg-white border rounded-xl shadow-sm grid grid-cols-4 divide-x divide-slate-100 items-stretch">
+    <div
+      className={`sticky top-[80px] z-40 bg-white border rounded-xl shadow-sm grid grid-cols-4 divide-x divide-slate-100 items-stretch transition-all duration-300 ${
+        isUpdating ? "ring-1 ring-purple-200" : ""
+      }`}
+    >
       {/*  1. Overall Progress */}
       <div className="flex items-center p-6">
         <div className="relative w-20 h-20">
@@ -89,6 +110,9 @@ export default function MetricsBar({
               className="text-purple-600"
               stroke="currentColor"
               fill="none"
+              style={{
+                transition: "stroke-dashoffset 360ms cubic-bezier(0.22, 1, 0.36, 1)",
+              }}
             />
           </svg>
 
@@ -102,6 +126,7 @@ export default function MetricsBar({
           <p className="font-semibold text-gray-900">
             {compliant}/{total} items
           </p>
+          {isUpdating && <p className="text-[11px] text-purple-600 animate-pulse">Updating...</p>}
         </div>
       </div>
 
@@ -122,7 +147,13 @@ export default function MetricsBar({
               </div>
 
               <div className="h-2 bg-gray-200 rounded mt-1">
-                <div className="h-2 bg-purple-600 rounded" style={{ width: `${f.pct}%` }} />
+                <div
+                  className="h-2 bg-purple-600 rounded"
+                  style={{
+                    width: `${f.pct}%`,
+                    transition: "width 320ms cubic-bezier(0.22, 1, 0.36, 1)",
+                  }}
+                />
               </div>
             </div>
           ))}
@@ -138,27 +169,39 @@ export default function MetricsBar({
             title={`Compliant: ${compliant}`}
             onClick={() => onFilterStatus?.("COMPLIANT")}
             className="bg-green-500 cursor-pointer"
-            style={{ width: `${safeBarPercent(compliant)}%` }}
+            style={{
+              width: `${safeBarPercent(compliant)}%`,
+              transition: "width 320ms cubic-bezier(0.22, 1, 0.36, 1)",
+            }}
           />
 
           <div
             title={`Partial: ${partial}`}
             onClick={() => onFilterStatus?.("PARTIALLY_COMPLIANT")}
             className="bg-yellow-400 cursor-pointer"
-            style={{ width: `${safeBarPercent(partial)}%` }}
+            style={{
+              width: `${safeBarPercent(partial)}%`,
+              transition: "width 320ms cubic-bezier(0.22, 1, 0.36, 1)",
+            }}
           />
 
           <div
             title={`Non-compliant: ${gap}`}
             onClick={() => onFilterStatus?.("NOT_COMPLIANT")}
             className="bg-red-500 cursor-pointer"
-            style={{ width: `${safeBarPercent(gap)}%` }}
+            style={{
+              width: `${safeBarPercent(gap)}%`,
+              transition: "width 320ms cubic-bezier(0.22, 1, 0.36, 1)",
+            }}
           />
 
           <div
             title={`Not started: ${notStarted}`}
             className="bg-gray-300"
-            style={{ width: `${safeBarPercent(notStarted)}%` }}
+            style={{
+              width: `${safeBarPercent(notStarted)}%`,
+              transition: "width 320ms cubic-bezier(0.22, 1, 0.36, 1)",
+            }}
           />
         </div>
 

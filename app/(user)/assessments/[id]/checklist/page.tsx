@@ -293,7 +293,43 @@ export default function ChecklistPage() {
     return [...map.values()];
   }, [allControls, scoreQuery.data?.frameworkScores]);
 
-  if (assessmentQuery.isPending || checklistQuery.isPending) {
+  const statusDistribution = useMemo(() => {
+    let compliant = 0;
+    let partial = 0;
+    let gap = 0;
+    let notStarted = 0;
+
+    for (const item of rawItems) {
+      if (item.status === "COMPLIANT") {
+        compliant += 1;
+        continue;
+      }
+
+      if (item.status === "PARTIALLY_COMPLIANT") {
+        partial += 1;
+        continue;
+      }
+
+      if (item.status === "NOT_COMPLIANT") {
+        gap += 1;
+        continue;
+      }
+
+      if (item.status === "NOT_STARTED") {
+        notStarted += 1;
+      }
+    }
+
+    return {
+      total: rawItems.length,
+      compliant,
+      partial,
+      gap,
+      notStarted,
+    };
+  }, [rawItems]);
+
+  if (assessmentQuery.isPending || checklistQuery.isPending || scoreQuery.isPending) {
     return <Skeleton />;
   }
 
@@ -339,6 +375,25 @@ export default function ChecklistPage() {
     );
   }
 
+  if (scoreQuery.isError) {
+    return (
+      <div className="p-6">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-5">
+          <h2 className="text-sm font-semibold text-red-700">Failed to load assessment score</h2>
+          <p className="text-sm text-red-600 mt-1">
+            {scoreQuery.error instanceof Error ? scoreQuery.error.message : "Please try again."}
+          </p>
+          <button
+            onClick={() => void scoreQuery.refetch()}
+            className="mt-4 px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (!visibleControls.length) {
     return (
       <EmptyState
@@ -354,7 +409,7 @@ export default function ChecklistPage() {
   const lastUpdated = assessmentQuery.data?.updatedAt
     ? formatRelativeTime(assessmentQuery.data.updatedAt)
     : "N/A";
-  const overallScore = scoreQuery.data?.score ?? assessmentQuery.data?.score ?? null;
+  const overallScore = scoreQuery.data?.score ?? null;
   const totalItems = checklistQuery.data?.meta.total ?? visibleControls.length;
   const updatingItemId = updateStatusMutation.isPending
     ? (updateStatusMutation.variables?.itemId ?? null)
@@ -398,6 +453,8 @@ export default function ChecklistPage() {
         controls={allControls}
         overallScore={overallScore}
         frameworkScores={scoreQuery.data?.frameworkScores}
+        statusDistribution={statusDistribution}
+        isUpdating={updateStatusMutation.isPending}
         onFilterFramework={(frameworkId) => setChecklistFilters({ frameworks: [frameworkId] })}
         onFilterStatus={(s) => setChecklistFilters({ status: [s] })}
       />
