@@ -3,16 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { FileText } from "lucide-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import {
-  getAssessmentDetails,
-  getAssessmentChecklist,
-  getAssessmentScore,
-  updateAssessmentItem,
-} from "@/lib/checklist-api";
-import { useAssessmentStore } from "@/stores/assessment-store";
+import { getAssessmentChecklist, getAssessmentScore } from "@/lib/checklist-api";
+import { useAssessmentQuery } from "@/lib/hooks/use-assessment-query";
+import { useUpdateAssessmentItemMutation } from "@/lib/hooks/use-update-assessment-item-mutation";
+import { type AssessmentSortField, useAssessmentStore } from "@/stores/assessment-store";
 import MetricsBar from "@/components/assessment-checklist/MetricsBar";
 import FilterBar from "@/components/assessment-checklist/FilterBar";
 import ChecklistGroup from "@/components/assessment-checklist/ChecklistGroup";
@@ -21,13 +18,10 @@ import Skeleton from "@/components/assessment-checklist/Skeleton";
 import EmptyState from "@/components/assessment-checklist/EmptyState";
 import MoreActionsDropdown from "@/components/assessment-checklist/MoreActionsDropdown";
 import {
-  type AssessmentScoreResponse,
   type AssessmentDetailResponse,
-  type ChecklistResponse,
   type ChecklistSort,
   type Control,
   type FrameworkFilterOption,
-  type Severity,
   type Status,
 } from "./types";
 
@@ -71,6 +65,41 @@ function assessmentStatusLabel(status: "DRAFT" | "IN_PROGRESS" | "COMPLETED"): s
   return "In Progress";
 }
 
+function mapStoreSortToChecklistSort(sortBy: AssessmentSortField): ChecklistSort {
+  if (sortBy === "status") {
+    return "status";
+  }
+
+  if (sortBy === "id") {
+    return "id";
+  }
+
+  if (sortBy === "updated") {
+    return "updated";
+  }
+
+  return "severity";
+}
+
+function mapChecklistSortToStoreSort(sort: ChecklistSort): {
+  by: AssessmentSortField;
+  order: "asc" | "desc";
+} {
+  if (sort === "status") {
+    return { by: "status", order: "asc" };
+  }
+
+  if (sort === "id") {
+    return { by: "id", order: "asc" };
+  }
+
+  if (sort === "updated") {
+    return { by: "updated", order: "desc" };
+  }
+
+  return { by: "severity", order: "desc" };
+}
+
 export default function ChecklistPage() {
   const params = useParams<{ id: string }>();
   const rawAssessmentId = params?.id;
@@ -78,15 +107,53 @@ export default function ChecklistPage() {
     ? (rawAssessmentId[0] ?? "")
     : (rawAssessmentId ?? "");
 
-  const queryClient = useQueryClient();
   const setChecklistScore = useAssessmentStore((state) => state.setChecklistScore);
   const clearChecklistState = useAssessmentStore((state) => state.clearChecklistState);
+  const resetChecklistViewState = useAssessmentStore((state) => state.resetChecklistViewState);
+  const setChecklistFilters = useAssessmentStore((state) => state.setChecklistFilters);
+  const setChecklistSortParams = useAssessmentStore((state) => state.setChecklistSortParams);
+  const activeChecklistFilters = useAssessmentStore((state) => state.activeChecklistFilters);
+  const activeChecklistSortParams = useAssessmentStore((state) => state.activeChecklistSortParams);
 
-  const [search, setSearch] = useState("");
-  const [frameworks, setFrameworks] = useState<string[]>([]);
-  const [status, setStatus] = useState<Status[]>([]);
-  const [severity, setSeverity] = useState<Severity[]>([]);
-  const [sort, setSort] = useState<ChecklistSort>("severity");
+  const search = activeChecklistFilters.search;
+  const frameworks = activeChecklistFilters.frameworks;
+  const status = activeChecklistFilters.status;
+  const severity = activeChecklistFilters.severity;
+  const sort = useMemo(
+    () => mapStoreSortToChecklistSort(activeChecklistSortParams.by),
+    [activeChecklistSortParams.by],
+  );
+
+  const setSearch = (nextSearch: string) => {
+    setChecklistFilters({ search: nextSearch });
+  };
+
+  const setFrameworks = (nextValue: string[] | ((prev: string[]) => string[])) => {
+    const resolved = typeof nextValue === "function" ? nextValue(frameworks) : nextValue;
+    setChecklistFilters({ frameworks: resolved });
+  };
+
+  const setStatus = (nextValue: Status[] | ((prev: Status[]) => Status[])) => {
+    const current = status as Status[];
+    const resolved = typeof nextValue === "function" ? nextValue(current) : nextValue;
+    setChecklistFilters({ status: resolved });
+  };
+
+  const setSeverity = (
+    nextValue:
+      | AssessmentDetailResponse["items"][number]["control"]["severity"][]
+      | ((
+          prev: AssessmentDetailResponse["items"][number]["control"]["severity"][],
+        ) => AssessmentDetailResponse["items"][number]["control"]["severity"][]),
+  ) => {
+    const current = severity as AssessmentDetailResponse["items"][number]["control"]["severity"][];
+    const resolved = typeof nextValue === "function" ? nextValue(current) : nextValue;
+    setChecklistFilters({ severity: resolved });
+  };
+
+  const setSort = (nextSort: ChecklistSort) => {
+    setChecklistSortParams(mapChecklistSortToStoreSort(nextSort));
+  };
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
@@ -101,10 +168,6 @@ export default function ChecklistPage() {
     setPage(1);
   }, [frameworks, perPage, search, severity, sort, status]);
 
-  const assessmentDetailQueryKey = useMemo(
-    () => ["assessment-detail", assessmentId] as const,
-    [assessmentId],
-  );
   const checklistQueryPrefix = useMemo(
     () => ["assessment-checklist", assessmentId] as const,
     [assessmentId],
@@ -127,11 +190,7 @@ export default function ChecklistPage() {
   );
   const scoreQueryKey = useMemo(() => ["assessment-score", assessmentId] as const, [assessmentId]);
 
-  const assessmentQuery = useQuery({
-    queryKey: assessmentDetailQueryKey,
-    queryFn: () => getAssessmentDetails(assessmentId),
-    enabled: assessmentId.length > 0,
-  });
+  const { query: assessmentQuery, rawItems } = useAssessmentQuery(assessmentId);
 
   const checklistQuery = useQuery({
     queryKey: checklistQueryKey,
@@ -182,95 +241,14 @@ export default function ChecklistPage() {
     };
   }
 
-  const updateStatusMutation = useMutation({
-    mutationFn: ({ itemId, nextStatus }: { itemId: string; nextStatus: Status }) =>
-      updateAssessmentItem(assessmentId, itemId, { status: nextStatus }),
-    onMutate: async ({ itemId, nextStatus }) => {
-      await queryClient.cancelQueries({ queryKey: checklistQueryPrefix });
-      await queryClient.cancelQueries({ queryKey: assessmentDetailQueryKey });
-
-      const previousEntries = queryClient.getQueriesData<ChecklistResponse>({
-        queryKey: checklistQueryPrefix,
-      });
-
-      const previousAssessment =
-        queryClient.getQueryData<AssessmentDetailResponse>(assessmentDetailQueryKey);
-
-      for (const [key, previous] of previousEntries) {
-        if (!previous) {
-          continue;
-        }
-
-        queryClient.setQueryData<ChecklistResponse>(key, {
-          ...previous,
-          items: previous.items.map((item) =>
-            item.id === itemId
-              ? {
-                  ...item,
-                  status: nextStatus,
-                }
-              : item,
-          ),
-        });
-      }
-
-      if (previousAssessment) {
-        queryClient.setQueryData<AssessmentDetailResponse>(assessmentDetailQueryKey, {
-          ...previousAssessment,
-          items: previousAssessment.items.map((item) =>
-            item.id === itemId
-              ? {
-                  ...item,
-                  status: nextStatus,
-                }
-              : item,
-          ),
-        });
-      }
-
-      return { previousEntries, previousAssessment };
-    },
-    onError: (error, variables, context) => {
-      void variables;
-
-      if (context?.previousEntries) {
-        for (const [key, previous] of context.previousEntries) {
-          queryClient.setQueryData(key, previous);
-        }
-      }
-
-      if (context?.previousAssessment) {
-        queryClient.setQueryData(assessmentDetailQueryKey, context.previousAssessment);
-      }
-
-      toast.error(error instanceof Error ? error.message : "Unable to update control status.");
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData<AssessmentScoreResponse | undefined>(scoreQueryKey, (previous) =>
-        previous
-          ? {
-              ...previous,
-              score: data.score,
-            }
-          : previous,
-      );
-
-      setChecklistScore(data.score, scoreQuery.data?.frameworkScores ?? []);
-      toast.success("Control status updated.");
-    },
-    onSettled: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: checklistQueryPrefix }),
-        queryClient.invalidateQueries({ queryKey: assessmentDetailQueryKey }),
-        queryClient.invalidateQueries({ queryKey: scoreQueryKey }),
-      ]);
-    },
+  const updateStatusMutation = useUpdateAssessmentItemMutation(assessmentId, {
+    checklistQueryPrefix,
+    scoreQueryKey,
   });
 
   const allControls = useMemo<Control[]>(() => {
-    const items = assessmentQuery.data?.items ?? [];
-    return items.map(mapApiItemToControl);
-  }, [assessmentQuery.data?.items]);
+    return rawItems.map(mapApiItemToControl);
+  }, [rawItems]);
 
   const visibleControls = useMemo<Control[]>(() => {
     const items = checklistQuery.data?.items ?? [];
@@ -365,10 +343,8 @@ export default function ChecklistPage() {
     return (
       <EmptyState
         onClear={() => {
-          setSearch("");
-          setFrameworks([]);
-          setStatus([]);
-          setSeverity([]);
+          resetChecklistViewState();
+          setPage(1);
         }}
       />
     );
@@ -422,8 +398,8 @@ export default function ChecklistPage() {
         controls={allControls}
         overallScore={overallScore}
         frameworkScores={scoreQuery.data?.frameworkScores}
-        onFilterFramework={(frameworkId) => setFrameworks([frameworkId])}
-        onFilterStatus={(s) => setStatus([s])}
+        onFilterFramework={(frameworkId) => setChecklistFilters({ frameworks: [frameworkId] })}
+        onFilterStatus={(s) => setChecklistFilters({ status: [s] })}
       />
 
       <FilterBar
@@ -448,7 +424,22 @@ export default function ChecklistPage() {
           controls={items}
           updatingItemId={updatingItemId}
           onStatusChange={(itemId, nextStatus) => {
-            updateStatusMutation.mutate({ itemId, nextStatus });
+            updateStatusMutation.mutate(
+              {
+                itemId,
+                payload: { status: nextStatus },
+              },
+              {
+                onSuccess: () => {
+                  toast.success("Control status updated.");
+                },
+                onError: (error) => {
+                  toast.error(
+                    error instanceof Error ? error.message : "Unable to update control status.",
+                  );
+                },
+              },
+            );
           }}
         />
       ))}

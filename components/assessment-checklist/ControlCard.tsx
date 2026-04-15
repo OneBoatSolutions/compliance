@@ -180,7 +180,11 @@ export default function ControlCard({ control, onStatusChange, isStatusUpdating 
             {/* QUICK ACTIONS */}
             <div className="flex gap-3 pt-2">
               {control.status !== "COMPLIANT" && (
-                <button className="bg-green-600 text-white px-3 py-1 rounded text-sm">
+                <button
+                  disabled={isStatusUpdating}
+                  onClick={() => onStatusChange?.(control.itemId, "COMPLIANT")}
+                  className="bg-green-600 text-white px-3 py-1 rounded text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+                >
                   Mark as Compliant
                 </button>
               )}
