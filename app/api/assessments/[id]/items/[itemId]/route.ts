@@ -41,47 +41,18 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
     return validationErrorResponse(parsed.error.format());
   }
 
-  const startedAt = Date.now();
-
   const data = await prisma.$transaction(async (tx) => {
-    const updatedItem = await tx.assessmentItem.update({
+    await tx.assessmentItem.update({
       where: {
         id: itemId,
       },
       data: parsed.data,
-      select: {
-        id: true,
-        assessmentId: true,
-        controlId: true,
-        status: true,
-        comments: true,
-        owner: true,
-        targetDate: true,
-        remarks: true,
-        evidenceNotes: true,
-        updatedAt: true,
-      },
     });
 
     const score = await recalculateAssessmentScore(assessmentId, tx);
 
-    return {
-      item: updatedItem,
-      score,
-    };
+    return score;
   });
 
-  const calculationDurationMs = Date.now() - startedAt;
-
-  return successResponse(
-    {
-      assessmentId: data.score.assessmentId,
-      score: data.score.score,
-      numerator: data.score.numerator,
-      denominator: data.score.denominator,
-      item: data.item,
-      calculationDurationMs,
-    },
-    200,
-  );
+  return successResponse({ score: data.score }, 200);
 });

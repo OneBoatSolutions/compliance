@@ -7,11 +7,14 @@ import { PATCH as assessmentItemPatch } from "@/app/api/assessments/[id]/items/[
 vi.mock("@/lib/prisma", () => {
   return {
     prisma: {
+      assessment: {
+        updateMany: vi.fn(),
+      },
       assessmentItem: {
         findFirst: vi.fn(),
+        findMany: vi.fn(),
         update: vi.fn(),
       },
-      $queryRaw: vi.fn(),
       $transaction: vi.fn(),
     },
   };
@@ -28,7 +31,7 @@ describe("Assessment item API route", () => {
     });
   });
 
-  it("updates assessment item and recalculates score", async () => {
+  it("updates assessment item and recalculates + persists score", async () => {
     vi.spyOn(prisma.assessmentItem, "findFirst").mockResolvedValue({
       id: "item_1",
       assessmentId: "asm_1",
@@ -36,25 +39,35 @@ describe("Assessment item API route", () => {
 
     vi.spyOn(prisma.assessmentItem, "update").mockResolvedValue({
       id: "item_1",
-      assessmentId: "asm_1",
-      controlId: "ctrl_1",
-      status: "COMPLIANT",
-      comments: "Updated",
-      owner: null,
-      targetDate: null,
-      remarks: null,
-      evidenceNotes: null,
-      updatedAt: new Date("2026-03-29T00:00:00.000Z"),
     } as never);
 
-    vi.spyOn(prisma, "$queryRaw").mockResolvedValue([
+    vi.spyOn(prisma.assessmentItem, "findMany").mockResolvedValue([
       {
-        id: "asm_1",
-        score: 91.5,
-        numerator: 183,
-        denominator: 200,
+        status: "COMPLIANT",
+        control: {
+          weight: 1,
+          frameworkId: "fw_1",
+          framework: {
+            id: "fw_1",
+            code: "GDPR",
+            name: "GDPR",
+          },
+        },
+      },
+      {
+        status: "NOT_COMPLIANT",
+        control: {
+          weight: 1,
+          frameworkId: "fw_1",
+          framework: {
+            id: "fw_1",
+            code: "GDPR",
+            name: "GDPR",
+          },
+        },
       },
     ] as never);
+    vi.spyOn(prisma.assessment, "updateMany").mockResolvedValue({ count: 1 } as never);
 
     const req = new Request("http://localhost/api/assessments/asm_1/items/item_1", {
       method: "PATCH",
@@ -75,10 +88,11 @@ describe("Assessment item API route", () => {
 
     expect(res.status).toBe(200);
     expect(json.success).toBe(true);
-    expect(json.data.assessmentId).toBe("asm_1");
-    expect(json.data.score).toBe(91.5);
-    expect(json.data.item.id).toBe("item_1");
-    expect(typeof json.data.calculationDurationMs).toBe("number");
+    expect(json.data).toEqual({ score: 50 });
+    expect(prisma.assessment.updateMany).toHaveBeenCalledWith({
+      where: { id: "asm_1" },
+      data: { score: 50 },
+    });
   });
 
   it("returns 404 when assessment item is not owned by user", async () => {
