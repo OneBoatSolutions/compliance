@@ -86,7 +86,7 @@ describe("Assessment items list API route", () => {
     vi.spyOn(prisma.assessmentItem, "count").mockResolvedValue(0);
 
     const req = new Request(
-      "http://localhost/api/assessments/asm_1/items?status=NOT_COMPLIANT&framework=ckfw000000000000000000000&severity=CRITICAL&search=policy&page=2&limit=10&sortBy=updatedAt&sortOrder=asc",
+      "http://localhost/api/assessments/asm_1/items?status=NOT_COMPLIANT&status=NOT_STARTED&framework=cm8abcde0000000000000002&framework=cm8abcde0000000000000003&severity=CRITICAL&severity=HIGH&search=policy&page=2&limit=10&sortBy=updatedAt&sortOrder=asc",
       { method: "GET" },
     );
 
@@ -97,10 +97,16 @@ describe("Assessment items list API route", () => {
       expect.objectContaining({
         where: {
           assessmentId: "asm_1",
-          status: "NOT_COMPLIANT",
+          status: {
+            in: ["NOT_COMPLIANT", "NOT_STARTED"],
+          },
           control: {
-            frameworkId: "ckfw000000000000000000000",
-            severity: "CRITICAL",
+            frameworkId: {
+              in: ["cm8abcde0000000000000002", "cm8abcde0000000000000003"],
+            },
+            severity: {
+              in: ["CRITICAL", "HIGH"],
+            },
           },
           OR: [
             { comments: { contains: "policy", mode: "insensitive" } },

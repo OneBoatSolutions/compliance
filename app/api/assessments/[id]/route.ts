@@ -11,6 +11,7 @@ interface RouteContext {
 
 export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
+
   const session = await requireAuth();
   const { id } = params;
 

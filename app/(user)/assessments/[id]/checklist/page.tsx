@@ -1,7 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Control } from "./types";
+import { useParams } from "next/navigation";
+import { FileText } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+
+import {
+  getAssessmentDetails,
+  getAssessmentChecklist,
+  getAssessmentScore,
+  updateAssessmentItem,
+} from "@/lib/checklist-api";
+import { useAssessmentStore } from "@/stores/assessment-store";
 import MetricsBar from "@/components/assessment-checklist/MetricsBar";
 import FilterBar from "@/components/assessment-checklist/FilterBar";
 import ChecklistGroup from "@/components/assessment-checklist/ChecklistGroup";
@@ -9,123 +20,348 @@ import Pagination from "@/components/assessment-checklist/Pagination";
 import Skeleton from "@/components/assessment-checklist/Skeleton";
 import EmptyState from "@/components/assessment-checklist/EmptyState";
 import MoreActionsDropdown from "@/components/assessment-checklist/MoreActionsDropdown";
-import { FileText } from "lucide-react";
+import {
+  type AssessmentScoreResponse,
+  type AssessmentDetailResponse,
+  type ChecklistResponse,
+  type ChecklistSort,
+  type Control,
+  type FrameworkFilterOption,
+  type Severity,
+  type Status,
+} from "./types";
+
+function formatRelativeTime(value: string): string {
+  const date = new Date(value);
+  const timestamp = date.getTime();
+
+  if (Number.isNaN(timestamp)) {
+    return value;
+  }
+
+  const now = Date.now();
+  const diffMs = timestamp - now;
+
+  const minute = 60_000;
+  const hour = 60 * minute;
+  const day = 24 * hour;
+
+  const formatter = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+  if (Math.abs(diffMs) < hour) {
+    return formatter.format(Math.round(diffMs / minute), "minute");
+  }
+
+  if (Math.abs(diffMs) < day) {
+    return formatter.format(Math.round(diffMs / hour), "hour");
+  }
+
+  return formatter.format(Math.round(diffMs / day), "day");
+}
+
+function assessmentStatusLabel(status: "DRAFT" | "IN_PROGRESS" | "COMPLETED"): string {
+  if (status === "COMPLETED") {
+    return "Completed";
+  }
+
+  if (status === "DRAFT") {
+    return "Draft";
+  }
+
+  return "In Progress";
+}
 
 export default function ChecklistPage() {
-  const [controls, setControls] = useState<Control[]>([]);
-  const [loading, setLoading] = useState(true);
+  const params = useParams<{ id: string }>();
+  const rawAssessmentId = params?.id;
+  const assessmentId = Array.isArray(rawAssessmentId)
+    ? (rawAssessmentId[0] ?? "")
+    : (rawAssessmentId ?? "");
 
-  // filters
+  const queryClient = useQueryClient();
+  const setChecklistScore = useAssessmentStore((state) => state.setChecklistScore);
+  const clearChecklistState = useAssessmentStore((state) => state.clearChecklistState);
+
   const [search, setSearch] = useState("");
   const [frameworks, setFrameworks] = useState<string[]>([]);
-  const [status, setStatus] = useState<string[]>([]);
-  const [severity, setSeverity] = useState<string[]>([]);
-  const [sort, setSort] = useState("severity");
+  const [status, setStatus] = useState<Status[]>([]);
+  const [severity, setSeverity] = useState<Severity[]>([]);
+  const [sort, setSort] = useState<ChecklistSort>("severity");
 
-  // pagination
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
 
-  // MOCK DATA (replace with API)
   useEffect(() => {
-    setTimeout(() => {
-      setControls([
-        {
-          id: "HIPAA-AS-01",
-          title: "Access Control Policy",
-          description: "Ensure policies exist...",
-          framework: "HIPAA",
-          severity: "MEDIUM",
-          status: "COMPLIANT",
-          evidenceCount: 3,
-          updatedAt: "2h ago",
-        },
-        {
-          id: "HIPAA-AS-02",
-          title: "Risk Assessment & Management",
-          description: "Conduct risk assessments...",
-          framework: "HIPAA",
-          severity: "HIGH",
-          status: "NON_COMPLIANT",
-          evidenceCount: 0,
-          updatedAt: "1d ago",
-        },
-        {
-          id: "ISO-27001-01",
-          title: "Information Security Policy",
-          description: "Define security policies...",
-          framework: "ISO27001",
-          severity: "LOW",
-          status: "COMPLIANT",
-          evidenceCount: 4,
-          updatedAt: "1d ago",
-        },
-        {
-          id: "ISO-27001-02",
-          title: "Asset Management",
-          description: "Maintain asset inventory...",
-          framework: "ISO27001",
-          severity: "HIGH",
-          status: "NON_COMPLIANT",
-          evidenceCount: 0,
-          updatedAt: "6h ago",
-        },
-      ]);
-      setLoading(false);
-    }, 1000);
-  }, []);
-
-  // FILTERING
-  const filtered = useMemo(() => {
-    return controls
-      .filter((c) => c.title.toLowerCase().includes(search.toLowerCase()))
-      .filter((c) => (frameworks.length ? frameworks.includes(c.framework) : true))
-      .filter((c) => (status.length ? status.includes(c.status) : true))
-      .filter((c) => (severity.length ? severity.includes(c.severity) : true));
-  }, [controls, search, frameworks, status, severity]);
+    return () => {
+      clearChecklistState();
+    };
+  }, [clearChecklistState]);
 
   useEffect(() => {
     setPage(1);
-  }, [search, frameworks, status, severity]);
+  }, [frameworks, perPage, search, severity, sort, status]);
 
-  // Sorting
-  const sorted = useMemo(() => {
-    return [...filtered].sort((a, b) => {
-      if (sort === "severity") {
-        const order = { CRITICAL: 4, HIGH: 3, MEDIUM: 2, LOW: 1 };
-        return order[b.severity] - order[a.severity];
+  const assessmentDetailQueryKey = useMemo(
+    () => ["assessment-detail", assessmentId] as const,
+    [assessmentId],
+  );
+  const checklistQueryPrefix = useMemo(
+    () => ["assessment-checklist", assessmentId] as const,
+    [assessmentId],
+  );
+  const checklistQueryKey = useMemo(
+    () =>
+      [
+        ...checklistQueryPrefix,
+        {
+          page,
+          perPage,
+          search,
+          frameworks,
+          status,
+          severity,
+          sort,
+        },
+      ] as const,
+    [checklistQueryPrefix, frameworks, page, perPage, search, severity, sort, status],
+  );
+  const scoreQueryKey = useMemo(() => ["assessment-score", assessmentId] as const, [assessmentId]);
+
+  const assessmentQuery = useQuery({
+    queryKey: assessmentDetailQueryKey,
+    queryFn: () => getAssessmentDetails(assessmentId),
+    enabled: assessmentId.length > 0,
+  });
+
+  const checklistQuery = useQuery({
+    queryKey: checklistQueryKey,
+    queryFn: () =>
+      getAssessmentChecklist({
+        assessmentId,
+        page,
+        limit: perPage,
+        search,
+        frameworks,
+        status,
+        severity,
+        sort,
+      }),
+    enabled: assessmentId.length > 0,
+    placeholderData: (previous) => previous,
+  });
+
+  const scoreQuery = useQuery({
+    queryKey: scoreQueryKey,
+    queryFn: () => getAssessmentScore(assessmentId),
+    enabled: assessmentId.length > 0,
+  });
+
+  useEffect(() => {
+    if (!scoreQuery.data) {
+      return;
+    }
+
+    setChecklistScore(scoreQuery.data.score, scoreQuery.data.frameworkScores);
+  }, [scoreQuery.data, setChecklistScore]);
+
+  function mapApiItemToControl(item: AssessmentDetailResponse["items"][number]): Control {
+    return {
+      itemId: item.id,
+      id: item.control.code,
+      title: item.control.title,
+      description: item.control.description,
+      frameworkId: item.control.framework.id,
+      frameworkName: item.control.framework.name,
+      framework: item.control.framework.code,
+      severity: item.control.severity,
+      status: item.status,
+      evidenceCount: item._count.evidence,
+      updatedAt: formatRelativeTime(item.updatedAt),
+      comments: item.comments,
+      weight: item.control.weight,
+    };
+  }
+
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ itemId, nextStatus }: { itemId: string; nextStatus: Status }) =>
+      updateAssessmentItem(assessmentId, itemId, { status: nextStatus }),
+    onMutate: async ({ itemId, nextStatus }) => {
+      await queryClient.cancelQueries({ queryKey: checklistQueryPrefix });
+      await queryClient.cancelQueries({ queryKey: assessmentDetailQueryKey });
+
+      const previousEntries = queryClient.getQueriesData<ChecklistResponse>({
+        queryKey: checklistQueryPrefix,
+      });
+
+      const previousAssessment =
+        queryClient.getQueryData<AssessmentDetailResponse>(assessmentDetailQueryKey);
+
+      for (const [key, previous] of previousEntries) {
+        if (!previous) {
+          continue;
+        }
+
+        queryClient.setQueryData<ChecklistResponse>(key, {
+          ...previous,
+          items: previous.items.map((item) =>
+            item.id === itemId
+              ? {
+                  ...item,
+                  status: nextStatus,
+                }
+              : item,
+          ),
+        });
       }
 
-      if (sort === "status") {
-        const order = {
-          NOT_STARTED: 1,
-          PARTIAL: 2,
-          NON_COMPLIANT: 3,
-          COMPLIANT: 4,
-        };
-        return order[a.status] - order[b.status];
+      if (previousAssessment) {
+        queryClient.setQueryData<AssessmentDetailResponse>(assessmentDetailQueryKey, {
+          ...previousAssessment,
+          items: previousAssessment.items.map((item) =>
+            item.id === itemId
+              ? {
+                  ...item,
+                  status: nextStatus,
+                }
+              : item,
+          ),
+        });
       }
 
-      if (sort === "updated") {
-        return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+      return { previousEntries, previousAssessment };
+    },
+    onError: (error, variables, context) => {
+      void variables;
+
+      if (context?.previousEntries) {
+        for (const [key, previous] of context.previousEntries) {
+          queryClient.setQueryData(key, previous);
+        }
       }
 
-      if (sort === "id") {
-        return a.id.localeCompare(b.id);
+      if (context?.previousAssessment) {
+        queryClient.setQueryData(assessmentDetailQueryKey, context.previousAssessment);
       }
 
-      return 0;
-    });
-  }, [filtered, sort]);
+      toast.error(error instanceof Error ? error.message : "Unable to update control status.");
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData<AssessmentScoreResponse | undefined>(scoreQueryKey, (previous) =>
+        previous
+          ? {
+              ...previous,
+              score: data.score,
+            }
+          : previous,
+      );
 
-  // PAGINATION
-  const paginated = sorted.slice((page - 1) * perPage, page * perPage);
+      setChecklistScore(data.score, scoreQuery.data?.frameworkScores ?? []);
+      toast.success("Control status updated.");
+    },
+    onSettled: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: checklistQueryPrefix }),
+        queryClient.invalidateQueries({ queryKey: assessmentDetailQueryKey }),
+        queryClient.invalidateQueries({ queryKey: scoreQueryKey }),
+      ]);
+    },
+  });
 
-  if (loading) {
+  const allControls = useMemo<Control[]>(() => {
+    const items = assessmentQuery.data?.items ?? [];
+    return items.map(mapApiItemToControl);
+  }, [assessmentQuery.data?.items]);
+
+  const visibleControls = useMemo<Control[]>(() => {
+    const items = checklistQuery.data?.items ?? [];
+    return items.map(mapApiItemToControl);
+  }, [checklistQuery.data?.items]);
+
+  const groupedControls = useMemo(
+    () =>
+      Object.entries(
+        visibleControls.reduce<Record<string, Control[]>>((accumulator, control) => {
+          if (!accumulator[control.framework]) {
+            accumulator[control.framework] = [];
+          }
+
+          accumulator[control.framework].push(control);
+          return accumulator;
+        }, {}),
+      ),
+    [visibleControls],
+  );
+
+  const frameworkOptions = useMemo(() => {
+    if (scoreQuery.data?.frameworkScores.length) {
+      return scoreQuery.data.frameworkScores.map((frameworkScore) => ({
+        id: frameworkScore.frameworkId,
+        code: frameworkScore.frameworkCode,
+        name: frameworkScore.frameworkName,
+      }));
+    }
+
+    const map = new Map<string, FrameworkFilterOption>();
+    for (const control of allControls) {
+      if (!map.has(control.frameworkId)) {
+        map.set(control.frameworkId, {
+          id: control.frameworkId,
+          code: control.framework,
+          name: control.frameworkName,
+        });
+      }
+    }
+
+    return [...map.values()];
+  }, [allControls, scoreQuery.data?.frameworkScores]);
+
+  if (assessmentQuery.isPending || checklistQuery.isPending) {
     return <Skeleton />;
   }
 
-  if (!filtered.length) {
+  if (assessmentQuery.isError) {
+    return (
+      <div className="p-6">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-5">
+          <h2 className="text-sm font-semibold text-red-700">Failed to load assessment</h2>
+          <p className="text-sm text-red-600 mt-1">
+            {assessmentQuery.error instanceof Error
+              ? assessmentQuery.error.message
+              : "Please try again."}
+          </p>
+          <button
+            onClick={() => void assessmentQuery.refetch()}
+            className="mt-4 px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (checklistQuery.isError) {
+    return (
+      <div className="p-6">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-5">
+          <h2 className="text-sm font-semibold text-red-700">Failed to load checklist</h2>
+          <p className="text-sm text-red-600 mt-1">
+            {checklistQuery.error instanceof Error
+              ? checklistQuery.error.message
+              : "Please try again."}
+          </p>
+          <button
+            onClick={() => void checklistQuery.refetch()}
+            className="mt-4 px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!visibleControls.length) {
     return (
       <EmptyState
         onClear={() => {
@@ -138,22 +374,32 @@ export default function ChecklistPage() {
     );
   }
 
+  const assessmentStatus = assessmentQuery.data?.status ?? "IN_PROGRESS";
+  const lastUpdated = assessmentQuery.data?.updatedAt
+    ? formatRelativeTime(assessmentQuery.data.updatedAt)
+    : "N/A";
+  const overallScore = scoreQuery.data?.score ?? assessmentQuery.data?.score ?? null;
+  const totalItems = checklistQuery.data?.meta.total ?? visibleControls.length;
+  const updatingItemId = updateStatusMutation.isPending
+    ? (updateStatusMutation.variables?.itemId ?? null)
+    : null;
+
   return (
     <div className="p-6 space-y-6">
       {/* HEADER */}
       <div className="space-y-2 p-6">
         {/* Breadcrumb */}
         <p className="text-sm text-gray-500 hover:text-purple-600 cursor-pointer">
-          Assessments / <span className="text-gray-800 font-">HealthTrack App Compliance</span>
+          Assessments / <span className="text-gray-800 font-medium">Assessment {assessmentId}</span>
         </p>
 
         {/* Title Row */}
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-gray-900">HealthTrack App Compliance</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Assessment Checklist</h1>
 
             <span className="px-2 py-1 text-xs font-semibold bg-yellow-100 text-yellow-700 rounded-full">
-              In Progress
+              {assessmentStatusLabel(assessmentStatus)}
             </span>
           </div>
 
@@ -169,13 +415,14 @@ export default function ChecklistPage() {
           </div>
         </div>
 
-        {/* Last updated */}
-        <p className="text-sm text-gray-500">Last updated: 2 hours ago by Sarah Chen</p>
-        {/*replace with username*/}
+        <p className="text-sm text-gray-500">Last updated: {lastUpdated}</p>
       </div>
+
       <MetricsBar
-        controls={controls}
-        onFilterFramework={(fw) => setFrameworks([fw])}
+        controls={allControls}
+        overallScore={overallScore}
+        frameworkScores={scoreQuery.data?.frameworkScores}
+        onFilterFramework={(frameworkId) => setFrameworks([frameworkId])}
         onFilterStatus={(s) => setStatus([s])}
       />
 
@@ -184,6 +431,7 @@ export default function ChecklistPage() {
         setSearch={setSearch}
         frameworks={frameworks}
         setFrameworks={setFrameworks}
+        frameworkOptions={frameworkOptions}
         status={status}
         setStatus={setStatus}
         severity={severity}
@@ -193,20 +441,20 @@ export default function ChecklistPage() {
       />
 
       {/* GROUPS */}
-      {Object.entries(
-        paginated.reduce<Record<string, Control[]>>((acc, curr) => {
-          if (!acc[curr.framework]) {
-            acc[curr.framework] = [];
-          }
-          acc[curr.framework].push(curr);
-          return acc;
-        }, {}),
-      ).map(([framework, items]) => (
-        <ChecklistGroup key={framework} framework={framework} controls={items} />
+      {groupedControls.map(([framework, items]) => (
+        <ChecklistGroup
+          key={framework}
+          framework={framework}
+          controls={items}
+          updatingItemId={updatingItemId}
+          onStatusChange={(itemId, nextStatus) => {
+            updateStatusMutation.mutate({ itemId, nextStatus });
+          }}
+        />
       ))}
 
       <Pagination
-        total={filtered.length}
+        total={totalItems}
         page={page}
         setPage={setPage}
         perPage={perPage}

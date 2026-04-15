@@ -24,6 +24,8 @@ vi.mock("@/lib/prisma", () => {
       },
       assessmentItem: {
         createMany: vi.fn(),
+        findMany: vi.fn(),
+        count: vi.fn(),
       },
       $transaction: vi.fn(),
     },

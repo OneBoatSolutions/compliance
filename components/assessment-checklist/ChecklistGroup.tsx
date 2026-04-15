@@ -1,13 +1,20 @@
-import { Control } from "@/app/(user)/assessments/[id]/checklist/types";
+import { type Control, type Status } from "@/app/(user)/assessments/[id]/checklist/types";
 import { useState } from "react";
 import ControlCard from "./ControlCard";
 import { ChevronDown, Plus } from "lucide-react";
 interface Props {
   framework: string;
   controls: Control[];
+  onStatusChange?: (itemId: string, status: Status) => void;
+  updatingItemId?: string | null;
 }
 
-export default function ChecklistGroup({ framework, controls }: Props) {
+export default function ChecklistGroup({
+  framework,
+  controls,
+  onStatusChange,
+  updatingItemId,
+}: Props) {
   const [open, setOpen] = useState(true);
   const completed = controls.filter((c) => c.status === "COMPLIANT").length;
   const total = controls.length;
@@ -59,7 +66,12 @@ export default function ChecklistGroup({ framework, controls }: Props) {
       {open && (
         <div className="space-y-3 p-3 bg-gray-50">
           {controls.map((c: Control) => (
-            <ControlCard key={c.id} control={c} />
+            <ControlCard
+              key={c.itemId}
+              control={c}
+              onStatusChange={onStatusChange}
+              isStatusUpdating={updatingItemId === c.itemId}
+            />
           ))}
         </div>
       )}

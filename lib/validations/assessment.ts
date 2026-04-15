@@ -33,9 +33,9 @@ export const updateAssessmentItemSchema = z
 export const assessmentItemsListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(50),
-  status: assessmentItemStatusSchema.optional(),
-  framework: z.cuid().optional(),
-  severity: z.nativeEnum(Severity).optional(),
+  status: z.array(assessmentItemStatusSchema).default([]),
+  framework: z.array(z.cuid()).default([]),
+  severity: z.array(z.nativeEnum(Severity)).default([]),
   search: z.string().trim().max(200).optional(),
   sortBy: z.enum(["severity", "updatedAt", "createdAt", "status", "code"]).default("severity"),
   sortOrder: z.enum(["asc", "desc"]).default("desc"),

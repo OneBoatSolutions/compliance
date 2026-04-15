@@ -45,12 +45,21 @@ interface CreateAssessmentResult {
   assessmentId?: string;
 }
 
+export interface ChecklistFrameworkScore {
+  frameworkId: string;
+  frameworkCode: string;
+  frameworkName: string;
+  score: number;
+}
+
 interface AssessmentState {
   organizationId: string | null;
   suggestions: FrameworkSuggestion[];
   selectedFrameworkIds: string[];
   onboardingData: OnboardingFormValues | null;
   assessmentId: string | null;
+  checklistScore: number | null;
+  checklistFrameworkScores: ChecklistFrameworkScore[];
   phase: OnboardingPhase;
   error: OnboardingFlowError | null;
   lastRetryContext: RetryContext | null;
@@ -58,6 +67,8 @@ interface AssessmentState {
   setOnboardingData: (data: OnboardingFormValues) => void;
   setOrganizationId: (id: string) => void;
   setSuggestions: (data: FrameworkSuggestion[]) => void;
+  setChecklistScore: (score: number, frameworkScores: ChecklistFrameworkScore[]) => void;
+  clearChecklistState: () => void;
 
   clearError: () => void;
   toggleFramework: (id: string) => void;
@@ -319,6 +330,8 @@ const initialState = {
   selectedFrameworkIds: [],
   onboardingData: null,
   assessmentId: null,
+  checklistScore: null,
+  checklistFrameworkScores: [],
   phase: "idle" as OnboardingPhase,
   error: null,
   lastRetryContext: null,
@@ -337,6 +350,16 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
   },
 
   setOnboardingData: (data) => set({ onboardingData: data }),
+  setChecklistScore: (score, frameworkScores) =>
+    set({
+      checklistScore: score,
+      checklistFrameworkScores: frameworkScores,
+    }),
+  clearChecklistState: () =>
+    set({
+      checklistScore: null,
+      checklistFrameworkScores: [],
+    }),
   clearError: () => set({ error: null }),
 
   toggleFramework: (id) =>

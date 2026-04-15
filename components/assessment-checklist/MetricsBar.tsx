@@ -1,36 +1,71 @@
-import { Control } from "@/app/(user)/assessments/[id]/checklist/types";
+import {
+  type Control,
+  type FrameworkScore,
+  type Status,
+} from "@/app/(user)/assessments/[id]/checklist/types";
 import { TriangleAlert } from "lucide-react";
 
 interface Props {
   controls: Control[];
+  overallScore?: number | null;
+  frameworkScores?: FrameworkScore[];
   onFilterFramework?: (fw: string) => void;
-  onFilterStatus?: (status: string) => void;
+  onFilterStatus?: (status: Status) => void;
 }
 
-export default function MetricsBar({ controls, onFilterFramework, onFilterStatus }: Props) {
+export default function MetricsBar({
+  controls,
+  overallScore,
+  frameworkScores,
+  onFilterFramework,
+  onFilterStatus,
+}: Props) {
   const total = controls.length;
 
-  // STATUS COUNTS
   const compliant = controls.filter((c) => c.status === "COMPLIANT").length;
-  const partial = controls.filter((c) => c.status === "PARTIAL").length;
-  const gap = controls.filter((c) => c.status === "NON_COMPLIANT").length;
+  const partial = controls.filter((c) => c.status === "PARTIALLY_COMPLIANT").length;
+  const gap = controls.filter((c) => c.status === "NOT_COMPLIANT").length;
   const notStarted = controls.filter((c) => !c.status || c.status === "NOT_STARTED").length;
 
-  const percent = total ? Math.round((compliant / total) * 100) : 0;
+  const percent =
+    typeof overallScore === "number"
+      ? Math.max(0, Math.min(100, Math.round(overallScore)))
+      : total
+        ? Math.round((compliant / total) * 100)
+        : 0;
 
-  // FRAMEWORK BREAKDOWN (dynamic)
-  const frameworks = ["HIPAA", "GDPR", "PCI-DSS"];
+  const frameworkStats =
+    frameworkScores && frameworkScores.length > 0
+      ? frameworkScores.map((frameworkScore) => ({
+          id: frameworkScore.frameworkId,
+          fw: frameworkScore.frameworkCode,
+          pct: Math.round(frameworkScore.score),
+          total: controls.filter((control) => control.frameworkId === frameworkScore.frameworkId)
+            .length,
+        }))
+      : [...new Set(controls.map((control) => control.frameworkId))].map((frameworkId) => {
+          const items = controls.filter((control) => control.frameworkId === frameworkId);
+          const done = items.filter((control) => control.status === "COMPLIANT").length;
+          const pct = items.length ? Math.round((done / items.length) * 100) : 0;
 
-  const frameworkStats = frameworks.map((fw) => {
-    const items = controls.filter((c) => c.framework === fw);
-    const done = items.filter((c) => c.status === "COMPLIANT").length;
-    const pct = items.length ? Math.round((done / items.length) * 100) : 0;
+          return {
+            id: frameworkId,
+            fw: items[0]?.frameworkName ?? items[0]?.framework ?? frameworkId,
+            pct,
+            total: items.length,
+          };
+        });
 
-    return { fw, pct, total: items.length };
-  });
+  const safeBarPercent = (count: number): number => {
+    if (total === 0) {
+      return 0;
+    }
+
+    return (count / total) * 100;
+  };
 
   return (
-    <div className=" top-[80px] z-40 bg-white border rounded-xl shadow-sm grid grid-cols-4 divide-x divide-slate-100 items-stretch">
+    <div className="sticky top-[80px] z-40 bg-white border rounded-xl shadow-sm grid grid-cols-4 divide-x divide-slate-100 items-stretch">
       {/*  1. Overall Progress */}
       <div className="flex items-center p-6">
         <div className="relative w-20 h-20">
@@ -77,8 +112,8 @@ export default function MetricsBar({ controls, onFilterFramework, onFilterStatus
         <div className="space-y-3">
           {frameworkStats.map((f) => (
             <div
-              key={f.fw}
-              onClick={() => onFilterFramework?.(f.fw)}
+              key={f.id}
+              onClick={() => onFilterFramework?.(f.id)}
               className="cursor-pointer hover:opacity-80"
             >
               <div className="flex justify-between text-sm">
@@ -103,27 +138,27 @@ export default function MetricsBar({ controls, onFilterFramework, onFilterStatus
             title={`Compliant: ${compliant}`}
             onClick={() => onFilterStatus?.("COMPLIANT")}
             className="bg-green-500 cursor-pointer"
-            style={{ width: `${(compliant / total) * 100}%` }}
+            style={{ width: `${safeBarPercent(compliant)}%` }}
           />
 
           <div
             title={`Partial: ${partial}`}
-            onClick={() => onFilterStatus?.("PARTIAL")}
+            onClick={() => onFilterStatus?.("PARTIALLY_COMPLIANT")}
             className="bg-yellow-400 cursor-pointer"
-            style={{ width: `${(partial / total) * 100}%` }}
+            style={{ width: `${safeBarPercent(partial)}%` }}
           />
 
           <div
             title={`Non-compliant: ${gap}`}
-            onClick={() => onFilterStatus?.("NON_COMPLIANT")}
+            onClick={() => onFilterStatus?.("NOT_COMPLIANT")}
             className="bg-red-500 cursor-pointer"
-            style={{ width: `${(gap / total) * 100}%` }}
+            style={{ width: `${safeBarPercent(gap)}%` }}
           />
 
           <div
             title={`Not started: ${notStarted}`}
             className="bg-gray-300"
-            style={{ width: `${(notStarted / total) * 100}%` }}
+            style={{ width: `${safeBarPercent(notStarted)}%` }}
           />
         </div>
 
@@ -138,7 +173,7 @@ export default function MetricsBar({ controls, onFilterFramework, onFilterStatus
 
       {/* 🔹 4. Critical Issues */}
       <div
-        onClick={() => onFilterStatus?.("NON_COMPLIANT")}
+        onClick={() => onFilterStatus?.("NOT_COMPLIANT")}
         className="p-6 flex flex-col justify-center cursor-pointer hover:opacity-80"
       >
         <p className="text-xs uppercase font-semibold text-gray-500">Critical Issues</p>

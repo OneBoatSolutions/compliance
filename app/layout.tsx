@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/components/providers/auth-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
 // Replace Geist with Inter
 const inter = Inter({
   variable: "--font-inter",
@@ -34,8 +35,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=optional"
         />
         <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
-          <AuthProvider>{children}</AuthProvider>
-          <Toaster richColors position="top-right" />
+          <QueryProvider>
+            <AuthProvider>{children}</AuthProvider>
+            <Toaster richColors position="top-right" />
+          </QueryProvider>
         </NextThemesProvider>
       </body>
     </html>
