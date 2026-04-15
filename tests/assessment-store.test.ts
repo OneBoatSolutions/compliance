@@ -30,6 +30,63 @@ describe("assessment onboarding store", () => {
     useAssessmentStore.getState().reset();
   });
 
+  it("stores localized checklist filters and sort parameters", () => {
+    const store = useAssessmentStore.getState();
+
+    store.setChecklistFilters({
+      search: "hipaa",
+      frameworks: ["fw_hipaa"],
+      status: ["NOT_STARTED"],
+      severity: ["HIGH"],
+    });
+    store.setChecklistSortParams({
+      by: "updated",
+      order: "asc",
+    });
+
+    const state = useAssessmentStore.getState();
+
+    expect(state.activeChecklistFilters).toEqual({
+      search: "hipaa",
+      frameworks: ["fw_hipaa"],
+      status: ["NOT_STARTED"],
+      severity: ["HIGH"],
+    });
+    expect(state.activeChecklistSortParams).toEqual({
+      by: "updated",
+      order: "asc",
+    });
+  });
+
+  it("tracks selected checklist item and resets checklist view state", () => {
+    const store = useAssessmentStore.getState();
+
+    store.setSelectedChecklistItem("item_42");
+    store.setChecklistFilters({
+      search: "privacy",
+      frameworks: ["fw_gdpr"],
+      status: ["COMPLIANT"],
+      severity: ["MEDIUM"],
+    });
+    store.setChecklistSortParams({ by: "status", order: "asc" });
+
+    store.resetChecklistViewState();
+
+    const state = useAssessmentStore.getState();
+
+    expect(state.selectedChecklistItemId).toBeNull();
+    expect(state.activeChecklistFilters).toEqual({
+      search: "",
+      frameworks: [],
+      status: [],
+      severity: [],
+    });
+    expect(state.activeChecklistSortParams).toEqual({
+      by: "severity",
+      order: "desc",
+    });
+  });
+
   it("submits onboarding and stores mapped framework IDs", async () => {
     const fetchSpy = vi
       .spyOn(globalThis, "fetch")
