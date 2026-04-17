@@ -170,11 +170,17 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
         comments: true,
         createdAt: true,
         updatedAt: true,
+        _count: {
+          select: {
+            evidence: true,
+          },
+        },
         control: {
           select: {
             id: true,
             code: true,
             title: true,
+            description: true,
             severity: true,
             weight: true,
             framework: {

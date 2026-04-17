@@ -31,6 +31,7 @@ const statusRank: Record<AssessmentItemStatus, number> = {
 
 type AssessmentDetailData = Awaited<ReturnType<typeof getAssessmentDetails>>;
 type AssessmentItem = AssessmentDetailData["items"][number];
+const emptyAssessmentItems: AssessmentItem[] = [];
 
 export const assessmentQueryKeys = {
   detail: (assessmentId: string) => [assessmentDetailQueryRoot, assessmentId] as const,
@@ -132,7 +133,7 @@ export function useAssessmentQuery(assessmentId: string) {
     enabled: assessmentId.trim().length > 0,
   });
 
-  const rawItems = query.data?.items ?? [];
+  const rawItems = query.data?.items ?? emptyAssessmentItems;
 
   const items = useMemo(() => {
     const filtered = applyChecklistFilters(rawItems, activeFilters);

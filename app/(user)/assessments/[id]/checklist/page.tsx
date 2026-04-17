@@ -1,12 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { FileText } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { getAssessmentChecklist, getAssessmentScore } from "@/lib/checklist-api";
+import {
+  deleteAssessment,
+  duplicateAssessment,
+  getAssessmentChecklist,
+  getAssessmentScore,
+} from "@/lib/checklist-api";
 import { useAssessmentQuery } from "@/lib/hooks/use-assessment-query";
 import { useUpdateAssessmentItemMutation } from "@/lib/hooks/use-update-assessment-item-mutation";
 import { type AssessmentSortField, useAssessmentStore } from "@/stores/assessment-store";
@@ -100,7 +105,60 @@ function mapChecklistSortToStoreSort(sort: ChecklistSort): {
   return { by: "severity", order: "desc" };
 }
 
+function escapeCsvField(value: string): string {
+  const escaped = value.replace(/"/g, '""');
+
+  if (/[",\n]/.test(escaped)) {
+    return `"${escaped}"`;
+  }
+
+  return escaped;
+}
+
+function serializeControlsToCsv(controls: Control[]): string {
+  const headers = [
+    "Control ID",
+    "Title",
+    "Framework",
+    "Severity",
+    "Status",
+    "Evidence Count",
+    "Last Updated",
+    "Comments",
+  ];
+
+  const rows = controls.map((control) => [
+    control.id,
+    control.title,
+    control.framework,
+    control.severity,
+    control.status,
+    String(control.evidenceCount),
+    control.updatedAt,
+    control.comments ?? "",
+  ]);
+
+  return [headers, ...rows]
+    .map((row) => row.map((value) => escapeCsvField(String(value))).join(","))
+    .join("\n");
+}
+
+function downloadCsv(filename: string, content: string): void {
+  const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", filename);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  URL.revokeObjectURL(url);
+}
+
 export default function ChecklistPage() {
+  const router = useRouter();
   const params = useParams<{ id: string }>();
   const rawAssessmentId = params?.id;
   const assessmentId = Array.isArray(rawAssessmentId)
@@ -157,6 +215,7 @@ export default function ChecklistPage() {
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
+  const [isHeaderActionPending, setIsHeaderActionPending] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -415,6 +474,66 @@ export default function ChecklistPage() {
     ? (updateStatusMutation.variables?.itemId ?? null)
     : null;
 
+  const exportChecklistCsv = () => {
+    if (allControls.length === 0) {
+      toast.info("No controls available to export.");
+      return;
+    }
+
+    const csv = serializeControlsToCsv(allControls);
+    const datePart = new Date().toISOString().slice(0, 10);
+    const filename = `assessment-${assessmentId}-checklist-${datePart}.csv`;
+
+    downloadCsv(filename, csv);
+    toast.success("Checklist CSV exported.");
+  };
+
+  const handleGenerateReport = () => {
+    exportChecklistCsv();
+  };
+
+  const handleDuplicateAssessment = async () => {
+    if (!assessmentId) {
+      return;
+    }
+
+    setIsHeaderActionPending(true);
+
+    try {
+      const duplicated = await duplicateAssessment(assessmentId);
+      toast.success("Assessment duplicated.");
+      router.push(`/assessments/${duplicated.assessmentId}/checklist`);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to duplicate assessment.");
+    } finally {
+      setIsHeaderActionPending(false);
+    }
+  };
+
+  const handleDeleteAssessment = async () => {
+    if (!assessmentId) {
+      return;
+    }
+
+    const shouldDelete = window.confirm("Delete this assessment? This action cannot be undone.");
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    setIsHeaderActionPending(true);
+
+    try {
+      await deleteAssessment(assessmentId);
+      toast.success("Assessment deleted.");
+      router.push("/assessments");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to delete assessment.");
+    } finally {
+      setIsHeaderActionPending(false);
+    }
+  };
+
   return (
     <div className="p-6 space-y-6">
       {/* HEADER */}
@@ -435,14 +554,27 @@ export default function ChecklistPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <button className="px-4 py-2 text-sm border border-slate-300 rounded-lg hover:bg-gray-100">
+            <button
+              onClick={() => router.push("/dashboard")}
+              disabled={isHeaderActionPending}
+              className="px-4 py-2 text-sm border border-slate-300 rounded-lg hover:bg-gray-100 disabled:opacity-60"
+            >
               ← Back to Dashboard
             </button>
 
-            <button className="flex items-center gap-2 px-4 py-2 text-sm border border-primary text-primary rounded-lg hover:bg-purple-50">
+            <button
+              onClick={handleGenerateReport}
+              disabled={isHeaderActionPending}
+              className="flex items-center gap-2 px-4 py-2 text-sm border border-primary text-primary rounded-lg hover:bg-purple-50 disabled:opacity-60"
+            >
               <FileText className="w-4 h-4" /> Generate Report
             </button>
-            <MoreActionsDropdown />
+            <MoreActionsDropdown
+              onExportCsv={exportChecklistCsv}
+              onDuplicateAssessment={handleDuplicateAssessment}
+              onDeleteAssessment={handleDeleteAssessment}
+              disabled={isHeaderActionPending}
+            />
           </div>
         </div>
 

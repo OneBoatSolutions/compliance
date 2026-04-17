@@ -28,6 +28,15 @@ interface UpdateAssessmentItemResponse {
   score: number;
 }
 
+interface DuplicateAssessmentResponse {
+  assessmentId: string;
+  totalItems: number;
+}
+
+interface DeleteAssessmentResponse {
+  id: string;
+}
+
 interface SortQuery {
   sortBy: "severity" | "status" | "code" | "updatedAt";
   sortOrder: "asc" | "desc";
@@ -112,4 +121,16 @@ export async function updateAssessmentItem(
     `/api/assessments/${id}/items/${targetItemId}`,
     { body: payload },
   );
+}
+
+export async function duplicateAssessment(
+  assessmentId: string,
+): Promise<DuplicateAssessmentResponse> {
+  const id = encodeURIComponent(assessmentId);
+  return apiClient.post<DuplicateAssessmentResponse>(`/api/assessments/${id}/duplicate`);
+}
+
+export async function deleteAssessment(assessmentId: string): Promise<DeleteAssessmentResponse> {
+  const id = encodeURIComponent(assessmentId);
+  return apiClient.delete<DeleteAssessmentResponse>(`/api/assessments/${id}`);
 }
