@@ -5,22 +5,35 @@ import { useParams } from "next/navigation";
 import ControlWorkspace from "@/components/user/control-workspace/ControlWorkspace";
 import { getControl } from "@/services/control.services";
 
+interface ControlWorkspaceData {
+  id: string;
+  framework: string;
+  title: string;
+  description: string;
+  severity: string;
+  status: string;
+  weight: number;
+  assessmentId: string;
+}
+
 export default function Page() {
   const params = useParams();
 
-  const assessmentId = params?.assessmentId as string;
+  const assessmentId = params?.id as string;
   const controlId = params?.controlId as string;
 
-  const [control, setControl] = useState<any>(null);
+  const [control, setControl] = useState<ControlWorkspaceData | null>(null);
   const [loading, setLoading] = useState(true);
 
   // 🧠 Fetch control data
   useEffect(() => {
-    if (!assessmentId || !controlId) return;
+    if (!assessmentId || !controlId) {
+      return;
+    }
 
     const fetchData = async () => {
       try {
-        const data = await getControl(controlId);
+        const data = (await getControl(controlId)) as Omit<ControlWorkspaceData, "assessmentId">;
         setControl({
           ...data,
           assessmentId, // attach route param if needed
@@ -52,4 +65,3 @@ export default function Page() {
 
   return <ControlWorkspace control={control} />;
 }
-

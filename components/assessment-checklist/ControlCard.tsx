@@ -1,6 +1,6 @@
 "use client";
 
-import { Control } from "@/app/(user)/assessments/[id]/checklist/types";
+import { Control, type Status } from "@/app/(user)/assessments/[id]/checklist/types";
 import { useState } from "react";
 import StatusDropdown from "./StatusDropdown";
 import {
@@ -18,9 +18,11 @@ import {
 
 interface Props {
   control: Control;
+  onStatusChange?: (itemId: string, status: Status) => void;
+  isStatusUpdating?: boolean;
 }
 
-export default function ControlCard({ control }: Props) {
+export default function ControlCard({ control, onStatusChange, isStatusUpdating = false }: Props) {
   const [open, setOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(true);
   const isOwn = true; // later from backend (user auth)
@@ -31,13 +33,17 @@ export default function ControlCard({ control }: Props) {
       color: "border-green-500",
       icon: <CheckCircle2 className="text-green-600 w-4 h-4" />,
     },
-    PARTIAL: {
+    PARTIALLY_COMPLIANT: {
       color: "border-yellow-400",
       icon: <AlertCircle className="text-yellow-500 w-4 h-4" />,
     },
-    NON_COMPLIANT: {
+    NOT_COMPLIANT: {
       color: "border-red-500",
       icon: <XCircle className="text-red-500 w-4 h-4" />,
+    },
+    NOT_APPLICABLE: {
+      color: "border-blue-500",
+      icon: <Circle className="text-blue-500 w-4 h-4" />,
     },
     NOT_STARTED: {
       color: "border-gray-300",
@@ -81,9 +87,8 @@ export default function ControlCard({ control }: Props) {
         <div className="flex justify-center" onClick={(e) => e.stopPropagation()}>
           <StatusDropdown
             status={control.status}
-            onChange={(newStatus) => {
-              console.log(newStatus);
-            }}
+            disabled={isStatusUpdating}
+            onChange={(newStatus) => onStatusChange?.(control.itemId, newStatus)}
           />
         </div>
 
@@ -123,7 +128,7 @@ export default function ControlCard({ control }: Props) {
             </div>
 
             {/* AI REMEDIATION */}
-            {control.status === "NON_COMPLIANT" && (
+            {control.status === "NOT_COMPLIANT" && (
               <div className="bg-gradient-to-r from-purple-700 to-purple-500 text-white p-5 rounded-xl relative overflow-hidden">
                 <div className="absolute right-4 top-4 opacity-30 text-4xl">✦</div>
 
@@ -175,7 +180,11 @@ export default function ControlCard({ control }: Props) {
             {/* QUICK ACTIONS */}
             <div className="flex gap-3 pt-2">
               {control.status !== "COMPLIANT" && (
-                <button className="bg-green-600 text-white px-3 py-1 rounded text-sm">
+                <button
+                  disabled={isStatusUpdating}
+                  onClick={() => onStatusChange?.(control.itemId, "COMPLIANT")}
+                  className="bg-green-600 text-white px-3 py-1 rounded text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+                >
                   Mark as Compliant
                 </button>
               )}

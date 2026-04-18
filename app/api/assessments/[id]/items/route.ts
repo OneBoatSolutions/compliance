@@ -12,6 +12,19 @@ interface RouteContext {
   };
 }
 
+function parseListParam(searchParams: URLSearchParams, key: string): string[] {
+  const entries = searchParams.getAll(key);
+
+  const values = entries.flatMap((entry) =>
+    entry
+      .split(",")
+      .map((value) => value.trim())
+      .filter((value) => value.length > 0),
+  );
+
+  return [...new Set(values)];
+}
+
 function buildOrderBy(sortBy: string, sortOrder: Prisma.SortOrder) {
   if (sortBy === "updatedAt") {
     return [{ updatedAt: sortOrder } satisfies Prisma.AssessmentItemOrderByWithRelationInput];
@@ -62,7 +75,16 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
   }
 
   const url = new URL(req.url);
-  const raw = Object.fromEntries(url.searchParams.entries());
+  const raw = {
+    page: url.searchParams.get("page") ?? undefined,
+    limit: url.searchParams.get("limit") ?? undefined,
+    status: parseListParam(url.searchParams, "status"),
+    framework: parseListParam(url.searchParams, "framework"),
+    severity: parseListParam(url.searchParams, "severity"),
+    search: url.searchParams.get("search") ?? undefined,
+    sortBy: url.searchParams.get("sortBy") ?? undefined,
+    sortOrder: url.searchParams.get("sortOrder") ?? undefined,
+  };
   const parsed = assessmentItemsListQuerySchema.safeParse(raw);
 
   if (!parsed.success) {
@@ -73,15 +95,6 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
 
   const where: Prisma.AssessmentItemWhereInput = {
     assessmentId,
-    ...(status ? { status } : {}),
-    ...(framework || severity
-      ? {
-          control: {
-            ...(framework ? { frameworkId: framework } : {}),
-            ...(severity ? { severity } : {}),
-          },
-        }
-      : {}),
     ...(search
       ? {
           OR: [
@@ -112,6 +125,36 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
       : {}),
   };
 
+  if (status.length === 1) {
+    where.status = status[0];
+  } else if (status.length > 1) {
+    where.status = {
+      in: status,
+    };
+  }
+
+  const controlWhere: Prisma.ControlWhereInput = {};
+
+  if (framework.length === 1) {
+    controlWhere.frameworkId = framework[0];
+  } else if (framework.length > 1) {
+    controlWhere.frameworkId = {
+      in: framework,
+    };
+  }
+
+  if (severity.length === 1) {
+    controlWhere.severity = severity[0];
+  } else if (severity.length > 1) {
+    controlWhere.severity = {
+      in: severity,
+    };
+  }
+
+  if (Object.keys(controlWhere).length > 0) {
+    where.control = controlWhere;
+  }
+
   const skip = (page - 1) * limit;
   const orderBy = buildOrderBy(sortBy, sortOrder);
 
@@ -127,11 +170,17 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
         comments: true,
         createdAt: true,
         updatedAt: true,
+        _count: {
+          select: {
+            evidence: true,
+          },
+        },
         control: {
           select: {
             id: true,
             code: true,
             title: true,
+            description: true,
             severity: true,
             weight: true,
             framework: {
