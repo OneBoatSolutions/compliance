@@ -1,5 +1,6 @@
 import { ClipboardList, CheckCircle2 } from "lucide-react";
 
+
 export default function ControlRequirements() {
   const items = [
     { text: "Documented authorization process for ePHI", done: true },
@@ -8,7 +9,7 @@ export default function ControlRequirements() {
   ];
 
   return (
-    <div className="bg-card p-4 rounded-xl border">
+    <div className="bg-card border border-border rounded-xl p-4">
       
       {/* Header */}
       <div className="flex items-center gap-2 mb-3">

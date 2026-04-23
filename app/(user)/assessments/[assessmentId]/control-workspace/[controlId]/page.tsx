@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import ControlWorkspace from "@/components/user/control-workspace/ControlWorkspace";
 import { getControl } from "@/services/control.services";
 
+
 export default function Page() {
   const params = useParams();
 
