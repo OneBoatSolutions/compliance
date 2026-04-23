@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/components/providers/auth-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
 // Replace Geist with Inter
 const inter = Inter({
   variable: "--font-inter",

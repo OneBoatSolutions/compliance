@@ -11,6 +11,7 @@ interface RouteContext {
 
 export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
+
   const session = await requireAuth();
   const { id } = params;
 
@@ -27,6 +28,11 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
               framework: true,
             },
           },
+          _count: {
+            select: {
+              evidence: true,
+            },
+          },
         },
       },
     },
@@ -37,4 +43,33 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
   }
 
   return successResponse(assessment, 200);
+});
+
+export const DELETE = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+  void req;
+
+  const session = await requireAuth();
+  const { id } = params;
+
+  const ownedAssessment = await prisma.assessment.findFirst({
+    where: {
+      id,
+      userId: session.user.id,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!ownedAssessment) {
+    return notFoundResponse("Assessment not found");
+  }
+
+  await prisma.assessment.delete({
+    where: {
+      id: ownedAssessment.id,
+    },
+  });
+
+  return successResponse({ id: ownedAssessment.id }, 200);
 });

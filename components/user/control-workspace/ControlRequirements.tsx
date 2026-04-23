@@ -1,6 +1,5 @@
 import { ClipboardList, CheckCircle2 } from "lucide-react";
 
-
 export default function ControlRequirements() {
   const items = [
     { text: "Documented authorization process for ePHI", done: true },

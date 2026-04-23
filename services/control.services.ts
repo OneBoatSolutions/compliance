@@ -1,26 +1,27 @@
 import { mockControls } from "./mockData";
 import { apiClient } from "@/lib/api-client";
-//import { AxiosResponse } from "axios";
 
 /**
- * 🔹 Types
+ * 🔹 TYPES
  */
+type SaveControlPayload = {
+  status: string;
+  comments: string;
+  evidence: any[];
+  assignee: string;
+  dueDate: string;
+  saveType?: string;
+};
+
 type SaveControlResponse = {
   score: number;
   status: string;
 };
 
 /**
- * 🔹 SAVE CONTROL
- * Calls backend PATCH API
- */
-
-
-/**
  * 🔹 GET CONTROL (TEMP MOCK)
- * Replace with real API later
  */
-export const getControl = async (controlId: string): Promise<any> => {
+export const getControl = async (controlId: string) => {
   try {
     await new Promise((res) => setTimeout(res, 300));
     return mockControls[controlId] || mockControls["test"];
@@ -30,20 +31,24 @@ export const getControl = async (controlId: string): Promise<any> => {
   }
 };
 
+/**
+ * 🔹 SAVE CONTROL
+ */
 export const saveControl = async (
   assessmentId: string,
   itemId: string,
-  payload: any
-): Promise<any> => {
+  payload: SaveControlPayload
+): Promise<SaveControlResponse> => {
   try {
-    return await apiClient.patch(
+    const response = await apiClient.patch<SaveControlResponse>(
       `/api/assessments/${assessmentId}/items/${itemId}`,
       payload
     );
+
+    return response.data; // ✅ IMPORTANT FIX
   } catch (error) {
     console.warn("API failed, using mock fallback");
 
-    // ✅ fallback mock
     return {
       status: payload.status,
       score: Math.floor(Math.random() * 100),

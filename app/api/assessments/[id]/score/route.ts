@@ -1,6 +1,6 @@
 import { withErrorHandler } from "@/lib/api-handler";
 import { notFoundResponse, successResponse } from "@/lib/api-helpers";
-import { recalculateAssessmentScore } from "@/lib/assessment-score";
+import { getFrameworkScoresForAssessment } from "@/lib/assessment-score";
 import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
@@ -10,7 +10,11 @@ interface RouteContext {
   };
 }
 
-export const POST = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+function roundScore(score: number): number {
+  return Math.round(score * 10) / 10;
+}
+
+export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
   const session = await requireAuth();
   const { id } = params;
@@ -22,6 +26,7 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
     },
     select: {
       id: true,
+      score: true,
     },
   });
 
@@ -29,14 +34,13 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
     return notFoundResponse("Assessment not found");
   }
 
-  const startedAt = Date.now();
-  const scoreResult = await recalculateAssessmentScore(id);
-  const calculationDurationMs = Date.now() - startedAt;
+  const frameworkScores = await getFrameworkScoresForAssessment(id);
 
   return successResponse(
     {
-      ...scoreResult,
-      calculationDurationMs,
+      assessmentId: ownedAssessment.id,
+      score: roundScore(Number(ownedAssessment.score ?? 0)),
+      frameworkScores,
     },
     200,
   );

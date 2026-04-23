@@ -57,7 +57,6 @@ export default function Page() {
     phase,
     error: flowError,
     clearError,
-    reset,
   } = useAssessmentStore();
 
   const creatingAssessment = phase === "creating";
@@ -74,7 +73,12 @@ export default function Page() {
       return;
     }
 
-    router.push("/dashboard");
+    if (result.assessmentId) {
+      router.push(`/assessments/${result.assessmentId}/checklist`);
+      return;
+    }
+
+    router.push("/assessments");
   };
 
   const handleRetry = async () => {
@@ -83,9 +87,18 @@ export default function Page() {
       return;
     }
 
-    if (useAssessmentStore.getState().phase === "success") {
-      useAssessmentStore.getState().reset();
-      router.push("/dashboard");
+    const state = useAssessmentStore.getState();
+
+    if (state.phase === "success") {
+      const nextAssessmentId = state.assessmentId;
+      state.reset();
+
+      if (nextAssessmentId) {
+        router.push(`/assessments/${nextAssessmentId}/checklist`);
+        return;
+      }
+
+      router.push("/assessments");
     }
   };
 

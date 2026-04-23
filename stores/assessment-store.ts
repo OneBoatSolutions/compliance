@@ -45,12 +45,49 @@ interface CreateAssessmentResult {
   assessmentId?: string;
 }
 
+export interface ChecklistFrameworkScore {
+  frameworkId: string;
+  frameworkCode: string;
+  frameworkName: string;
+  score: number;
+}
+
+export type AssessmentItemStatus =
+  | "NOT_STARTED"
+  | "COMPLIANT"
+  | "PARTIALLY_COMPLIANT"
+  | "NOT_COMPLIANT"
+  | "NOT_APPLICABLE";
+
+export type AssessmentItemSeverity = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+
+export type AssessmentSortField = "severity" | "status" | "id" | "updated";
+
+export type AssessmentSortOrder = "asc" | "desc";
+
+export interface AssessmentChecklistFilters {
+  search: string;
+  frameworks: string[];
+  status: AssessmentItemStatus[];
+  severity: AssessmentItemSeverity[];
+}
+
+export interface AssessmentSortParams {
+  by: AssessmentSortField;
+  order: AssessmentSortOrder;
+}
+
 interface AssessmentState {
   organizationId: string | null;
   suggestions: FrameworkSuggestion[];
   selectedFrameworkIds: string[];
   onboardingData: OnboardingFormValues | null;
   assessmentId: string | null;
+  checklistScore: number | null;
+  checklistFrameworkScores: ChecklistFrameworkScore[];
+  activeChecklistFilters: AssessmentChecklistFilters;
+  activeChecklistSortParams: AssessmentSortParams;
+  selectedChecklistItemId: string | null;
   phase: OnboardingPhase;
   error: OnboardingFlowError | null;
   lastRetryContext: RetryContext | null;
@@ -58,6 +95,12 @@ interface AssessmentState {
   setOnboardingData: (data: OnboardingFormValues) => void;
   setOrganizationId: (id: string) => void;
   setSuggestions: (data: FrameworkSuggestion[]) => void;
+  setChecklistScore: (score: number, frameworkScores: ChecklistFrameworkScore[]) => void;
+  setChecklistFilters: (filters: Partial<AssessmentChecklistFilters>) => void;
+  setChecklistSortParams: (params: Partial<AssessmentSortParams>) => void;
+  setSelectedChecklistItem: (itemId: string | null) => void;
+  resetChecklistViewState: () => void;
+  clearChecklistState: () => void;
 
   clearError: () => void;
   toggleFramework: (id: string) => void;
@@ -319,6 +362,19 @@ const initialState = {
   selectedFrameworkIds: [],
   onboardingData: null,
   assessmentId: null,
+  checklistScore: null,
+  checklistFrameworkScores: [],
+  activeChecklistFilters: {
+    search: "",
+    frameworks: [],
+    status: [],
+    severity: [],
+  },
+  activeChecklistSortParams: {
+    by: "severity" as AssessmentSortField,
+    order: "desc" as AssessmentSortOrder,
+  },
+  selectedChecklistItemId: null,
   phase: "idle" as OnboardingPhase,
   error: null,
   lastRetryContext: null,
@@ -337,6 +393,56 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
   },
 
   setOnboardingData: (data) => set({ onboardingData: data }),
+  setChecklistScore: (score, frameworkScores) =>
+    set({
+      checklistScore: score,
+      checklistFrameworkScores: frameworkScores,
+    }),
+  setChecklistFilters: (filters) =>
+    set((state) => ({
+      activeChecklistFilters: {
+        ...state.activeChecklistFilters,
+        ...filters,
+      },
+    })),
+  setChecklistSortParams: (params) =>
+    set((state) => ({
+      activeChecklistSortParams: {
+        ...state.activeChecklistSortParams,
+        ...params,
+      },
+    })),
+  setSelectedChecklistItem: (itemId) => set({ selectedChecklistItemId: itemId }),
+  resetChecklistViewState: () =>
+    set({
+      activeChecklistFilters: {
+        search: "",
+        frameworks: [],
+        status: [],
+        severity: [],
+      },
+      activeChecklistSortParams: {
+        by: "severity",
+        order: "desc",
+      },
+      selectedChecklistItemId: null,
+    }),
+  clearChecklistState: () =>
+    set({
+      checklistScore: null,
+      checklistFrameworkScores: [],
+      activeChecklistFilters: {
+        search: "",
+        frameworks: [],
+        status: [],
+        severity: [],
+      },
+      activeChecklistSortParams: {
+        by: "severity",
+        order: "desc",
+      },
+      selectedChecklistItemId: null,
+    }),
   clearError: () => set({ error: null }),
 
   toggleFramework: (id) =>
