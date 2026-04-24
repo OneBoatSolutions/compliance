@@ -42,7 +42,7 @@ export default function RemediationFooter({
                    hover:bg-purple-700 transition"
       >
         <FileDown size={14} />
-        Export PDF
+        Export TXT
       </button>
     </div>
   );

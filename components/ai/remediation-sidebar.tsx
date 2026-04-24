@@ -6,7 +6,6 @@ export default function RemediationSidebar() {
 
   return (
     <div className="space-y-6 text-sm">
-
       {/* 🔧 TOOLS */}
       <div className="bg-card border rounded-xl p-4">
         <div className="flex items-center gap-2 mb-3">
@@ -19,15 +18,12 @@ export default function RemediationSidebar() {
             <div key={i} className="flex justify-between items-center">
               <div>
                 <p className="font-medium">{tool.name}</p>
-                <span className="text-xs px-2 py-0.2 rounded bg-green-100 text-green-600">
+                <span className="text-xs px-2 py-0.5 rounded bg-green-100 text-green-600">
                   {tool.badge}
                 </span>
               </div>
 
-              <a
-                href={tool.link}
-                className="text-purple-600 text-xs hover:underline"
-              >
+              <a href={tool.link} className="text-purple-600 text-xs hover:underline">
                 Learn More
               </a>
             </div>
@@ -86,7 +82,6 @@ export default function RemediationSidebar() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }
