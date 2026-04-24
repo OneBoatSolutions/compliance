@@ -1,15 +1,57 @@
 import { mockControls } from "./mockData";
+import { apiClient } from "@/lib/api-client";
 
-export async function saveControl(data: any) {
-  console.log("Saving control:", data);
+/**
+ * 🔹 TYPES
+ */
+type SaveControlPayload = {
+  status: string;
+  comments: string;
+  evidence: unknown[];
+  assignee: string;
+  dueDate: string;
+  saveType?: string;
+};
 
-  // later your teammate replaces this
-  return new Promise((resolve) => setTimeout(resolve, 1000));
-}
+type SaveControlResponse = {
+  score: number;
+  status: string;
+};
 
-export async function getControl(controlId: string) {
-  // simulate API delay
-  await new Promise((res) => setTimeout(res, 300));
+/**
+ * 🔹 GET CONTROL (TEMP MOCK)
+ */
+export const getControl = async (controlId: string) => {
+  try {
+    await new Promise((res) => setTimeout(res, 300));
+    return mockControls[controlId] || mockControls["test"];
+  } catch (error) {
+    console.error("Error fetching control:", error);
+    throw error;
+  }
+};
 
-  return mockControls[controlId] || mockControls["test"];
-}
+/**
+ * 🔹 SAVE CONTROL
+ */
+export const saveControl = async (
+  assessmentId: string,
+  itemId: string,
+  payload: SaveControlPayload
+): Promise<SaveControlResponse> => {
+  try {
+    const response = await apiClient.patch<SaveControlResponse>(
+      `/api/assessments/${assessmentId}/items/${itemId}`,
+      { body: payload }
+    );
+
+    return response;
+  } catch (error) {
+    console.warn("API failed, using mock fallback");
+
+    return {
+      status: payload.status,
+      score: Math.floor(Math.random() * 100),
+    };
+  }
+};

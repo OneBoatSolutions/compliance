@@ -22,7 +22,7 @@ export default function WorkspaceHeader({ control }: { control?: { framework?: s
         {/* ✅ Status Badge */}
         <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
           <CheckCircle size={14} />
-          All changes saved
+          Secure Controls
         </div>
 
         {/* 🔔 Notification */}
