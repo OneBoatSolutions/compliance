@@ -8,7 +8,14 @@ export default function LeftPanel({
   comments,
   setComments,
   control,
-}: any) {
+}: {
+  status: string;
+  setStatus: (s: string) => void;
+  comments: string;
+  setComments: (c: string) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control?: any;
+}) {
   const options = [
     {
       label: "Compliant",
@@ -33,88 +40,80 @@ export default function LeftPanel({
   ];
 
   return (
+    <div className="bg-white shadow-md border border-slate-200 rounded-2xl p-6 space-y-8">
+      {/* 🔹 1. HEADER (FULL WIDTH) */}
+      <div>
+        <p className="text-xs text-muted-foreground mb-1">{control?.id}</p>
 
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">{control?.title}</h2>
 
+          <span
+            className={`text-xs px-3 py-1 rounded-full font-semibold ${
+              control?.severity === "HIGH" || control?.severity === "CRITICAL"
+                ? "bg-red-50 text-red-600 ring-1 ring-red-500/20"
+                : control?.severity === "MEDIUM"
+                  ? "bg-amber-50 text-amber-600 ring-1 ring-amber-500/20"
+                  : "bg-blue-50 text-blue-600 ring-1 ring-blue-500/20"
+            }`}
+          >
+            {control?.severity || "MEDIUM"} SEVERITY
+          </span>
+        </div>
 
-<div className="bg-card border rounded-xl p-5 space-y-6">
+        <p className="text-sm text-muted-foreground mt-2">{control?.description}</p>
+      </div>
 
-  {/* 🔹 1. HEADER (FULL WIDTH) */}
-  <div>
-    <p className="text-xs text-muted-foreground mb-1">
-      {control?.id}
-    </p>
+      {/* 🔹 2. STATUS GRID */}
+      <div>
+        <p className="text-sm font-medium mb-3">Compliance Status</p>
 
-    <div className="flex items-center justify-between">
-      <h2 className="text-lg font-semibold">
-        {control?.title}
-      </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {options.map((item, i) => {
+            const isActive = status === item.label;
 
-      <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-600 font-medium">
-        HIGH SEVERITY
-      </span>
-    </div>
-
-    <p className="text-sm text-muted-foreground mt-2">
-      {control?.description}
-    </p>
-  </div>
-
-  {/* 🔹 2. STATUS GRID */}
-  <div>
-    <p className="text-sm font-medium mb-3">Compliance Status</p>
-
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      {options.map((item, i) => {
-        const isActive = status === item.label;
-
-        return (
-          <div
-            key={i}
-            onClick={() => setStatus(item.label)}
-            className={`cursor-pointer border rounded-lg p-4 transition
+            return (
+              <div
+                key={i}
+                onClick={() => setStatus(item.label)}
+                className={`cursor-pointer border rounded-xl p-4 transition-all duration-200
               ${
                 isActive
-                  ? "border-primary ring-2 ring-primary/30 bg-primary/5"
-                  : "border-muted hover:border-primary/40"
+                  ? "border-purple-600 ring-1 ring-purple-600 bg-purple-50/50 shadow-sm"
+                  : "border-slate-200 hover:border-purple-300 hover:bg-slate-50"
               }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              {item.icon}
-              {isActive && <span className="text-primary text-xs">✔</span>}
-            </div>
+              >
+                <div className="flex items-center justify-between mb-2">
+                  {item.icon}
+                  {isActive && <span className="text-primary text-xs">✔</span>}
+                </div>
 
-            <p className="text-sm font-medium">{item.label}</p>
-            <p className="text-xs text-muted-foreground">
-              {item.desc}
-            </p>
-          </div>
-        );
-      })}
-    </div>
-  </div>
+                <p className="text-sm font-medium">{item.label}</p>
+                <p className="text-xs text-muted-foreground">{item.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
 
-  {/* 🔹 3. TEXTAREA (FULL WIDTH FIX) */}
-  <div className="w-full">
-    <p className="text-sm font-medium mb-2">Compliance Gap Details</p>
+      {/* 🔹 3. TEXTAREA (FULL WIDTH FIX) */}
+      <div className="w-full">
+        <p className="text-sm font-medium mb-2">Compliance Gap Details</p>
 
-    <textarea
-      value={comments}
-      onChange={(e) => setComments(e.target.value)}
-      maxLength={1000}
-      rows={4}
-      placeholder="Describe any compliance gaps..."
-      className={`
-        w-full rounded-md p-3 text-sm bg-background transition
-        ${!comments ? "border border-red-400" : "border border-muted"}
-        focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30
+        <textarea
+          value={comments}
+          onChange={(e) => setComments(e.target.value)}
+          maxLength={1000}
+          rows={4}
+          placeholder="Describe any compliance gaps..."
+          className={`
+        w-full rounded-xl p-4 text-sm bg-slate-50 transition-all duration-200
+        ${!comments ? "border border-red-300 focus:border-red-500 focus:ring-red-500/20" : "border border-slate-200 focus:border-purple-500 focus:ring-purple-500/20"}
+        focus:outline-none focus:ring-4 focus:bg-white
       `}
-
-    />
-    <p className="text-xs text-muted-foreground text-right mt-1">
-    {comments.length}/1000
-  </p>
-  </div>
-
-</div>
-  )
+        />
+        <p className="text-xs text-muted-foreground text-right mt-1">{comments.length}/1000</p>
+      </div>
+    </div>
+  );
 }

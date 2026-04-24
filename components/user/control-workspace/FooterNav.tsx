@@ -5,7 +5,7 @@ import { ArrowLeft, Folder } from "lucide-react";
 
 export default function FooterNav({ onSave }: any) {
   return (
-<div className=" bg-background border-t px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <div className=" bg-background border-t px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
       {/* 🔙 LEFT BUTTON */}
       <Button
         variant="outline"
@@ -16,7 +16,7 @@ export default function FooterNav({ onSave }: any) {
       </Button>
 
       {/* 👉 RIGHT BUTTONS */}
-<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
         {/* 📁 Save Draft */}
         <Button
           variant="outline"

@@ -4,16 +4,14 @@ import { Plus, X } from "lucide-react";
 import { useState } from "react";
 
 export default function TagsInput() {
-  const [tags, setTags] = useState([
-    "Access Control",
-    "Security Training",
-    "Workforce Mgmt",
-  ]);
+  const [tags, setTags] = useState(["Access Control", "Security Training", "Workforce Mgmt"]);
 
   const [input, setInput] = useState("");
 
   const addTag = () => {
-    if (!input.trim()) return;
+    if (!input.trim()) {
+      return;
+    }
     setTags([...tags, input]);
     setInput("");
   };
@@ -27,7 +25,6 @@ export default function TagsInput() {
       <p className="text-sm mb-2">Related Topics</p>
 
       <div className="flex flex-wrap gap-2">
-
         {/* Existing tags */}
         {tags.map((tag, i) => (
           <div
@@ -36,11 +33,7 @@ export default function TagsInput() {
             bg-purple-100 text-purple-700 text-xs"
           >
             {tag}
-            <X
-              size={12}
-              className="cursor-pointer"
-              onClick={() => removeTag(i)}
-            />
+            <X size={12} className="cursor-pointer" onClick={() => removeTag(i)} />
           </div>
         ))}
 

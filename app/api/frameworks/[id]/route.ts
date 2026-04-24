@@ -39,11 +39,19 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
 
   const existing = await prisma.framework.findUnique({
     where: { id: params.id },
-    select: { id: true },
+    select: { id: true, status: true },
   });
 
   if (!existing) {
     return notFoundResponse("Framework not found");
+  }
+
+  // Block edits to published frameworks — they are immutable
+  if (existing.status === "PUBLISHED") {
+    return errorResponse(
+      "Published frameworks cannot be edited. Create a new version instead.",
+      403,
+    );
   }
 
   const body = await req.json();

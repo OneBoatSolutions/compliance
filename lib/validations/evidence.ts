@@ -30,15 +30,13 @@ const allowedFileExtensions = new Set([
 
 export const evidenceUploadFieldsSchema = z.object({
   assessmentItemId: z.string().cuid(),
-  description: z
-    .string()
-    .trim()
-    .max(500, "Description cannot exceed 500 characters")
-    .optional(),
+  description: z.string().trim().max(500, "Description cannot exceed 500 characters").optional(),
 });
 
 export function isAllowedEvidenceMimeType(mimeType: string) {
-  return ALLOWED_EVIDENCE_MIME_TYPES.includes(mimeType as (typeof ALLOWED_EVIDENCE_MIME_TYPES)[number]);
+  return ALLOWED_EVIDENCE_MIME_TYPES.includes(
+    mimeType as (typeof ALLOWED_EVIDENCE_MIME_TYPES)[number],
+  );
 }
 
 export function isAllowedEvidenceExtension(filename: string) {
