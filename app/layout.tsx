@@ -34,11 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=optional"
         />
-        <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
-          <QueryProvider>
-            <AuthProvider>{children}</AuthProvider>
-            <Toaster richColors position="top-right" />
-          </QueryProvider>
+        <NextThemesProvider attribute="class" defaultTheme="bright" enableSystem={false}>
+          <AuthProvider>{children}</AuthProvider>
+          <Toaster richColors position="top-right" />
         </NextThemesProvider>
       </body>
     </html>
