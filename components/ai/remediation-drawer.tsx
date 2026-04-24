@@ -64,14 +64,14 @@ export default function RemediationDrawer({
 
   const handleExportPDF = () => {
     const blob = new Blob(["AI Remediation Plan\n\n(This will be real data later)"], {
-      type: "application/pdf",
+      type: "text/plain",
     });
 
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
 
     a.href = url;
-    a.download = "remediation-plan.pdf";
+    a.download = "remediation-plan.txt";
     a.click();
 
     window.URL.revokeObjectURL(url);

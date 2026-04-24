@@ -37,8 +37,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <NextThemesProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <QueryProvider>
             <AuthProvider>{children}</AuthProvider>
+            <Toaster richColors position="top-right" />
           </QueryProvider>
-          <Toaster richColors position="top-right" />
         </NextThemesProvider>
       </body>
     </html>
