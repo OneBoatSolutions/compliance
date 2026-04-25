@@ -7,7 +7,7 @@ import RightSidebar from "./RightSidebar";
 import FooterNav from "./FooterNav";
 import ProgressSection from "./ProgressSection";
 import TagsInput from "./TagsInput";
-import EvidenceUploader from "./EvidenceUploader";
+import EvidenceUploader from "@/components/user/evidence-uploader";
 import { AssigneeDueDate } from "./AssigneeDueDate";
 import WorkspaceHeader from "./WorkspaceHeader";
 
@@ -33,7 +33,6 @@ interface Props {
 export default function ControlWorkspace({ control }: Props) {
   const [status, setStatus] = useState(control?.status || "NOT_STARTED");
   const [comments, setComments] = useState(control?.comments || "");
-  const [files, setFiles] = useState<unknown[]>([]);
   const [assignee, setAssignee] = useState(control?.owner || "");
   const [dueDate, setDueDate] = useState(control?.targetDate || "");
   const [isSaving, setIsSaving] = useState(false);
@@ -114,7 +113,7 @@ export default function ControlWorkspace({ control }: Props) {
 
           <div className="bg-white shadow-sm border rounded-xl p-5 space-y-6">
             <div>
-              <EvidenceUploader files={files} setFiles={setFiles} />
+              <EvidenceUploader />
             </div>
 
             <AssigneeDueDate
