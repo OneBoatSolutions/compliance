@@ -4,14 +4,18 @@ import ControlCard from "./ControlCard";
 import { ChevronDown, Plus } from "lucide-react";
 interface Props {
   framework: string;
+  category?: string;
   controls: Control[];
+  assessmentId?: string;
   onStatusChange?: (itemId: string, status: Status) => void;
   updatingItemId?: string | null;
 }
 
 export default function ChecklistGroup({
   framework,
+  category,
   controls,
+  assessmentId,
   onStatusChange,
   updatingItemId,
 }: Props) {
@@ -40,7 +44,8 @@ export default function ChecklistGroup({
           {/* Title + progress text */}
           <div>
             <h3 className="font-semibold text-sm text-gray-900">
-              {framework} - Administrative Safeguards
+              {framework}
+              {category ? ` - ${category}` : ""}
             </h3>
             <p className="text-xs text-gray-500">
               ({completed}/{total} completed)
@@ -69,6 +74,7 @@ export default function ChecklistGroup({
             <ControlCard
               key={c.itemId}
               control={c}
+              assessmentId={assessmentId}
               onStatusChange={onStatusChange}
               isStatusUpdating={updatingItemId === c.itemId}
             />

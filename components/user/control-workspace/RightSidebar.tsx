@@ -1,46 +1,28 @@
-import DiscussionPanel from "./DiscussionPanel"
+import DiscussionPanel from "./DiscussionPanel";
 import RelatedControls from "./RelatedControls";
 import ControlRequirements from "./ControlRequirements";
 import AuditTrail from "./AuditTrail";
 import AIAssistantCard from "./AIAssisstentCard";
-import { useState } from "react";
-  
-type Props = {
-  status: string;
-  onOpenRemediation: () => void;
-};
-
-export default function RightSidebar({
-  status,
-  onOpenRemediation,
-}: Props) {
-
-
+export default function RightSidebar({ status }: any) {
   return (
     <div className="space-y-4 ">
-
       {/* AI Assistant */}
-      <AIAssistantCard
-        status={status}
-        onOpenRemediation={onOpenRemediation}
-/>
-
-        
+      <AIAssistantCard status={status} />
 
       {/* Requirements */}
       <div>
-        <ControlRequirements/>
+        <ControlRequirements />
       </div>
       <div>
-        <RelatedControls/>
+        <RelatedControls />
       </div>
       <div>
-        < DiscussionPanel/>
+        <DiscussionPanel />
       </div>
 
       {/* Audit Trail */}
       <div>
-        <AuditTrail/>
+        <AuditTrail />
       </div>
     </div>
   );

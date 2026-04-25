@@ -1,4 +1,4 @@
-import { redis } from './redis';
+import { redis } from "./redis";
 
 export async function getCache<T>(key: string): Promise<T | null> {
   try {
@@ -17,7 +17,7 @@ export async function getCache<T>(key: string): Promise<T | null> {
 
 export async function setCache(key: string, data: any, ttlSeconds: number): Promise<void> {
   try {
-    await redis.set(key, JSON.stringify(data), 'EX', ttlSeconds);
+    await redis.set(key, JSON.stringify(data), "EX", ttlSeconds);
   } catch (error) {
     console.warn(`[Cache SET Error] ${key}:`, error);
   }

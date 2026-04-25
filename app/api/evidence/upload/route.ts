@@ -1,5 +1,10 @@
 import { withErrorHandler } from "@/lib/api-handler";
-import { errorResponse, notFoundResponse, successResponse, validationErrorResponse } from "@/lib/api-helpers";
+import {
+  errorResponse,
+  notFoundResponse,
+  successResponse,
+  validationErrorResponse,
+} from "@/lib/api-helpers";
 import { requireAuth } from "@/lib/auth-helpers";
 import { parseMultipartRequest } from "@/lib/multipart";
 import { prisma } from "@/lib/prisma";
@@ -60,7 +65,10 @@ export const POST = withErrorHandler(async (req: Request) => {
   });
 
   if (existingFileCount + parsed.files.length > MAX_EVIDENCE_FILES_PER_ITEM) {
-    return errorResponse(`Maximum ${MAX_EVIDENCE_FILES_PER_ITEM} files are allowed per assessment item`, 400);
+    return errorResponse(
+      `Maximum ${MAX_EVIDENCE_FILES_PER_ITEM} files are allowed per assessment item`,
+      400,
+    );
   }
 
   const created = [];

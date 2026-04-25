@@ -8,8 +8,7 @@ export default function RelatedControls() {
   ];
 
   return (
-    <div className="bg-card p-4 rounded-xl border">
-      
+    <div className="bg-white shadow-sm p-4 rounded-xl border">
       {/* Header */}
       <div className="flex items-center gap-2 mb-3">
         <Link2 className="text-purple-500" size={18} />

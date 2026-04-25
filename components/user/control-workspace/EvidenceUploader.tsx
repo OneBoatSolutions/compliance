@@ -2,20 +2,17 @@
 
 import { Upload, X, FileText, Image as ImageIcon } from "lucide-react";
 
-export default function EvidenceUploader({
-  files = [],
-  setFiles,
-}: any) {
+export default function EvidenceUploader({ files = [], setFiles }: any) {
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
+    if (!e.target.files) {
+      return;
+    }
     const newFiles = Array.from(e.target.files);
     setFiles((prev: any) => [...(prev || []), ...newFiles]);
   };
 
   const handleRemove = (index: number) => {
-    setFiles((prev: any) =>
-      (prev || []).filter((_: any, i: number) => i !== index)
-    );
+    setFiles((prev: any) => (prev || []).filter((_: any, i: number) => i !== index));
   };
 
   // 🧠 File type icon logic
@@ -29,32 +26,25 @@ export default function EvidenceUploader({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between border-2px">
-        <p className="font-medium">Supporting Evidence</p></div>
-
+        <p className="font-medium">Supporting Evidence</p>
+      </div>
 
       {/* 🔥 Drop Zone */}
       <label className="block cursor-pointer">
-        <div className="border-2 border-dashed border-primary 
-        bg-primary/5 rounded-xl p-6 text-center transition hover:bg-primary/10">
-
+        <div
+          className="border-2 border-dashed border-primary 
+        bg-primary/5 rounded-xl p-6 text-center transition hover:bg-primary/10"
+        >
           <Upload className="mx-auto mb-2 text-primary" size={20} />
 
           <p className="text-sm">
-            Drag & drop files or{" "}
-            <span className="text-primary underline">browse</span>
+            Drag & drop files or <span className="text-primary underline">browse</span>
           </p>
 
-          <p className="text-xs text-muted-foreground mt-1">
-            PDF, PNG, JPG, or XLSX up to 10MB
-          </p>
+          <p className="text-xs text-muted-foreground mt-1">PDF, PNG, JPG, or XLSX up to 10MB</p>
         </div>
 
-        <input
-          type="file"
-          multiple
-          className="hidden"
-          onChange={handleUpload}
-        />
+        <input type="file" multiple className="hidden" onChange={handleUpload} />
       </label>
 
       {/* 📄 File List */}

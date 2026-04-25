@@ -29,7 +29,10 @@ const upload = multer({
     files: MAX_EVIDENCE_FILES_PER_ITEM,
   },
   fileFilter: (_req, file, cb) => {
-    if (!isAllowedEvidenceMimeType(file.mimetype) || !isAllowedEvidenceExtension(file.originalname)) {
+    if (
+      !isAllowedEvidenceMimeType(file.mimetype) ||
+      !isAllowedEvidenceExtension(file.originalname)
+    ) {
       cb(new Error("Unsupported file type"));
       return;
     }
@@ -51,9 +54,8 @@ function toNodeRequest(req: Request): IncomingMessage {
   }
 
   const stream = Readable.fromWeb(req.body as ReadableStream) as IncomingMessage;
-  (stream as IncomingMessage & { headers: IncomingHttpHeaders }).headers = requestHeadersToNodeHeaders(
-    req.headers,
-  );
+  (stream as IncomingMessage & { headers: IncomingHttpHeaders }).headers =
+    requestHeadersToNodeHeaders(req.headers);
   (stream as IncomingMessage & { method?: string }).method = req.method;
   (stream as IncomingMessage & { url?: string }).url = req.url;
   return stream;

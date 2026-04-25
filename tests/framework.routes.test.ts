@@ -125,7 +125,13 @@ describe("Framework Admin API", () => {
   });
 
   it("POST /api/frameworks/[id]/publish returns 422 when no controls", async () => {
-    vi.mocked(prisma.framework.findUnique).mockResolvedValue({ id: "fw1" } as never);
+    vi.mocked(prisma.framework.findUnique).mockResolvedValue({
+      id: "fw1",
+      code: "X",
+      name: "X",
+      description: "A test framework",
+      status: "DRAFT",
+    } as never);
     vi.mocked(prisma.control.count).mockResolvedValue(0);
 
     const res = (await publishFramework(
@@ -138,7 +144,13 @@ describe("Framework Admin API", () => {
 
   it("POST /api/frameworks/[id]/publish updates to PUBLISHED", async () => {
     const publishedAt = new Date();
-    vi.mocked(prisma.framework.findUnique).mockResolvedValue({ id: "fw1" } as never);
+    vi.mocked(prisma.framework.findUnique).mockResolvedValue({
+      id: "fw1",
+      code: "X",
+      name: "X",
+      description: "A test framework",
+      status: "DRAFT",
+    } as never);
     vi.mocked(prisma.control.count).mockResolvedValue(2);
     vi.mocked(prisma.framework.update).mockResolvedValue({
       id: "fw1",

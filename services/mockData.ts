@@ -1,5 +1,5 @@
 export const mockControls: Record<string, any> = {
-  "test": {
+  test: {
     id: "HIPAA-164.308(a)(3)(i)",
     framework: "HIPAA",
     title: "Workforce Security - Authorization/Supervision",

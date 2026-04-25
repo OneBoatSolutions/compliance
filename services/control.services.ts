@@ -7,7 +7,7 @@ import { apiClient } from "@/lib/api-client";
 type SaveControlPayload = {
   status: string;
   comments: string;
-  evidence: any[];
+  evidence: unknown[];
   assignee: string;
   dueDate: string;
   saveType?: string;
@@ -42,10 +42,10 @@ export const saveControl = async (
   try {
     const response = await apiClient.patch<SaveControlResponse>(
       `/api/assessments/${assessmentId}/items/${itemId}`,
-      payload
+      { body: payload }
     );
 
-    return response.data; // ✅ IMPORTANT FIX
+    return response;
   } catch (error) {
     console.warn("API failed, using mock fallback");
 
