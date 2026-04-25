@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const protectedUserRoutes = ["/dashboard", "/assessments" , "/reports", "/settings"];
+  const protectedUserRoutes = ["/dashboard", "assessments", "/reports", "/settings"];
   const isAuthPage = pathname === "/login" || pathname === "/register";
 
   // ✅ Logging (only in development)
