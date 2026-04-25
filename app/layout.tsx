@@ -39,6 +39,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <AuthProvider>{children}</AuthProvider>
             <Toaster richColors position="top-right" />
           </QueryProvider>
+          <AuthProvider>{children}</AuthProvider>
+          <Toaster richColors position="top-right" />
         </NextThemesProvider>
       </body>
     </html>
