@@ -8,7 +8,7 @@ export default function ControlRequirements() {
   ];
 
   return (
-    <div className="bg-card p-4 rounded-xl border">
+    <div className="bg-card border border-border rounded-xl p-4">
       
       {/* Header */}
       <div className="flex items-center gap-2 mb-3">
