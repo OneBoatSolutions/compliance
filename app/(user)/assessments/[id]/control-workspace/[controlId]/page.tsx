@@ -24,7 +24,7 @@ export default function Page() {
   const params = useParams();
   const router = useRouter();
 
-  const assessmentId = params?.assessmentId as string;
+  const assessmentId = params?.id as string;
   const controlId = params?.controlId as string;
 
   const [control, setControl] = useState<ControlWorkspaceData | null>(null);
