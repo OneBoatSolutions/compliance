@@ -158,8 +158,7 @@ const mapFromBackend = (data: BackendOrganization): OnboardingFormValues => ({
 function Stepper({ currentStep }: { currentStep: number }) {
   const steps = [
     { id: 1, label: "Business Profile" },
-    { id: 2, label: "Framework Selection" },
-    { id: 3, label: "Review & Create" },
+    { id: 2, label: "AI Recommendations & Review" },
   ];
 
   // 33% per step
@@ -171,7 +170,7 @@ function Stepper({ currentStep }: { currentStep: number }) {
         {/* Steps */}
         <div className="flex justify-between relative z-10">
           {steps.map((step) => (
-            <div key={step.id} className="flex flex-col items-center text-center w-1/3">
+            <div key={step.id} className="flex flex-col items-center text-center w-1/2">
               {/* Circle */}
               <div
                 className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold transition-all
@@ -384,6 +383,7 @@ export default function OnboardingPage() {
         // ✅ keep "saved" visible
         setSaving(false);
         setSaved(true);
+        // eslint-disable-next-line no-console
         console.log("SAVED TRIGGERED");
       } catch (error: unknown) {
         if (error instanceof DOMException && error.name === "AbortError") {
@@ -394,6 +394,7 @@ export default function OnboardingPage() {
     }, 2000);
 
     return () => clearTimeout(handler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, orgId, hasFetched, lastSavedValues, creating, isReadyForSave]);
 
   //FETCH EXISTING DATA
@@ -417,6 +418,7 @@ export default function OnboardingPage() {
     };
 
     fetchOrg();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgId, creating]);
 
   // CHECKBOX HANDLER
@@ -479,6 +481,7 @@ export default function OnboardingPage() {
   };
 
   const onError = (errors: FieldErrors<OnboardingFormValues>) => {
+    // eslint-disable-next-line no-console
     console.log("FORM ERRORS", errors);
     const firstError = Object.keys(errors)[0] as keyof OnboardingFormValues;
 
@@ -730,7 +733,7 @@ export default function OnboardingPage() {
                     ? "Saving organization..."
                     : phase === "aiLoading"
                       ? "Generating AI suggestions..."
-                      : "Next: Framework Selection →"}
+                      : "Next: AI Recommendations →"}
                 </button>
               </div>
             </div>
@@ -1036,11 +1039,6 @@ function DataCheckboxGrid({ selected, onChange, register }: DataCheckboxGridProp
       })}
     </div>
   );
-}
-interface RegionOption {
-  id: string;
-  label: string;
-  icon: React.ReactNode;
 }
 
 const regionOptions = [

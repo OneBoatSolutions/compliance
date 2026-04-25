@@ -18,11 +18,13 @@ function row(
   frameworkId: string,
   frameworkCode: string,
   frameworkName: string,
+  isGateway = false,
 ): ScoreItemRow {
   return {
     status,
     control: {
       weight,
+      isGateway,
       frameworkId,
       framework: {
         id: frameworkId,
@@ -106,6 +108,36 @@ describe("Assessment scoring logic", () => {
         frameworkCode: "PCI",
         frameworkName: "PCI DSS",
         score: 50,
+      },
+    ]);
+  });
+
+  it("excludes gateway controls from overall score", () => {
+    const rows: ScoreItemRow[] = [
+      row("COMPLIANT", 2, "fw1", "GDPR", "GDPR", false),
+      row("NOT_COMPLIANT", 8, "fw1", "GDPR", "GDPR", true), // gateway — should be excluded
+    ];
+
+    // Only the non-gateway row should count: (2*1)/(2) * 100 = 100
+    expect(computeOverallScore(rows)).toBe(100);
+  });
+
+  it("excludes gateway controls from per-framework scores", () => {
+    const rows: ScoreItemRow[] = [
+      row("COMPLIANT", 2, "fw1", "GDPR", "GDPR", false),
+      row("NOT_COMPLIANT", 4, "fw1", "GDPR", "GDPR", true), // gateway
+      row("PARTIALLY_COMPLIANT", 2, "fw1", "GDPR", "GDPR", false),
+    ];
+
+    const frameworkScores = computeFrameworkScores(rows);
+
+    // Non-gateway: (2*1 + 2*0.5) / (2+2) * 100 = 75
+    expect(frameworkScores).toEqual([
+      {
+        frameworkId: "fw1",
+        frameworkCode: "GDPR",
+        frameworkName: "GDPR",
+        score: 75,
       },
     ]);
   });

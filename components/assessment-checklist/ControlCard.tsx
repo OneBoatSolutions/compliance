@@ -2,6 +2,7 @@
 
 import { Control, type Status } from "@/app/(user)/assessments/[id]/checklist/types";
 import { useState } from "react";
+import Link from "next/link";
 import StatusDropdown from "./StatusDropdown";
 import {
   CheckCircle2,
@@ -18,11 +19,17 @@ import {
 
 interface Props {
   control: Control;
+  assessmentId?: string;
   onStatusChange?: (itemId: string, status: Status) => void;
   isStatusUpdating?: boolean;
 }
 
-export default function ControlCard({ control, onStatusChange, isStatusUpdating = false }: Props) {
+export default function ControlCard({
+  control,
+  assessmentId,
+  onStatusChange,
+  isStatusUpdating = false,
+}: Props) {
   const [open, setOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(true);
   const isOwn = true; // later from backend (user auth)
@@ -192,6 +199,15 @@ export default function ControlCard({ control, onStatusChange, isStatusUpdating 
               <button className="border px-3 py-1 rounded text-sm">Request Help</button>
 
               <button className="border px-3 py-1 rounded text-sm">Copy Link</button>
+
+              {assessmentId && (
+                <Link
+                  href={`/assessments/${assessmentId}/control-workspace/${control.id}`}
+                  className="border border-[#6d18ff] text-[#6d18ff] px-3 py-1 rounded text-sm hover:bg-[#6d18ff]/5 transition-colors"
+                >
+                  View Full Workspace →
+                </Link>
+              )}
             </div>
           </div>
 

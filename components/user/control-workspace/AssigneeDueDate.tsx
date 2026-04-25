@@ -1,13 +1,8 @@
 import { User, Calendar } from "lucide-react";
 
-export function AssigneeDueDate({
-  assignee,
-  setAssignee,
-  dueDate,
-  setDueDate,
-}: any) {
+export function AssigneeDueDate({ assignee, setAssignee, dueDate, setDueDate }: any) {
   return (
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {/* 👤 Assignee */}
       <div>
         <p className="text-sm mb-1">Assignee</p>

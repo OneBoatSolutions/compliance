@@ -6,6 +6,7 @@ export interface ScoreItemRow {
   status: ItemStatus;
   control: {
     weight: number;
+    isGateway: boolean;
     frameworkId: string;
     framework: {
       id: string;
@@ -55,6 +56,11 @@ export function computeOverallScore(rows: ScoreItemRow[]): number {
   let denominator = 0;
 
   for (const row of rows) {
+    // Skip gateway controls — consistent with dashboard-data.ts
+    if (row.control.isGateway) {
+      continue;
+    }
+
     const factor = statusFactor(row.status);
 
     if (factor === null) {
@@ -113,6 +119,7 @@ async function fetchScoreRows(
       control: {
         select: {
           weight: true,
+          isGateway: true,
           frameworkId: true,
           framework: {
             select: {

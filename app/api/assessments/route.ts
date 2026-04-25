@@ -43,6 +43,7 @@ export const POST = withErrorHandler(async (req: Request) => {
       id: {
         in: uniqueFrameworkIds,
       },
+      status: "PUBLISHED",
     },
     select: {
       id: true,
@@ -50,7 +51,7 @@ export const POST = withErrorHandler(async (req: Request) => {
   });
 
   if (frameworks.length !== uniqueFrameworkIds.length) {
-    return errorResponse("One or more frameworks were not found", 400);
+    return errorResponse("One or more frameworks were not found or are not published", 400);
   }
 
   const controls = await prisma.control.findMany({

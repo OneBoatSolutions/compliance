@@ -10,24 +10,19 @@ export default function RemediationFooter({
   onSave: () => void;
   onExport: () => void;
   regenerating: boolean;
-}) 
- {
+}) {
   return (
     <div className="p-4 flex justify-end gap-3 bg-white">
-
       {/* REGENERATE */}
       <button
-  onClick={onRegenerate}
-  disabled={regenerating}
-  className="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-md 
+        onClick={onRegenerate}
+        disabled={regenerating}
+        className="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-md 
              hover:bg-gray-100 transition disabled:opacity-50"
->
-  <RefreshCw
-    size={14}
-    className={regenerating ? "animate-spin" : ""}
-  />
-  {regenerating ? "Regenerating..." : "Regenerate"}
-</button>
+      >
+        <RefreshCw size={14} className={regenerating ? "animate-spin" : ""} />
+        {regenerating ? "Regenerating..." : "Regenerate"}
+      </button>
 
       {/* SAVE */}
       <button
@@ -47,9 +42,8 @@ export default function RemediationFooter({
                    hover:bg-purple-700 transition"
       >
         <FileDown size={14} />
-        Export PDF
+        Export TXT
       </button>
-
     </div>
   );
 }

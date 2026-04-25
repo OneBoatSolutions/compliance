@@ -8,8 +8,7 @@ export default function ControlRequirements() {
   ];
 
   return (
-    <div className="bg-card border border-border rounded-xl p-4">
-      
+    <div className="bg-white shadow-sm p-4 rounded-xl border">
       {/* Header */}
       <div className="flex items-center gap-2 mb-3">
         <ClipboardList className="text-primary" size={18} />
@@ -20,13 +19,8 @@ export default function ControlRequirements() {
       <div className="space-y-2 text-sm">
         {items.map((item, i) => (
           <div key={i} className="flex items-center gap-2">
-            <CheckCircle2
-              size={16}
-              className={item.done ? "text-green-500" : "text-gray-300"}
-            />
-            <span className={item.done ? "" : "text-muted-foreground"}>
-              {item.text}
-            </span>
+            <CheckCircle2 size={16} className={item.done ? "text-green-500" : "text-gray-300"} />
+            <span className={item.done ? "" : "text-muted-foreground"}>{item.text}</span>
           </div>
         ))}
       </div>

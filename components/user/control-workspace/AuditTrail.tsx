@@ -31,20 +31,16 @@ export default function AuditTrail() {
   ];
 
   return (
-    <div className="bg-card p-5 rounded-xl border">
+    <div className="bg-white shadow-sm p-5 rounded-xl border">
       <p className="font-medium mb-5">Audit Trail</p>
 
       <div className="relative">
-
         {/* 🔥 CONTINUOUS LINE */}
         <div className="absolute left-[10px] top-0 bottom-0 w-[2px] bg-primary" />
 
         <div className="space-y-6">
           {items.map((item, i) => (
-            <div
-              key={i}
-              className="relative flex gap-4 animate-fadeIn"
-            >
+            <div key={i} className="relative flex gap-4 animate-fadeIn">
               {/* 🔵 ICON ON LINE */}
               <div className="relative z-10 flex items-center justify-center w-5 h-5 rounded-full bg-white border shadow-sm">
                 {item.icon}

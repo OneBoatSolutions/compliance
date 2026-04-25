@@ -12,6 +12,7 @@ export interface Control {
   id: string;
   title: string;
   description: string;
+  category: string | null;
   frameworkId: string;
   frameworkName: string;
   framework: string;
@@ -59,6 +60,7 @@ export interface ChecklistApiItem {
     code: string;
     title: string;
     description: string;
+    category: string | null;
     severity: Severity;
     weight: number;
     framework: {

@@ -2,6 +2,7 @@ import { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
+import { isLocked, recordFailedAttempt, resetAttempts } from "@/lib/rate-limits";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -17,9 +18,23 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
 
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Missing credentials");
+        }
+
+        // Build rate-limit identifier from email + IP
+        const forwardedFor =
+          req?.headers?.["x-forwarded-for"] ?? req?.headers?.["X-Forwarded-For"] ?? "";
+        const ip =
+          typeof forwardedFor === "string"
+            ? forwardedFor.split(",")[0].trim() || "unknown-ip"
+            : "unknown-ip";
+        const identifier = `${credentials.email}:${ip}`;
+
+        // Check lockout
+        if (isLocked(identifier)) {
+          throw new Error("Too many failed login attempts. Please try again later.");
         }
 
         const user = await prisma.user.findUnique({
@@ -27,14 +42,24 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user) {
-          throw new Error("User not found");
+          recordFailedAttempt(identifier);
+          throw new Error("Invalid email or password");
         }
 
         const valid = await bcrypt.compare(credentials.password, user.password);
 
         if (!valid) {
-          throw new Error("Invalid password");
+          recordFailedAttempt(identifier);
+          throw new Error("Invalid email or password");
         }
+
+        // Successful login — reset attempts and update lastLoginAt
+        resetAttempts(identifier);
+
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastLoginAt: new Date() },
+        });
 
         return {
           id: user.id,

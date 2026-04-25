@@ -1,10 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 
-
 export default function ControlDetails() {
   return (
-    <div className="bg-card p-5 rounded-xl border space-y-5">
-
+    <div className="bg-white shadow-sm p-5 rounded-xl border space-y-5">
       {/* Description */}
       <p className="text-sm text-muted-foreground leading-relaxed">
         Workforce supervision is handled via the OKTA provisioning workflow...
