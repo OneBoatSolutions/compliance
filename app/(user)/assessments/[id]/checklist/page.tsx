@@ -159,8 +159,8 @@ function downloadCsv(filename: string, content: string): void {
 
 export default function ChecklistPage() {
   const router = useRouter();
-  const params = useParams<{ assessmentId: string }>();
-  const rawAssessmentId = params?.assessmentId;
+  const params = useParams<{ id: string }>();
+  const rawAssessmentId = params?.id;
   const assessmentId = Array.isArray(rawAssessmentId)
     ? (rawAssessmentId[0] ?? "")
     : (rawAssessmentId ?? "");
@@ -345,13 +345,11 @@ export default function ChecklistPage() {
 
   const frameworkOptions = useMemo(() => {
     if (scoreQuery.data?.frameworkScores.length) {
-      return (
-        scoreQuery.data?.frameworkScores?.map((frameworkScore) => ({
-          id: frameworkScore.frameworkId,
-          code: frameworkScore.frameworkCode,
-          name: frameworkScore.frameworkName,
-        })) ?? []
-      );
+      return scoreQuery.data.frameworkScores.map((frameworkScore) => ({
+        id: frameworkScore.frameworkId,
+        code: frameworkScore.frameworkCode,
+        name: frameworkScore.frameworkName,
+      }));
     }
 
     const map = new Map<string, FrameworkFilterOption>();
