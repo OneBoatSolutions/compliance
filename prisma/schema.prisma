@@ -168,11 +168,12 @@ model Assessment {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
 
-  user           User             @relation(fields: [userId], references: [id])
-  organization   Organization     @relation(fields: [organizationId], references: [id])
+  user           User                 @relation(fields: [userId], references: [id])
+  organization   Organization         @relation(fields: [organizationId], references: [id])
   items          AssessmentItem[]
   reports        Report[]
   aiInteractions AIInteraction[]
+  scoreLogs      AssessmentScoreLog[]
 
   @@index([userId])
   @@index([organizationId])
@@ -205,6 +206,20 @@ model AssessmentItem {
   @@index([status])
   @@index([assessmentId, status], map: "assessment_items_assessmentId_status_idx")
   @@map("assessment_items")
+}
+
+model AssessmentScoreLog {
+  id              String   @id @default(cuid())
+  assessmentId    String
+  overallScore    Float
+  frameworkScores Json // Stores an array of { frameworkCode: "GDPR", score: 85 }
+  createdAt       DateTime @default(now())
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  @@index([assessmentId])
+  @@index([createdAt])
+  @@map("assessment_score_logs")
 }
 
 model ControlDependency {
