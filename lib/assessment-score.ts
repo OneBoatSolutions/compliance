@@ -56,7 +56,6 @@ export function computeOverallScore(rows: ScoreItemRow[]): number {
   let denominator = 0;
 
   for (const row of rows) {
-    // Skip gateway controls — consistent with dashboard-data.ts
     if (row.control.isGateway) {
       continue;
     }
@@ -150,6 +149,25 @@ export async function recalculateAssessmentScore(
   if (updated.count === 0) {
     throw new Error("404: Assessment not found");
   }
+
+  const scoreLogClient = db as unknown as {
+    assessmentScoreLog: {
+      create: (args: unknown) => Promise<unknown>;
+    };
+  };
+
+  await scoreLogClient.assessmentScoreLog.create({
+    data: {
+      assessmentId,
+      overallScore: score,
+      frameworkScores: frameworkScores.map((framework) => ({
+        frameworkId: framework.frameworkId,
+        frameworkCode: framework.frameworkCode,
+        frameworkName: framework.frameworkName,
+        score: framework.score,
+      })),
+    },
+  });
 
   return {
     assessmentId,
