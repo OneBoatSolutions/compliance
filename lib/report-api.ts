@@ -1,17 +1,15 @@
-import axios from "axios";
+import { apiClient } from "@/lib/api-client";
 import { ReportData } from "./report-types";
 
 export const fetchReport = async (assessmentId: string) => {
-  const res = await axios.get<ReportData>(`/api/reports/${assessmentId}`);
-  return res.data;
+  return await apiClient.get<ReportData>(`/api/reports/${assessmentId}`);
 };
 
 export const generateReport = async (assessmentId: string) => {
-  const res = await axios.post(`/api/reports/${assessmentId}/generate`);
-  return res.data;
+  return await apiClient.post(`/api/reports/${assessmentId}/generate`);
 };
 
 export const downloadReport = async (assessmentId: string) => {
-  const res = await axios.get(`/api/reports/${assessmentId}/download`);
-  return res.data.url;
+  const res = await apiClient.get<{ url: string }>(`/api/reports/${assessmentId}/download`);
+  return res.url;
 };

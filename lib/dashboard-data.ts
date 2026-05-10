@@ -222,25 +222,34 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
   activities.sort((x, y) => new Date(y.occurredAt).getTime() - new Date(x.occurredAt).getTime());
   const recentActivity = activities.slice(0, 10);
 
-  const assessments: DashboardAssessmentSummary[] = assessmentRows.map((a) => {
-    const items = a.items as ItemWithControlFramework[];
-    const computed = roundScore(weightedScorePercent(items));
-    const score =
-      a.score !== null && a.score !== undefined
-        ? roundScore(Number(a.score))
-        : items.length > 0
-          ? computed
-          : null;
+  const assessments: DashboardAssessmentSummary[] = assessmentRows.map(
+    (a: {
+      id: string;
+      status: string;
+      score: number | null;
+      updatedAt: Date;
+      organization: { productName: string };
+      items: ItemWithControlFramework[];
+    }) => {
+      const items = a.items as ItemWithControlFramework[];
+      const computed = roundScore(weightedScorePercent(items));
+      const score =
+        a.score !== null && a.score !== undefined
+          ? roundScore(Number(a.score))
+          : items.length > 0
+            ? computed
+            : null;
 
-    return {
-      id: a.id,
-      organizationName: a.organization.productName,
-      status: a.status,
-      score,
-      updatedAt: a.updatedAt.toISOString(),
-      frameworkScores: frameworkScoresFromItems(items),
-    };
-  });
+      return {
+        id: a.id,
+        organizationName: a.organization.productName,
+        status: a.status,
+        score,
+        updatedAt: a.updatedAt.toISOString(),
+        frameworkScores: frameworkScoresFromItems(items),
+      };
+    },
+  );
 
   return {
     totalAssessments,

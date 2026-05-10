@@ -232,7 +232,7 @@ async function main() {
     throw new Error("GDPR framework was not seeded.");
   }
 
-  const v2GdprCodeSet = new Set(gdprControls.map((control) => control.code));
+  const v2GdprCodeSet = new Set(gdprControls.map((control: { code: string }) => control.code));
   const staleControls = await prisma.control.findMany({
     where: {
       frameworkId: gdprFrameworkId,
@@ -244,11 +244,11 @@ async function main() {
   if (staleControls.length > 0) {
     console.log(
       `🧹  Removing ${staleControls.length} stale GDPR control(s): ${staleControls
-        .map((control) => control.code)
+        .map((control: { code: string }) => control.code)
         .join(", ")}`,
     );
 
-    const staleControlIds = staleControls.map((control) => control.id);
+    const staleControlIds = staleControls.map((control: { id: string }) => control.id);
     await prisma.assessmentItem.deleteMany({
       where: { controlId: { in: staleControlIds } },
     });
@@ -267,7 +267,7 @@ async function main() {
     select: { id: true, code: true },
   });
   const gdprCodeToId = Object.fromEntries(
-    gdprControlRows.map((control) => [control.code, control.id]),
+    gdprControlRows.map((control: { code: string; id: string }) => [control.code, control.id]),
   ) as Record<string, string>;
 
   for (const dependency of gatewayDependencies) {

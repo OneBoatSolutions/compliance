@@ -45,6 +45,15 @@ interface FrameworkCatalogEntry {
   controls: number;
 }
 
+interface FrameworkCatalogSelectRow {
+  id: string;
+  code: string;
+  name: string;
+  _count: {
+    controls: number;
+  };
+}
+
 const frameworkCatalogCacheTtl = 5 * 60 * 1000; // 5 minutes
 const remediationTimeoutMs = 10_000;
 const remediationMaxRetries = 3;
@@ -142,7 +151,7 @@ async function getFrameworkCatalog(): Promise<FrameworkCatalogEntry[]> {
     },
   });
 
-  const catalog = frameworks.map((framework) => ({
+  const catalog = frameworks.map((framework: FrameworkCatalogSelectRow) => ({
     id: framework.id,
     code: framework.code,
     name: framework.name,
@@ -586,7 +595,7 @@ export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestio
             tokensUsed: result.usage?.totalTokens ?? 0,
           },
         })
-        .catch((logError) => {
+        .catch((logError: unknown) => {
           console.error("Failed to log AI interaction", logError);
         });
 
@@ -613,7 +622,7 @@ export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestio
         tokensUsed: 0,
       },
     })
-    .catch((logError) => {
+    .catch((logError: unknown) => {
       console.error("Failed to log fallback AI interaction", logError);
     });
 

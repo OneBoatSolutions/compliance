@@ -41,7 +41,7 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
     return validationErrorResponse(parsed.error.format());
   }
 
-  const data = await prisma.$transaction(async (tx) => {
+  const data = await prisma.$transaction(async (tx: typeof prisma) => {
     await tx.assessmentItem.update({
       where: {
         id: itemId,
