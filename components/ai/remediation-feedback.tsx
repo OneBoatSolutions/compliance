@@ -35,20 +35,16 @@ export default function RemediationFeedback() {
 
   return (
     <div className="bg-purple-50 border border-purple-100 rounded-xl p-4 flex items-center justify-between">
-      
       {/* TEXT */}
       <div>
         <p className="text-sm text-purple-700">
-          {submitted
-            ? "Thanks for your feedback!"
-            : "Was this remediation plan helpful?"}
+          {submitted ? "Thanks for your feedback!" : "Was this remediation plan helpful?"}
         </p>
       </div>
 
       {/* ACTIONS */}
       {!submitted && (
         <div className="flex items-center gap-2">
-
           <button
             onClick={() => handleFeedback("yes")}
             disabled={loading}
@@ -76,7 +72,6 @@ export default function RemediationFeedback() {
             <ThumbsDown size={14} />
             No
           </button>
-
         </div>
       )}
     </div>

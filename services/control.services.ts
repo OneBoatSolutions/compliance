@@ -4,19 +4,19 @@ import { apiClient } from "@/lib/api-client";
 /**
  * 🔹 TYPES
  */
-type SaveControlPayload = {
+interface SaveControlPayload {
   status: string;
   comments: string;
   evidence: unknown[];
   assignee: string;
   dueDate: string;
   saveType?: string;
-};
+}
 
-type SaveControlResponse = {
+interface SaveControlResponse {
   score: number;
   status: string;
-};
+}
 
 /**
  * 🔹 GET CONTROL (TEMP MOCK)
@@ -37,12 +37,12 @@ export const getControl = async (controlId: string) => {
 export const saveControl = async (
   assessmentId: string,
   itemId: string,
-  payload: SaveControlPayload
+  payload: SaveControlPayload,
 ): Promise<SaveControlResponse> => {
   try {
     const response = await apiClient.patch<SaveControlResponse>(
       `/api/assessments/${assessmentId}/items/${itemId}`,
-      { body: payload }
+      { body: payload },
     );
 
     return response;

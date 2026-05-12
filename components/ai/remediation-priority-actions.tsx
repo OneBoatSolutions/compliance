@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ListChecks } from "lucide-react";
 
 const mockSteps = [
@@ -6,11 +7,7 @@ const mockSteps = [
     priority: "HIGH",
     owner: "IT Security Team",
     effort: "40 hours",
-    tasks: [
-      "Define roles and permissions",
-      "Map users",
-      "Audit access",
-    ],
+    tasks: ["Define roles and permissions", "Map users", "Audit access"],
   },
   {
     title: "Enable Multi-Factor Authentication (MFA)",
@@ -26,7 +23,6 @@ export default function PriorityActions({ data }: any) {
 
   return (
     <div className="space-y-4">
-
       {/* HEADER */}
       <div className="flex items-center gap-2">
         <ListChecks size={16} className="text-purple-600" />
@@ -35,7 +31,6 @@ export default function PriorityActions({ data }: any) {
 
       {steps.map((step: any, i: number) => (
         <div key={i} className="border rounded-xl p-4 space-y-3">
-
           <div className="flex justify-between items-center">
             <p className="font-medium">{step.title}</p>
 
@@ -54,10 +49,8 @@ export default function PriorityActions({ data }: any) {
               <li key={j}>• {t}</li>
             ))}
           </ul>
-
         </div>
       ))}
-
     </div>
   );
 }

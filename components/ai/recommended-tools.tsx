@@ -1,5 +1,5 @@
 export default function RecommendedTools() {
-  const tools = ["Auth0", "Okta Identity", "Azure AD"]
+  const tools = ["Auth0", "Okta Identity", "Azure AD"];
 
   return (
     <div className="bg-white border rounded-xl p-4 space-y-3">
@@ -12,5 +12,5 @@ export default function RecommendedTools() {
         </div>
       ))}
     </div>
-  )
+  );
 }

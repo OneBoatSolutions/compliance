@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
 export default function RemediationActions() {
   return (
@@ -7,5 +7,5 @@ export default function RemediationActions() {
       <Button variant="secondary">Save Plan</Button>
       <Button variant="secondary">Export as PDF</Button>
     </div>
-  )
+  );
 }

@@ -1,42 +1,44 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 // UI Sections
-import HeaderCard from "./header-card"
-import PriorityActions from "./priority-actions"
-import RecommendedTools from "./recommended-tools"
-import Timeline from "./timeline"
-import CostSummary from "./cost-summary"
-import FeedbackBar from "./remediation-feedback"
-import RemediationActions from "./remediation-actions"
-import PolicySection from "./policy-section"
-import AiLoader from "./ai-loader"
+import HeaderCard from "./header-card";
+import PriorityActions from "./priority-actions";
+import RecommendedTools from "./recommended-tools";
+import Timeline from "./timeline";
+import CostSummary from "./cost-summary";
+import FeedbackBar from "./remediation-feedback";
+import RemediationActions from "./remediation-actions";
+import PolicySection from "./policy-section";
+import AiLoader from "./ai-loader";
 
 // Types
-type Step = {
-  id: number
-  title: string
-  description: string[]
-  owner: string
-  hours: number
-  priority: "HIGH" | "MEDIUM" | "LOW"
+interface Step {
+  id: number;
+  title: string;
+  description: string[];
+  owner: string;
+  hours: number;
+  priority: "HIGH" | "MEDIUM" | "LOW";
 }
 
-type Props = {
-  status: string
+interface Props {
+  status: string;
 }
 
 export default function RemediationPlan({ status }: Props) {
-  const [loading, setLoading] = useState(true)
-  const [steps, setSteps] = useState<Step[]>([])
+  const [loading, setLoading] = useState(true);
+  const [steps, setSteps] = useState<Step[]>([]);
 
   // 🚀 Fetch / simulate AI data
   useEffect(() => {
     // ❌ Do not run if compliant
-    if (status === "Compliant" || status === "Not Applicable") return
+    if (status === "Compliant" || status === "Not Applicable") {
+      return;
+    }
 
-    setLoading(true)
+    setLoading(true);
 
     // 🔁 Simulated API call
     setTimeout(() => {
@@ -56,10 +58,7 @@ export default function RemediationPlan({ status }: Props) {
         {
           id: 2,
           title: "Enable Multi-Factor Authentication (MFA)",
-          description: [
-            "Integrate MFA provider",
-            "Enforce MFA for all users",
-          ],
+          description: ["Integrate MFA provider", "Enforce MFA for all users"],
           owner: "SysAdmin",
           hours: 16,
           priority: "HIGH",
@@ -67,26 +66,24 @@ export default function RemediationPlan({ status }: Props) {
         {
           id: 3,
           title: "Enable Cloud Monitoring",
-          description: [
-            "Set up logging",
-            "Configure alerts",
-          ],
+          description: ["Set up logging", "Configure alerts"],
           owner: "DevOps",
           hours: 24,
           priority: "MEDIUM",
         },
-      ])
+      ]);
 
-      setLoading(false)
-    }, 1200)
-  }, [status])
+      setLoading(false);
+    }, 1200);
+  }, [status]);
 
   // ❌ Hide component for compliant states
-  if (status === "Compliant" || status === "Not Applicable") return null
+  if (status === "Compliant" || status === "Not Applicable") {
+    return null;
+  }
 
   return (
     <div className="space-y-6">
-
       {/* 🧠 AI Header */}
       <div>
         <h2 className="text-lg font-semibold">AI Remediation Plan</h2>
@@ -105,7 +102,6 @@ export default function RemediationPlan({ status }: Props) {
 
           {/* 🔹 Main Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
             {/* LEFT: Steps */}
             <div className="lg:col-span-2 space-y-4">
               <PriorityActions steps={steps} />
@@ -117,7 +113,6 @@ export default function RemediationPlan({ status }: Props) {
               <Timeline />
               <CostSummary />
             </div>
-
           </div>
 
           {/* 🔹 Policy Section */}
@@ -131,5 +126,5 @@ export default function RemediationPlan({ status }: Props) {
         </>
       )}
     </div>
-  )
+  );
 }
