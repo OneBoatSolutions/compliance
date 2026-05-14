@@ -1,5 +1,6 @@
 import { Readable } from "node:stream";
 import { ServerResponse, type IncomingHttpHeaders, type IncomingMessage } from "node:http";
+import type { ReadableStream as NodeReadableStream } from "node:stream/web";
 import multer from "multer";
 import { errorResponse } from "@/lib/api-helpers";
 import {
@@ -28,7 +29,11 @@ const upload = multer({
     fileSize: MAX_EVIDENCE_FILE_SIZE_BYTES,
     files: MAX_EVIDENCE_FILES_PER_ITEM,
   },
-  fileFilter: (_req, file, cb) => {
+  fileFilter: (
+    req: IncomingMessage,
+    file: { mimetype: string; originalname: string },
+    cb: (error: Error | null, acceptFile?: boolean) => void,
+  ) => {
     if (
       !isAllowedEvidenceMimeType(file.mimetype) ||
       !isAllowedEvidenceExtension(file.originalname)
@@ -53,7 +58,7 @@ function toNodeRequest(req: Request): IncomingMessage {
     throw new Error("Request body is required for multipart parsing");
   }
 
-  const stream = Readable.fromWeb(req.body as ReadableStream) as IncomingMessage;
+  const stream = Readable.fromWeb(req.body as NodeReadableStream<Uint8Array>) as IncomingMessage;
   (stream as IncomingMessage & { headers: IncomingHttpHeaders }).headers =
     requestHeadersToNodeHeaders(req.headers);
   (stream as IncomingMessage & { method?: string }).method = req.method;

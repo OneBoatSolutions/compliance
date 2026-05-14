@@ -34,7 +34,7 @@ function formatBytes(bytes: number, decimals = 2) {
 
 export interface UploadedFile {
   id: string;
-  file: window.File;
+  file: File;
   name: string;
   size: number;
   type: string;
@@ -50,7 +50,7 @@ export default function EvidenceUploader() {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const validateFile = (file: window.File) => {
+  const validateFile = (file: File) => {
     const extension = file.name.split(".").pop()?.toLowerCase();
     if (!extension || !allowedExtensions.includes(extension)) {
       toast.error(`File type not allowed: ${file.name}. Allowed: ${allowedExtensions.join(", ")}`);
@@ -63,7 +63,7 @@ export default function EvidenceUploader() {
     return true;
   };
 
-  const processFiles = (newFiles: window.File[]) => {
+  const processFiles = (newFiles: File[]) => {
     const validFiles = newFiles.filter(validateFile);
     if (validFiles.length === 0) {
       return;

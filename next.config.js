@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ["pdfkit", "svg-to-pdfkit"],
+  },
   images: {
     domains: ["example.com", "images.unsplash.com"],
   },
