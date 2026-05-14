@@ -5,5 +5,5 @@ export default function AiLoader() {
         🤖 AI is generating remediation plan...
       </div>
     </div>
-  )
+  );
 }

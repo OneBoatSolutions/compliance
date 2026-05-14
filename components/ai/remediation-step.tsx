@@ -1,5 +1,6 @@
-import { Card } from "@/components/ui/card"
-import PriorityBadge from "./priority-badge"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Card } from "@/components/ui/card";
+import PriorityBadge from "./priority-badge";
 
 export default function RemediationStep({ step, index }: any) {
   return (
@@ -25,5 +26,5 @@ export default function RemediationStep({ step, index }: any) {
         ))}
       </ul>
     </Card>
-  )
+  );
 }

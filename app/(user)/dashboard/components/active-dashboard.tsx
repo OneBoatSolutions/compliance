@@ -342,6 +342,12 @@ export default function ActiveDashboard({ data }: Props) {
                     Continue Latest
                   </Link>
                 )}
+                <Link
+                  href="/analytics"
+                  className="flex w-full items-center justify-center rounded-lg border border-white/45 bg-white/10 px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
+                >
+                  View Analytics Dashboard
+                </Link>
               </div>
             </article>
 

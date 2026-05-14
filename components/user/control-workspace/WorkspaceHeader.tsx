@@ -1,7 +1,11 @@
 "use client";
 
 import { CheckCircle } from "lucide-react";
-export default function WorkspaceHeader({ control }: { control?: { framework?: string; id?: string; title?: string } }) {
+export default function WorkspaceHeader({
+  control,
+}: {
+  control?: { framework?: string; id?: string; title?: string };
+}) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
       {/* 🔹 LEFT: Breadcrumb + Title */}

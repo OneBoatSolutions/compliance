@@ -18,5 +18,5 @@ export default function CostSummary() {
         <span className="text-purple-600">$7600</span>
       </div>
     </div>
-  )
+  );
 }
