@@ -13,6 +13,7 @@ interface RightSidebarProps {
     title: string;
     description: string;
     framework: string;
+    severity: string;
   };
   status: string;
 }
@@ -51,6 +52,7 @@ export default function RightSidebar({ control, status }: RightSidebarProps) {
           controlDescription={control.description}
           framework={control.framework}
           status={status}
+          severity={control.severity}
         />
       )}
     </div>

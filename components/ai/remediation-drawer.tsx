@@ -23,6 +23,7 @@ interface RemediationDrawerProps {
   controlDescription: string;
   framework: string;
   status: string;
+  severity: string;
 }
 
 export default function RemediationDrawer({
@@ -34,6 +35,7 @@ export default function RemediationDrawer({
   controlDescription,
   framework,
   status,
+  severity,
 }: RemediationDrawerProps) {
   const [data, setData] = useState<RemediationData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -46,11 +48,11 @@ export default function RemediationDrawer({
           const response = await apiClient.post<RemediationData>("/api/ai/remediation", {
             body: {
               controlId,
-              assessmentItemId,
               controlTitle,
               controlDescription,
-              framework,
-              status,
+              frameworkName: framework,
+              currentStatus: status,
+              severity,
             },
           });
           setData(response);
@@ -63,7 +65,16 @@ export default function RemediationDrawer({
 
       fetchRemediation();
     }
-  }, [open, controlId, assessmentItemId, controlTitle, controlDescription, framework, status]);
+  }, [
+    open,
+    controlId,
+    assessmentItemId,
+    controlTitle,
+    controlDescription,
+    framework,
+    status,
+    severity,
+  ]);
 
   if (!open) {
     return null;
@@ -78,12 +89,12 @@ export default function RemediationDrawer({
       const response = await apiClient.post<RemediationData>("/api/ai/remediation", {
         body: {
           controlId,
-          assessmentItemId,
           controlTitle,
           controlDescription,
-          framework,
-          status,
-          bypass_cache: true,
+          frameworkName: framework,
+          currentStatus: status,
+          severity,
+          regenerate: true,
         },
       });
       setData(response);
