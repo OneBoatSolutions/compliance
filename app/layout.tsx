@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google"; // valid Google Fonts
 import "./globals.css";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { Toaster } from "sonner";
-import { AuthProvider } from "@/components/providers/auth-provider";
-import { QueryProvider } from "@/components/providers/query-provider";
+import { AppProviders } from "@/components/providers/app-providers";
 // Replace Geist with Inter
 const inter = Inter({
   variable: "--font-inter",
@@ -34,12 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=optional"
         />
-        <NextThemesProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <QueryProvider>
-            <AuthProvider>{children}</AuthProvider>
-            <Toaster richColors position="top-right" />
-          </QueryProvider>
-        </NextThemesProvider>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

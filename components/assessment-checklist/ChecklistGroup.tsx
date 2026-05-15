@@ -19,7 +19,7 @@ export default function ChecklistGroup({
   onStatusChange,
   updatingItemId,
 }: Props) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const completed = controls.filter((c) => c.status === "COMPLIANT").length;
   const total = controls.length;
   const percent = total ? Math.round((completed / total) * 100) : 0;
@@ -95,7 +95,7 @@ export default function ChecklistGroup({
         {/* Button */}
         <button
           onClick={() => setGlobalUploadOpen(true)}
-          className="w-14 h-14 rounded-full bg-gradient-to-r from-purple-600 to-purple-500 
+          className="w-14 h-14 rounded-full bg-linear-to-r from-purple-600 to-purple-500 
     text-white flex items-center justify-center shadow-lg hover:scale-105 transition"
         >
           <Plus size={22} />
@@ -103,7 +103,7 @@ export default function ChecklistGroup({
       </div>
       {/* GLOBAL UPLOAD MODAL */}
       {globalUploadOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40">
+        <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 space-y-4">
             {/* HEADER */}
             <div className="flex justify-between items-center">

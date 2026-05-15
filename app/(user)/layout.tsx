@@ -48,7 +48,7 @@ export default function AppLayout({ children }: LayoutProps) {
         }`}
       >
         <Header items={userNavItems} />
-        <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8 xl:p-10 pt-20">{children}</main>
+        <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8 xl:p-10 pt-16">{children}</main>
         <Footer />
       </div>
     </div>
