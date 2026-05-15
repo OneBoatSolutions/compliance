@@ -634,7 +634,7 @@ function buildRemediationItems(assessment: ReportAssessment): RemediationItem[] 
   }));
 }
 
-async function buildReportBundle(context: ReportRequestContext): Promise<ReportBundle> {
+export async function buildReportBundle(context: ReportRequestContext): Promise<ReportBundle> {
   const assessment = await fetchAssessmentBundle(context);
   const scoreRows = toScoreRows(assessment);
   const overallScore = computeOverallScore(scoreRows);
