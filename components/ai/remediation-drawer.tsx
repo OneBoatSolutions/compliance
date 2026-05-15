@@ -1,9 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
 import RemediationHeader from "./remediation-header";
-import RemediationSummary from "./remediation-summary";
-import RemediationActions from "./remediation-p-actions";
 import RemediationSidebar from "./remediation-sidebar";
 import LoadingState from "@/components/framework-selection/LoadingScreen";
 import { useState, useEffect } from "react";
@@ -14,67 +11,129 @@ import PriorityActions from "./remediation-priority-actions";
 import PolicyRecommendations from "./policy-recommendations";
 import RemediationFeedback from "./remediation-feedback";
 
+import { apiClient } from "@/lib/api-client";
+import { toast } from "sonner";
+
+interface RemediationDrawerProps {
+  open: boolean;
+  onClose: () => void;
+  controlId: string;
+  assessmentItemId: string;
+  controlTitle: string;
+  controlDescription: string;
+  framework: string;
+  status: string;
+}
+
 export default function RemediationDrawer({
   open,
   onClose,
-  data,
-}: {
-  open: boolean;
-  onClose: () => void;
-  data: RemediationData;
-}) {
+  controlId,
+  assessmentItemId,
+  controlTitle,
+  controlDescription,
+  framework,
+  status,
+}: RemediationDrawerProps) {
+  const [data, setData] = useState<RemediationData | null>(null);
   const [loading, setLoading] = useState(true);
   const [regenerating, setRegenerating] = useState(false);
   useEffect(() => {
     if (open) {
-      setLoading(true);
+      const fetchRemediation = async () => {
+        try {
+          setLoading(true);
+          const response = await apiClient.post<RemediationData>("/api/ai/remediation", {
+            body: {
+              controlId,
+              assessmentItemId,
+              controlTitle,
+              controlDescription,
+              framework,
+              status,
+            },
+          });
+          setData(response);
+        } catch {
+          toast.error("Failed to generate remediation plan");
+        } finally {
+          setLoading(false);
+        }
+      };
 
-      setTimeout(() => {
-        setLoading(false);
-      }, 1500); // simulate AI delay
+      fetchRemediation();
     }
-  }, [open]);
+  }, [open, controlId, assessmentItemId, controlTitle, controlDescription, framework, status]);
 
   if (!open) {
     return null;
   }
 
-  const safeData = data || {};
+  const safeData = data || ({} as RemediationData);
 
   const handleRegenerate = async () => {
-    setRegenerating(true); // start spinner
-    setLoading(true); // show loading screen
-
-    setTimeout(() => {
+    setRegenerating(true);
+    try {
+      setLoading(true);
+      const response = await apiClient.post<RemediationData>("/api/ai/remediation", {
+        body: {
+          controlId,
+          assessmentItemId,
+          controlTitle,
+          controlDescription,
+          framework,
+          status,
+          bypass_cache: true,
+        },
+      });
+      setData(response);
+      toast.success("Plan regenerated");
+    } catch {
+      toast.error("Failed to regenerate plan");
+    } finally {
       setLoading(false);
-      setRegenerating(false); // stop spinner
-    }, 1500);
+      setRegenerating(false);
+    }
   };
 
   const handleSavePlan = async () => {
     try {
-      console.log("Saving remediation plan...");
-      // later → API call
-
-      alert("Plan saved successfully");
+      if (!data) {
+        return;
+      }
+      await apiClient.post("/api/ai/remediation/save", { body: data });
+      toast.success("Plan saved");
     } catch {
-      alert("Failed to save plan");
+      toast.error("Failed to save plan");
     }
   };
 
-  const handleExportPDF = () => {
-    const blob = new Blob(["AI Remediation Plan\n\n(This will be real data later)"], {
-      type: "text/plain",
-    });
+  const handleExportPDF = async () => {
+    try {
+      const response = await apiClient.getBlob(`/api/ai/remediation/${assessmentItemId}/export`);
 
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
+      // If the backend returned JSON { url } it would fail as blob or we can just try to see if it's JSON
+      if (response.type.includes("application/json")) {
+        const text = await response.text();
+        const data = JSON.parse(text);
+        if (data.url) {
+          window.open(data.url, "_blank");
+          return;
+        }
+      }
 
-    a.href = url;
-    a.download = "remediation-plan.txt";
-    a.click();
-
-    window.URL.revokeObjectURL(url);
+      const url = window.URL.createObjectURL(response);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `remediation-plan-${controlId}.pdf`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch {
+      toast.info("Preparing document for printing...");
+      setTimeout(() => {
+        window.print();
+      }, 500);
+    }
   };
 
   return (
@@ -105,8 +164,8 @@ export default function RemediationDrawer({
                 <LoadingState />
               ) : (
                 <>
-                  <PriorityActions data={data} />
-                  <PolicyRecommendations data={data} />
+                  <PriorityActions data={safeData} />
+                  <PolicyRecommendations data={safeData} />
                   <RemediationFeedback />
                 </>
               )}

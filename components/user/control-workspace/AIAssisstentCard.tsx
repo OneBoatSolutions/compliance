@@ -3,7 +3,12 @@
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function AIAssistantCard({ status }: any) {
+interface AIAssistantCardProps {
+  status: string;
+  onOpenDrawer?: () => void;
+}
+
+export default function AIAssistantCard({ status, onOpenDrawer }: AIAssistantCardProps) {
   // 🧠 Dynamic content
   let message = "";
   let buttonText = "";
@@ -45,7 +50,9 @@ export default function AIAssistantCard({ status }: any) {
       <p className="text-sm text-white/90 leading-relaxed">{message}</p>
 
       {/* CTA */}
-      <Button className="w-full bg-white text-purple-700 hover:bg-white/90">{buttonText}</Button>
+      <Button onClick={onOpenDrawer} className="w-full bg-white text-purple-700 hover:bg-white/90">
+        {buttonText}
+      </Button>
     </div>
   );
 }

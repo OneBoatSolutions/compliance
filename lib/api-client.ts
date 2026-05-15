@@ -249,6 +249,73 @@ function del<TData>(input: string, options?: ApiRequestOptions<never>) {
   return apiRequest<TData, never>(input, { ...options, method: "DELETE" });
 }
 
+export function uploadWithProgress<TData>(
+  input: string,
+  formData: FormData,
+  onProgress: (progress: number) => void,
+): { promise: Promise<TData>; abort: () => void } {
+  const xhr = new XMLHttpRequest();
+
+  const promise = new Promise<TData>((resolve, reject) => {
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        onProgress((event.loaded / event.total) * 100);
+      }
+    };
+
+    xhr.onload = () => {
+      let payload;
+      try {
+        payload = JSON.parse(xhr.responseText);
+      } catch {
+        payload = xhr.responseText;
+      }
+
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          resolve(extractData<TData>(payload));
+        } catch (err) {
+          reject(err);
+        }
+      } else {
+        reject(normalizeHttpError(xhr.status, payload));
+      }
+    };
+
+    xhr.onerror = () => reject(normalizeHttpError(0, null));
+    xhr.onabort = () => reject(normalizeHttpError(0, { error: "Aborted" }));
+
+    xhr.open("POST", input);
+
+    const token = getAuthToken();
+    if (token) {
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+    }
+    xhr.setRequestHeader("Accept", "application/json");
+
+    xhr.send(formData);
+  });
+
+  return { promise, abort: () => xhr.abort() };
+}
+
+export async function getBlob(input: string, options?: ApiRequestOptions<never>): Promise<Blob> {
+  const requestInit: RequestInit = {
+    ...options,
+    method: "GET",
+    headers: buildHeaders(options),
+    credentials: options.credentials ?? "include",
+  };
+
+  const response = await fetch(input, requestInit);
+  if (!response.ok) {
+    const payload = await parseResponseBody(response).catch(() => null);
+    throw normalizeHttpError(response.status, payload);
+  }
+
+  return response.blob();
+}
+
 export const apiClient = {
   request: apiRequest,
   get,
@@ -256,6 +323,8 @@ export const apiClient = {
   put,
   patch,
   delete: del,
+  upload: uploadWithProgress,
+  getBlob,
 };
 
 export type { ApiResponse };

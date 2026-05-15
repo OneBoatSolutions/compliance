@@ -10,6 +10,8 @@ interface CoverProps {
   preparedFor: string;
   version: string;
 
+  isGenerating?: boolean;
+  isDownloading?: boolean;
   onGenerate: () => void;
   onDownload: () => void;
 }
@@ -20,6 +22,8 @@ export default function Cover({
   generatedAt,
   preparedFor,
   version,
+  isGenerating,
+  isDownloading,
   onGenerate,
   onDownload,
 }: CoverProps) {
@@ -49,21 +53,31 @@ export default function Cover({
           {/*  Export (Generate) */}
           <button
             onClick={onGenerate}
-            className="flex items-center gap-1 px-3 py-1 border rounded 
-            hover:bg-gray-100 hover:shadow-sm transition"
+            disabled={isGenerating}
+            className={`flex items-center gap-1 px-3 py-1 border rounded transition
+            ${isGenerating ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100 hover:shadow-sm"}`}
           >
-            <FileDown size={14} />
-            Export
+            {isGenerating ? (
+              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-900" />
+            ) : (
+              <FileDown size={14} />
+            )}
+            {isGenerating ? "Exporting..." : "Export"}
           </button>
 
           {/* ⬇ Download */}
           <button
             onClick={onDownload}
-            className="flex items-center gap-1 px-3 py-1 bg-purple-600 text-white rounded 
-            hover:bg-purple-700 hover:shadow-md transition"
+            disabled={isDownloading}
+            className={`flex items-center gap-1 px-3 py-1 bg-purple-600 text-white rounded transition
+            ${isDownloading ? "opacity-50 cursor-not-allowed" : "hover:bg-purple-700 hover:shadow-md"}`}
           >
-            <Download size={14} />
-            Download
+            {isDownloading ? (
+              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white" />
+            ) : (
+              <Download size={14} />
+            )}
+            {isDownloading ? "Downloading..." : "Download"}
           </button>
         </div>
       </div>

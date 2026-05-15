@@ -1,15 +1,16 @@
 "use client";
 
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LeftPanel from "./LeftPanel";
 import RightSidebar from "./RightSidebar";
 import FooterNav from "./FooterNav";
 import ProgressSection from "./ProgressSection";
 import TagsInput from "./TagsInput";
-import EvidenceUploader from "@/components/user/evidence-uploader";
+import EvidenceUploader, { ExistingFile } from "@/components/user/evidence-uploader";
 import { AssigneeDueDate } from "./AssigneeDueDate";
 import WorkspaceHeader from "./WorkspaceHeader";
+import { apiClient } from "@/lib/api-client";
 
 interface ControlData {
   id: string;
@@ -36,6 +37,26 @@ export default function ControlWorkspace({ control }: Props) {
   const [assignee, setAssignee] = useState(control?.owner || "");
   const [dueDate, setDueDate] = useState(control?.targetDate || "");
   const [isSaving, setIsSaving] = useState(false);
+  const [existingFiles, setExistingFiles] = useState<ExistingFile[]>([]);
+
+  useEffect(() => {
+    if (!control?.assessmentId || !control?.itemId) {
+      return;
+    }
+    const fetchEvidence = async () => {
+      try {
+        const response = await apiClient.get<{ evidence: ExistingFile[] }>(
+          `/api/assessments/${control.assessmentId}/items/${control.itemId}`,
+        );
+        if (response && response.evidence) {
+          setExistingFiles(response.evidence);
+        }
+      } catch (error) {
+        console.error("Failed to fetch existing evidence", error);
+      }
+    };
+    fetchEvidence();
+  }, [control?.assessmentId, control?.itemId]);
 
   const handleSave = async (type = "final") => {
     if (!control?.assessmentId || !control?.itemId) {
@@ -113,7 +134,7 @@ export default function ControlWorkspace({ control }: Props) {
 
           <div className="bg-white shadow-sm border rounded-xl p-5 space-y-6">
             <div>
-              <EvidenceUploader />
+              <EvidenceUploader assessmentItemId={control.itemId} existingFiles={existingFiles} />
             </div>
 
             <AssigneeDueDate
@@ -128,7 +149,7 @@ export default function ControlWorkspace({ control }: Props) {
         </div>
 
         {/* RIGHT SIDE */}
-        <RightSidebar status={status} />
+        <RightSidebar control={control} status={status} />
       </div>
 
       <FooterNav onSave={handleSave} isSaving={isSaving} />
