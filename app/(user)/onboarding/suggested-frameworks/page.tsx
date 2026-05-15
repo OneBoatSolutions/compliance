@@ -320,7 +320,7 @@ export default function Page() {
 
       {/* Manual Add Modal */}
       {showManualAdd && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40">
+        <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 space-y-4 max-h-[80vh] flex flex-col">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold text-gray-900">Add Framework</h3>
