@@ -1,0 +1,719 @@
+Section 4 - Security & Data,,,,,,,,
+Question #,Question Text,Indicator,Question Responses,Education,Risk,Risk Indicated,Required?,Reference
+Section Questions,,,,,,,,
+1,"Do you manage and control personnel access to ePHI, systems, and facilities?",,,,,,,
+,,,Yes.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. User accounts enable organizations to control and monitor each user's access to and activities on devices, EHRs, e-mail, and other third-party software systems. It is essential to protect user accounts to mitigate the risk of cyber threats.",1,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, PR.AA, PR.IR 
+HPH CPG: 6 
+HICP: TV1 - Practice #2, 3"
+,,,No.,"Consider implementing policies and procedures to determine, authorize, and control access of workforce members to ePHI, systems, and facilities as appropriate. User accounts enable organizations to control and monitor each user's access to and activities on devices, EHRs, e-mail, and other third-party software systems. It is essential to protect user accounts to mitigate the risk of cyber threats.",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, PR.AA, PR.IR 
+HPH CPG: 6 
+HICP: TV1 - Practice #2, 3"
+,,,I don't know. ,"Consider looking into whether you have policies and procedures to determine, authorize, and control access of workforce members to ePHI, systems, and facilities as appropriate. User accounts enable organizations to control and monitor each user's access to and activities on devices, EHRs, e-mail, and other third-party software systems. It is essential to protect user accounts to mitigate the risk of cyber threats.",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, PR.AA, PR.IR 
+HPH CPG: 6 
+HICP: TV1 - Practice #2, 3"
+,,,We manage and control personnel access to some but not all. ,"Consider implementing policies and procedures to determine, authorize, and control access of workforce members to ePHI, systems, and facilities as appropriate. User accounts enable organizations to control and monitor each user's access to and activities on devices, EHRs, e-mail, and other third-party software systems. It is essential to protect user accounts to mitigate the risk of cyber threats.",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, PR.AA, PR.IR 
+HPH CPG: 6 
+HICP: TV1 - Practice #2, 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, PR.AA, PR.IR 
+HPH CPG: 6 
+HICP: TV1 - Practice #2, 3"
+,Notes,,,,,,,
+2,"How do you manage and control personnel access to ePHI, systems, and facilities?",,,,,,,
+,,,Detailed log of personnel and access levels based on role. Updates are reviewed by the security officer.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Implement single sign-on systems that automatically manage access to all software and tools once users have signed onto the network. Such systems allow the organization to centrally maintain and monitor access.",1,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, PR.AA, PR.IR
+HPH CPG: 3, 6 
+HICP: TV1 - Practice #2, 3"
+,,,Log of personnel names.,"You should develop, document, and disseminate to workforce members an access control policy. The access control policy should address purpose, scope, roles, responsibilities, management commitment, the expected coordination among organizational entities, and compliance requirements. You should also maintain a list of workforce members with their corresponding level of access. This list should be reviewed and updated by the security officer. Implement single sign-on systems that automatically manage access to all software and tools once users have signed onto the network. Such systems allow the organization to centrally maintain and monitor access.",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, PR.AA, PR.IR
+HPH CPG: 3, 6 
+HICP: TV1 - Practice #2, 3"
+,,,"Access is granted by role, but we do not maintain a corresponding list of personnel.",Make sure your access control measures are effective and up-to-date. Implement a procedure for updating your log upon changes in the workforce to include access levels based on role within your practice. Any updates based on changes in the workforce should be verified by the security officer. Implement single sign-on systems that automatically manage access to all software and tools once users have signed onto the network. Such systems allow the organization to centrally maintain and monitor access.,0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, PR.AA, PR.IR
+HPH CPG: 3, 6 
+HICP: TV1 - Practice #2, 3"
+,,,We do not keep a detailed log of workforce members or designate access levels based on role.,Make sure your access control measures are effective and up-to-date. Implement a procedure for updating your log upon changes in the workforce to include access levels based on role within your practice. Any updates based on changes in the workforce should be verified by the security officer. Implement single sign-on systems that automatically manage access to all software and tools once users have signed onto the network. Such systems allow the organization to centrally maintain and monitor access.,0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, PR.AA, PR.IR
+HPH CPG: 3, 6 
+HICP: TV1 - Practice #2, 3"
+,,,Detailed log of personnel and access levels based on role.,Make sure your access control measures are effective and up-to-date. Implement a procedure for updating your log upon changes in the workforce to include access levels based on role within your practice. Any updates based on changes in the workforce should be verified by the security officer. Implement single sign-on systems that automatically manage access to all software and tools once users have signed onto the network. Such systems allow the organization to centrally maintain and monitor access.,0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, PR.AA, PR.IR
+HPH CPG: 3, 6 
+HICP: TV1 - Practice #2, 3"
+,,,Log of personnel names and access levels.,Make sure your access control measures are effective and up-to-date. Implement a procedure for updating your log upon changes in the workforce to include access levels based on role within your practice. Any updates based on changes in the workforce should be verified by the security officer. Implement single sign-on systems that automatically manage access to all software and tools once users have signed onto the network. Such systems allow the organization to centrally maintain and monitor access.,0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, PR.AA, PR.IR
+HPH CPG: 3, 6 
+HICP: TV1 - Practice #2, 3"
+,,,Other.,Make sure your access control measures are effective and up-to-date. Implement a procedure for updating your log upon changes in the workforce to include access levels based on role within your practice. Any updates based on changes in the workforce should be verified by the security officer. Implement single sign-on systems that automatically manage access to all software and tools once users have signed onto the network. Such systems allow the organization to centrally maintain and monitor access.,0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, PR.AA, PR.IR
+HPH CPG: 3, 6 
+HICP: TV1 - Practice #2, 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, PR.AA, PR.IR
+HPH CPG: 3, 6 
+HICP: TV1 - Practice #2, 3"
+,Notes,,,,,,,
+3,"What is your process for authorizing, establishing, and modifying access to ePHI?",,,,,,,
+,,,"Our security procedures designate personnel authorized to grant, review, modify, and terminate access. Access levels are reviewed and modified as needed.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Tailor access for each user based on the user's specific workplace requirements. Most users require access to common systems, such as e-mail and file servers. Implementing tailored access is usually called provisioning.",1,,Addressable,"HIPAA: §164.308(a)(4)(ii)(B) §164.308(a)(4)(ii)(C ) 
+NIST CSF: PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: TV1 - Practice # 3"
+,,,Our security procedures designate personnel authorized to grant and terminate access. We do not have a procedure to review and modify access as needed.,"You should implement formal procedures to review and modify personnel access. Tailor access for each user based on the user's specific workplace requirements. Most users require access to common systems, such as e-mail and file servers. Implementing tailored access is usually called provisioning.",0,,Addressable,"HIPAA: §164.308(a)(4)(ii)(B) §164.308(a)(4)(ii)(C ) 
+NIST CSF: PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: TV1 - Practice # 3"
+,,,"Access levels are granted, modified, and terminated as needed, but we do not have formal procedures.","You should implement a formal security procedure and designate authorized personnel to grant, review, modify, and terminate access. Access levels should be reviewed and modified as needed. Tailor access for each user based on the user's specific workplace requirements. Most users require access to common systems, such as e-mail and file servers. Implementing tailored access is usually called provisioning.",0,,Addressable,"HIPAA: §164.308(a)(4)(ii)(B) §164.308(a)(4)(ii)(C ) 
+NIST CSF: PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: TV1 - Practice # 3"
+,,,"We do not have a process in place to grant, modify, or terminate access.","You should implement formal procedures to grant, modify, review, and terminate personnel access. Access levels should be reviewed and modified as needed. Tailor access for each user based on the user's specific workplace requirements. Most users require access to common systems, such as e-mail and file servers. Implementing tailored access is usually called provisioning.",0,,Addressable,"HIPAA: §164.308(a)(4)(ii)(B) §164.308(a)(4)(ii)(C ) 
+NIST CSF: PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: TV1 - Practice # 3"
+,,,I don't know. ,"You should implement formal procedures to grant, modify, review, and terminate personnel access. Access levels should be reviewed and modified as needed. Tailor access for each user based on the user's specific workplace requirements. Most users require access to common systems, such as e-mail and file servers. Implementing tailored access is usually called provisioning.",0,,Addressable,"HIPAA: §164.308(a)(4)(ii)(B) §164.308(a)(4)(ii)(C ) 
+NIST CSF: PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: TV1 - Practice # 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.308(a)(4)(ii)(B) §164.308(a)(4)(ii)(C ) 
+NIST CSF: PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: TV1 - Practice # 3"
+,Notes,,,,,,,
+4,How much access to ePHI is granted to users or other entities?,,,,,,,
+,,,Minimum access necessary based on the user's formal role.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. As user accounts are established, the accounts must be granted access to the organization's computers and programs, as appropriate to each user. Consider following the ""minimum necessary"" principle associated with the HIPAA Privacy Rule. Allow each user access only to the computers and programs required to accomplish that user's job or role in the organization. This limits the organization's exposure to unauthorized access, loss, and theft of data if the user's identity or access is compromised.",1,,Required,"HIPAA: §164.502(b) 
+NIST CSF: PR.AA, PR.IR, PR.PS, GV.RM, PR.DS 
+HPH CPG: 3, 9 
+HICP: TV1 - Practice # 3"
+,,,Access is granted based on user duties and activities but not on any formal role or minimum necessary consideration.,"Policies and procedures outlining how users are granted only the minimum necessary access to ePHI should be documented and implemented based on the user role. Allowing a high degree of access to ePHI may have negative impacts to your practice. Unauthorized or inappropriate access to ePHI can compromise the confidentiality, integrity, and availability of your ePHI. As user accounts are established, the accounts must be granted access to the organization's computers and programs, as appropriate to each user. Consider following the ""minimum necessary"" principle associated with the HIPAA Privacy Rule. Allow each user access only to the computers and programs required to accomplish that user's job or role in the organization. This limits the organization's exposure to unauthorized access, loss, and theft of data if the user's identity or access is compromised.",0,,Required,"HIPAA: §164.502(b) 
+NIST CSF: PR.AA, PR.IR, PR.PS, GV.RM, PR.DS 
+HPH CPG: 3, 9 
+HICP: TV1 - Practice # 3"
+,,,No limit to access.,"Policies and procedures outlining how users are granted only the minimum necessary access to ePHI should be documented and implemented based on the user role. Allowing a high degree of access to ePHI may have negative impacts to your practice. Unauthorized or inappropriate access to ePHI can compromise the confidentiality, integrity, and availability of your ePHI. As user accounts are established, the accounts must be granted access to the organization's computers and programs, as appropriate to each user. Consider following the ""minimum necessary"" principle associated with the HIPAA Privacy Rule. Allow each user access only to the computers and programs required to accomplish that user's job or role in the organization. This limits the organization's exposure to unauthorized access, loss, and theft of data if the user's identity or access is compromised.",0,,Required,"HIPAA: §164.502(b) 
+NIST CSF: PR.AA, PR.IR, PR.PS, GV.RM, PR.DS 
+HPH CPG: 3, 9 
+HICP: TV1 - Practice # 3"
+,,,I don't know.,"Policies and procedures outlining how users are granted only the minimum necessary access to ePHI should be documented and implemented based on the user role. Allowing a high degree of access to ePHI may have negative impacts to your practice. Unauthorized or inappropriate access to ePHI can compromise the confidentiality, integrity, and availability of your ePHI. As user accounts are established, the accounts must be granted access to the organization's computers and programs, as appropriate to each user. Consider following the ""minimum necessary"" principle associated with the HIPAA Privacy Rule. Allow each user access only to the computers and programs required to accomplish that user's job or role in the organization. This limits the organization's exposure to unauthorized access, loss, and theft of data if the user's identity or access is compromised.",0,,Required,"HIPAA: §164.502(b) 
+NIST CSF: PR.AA, PR.IR, PR.PS, GV.RM, PR.DS 
+HPH CPG: 3, 9 
+HICP: TV1 - Practice # 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.502(b) 
+NIST CSF: PR.AA, PR.IR, PR.PS, GV.RM, PR.DS 
+HPH CPG: 3, 9 
+HICP: TV1 - Practice # 3"
+,Notes,,,,,,,
+5,How are individual users identified when accessing ePHI?,,,,,,,
+,,,Unique IDs and individual passwords are created for authorized workforce members and contractors in order access ePHI.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Assign a separate user account to each user in your organization. Train and regularly remind users that they must never share their passwords. Require each user to create an account password that is different from the ones used for personal internet or e-mail access (e.g., Gmail, Yahoo, Facebook).",1,,Required,"HIPAA: §164.312(a)(2)(i) 
+NIST CSF: PR.AA, PR.IR, DE.CM 
+HPH CPG: 8, 9 
+HICP: TV1 - Practice # 3"
+,,,Unique IDs are required to access ePHI but these are not always used. Generic or shared accounts also exist that have access to ePHI and are not specific to unique users.,"If you do not have policies requiring use of a unique identifier for all users accessing ePHI, you might not be able to keep track of authorized users and the roles and responsibilities assigned to them. Assign a separate user account to each user in your organization. Train and regularly remind users that they must never share their passwords. Require each user to create an account password that is different from the ones used for personal internet or e-mail access (e.g., Gmail, Yahoo, Facebook).",0,,Required,"HIPAA: §164.312(a)(2)(i) 
+NIST CSF: PR.AA, PR.IR, DE.CM 
+HPH CPG: 8, 9 
+HICP: TV1 - Practice # 3"
+,,,Generic usernames and/or shared passwords are used to access ePHI.,"If you do not have policies requiring use of a unique identifier for all users accessing ePHI, you might not be able to keep track of authorized users and the roles and responsibilities assigned to them. Assign a separate user account to each user in your organization. Train and regularly remind users that they must never share their passwords. Require each user to create an account password that is different from the ones used for personal internet or e-mail access (e.g., Gmail, Yahoo, Facebook).",0,,Required,"HIPAA: §164.312(a)(2)(i) 
+NIST CSF: PR.AA, PR.IR, DE.CM 
+HPH CPG: 8, 9 
+HICP: TV1 - Practice # 3"
+,,,We do not have a process to authenticate users with unique IDs.,"If you do not have policies requiring use of a unique identifier for all users accessing ePHI, you might not be able to keep track of authorized users and the roles and responsibilities assigned to them. Assign a separate user account to each user in your organization. Train and regularly remind users that they must never share their passwords. Require each user to create an account password that is different from the ones used for personal internet or e-mail access (e.g., Gmail, Yahoo, Facebook).",0,,Required,"HIPAA: §164.312(a)(2)(i) 
+NIST CSF: PR.AA, PR.IR, DE.CM 
+HPH CPG: 8, 9 
+HICP: TV1 - Practice # 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.312(a)(2)(i) 
+NIST CSF: PR.AA, PR.IR, DE.CM 
+HPH CPG: 8, 9 
+HICP: TV1 - Practice # 3"
+,Notes,,,,,,,
+6,Do you ensure all of your workforce members have appropriate access to ePHI?,,,,,,,
+,,,"Yes. We have written procedures to ensure workforce members' access privileges are the minimum necessary (i.e., ""need to know"") based on their roles. These access privileges are approved by the security officer.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. As user accounts are established, the accounts must be granted access to the organization's computers and programs, as appropriate to each user. Consider following the ""minimum necessary"" principle associated with the HIPAA Privacy Rule. Allow each user access only to the computers and programs required to accomplish that user's job or role in the organization. This limits the organization's exposure to unauthorized access, loss, and theft of data if the user's identity or access is compromised.",1,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.AA, PR.IR, PR.PS 
+HPH CPG: 9 
+HICP: TV1 - Practice # 3,4"
+,,,Yes. We have written procedures to ensure workforce members' access privileges are the minimum necessary but these are not always based on their roles. ,"You should implement and document procedures to ensure workforce members have access privileges based on their role and no higher than necessary to perform their duties. These procedures and access privileges should be appropriately approved and communicated. As user accounts are established, the accounts must be granted access to the organization's computers and programs, as appropriate to each user. Consider following the ""minimum necessary"" principle associated with the HIPAA Privacy Rule. Allow each user access only to the computers and programs required to accomplish that user's job or role in the organization. This limits the organization's exposure to unauthorized access, loss, and theft of data if the user's identity or access is compromised.",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.AA, PR.IR, PR.PS 
+HPH CPG: 9 
+HICP: TV1 - Practice # 3,4"
+,,,Yes. We verbally communicate access privileges to our workforce members but we do not have written procedures.,"You should implement and document procedures to ensure workforce members have access privileges based on their role and no higher than necessary to perform their duties. These procedures and access privileges should be appropriately approved and communicated. As user accounts are established, the accounts must be granted access to the organization's computers and programs, as appropriate to each user. Consider following the ""minimum necessary"" principle associated with the HIPAA Privacy Rule. Allow each user access only to the computers and programs required to accomplish that user's job or role in the organization. This limits the organization's exposure to unauthorized access, loss, and theft of data if the user's identity or access is compromised.",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.AA, PR.IR, PR.PS 
+HPH CPG: 9 
+HICP: TV1 - Practice # 3,4"
+,,,No. We do not have any procedures for ensuring appropriate workforce member access to ePHI.,"You should implement and document procedures to ensure workforce members have access privileges based on their role and no higher than necessary to perform their duties. These procedures and access privileges should be appropriately approved and communicated. As user accounts are established, the accounts must be granted access to the organization's computers and programs, as appropriate to each user. Consider following the ""minimum necessary"" principle associated with the HIPAA Privacy Rule. Allow each user access only to the computers and programs required to accomplish that user's job or role in the organization. This limits the organization's exposure to unauthorized access, loss, and theft of data if the user's identity or access is compromised.",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.AA, PR.IR, PR.PS 
+HPH CPG: 9 
+HICP: TV1 - Practice # 3,4"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.AA, PR.IR, PR.PS 
+HPH CPG: 9 
+HICP: TV1 - Practice # 3,4"
+,Notes,,,,,,,
+7,"How do you make sure that your workforce's designated access to ePHI is logical, consistent, and appropriate?",,,,,,,
+,,,Workforce members are granted access based on the minimum amount necessary for their role. This is consistently applied across the practice and any changes must be formally approved and documented.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Tailor access for each user based on the user's specific workplace requirements. Most users require access to common systems, such as e-mail and file servers. Implementing tailored access is usually called provisioning.",1,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, DE.CM
+HPH CPG: 3, 8, 9 
+HICP: TV1 - Practice # 3,4"
+,,,"Workforce members have a default level of access for their role, but exceptions are commonly granted.  ","Review role-based access to determine how specific you can designate access for users, based on their roles. Implement and document procedures to ensure minimum necessary access is in place across the board to the extent reasonable and appropriate. If access exceptions are commonly granted, they should be documented and policies should be in place outlining the procedure for access exceptions. Tailor access for each user based on the user's specific workplace requirements. Most users require access to common systems, such as e-mail and file servers. Implementing tailored access is usually called provisioning.",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, DE.CM
+HPH CPG: 3, 8, 9 
+HICP: TV1 - Practice # 3,4"
+,,,"Our software vendor designates access to users, e.g. based on their role as indicated in the system.","Review role-based access to determine how specific you can designate access for users, based on their roles. Implement and document procedures to ensure minimum necessary access is in place across the board to the extent reasonable and appropriate. If access exceptions are commonly granted, they should be documented and policies should be in place outlining the procedure for access exceptions. Tailor access for each user based on the user's specific workplace requirements. Most users require access to common systems, such as e-mail and file servers. Implementing tailored access is usually called provisioning.",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, DE.CM
+HPH CPG: 3, 8, 9 
+HICP: TV1 - Practice # 3,4"
+,,,We do not have a procedure for ensuring user access is appropriate for their role.,"Review role-based access to determine how specific you can designate access for users, based on their roles. Implement and document procedures to ensure minimum necessary access is in place across the board to the extent reasonable and appropriate. If access exceptions are commonly granted, they should be documented and policies should be in place outlining the procedure for access exceptions. Tailor access for each user based on the user's specific workplace requirements. Most users require access to common systems, such as e-mail and file servers. Implementing tailored access is usually called provisioning.",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, DE.CM
+HPH CPG: 3, 8, 9 
+HICP: TV1 - Practice # 3,4"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(3)(i) 
+NIST CSF: PR.AT, PR.PS, DE.CM
+HPH CPG: 3, 8, 9 
+HICP: TV1 - Practice # 3,4"
+,Notes,,,,,,,
+8,Do you use encryption everywhere ePHI is stored throughout your organization?,,,,,,,
+,,,Yes.,"This is the most effective option. Whenever reasonable and appropriate implement a mechanism to encrypt and decrypt ePHI. Install encryption software on every endpoint that connects to your EHR system, especially mobile devices such as laptops. Maintain audit trails of this encryption in case a device is ever lost or stolen. This simple and inexpensive precaution may prevent a complicated and expensive breach. If supported by the manufacturer, medical devices should have local encryption enabled (if reasonable and appropriate) in case the device is stolen. Implement an e-mail encryption module that enables users to securely send e-mails to external recipients or to protect information that should only be seen by authorized individuals.",1,,Addressable,"HIPAA: §164.312(a)(2)(iv) 
+NIST CSF: PR.DS, PR.MA 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,,,No. ,"You might not be able to ensure access to ePHI is denied to unauthorized users if you do not use encryption/decryption methods to control access to ePHI and other health information. Whenever reasonable and appropriate implement a mechanism to encrypt and decrypt ePHI. Install encryption software on every endpoint that connects to your EHR system, especially mobile devices such as laptops. Maintain audit trails of this encryption in case a device is ever lost or stolen. This simple and inexpensive precaution may prevent a complicated and expensive breach. If supported by the manufacturer, medical devices should have local encryption enabled (if reasonable and appropriate) in case the device is stolen. Implement an e-mail encryption module that enables users to securely send e-mails to external recipients or to protect information that should only be seen by authorized individuals.",0,,Addressable,"HIPAA: §164.312(a)(2)(iv) 
+NIST CSF: PR.DS, PR.MA 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,,,We have not comprehensively evaluated whether encryption is reasonable or appropriate to implement on our devices and information systems. ,"You should evaluate whether encryption is reasonable and appropriate to implement. You might not be able to ensure access to ePHI is denied to unauthorized users if you do not use encryption/decryption methods to control access to ePHI and other health information. Install encryption software on every endpoint that connects to your EHR system, especially mobile devices such as laptops. Maintain audit trails of this encryption in case a device is ever lost or stolen. This simple and inexpensive precaution may prevent a complicated and expensive breach. If supported by the manufacturer, medical devices should have local encryption enabled (if reasonable and appropriate) in case the device is stolen. Implement an e-mail encryption module that enables users to securely send e-mails to external recipients or to protect information that should only be seen by authorized individuals.",0,,Addressable,"HIPAA: §164.312(a)(2)(iv) 
+NIST CSF: PR.DS, PR.MA 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,,,I don't know. ,"You might not be able to ensure access to ePHI is denied to unauthorized users if you do not use encryption/decryption methods to control access to ePHI and other health information. Whenever reasonable and appropriate implement a mechanism to encrypt and decrypt ePHI. Install encryption software on every endpoint that connects to your EHR system, especially mobile devices such as laptops. Maintain audit trails of this encryption in case a device is ever lost or stolen. This simple and inexpensive precaution may prevent a complicated and expensive breach. If supported by the manufacturer, medical devices should have local encryption enabled (if reasonable and appropriate) in case the device is stolen. Implement an e-mail encryption module that enables users to securely send e-mails to external recipients or to protect information that should only be seen by authorized individuals.",0,,Addressable,"HIPAA: §164.312(a)(2)(iv) 
+NIST CSF: PR.DS, PR.MA 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.312(a)(2)(iv) 
+NIST CSF: PR.DS, PR.MA 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,Notes,,,,,,,
+9,What procedures do you have in place to encrypt ePHI when deemed reasonable and appropriate?,,,,,,,
+,,,"Encryption is evaluated as part of our risk management process. We have procedures in place to encrypt ePHI at rest (e.g., USB drives or tapes) and in transit (e.g., email or cloud EHR) whenever reasonable and appropriate, and find an alternative safeguard when not reasonable and appropriate.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Install encryption software on every endpoint that connects to your EHR system, especially mobile devices such as laptops. Maintain audit trails of this encryption in case a device is ever lost or stolen. This simple and inexpensive precaution may prevent a complicated and expensive breach. Provide regular training on encryption.",1,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,,,"We have procedures in place to encrypt ePHI in transit (e.g., email or cloud EHR) but not at rest (e.g., USB drives or tapes) whenever reasonable and appropriate.","Consider encrypting ePHI when it is in transmission as well as when at rest as part of your risk management process. If encryption is determined not reasonable and appropriate, document the reason why and implement an equivalent, alternative safeguard. Install encryption software on every endpoint that connects to your EHR system, especially mobile devices such as laptops. Maintain audit trails of this encryption in case a device is ever lost or stolen. This simple and inexpensive precaution may prevent a complicated and expensive breach. Provide regular training on encryption.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,,,"We have procedures in place to encrypt ePHI at rest (e.g., USB drives or tapes) but not in transit (e.g., email or cloud EHR) whenever reasonable and appropriate.","Consider encrypting ePHI when it is in transmission as well as when at rest as part of your risk management process. If encryption is determined not reasonable and appropriate, document the reason why and implement an equivalent, alternative safeguard. Install encryption software on every endpoint that connects to your EHR system, especially mobile devices such as laptops. Maintain audit trails of this encryption in case a device is ever lost or stolen. This simple and inexpensive precaution may prevent a complicated and expensive breach. Provide regular training on encryption.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,,,Other.,"Consider encrypting ePHI when it is in transmission as well as when at rest as part of your risk management process. If encryption is determined not reasonable and appropriate, document the reason why and implement an equivalent, alternative safeguard. Install encryption software on every endpoint that connects to your EHR system, especially mobile devices such as laptops. Maintain audit trails of this encryption in case a device is ever lost or stolen. This simple and inexpensive precaution may prevent a complicated and expensive breach. Provide regular training on encryption.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,,,I don't know.,"Consider encrypting ePHI when it is in transmission as well as when at rest as part of your risk management process. If encryption is determined not reasonable and appropriate, document the reason why and implement an equivalent, alternative safeguard. Install encryption software on every endpoint that connects to your EHR system, especially mobile devices such as laptops. Maintain audit trails of this encryption in case a device is ever lost or stolen. This simple and inexpensive precaution may prevent a complicated and expensive breach. Provide regular training on encryption.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,Notes,,,,,,,
+10,Do you use alternative safeguards in place of encryption?,,,,,,,
+,,,"Yes. When encryption is not reasonable or appropriate, we implement an alternative safeguard and document as appropriate.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. For ePHI that is not, or cannot, be encrypted, or that is managed by a third party, implement and document alternate security controls to minimize theft or unauthorized removal. Example controls could include anti-theft cables, locks on rooms where the devices are located, user authorization restrictions, and badge readers to monitor access to rooms where devices are located. ",1,,Addressable,"HIPAA: N/A 
+NIST CSF: GV.RR, GV.PO, GV.OV, PR.DS, PR.PS, ID.RA 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,,,No. We do not always have alternative safeguards when encryption is not reasonable or appropriate.,"You might not be able to ensure access to ePHI is denied to unauthorized users if you do not use alternative safeguards or methods to control access to ePHI and other health information. Whenever encryption is not reasonable or appropriate, implement and document an alternative safeguard or mechanism to protect your ePHI. For ePHI that is not, or cannot, be encrypted, or that is managed by a third party, implement and document alternate security controls to minimize theft or unauthorized removal. Example controls could include anti-theft cables, locks on rooms where the devices are located, user authorization restrictions, and badge readers to monitor access to rooms where devices are located.",0,,Addressable,"HIPAA: N/A 
+NIST CSF: GV.RR, GV.PO, GV.OV, PR.DS, PR.PS, ID.RA 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,,,I don't know. ,"You might not be able to ensure access to ePHI is denied to unauthorized users if you do not use alternative safeguards or methods to control access to ePHI and other health information. Whenever encryption is not reasonable or appropriate, implement and document an alternative safeguard or mechanism to protect your ePHI. For ePHI that is not, or cannot, be encrypted, or that is managed by a third party, implement and document alternate security controls to minimize theft or unauthorized removal. Example controls could include anti-theft cables, locks on rooms where the devices are located, user authorization restrictions, and badge readers to monitor access to rooms where devices are located.",0,,Addressable,"HIPAA: N/A 
+NIST CSF: GV.RR, GV.PO, GV.OV, PR.DS, PR.PS, ID.RA 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,,,"We have encryption in place for some devices and systems which access ePHI, but have not comprehensively evaluated the reasonable and appropriateness to do so for all devices and systems. We do not always have alternative safeguards when encryption is not reasonable and appropriate.","You might not be able to ensure access to ePHI is denied to unauthorized users if you do not use alternative safeguards or methods to control access to ePHI and other health information. Whenever encryption is not reasonable or appropriate, implement and document an alternative safeguard or mechanism to protect your ePHI. For ePHI that is not, or cannot, be encrypted, or that is managed by a third party, implement and document alternate security controls to minimize theft or unauthorized removal. Example controls could include anti-theft cables, locks on rooms where the devices are located, user authorization restrictions, and badge readers to monitor access to rooms where devices are located.",0,,Addressable,"HIPAA: N/A 
+NIST CSF: GV.RR, GV.PO, GV.OV, PR.DS, PR.PS, ID.RA 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: N/A 
+NIST CSF: GV.RR, GV.PO, GV.OV, PR.DS, PR.PS, ID.RA 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,Notes,,,,,,,
+11,"When encryption is deemed unreasonable or inappropriate to implement, do you document the use of an alternative safeguard?",,,,,,,
+,,,"Yes. We have policies and procedures to identify encryption capabilities of our devices and information systems. When encryption is not reasonable or appropriate, we implement an alternative safeguard and document it.","The best practice is having policies and procedures to identify the encryption capabilities of your devices and information systems and then documenting when ePHI encryption is not reasonable or appropriate and that you have implemented an alternative safeguard. For devices that cannot be encrypted or that are managed by a third party, implement physical security controls to minimize theft or unauthorized removal. Examples include installation of anti-theft cables, locks on rooms where the devices are located, and the use of badge readers to monitor access to rooms where devices are located.",1,,Addressable,"HIPAA: N/A 
+NIST CSF: PR.DS 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,,,No. We do not have policies or procedures to document alternative safeguards as a means of controlling access to ePHI on our devices and information systems.,"The best practice is having policies and procedures to identify the encryption capabilities of your devices and information systems and then documenting when ePHI encryption is not reasonable or appropriate and that you have implemented an alternative safeguard. For devices that cannot be encrypted or that are managed by a third party, implement physical security controls to minimize theft or unauthorized removal. Examples include installation of anti-theft cables, locks on rooms where the devices are located, and the use of badge readers to monitor access to rooms where devices are located.",0,,Addressable,"HIPAA: N/A 
+NIST CSF: PR.DS 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,,,I don't know. ,"The best practice is having policies and procedures to identify the encryption capabilities of your devices and information systems and then documenting when ePHI encryption is not reasonable or appropriate and that you have implemented an alternative safeguard. For devices that cannot be encrypted or that are managed by a third party, implement physical security controls to minimize theft or unauthorized removal. Examples include installation of anti-theft cables, locks on rooms where the devices are located, and the use of badge readers to monitor access to rooms where devices are located.",0,,Addressable,"HIPAA: N/A 
+NIST CSF: PR.DS 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report.",0,,Addressable,"HIPAA: N/A 
+NIST CSF: PR.DS 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,Notes,,,,,,,
+12,"Have you evaluated implementing any of the following encryption solutions in your local environment to protect ePHI: full disk encryption, file/folder/volume encryption, database encryption, encryption of thumb drives or other external media (including backup media)?",,,,,,,
+,,,"All of the above (and other solutions as applicable) have been identified, assessed if reasonable and appropriate to protect ePHI, and documented.","Encryption in these areas is critical to protecting ePHI in your local environment. Encryption applications prevent hackers from accessing sensitive data, usually by requiring a ""key"" to encrypt and/or decrypt data. Prohibit the use of unencrypted storage, such as thumb drives, mobile phones, or computers. Require encryption of these mobile storage mediums before use. If responses to questions in the tool represent risks in the aggregate, ensure that responses include sufficient detail or that supplemental documentation is maintained supporting aggregate risk determinations.",1,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: PR.AA, PR.IR, PR.DS, DE.CM, ID.RA, GV.RM 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,,,"Some of the above (and other solutions as applicable) have been identified, assessed if reasonable and appropriate to protect ePHI, and documented.","Consider reviewing and evaluating all the locations where you are processing, storing, or transmitting ePHI and whether it is reasonable to implement encryption. Encryption can help safeguard your ePHI, whether you are transmitting it over the Internet, backing it up on a server, or just carrying a mobile device or your laptop to and from your facility. Encrypting ePHI makes it completely unreadable to anyone but you or its intend recipient. Encryption applications prevent hackers from accessing sensitive data, usually by requiring a ""key"" to encrypt and/or decrypt data. Prohibit the use of unencrypted storage, such as thumb drives, mobile phones, or computers. Require encryption of these mobile storage mediums before use. If responses to questions in the tool represent risks in the aggregate, ensure that responses include sufficient detail or that supplemental documentation is maintained supporting aggregate risk determinations.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: PR.AA, PR.IR, PR.DS, DE.CM, ID.RA, GV.RM 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,,,None of the above. ,"Consider reviewing and evaluating all the locations where you are processing, storing, or transmitting ePHI and whether it is reasonable to implement encryption. Encryption can help safeguard your ePHI, whether you are transmitting it over the Internet, backing it up on a server, or just carrying a mobile device or your laptop to and from your facility. Encrypting ePHI makes it completely unreadable to anyone but you or its intend recipient. Encryption applications prevent hackers from accessing sensitive data, usually by requiring a ""key"" to encrypt and/or decrypt data. Prohibit the use of unencrypted storage, such as thumb drives, mobile phones, or computers. Require encryption of these mobile storage mediums before use.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: PR.AA, PR.IR, PR.DS, DE.CM, ID.RA, GV.RM 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,,,I don't know.,"Consider reviewing and evaluating all the locations where you are processing, storing, or transmitting ePHI and whether it is reasonable to implement encryption. Encryption can help safeguard your ePHI, whether you are transmitting it over the Internet, backing it up on a server, or just carrying a mobile device or your laptop to and from your facility. Encrypting ePHI makes it completely unreadable to anyone but you or its intend recipient. Encryption applications prevent hackers from accessing sensitive data, usually by requiring a ""key"" to encrypt and/or decrypt data. Prohibit the use of unencrypted storage, such as thumb drives, mobile phones, or computers. Require encryption of these mobile storage mediums before use.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: PR.AA, PR.IR, PR.DS, DE.CM, ID.RA, GV.RM 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: PR.AA, PR.IR, PR.DS, DE.CM, ID.RA, GV.RM 
+HPH CPG: 5 
+HICP: TV1 - Practice # 2"
+,Notes,,,,,,,
+13,"Have you evaluated implementing encryption solutions for any of the following cloud services to protect ePHI: email service, file storage, web applications, databases, remote system backups?",,,,,,,
+,,,"All of the above (and other solutions as applicable) have been identified, assessed if reasonable and appropriate to protect ePHI, and documented.","Encryption in these areas is critical to protecting ePHI in your cloud environments. Contracts with EHR vendors should include language that requires ePHI to be encrypted both at rest and during transmission between systems. If responses to questions in the tool represent risks in the aggregate, ensure that responses include sufficient detail or that supplemental documentation is maintained supporting aggregate risk determinations.",1,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: N/A 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1"
+,,,"Some of the above (and other solutions as applicable) have been identified, assessed if reasonable and appropriate to protect ePHI, and documented.","Consider reviewing and evaluating all the locations where you are processing, storing, or transmitting ePHI and whether it is reasonable to implement encryption. Encryption can help safeguard your ePHI, whether you are transmitting it over the Internet, backing it up on a server, or just carrying a mobile device or your laptop to and from your facility. Encrypting ePHI makes it completely unreadable to anyone but you or its intended recipient. Contracts with EHR vendors should include language that requires ePHI to be encrypted both at rest and during transmission between systems. If responses to questions in the tool represent risks in the aggregate, ensure that responses include sufficient detail or that supplemental documentation is maintained supporting aggregate risk determinations.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: N/A 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1"
+,,,None of the above. ,"Consider reviewing and evaluating all the locations where you are processing, storing, or transmitting ePHI and whether it is reasonable to implement encryption. Encryption can help safeguard your ePHI, whether you are transmitting it over the Internet, backing it up on a server, or just carrying a mobile device or your laptop to and from your facility. Encrypting ePHI makes it completely unreadable to anyone but you or its intended recipient. Contracts with EHR vendors should include language that requires ePHI to be encrypted both at rest and during transmission between systems.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: N/A 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1"
+,,,Not applicable.,"Consider reviewing and evaluating all the locations where you are processing, storing, or transmitting ePHI and whether it is reasonable to implement encryption. Encryption can help safeguard your ePHI, whether you are transmitting it over the Internet, backing it up on a server, or just carrying a mobile device or your laptop to and from your facility. Encrypting ePHI makes it completely unreadable to anyone but you or its intended recipient. Contracts with EHR vendors should include language that requires ePHI to be encrypted both at rest and during transmission between systems.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: N/A 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1"
+,,,I don't know.,"Consider reviewing and evaluating all the locations where you are processing, storing, or transmitting ePHI and whether it is reasonable to implement encryption. Encryption can help safeguard your ePHI, whether you are transmitting it over the Internet, backing it up on a server, or just carrying a mobile device or your laptop to and from your facility. Encrypting ePHI makes it completely unreadable to anyone but you or its intended recipient. Contracts with EHR vendors should include language that requires ePHI to be encrypted both at rest and during transmission between systems.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: N/A 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: N/A 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1"
+,Notes,,,,,,,
+14,"Have you evaluated implementing any of the following encryption solutions for ePHI in transit: encryption of internet traffic by means of a VPN, web traffic over HTTP encrypted using Transport Layer Security (TLS), or secure file transfer?",,,,,,,
+,,,"All of the above (and other solutions as applicable) have been identified, assessed if reasonable and appropriate to protect ePHI, and documented. ","Encryption in these areas is critical to protecting ePHI in transit. At minimum, provide annual training on the most important policy considerations, such as the use of encryption and PHI transmission restrictions. Implement an e-mail encryption module that enables users to securely send e-mails to external recipients or to protect information that should only be seen by authorized individuals. If responses to questions in the tool represent risks in the aggregate, ensure that responses include sufficient detail or that supplemental documentation is maintained supporting aggregate risk determinations.",1,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: N/A 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,,,"Some of the above (and other solutions as applicable) have been identified, assessed if reasonable and appropriate to protect ePHI, and documented.","Consider reviewing and evaluating all the locations where you are processing, storing, or transmitting ePHI and whether it is reasonable to implement encryption. Encryption can help safeguard your ePHI, whether you are transmitting it over the Internet, backing it up on a server, or just carrying a mobile device or your laptop to and from your facility. Encrypting ePHI makes it completely unreadable to anyone but you or its intended recipient. At minimum, provide annual training on the most important policy considerations, such as the use of encryption and PHI transmission restrictions. Implement an e-mail encryption module that enables users to securely send e-mails to external recipients or to protect information that should only be seen by authorized individuals. If responses to questions in the tool represent risks in the aggregate, ensure that responses include sufficient detail or that supplemental documentation is maintained supporting aggregate risk determinations.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: N/A 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,,,None of the above. ,"Consider reviewing and evaluating all the locations where you are processing, storing, or transmitting ePHI and whether it is reasonable to implement encryption. Encryption can help safeguard your ePHI, whether you are transmitting it over the Internet, backing it up on a server, or just carrying a mobile device or your laptop to and from your facility. Encrypting ePHI makes it completely unreadable to anyone but you or its intended recipient. At minimum, provide annual training on the most important policy considerations, such as the use of encryption and PHI transmission restrictions. Implement an e-mail encryption module that enables users to securely send e-mails to external recipients or to protect information that should only be seen by authorized individuals.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: N/A 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,,,I don't know,"Consider reviewing and evaluating all the locations where you are processing, storing, or transmitting ePHI and whether it is reasonable to implement encryption. Encryption can help safeguard your ePHI, whether you are transmitting it over the Internet, backing it up on a server, or just carrying a mobile device or your laptop to and from your facility. Encrypting ePHI makes it completely unreadable to anyone but you or its intended recipient. At minimum, provide annual training on the most important policy considerations, such as the use of encryption and PHI transmission restrictions. Implement an e-mail encryption module that enables users to securely send e-mails to external recipients or to protect information that should only be seen by authorized individuals.",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: N/A 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.312(e)(2)(ii) 
+NIST CSF: N/A 
+HPH CPG: 5 
+HICP: TV1 - Practice # 1, 4"
+,Notes,,,,,,,
+15,Do you periodically review your information systems for how security settings can be implemented to safeguard ePHI?,,,,,,,
+,,,Yes. We periodically review our information system and evaluate if additional settings can be implemented to safeguard ePHI and document our security settings. ,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Patching (i.e., regularly updating) systems removes vulnerabilities that can be exploited by attackers. Each patch modifies a software application, rendering it more difficult for hackers to maintain programs that are aligned with the most current version of that software application. Configure endpoints to patch automatically and ensure that third-party applications are patched as soon as possible. Schedule and conduct vulnerability scans on servers and systems under your control to proactively identify technology flaws. Remediate flaws based on the severity of the identified vulnerability. This method is considered an ""unauthenticated scan."" The scanner has no extra sets of privileges to the server. It queries a server based on ports that are active and present for network connectivity. Each server is queried for vulnerabilities based upon the level of sophistication of the software scanner. Conduct web application scanning of internet-facing webservers, such as web-based patient portals. Specialized vulnerability scanners can interrogate running web applications to identify vulnerabilities in the application design. Conduct routine patching of security flaws in servers, applications (including web applications), and third-party software. Maintain software at least monthly, implementing patches distributed by the vendor community, if patching is not automatic. Robust patch management processes mitigate vulnerabilities associated with obsolete software versions, which are often easier for hackers to exploit.",1,,Required,"HIPAA: §164.312(a)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS, ID.RA, PR.PS, DE.CM 
+HPH CPG: 1, 16, 18, 20 
+HICP: TV1 - Practice # 2, 7"
+,,,No.,"Consider periodically reviewing the security settings on all systems which process, store, or transmit ePHI for how you can implement mechanisms to protect ePHI. Patching (i.e., regularly updating) systems removes vulnerabilities that can be exploited by attackers. Each patch modifies a software application, rendering it more difficult for hackers to maintain programs that are aligned with the most current version of that software application. Configure endpoints to patch automatically and ensure that third-party applications are patched as soon as possible. Schedule and conduct vulnerability scans on servers and systems under your control to proactively identify technology flaws. Remediate flaws based on the severity of the identified vulnerability. This method is considered an ""unauthenticated scan."" The scanner has no extra sets of privileges to the server. It queries a server based on ports that are active and present for network connectivity. Each server is queried for vulnerabilities based upon the level of sophistication of the software scanner. Conduct web application scanning of internet-facing webservers, such as web-based patient portals. Specialized vulnerability scanners can interrogate running web applications to identify vulnerabilities in the application design. Conduct routine patching of security flaws in servers, applications (including web applications),and third-party software. Maintain software at least monthly, implementing patches distributed by the vendor community, if patching is not automatic. Robust patch management processes mitigate vulnerabilities associated with obsolete software versions, which are often easier for hackers to exploit.",0,,Required,"HIPAA: §164.312(a)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS, ID.RA, PR.PS, DE.CM 
+HPH CPG: 1, 16, 18, 20 
+HICP: TV1 - Practice # 2, 7"
+,,,I don't know.,"Consider looking into whether your practice periodically reviews the security settings on all systems which process, store, or transmit ePHI for how you can implement mechanisms to protect ePHI. Patching (i.e., regularly updating) systems removes vulnerabilities that can be exploited by attackers. Each patch modifies a software application, rendering it more difficult for hackers to maintain programs that are aligned with the most current version of that software application. Configure endpoints to patch automatically and ensure that third-party applications are patched as soon as possible. Schedule and conduct vulnerability scans on servers and systems under your control to proactively identify technology flaws. Remediate flaws based on the severity of the identified vulnerability. This method is considered an ""unauthenticated scan."" The scanner has no extra sets of privileges to the server. It queries a server based on ports that are active and present for network connectivity. Each server is queried for vulnerabilities based upon the level of sophistication of the software scanner. Conduct web application scanning of internet-facing webservers, such as web-based patient portals. Specialized vulnerability scanners can interrogate running web applications to identify vulnerabilities in the application design. Conduct routine patching of security flaws in servers, applications (including web applications),and third-party software. Maintain software at least monthly, implementing patches distributed by the vendor community, if patching is not automatic. Robust patch management processes mitigate vulnerabilities associated with obsolete software versions, which are often easier for hackers to exploit.",0,,Required,"HIPAA: §164.312(a)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS, ID.RA, PR.PS, DE.CM 
+HPH CPG: 1, 16, 18, 20 
+HICP: TV1 - Practice # 2, 7"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.312(a)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS, ID.RA, PR.PS, DE.CM 
+HPH CPG: 1, 16, 18, 20 
+HICP: TV1 - Practice # 2, 7"
+,Notes,,,,,,,
+16,"How are you aware of the security settings for information systems which process, store, or transmit ePHI?",,,,,,,
+,,,"All systems which create, receive, maintain, or transmit ePHI (including any firewalls, databases, servers, and networked devices) have been examined to determine how security settings can be implemented to most appropriately protect ePHI.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Vulnerability scans may yield large amounts of data, which organizations urgently need to classify, evaluate, and prioritize to remediate security flaws before an attacker can exploit them.",1,,Required,"HIPAA: §164.312(a)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS, ID.RA, PR.MA, DE.CM 
+HPH CPG: 1, 18, 20 
+HICP: TV1 - Practice # 7"
+,,,We are aware that systems have security settings to protect ePHI but have not reviewed all systems comprehensively.,"Consider reviewing security settings for all systems which process, store, and transmit ePHI. Vulnerability scans may yield large amounts of data, which organizations urgently need to classify, evaluate, and prioritize to remediate security flaws before an attacker can exploit them.",0,,Required,"HIPAA: §164.312(a)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS, ID.RA, PR.MA, DE.CM 
+HPH CPG: 1, 18, 20 
+HICP: TV1 - Practice # 7"
+,,,"We do not have a process to review security settings for information systems which process, store, or transmit ePHI.","If you do not identify the access control security settings necessary for each of your information systems and electronic devices, you are not taking full advantage of the security features available in the hardware and software. Vulnerability scans may yield large amounts of data, which organizations urgently need to classify, evaluate, and prioritize to remediate security flaws before an attacker can exploit them.",0,,Required,"HIPAA: §164.312(a)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS, ID.RA, PR.MA, DE.CM 
+HPH CPG: 1, 18, 20 
+HICP: TV1 - Practice # 7"
+,,,I don't know. ,"If you do not identify the access control security settings necessary for each of your information systems and electronic devices, you are not taking full advantage of the security features available in the hardware and software. Vulnerability scans may yield large amounts of data, which organizations urgently need to classify, evaluate, and prioritize to remediate security flaws before an attacker can exploit them.",0,,Required,"HIPAA: §164.312(a)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS, ID.RA, PR.MA, DE.CM 
+HPH CPG: 1, 18, 20 
+HICP: TV1 - Practice # 7"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.312(a)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS, ID.RA, PR.MA, DE.CM 
+HPH CPG: 1, 18, 20 
+HICP: TV1 - Practice # 7"
+,Notes,,,,,,,
+17,Do you use security settings and mechanisms to record and examine information system activity?,,,,,,,
+,,,Yes and documentation is available of security setting assessments and mechanisms to record and examine information system activity.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. User accounts enable organizations to control and monitor each user's access to and activities on devices, EHRs, e-mail, and other third-party software systems. Frequently reviewing access and activities on all devices that access ePHI allows you to be proactive for potential threats or vulnerabilities that arise. ",1,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.DS, DE.CM 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,No.,"Consider implementing hardware, software, and/or procedural mechanisms to monitor system activity. User accounts enable organizations to control and monitor each user's access. Frequently reviewing access and activities on all devices that access ePHI allows you to be proactive for potential threats or vulnerabilities that arise. ",0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.DS, DE.CM 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,I don't know.,"Consider investigating whether your practice has implemented hardware, software, and/or procedural mechanisms to monitor system activity. Your practice should have system monitoring mechanisms in place where ePHI is accessible. User accounts enable organizations to control and monitor each user's access to and activities on devices, EHRs, e-mail, and other third-party software systems. Frequently reviewing access and activities on all devices that access ePHI allows you to be proactive for potential threats or vulnerabilities that arise. ",0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.DS, DE.CM 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.DS, DE.CM 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,Notes,,,,,,,
+18,What mechanisms are in place to monitor or log system activity?,,,,,,,
+,,,"Monitoring of system users, access attempts, and modifications. This includes a date/time stamp.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Implement access management procedures to track and monitor user access to computers and programs. ",1,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.DS, PR.MA, DE.AE, DE.CM, RS.AN 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,Date/time stamp of system access attempts and modifications only.,Determine the mechanisms available to log and monitor system activity. Make sure a procedure to monitor system activity logs is implemented and documented. Implement access management procedures to track and monitor user access to computers and programs. ,0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.DS, PR.MA, DE.AE, DE.CM, RS.AN 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,Monitoring of system modifications only.,Determine the mechanisms available to log and monitor system activity. Make sure a procedure to monitor system activity logs is implemented and documented. Implement access management procedures to track and monitor user access to computers and programs. ,0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.DS, PR.MA, DE.AE, DE.CM, RS.AN 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,Identity of users accessing and modifying within the system.,Determine the mechanisms available to log and monitor system activity. Make sure a procedure to monitor system activity logs is implemented and documented. Implement access management procedures to track and monitor user access to computers and programs. ,0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.DS, PR.MA, DE.AE, DE.CM, RS.AN 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,None of the above. ,Determine the mechanisms available to log and monitor system activity. Make sure a procedure to monitor system activity logs is implemented and documented. Implement access management procedures to track and monitor user access to computers and programs. ,0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.DS, PR.MA, DE.AE, DE.CM, RS.AN 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,Other.,Determine the mechanisms available to log and monitor system activity. Make sure a procedure to monitor system activity logs is implemented and documented. Implement access management procedures to track and monitor user access to computers and programs. ,0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.DS, PR.MA, DE.AE, DE.CM, RS.AN 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,I don't know. ,Determine the mechanisms available to log and monitor system activity. Make sure a procedure to monitor system activity logs is implemented and documented. Implement access management procedures to track and monitor user access to computers and programs. ,0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.DS, PR.MA, DE.AE, DE.CM, RS.AN 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.DS, PR.MA, DE.AE, DE.CM, RS.AN 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,Notes,,,,,,,
+19,How do you monitor or track ePHI system activity?,,,,,,,
+,,,"System activity records are reviewed on a regular basis with the results of such reviews documented. The frequency of reviews is documented within our procedures. Results of activity reviews are also maintained, including activities which may prompt further investigation.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Implement access management procedures to track and monitor user access to computers and programs. ",1,,Required,"HIPAA: §164.308(a)(1)(ii)(D) 
+NIST CSF: ID.RA, PR.DS, PR.MA, DE.AE, DE.CM, RS.AN 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,"System activity records are reviewed as needed but not on a regular basis. Results of activity reviews are maintained, including activities which may prompt further investigation.",Ensure your practice is able to detect and prevent security incidents by regularly reviewing system activity information as part of its ongoing operations and following security incidents. Implement access management procedures to track and monitor user access to computers and programs. ,0,,Required,"HIPAA: §164.308(a)(1)(ii)(D) 
+NIST CSF: ID.RA, PR.DS, PR.MA, DE.AE, DE.CM, RS.AN 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,System activity records are reviewed as needed but not on a regular basis. Documentation of activity reviews are not maintained.,Ensure your practice is able to detect and prevent security incidents by regularly reviewing system activity information as part of its ongoing operations and following security incidents. Implement access management procedures to track and monitor user access to computers and programs. ,0,,Required,"HIPAA: §164.308(a)(1)(ii)(D) 
+NIST CSF: ID.RA, PR.DS, PR.MA, DE.AE, DE.CM, RS.AN 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,System activity records are not reviewed as needed or on a regular basis.,Ensure your practice is able to detect and prevent security incidents by regularly reviewing system activity information as part of its ongoing operations and following security incidents. Implement access management procedures to track and monitor user access to computers and programs. ,0,,Required,"HIPAA: §164.308(a)(1)(ii)(D) 
+NIST CSF: ID.RA, PR.DS, PR.MA, DE.AE, DE.CM, RS.AN 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(1)(ii)(D) 
+NIST CSF: ID.RA, PR.DS, PR.MA, DE.AE, DE.CM, RS.AN 
+HPH CPG: 14, 15, 16, 18, 20 
+HICP: TV1 - Practice # 3"
+,Notes,,,,,,,
+20,Do you have automatic logoff enabled on devices and platforms accessing ePHI?,,,,,,,
+,,,"Yes, automatic logoff is enabled on all devices and platforms to terminate access to ePHI after a set time of inactivity.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Configure systems and endpoints to automatically lock and log off users after a predetermined period of inactivity, such as 15 minutes.",1,,Addressable,"HIPAA: §164.312(a)(2)(iii) 
+NIST CSF: PR.AA, PR.IR, PR.DS 
+HPH CPG: 11 
+HICP: TV1 - Practice # 3"
+,,,"Yes, automatic logoff is enabled but not on all devices and platforms to terminate access to ePHI after a set time of inactivity.","Consider implementing automatic logoff on all devices and platforms which access ePHI. If this is not determined to be reasonable and appropriate, document the reason why and what compensating control is in its place. Configure systems and endpoints to automatically lock and log off users after a predetermined period of inactivity, such as 15 minutes.",0,,Addressable,"HIPAA: §164.312(a)(2)(iii) 
+NIST CSF: PR.AA, PR.IR, PR.DS 
+HPH CPG: 11 
+HICP: TV1 - Practice # 3"
+,,,"Automatic time-out is enabled on electronic devices accessing ePHI, but automatic logoff to fully terminate the session is not enabled.","Consider implementing automatic logoff on all devices and platforms which access ePHI. If this is not determined to be reasonable and appropriate, document the reason why and what compensating control is in its place. Configure systems and endpoints to automatically lock and log off users after a predetermined period of inactivity, such as 15 minutes.",0,,Addressable,"HIPAA: §164.312(a)(2)(iii) 
+NIST CSF: PR.AA, PR.IR, PR.DS 
+HPH CPG: 11 
+HICP: TV1 - Practice # 3"
+,,,Automatic logoff is not enabled on devices or platforms accessing ePHI.,"Consider implementing automatic logoff on all devices and platforms which access ePHI. If this is not determined to be reasonable and appropriate, document the reason why and what compensating control is in its place. Configure systems and endpoints to automatically lock and log off users after a predetermined period of inactivity, such as 15 minutes.",0,,Addressable,"HIPAA: §164.312(a)(2)(iii) 
+NIST CSF: PR.AA, PR.IR, PR.DS 
+HPH CPG: 11 
+HICP: TV1 - Practice # 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.312(a)(2)(iii) 
+NIST CSF: PR.AA, PR.IR, PR.DS 
+HPH CPG: 11 
+HICP: TV1 - Practice # 3"
+,Notes,,,,,,,
+21,Do you ensure users accessing ePHI are who they claim to be?,,,,,,,
+,,,"Yes. We require strong authentication where possible and have documentation of generic, shared, application, service, and system account assessments. ","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Strong authentication is one way to confirm users accessing ePHI are who they claim to be. The use of shared or generic accounts should be avoided. If shared accounts are required, train and regularly remind users that they must sign out upon completion of activity or whenever they leave the device, even for a moment. Passwords should be changed after each use. Sharing accounts exposes organizations to greater vulnerabilities. For example, the complexity of updating passwords for multiple users on a shared account may result in a compromised password remaining active and allowing unauthorized access over an extended period of time.",1,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,,,No. We have no specific policies or procedures that help us verify users accessing ePHI are who they claim to be. ,"Procedures should be in place to verify users accessing ePHI are who they claim to be, such as user authentication. Strong authentication is one way to confirm users accessing ePHI are who they claim to be. The use of shared or generic accounts should be avoided. If shared accounts are required, train and regularly remind users that they must sign out upon completion of activity or whenever they leave the device, even for a moment. Passwords should be changed after each use. Sharing accounts exposes organizations to greater vulnerabilities. For example, the complexity of updating passwords for multiple users on a shared account may result in a compromised password remaining active and allowing unauthorized access over an extended period of time.",0,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,,,I don't know.,"Procedures should be in place to verify users accessing ePHI are who they claim to be, such as user authentication. Strong authentication is one way to confirm users accessing ePHI are who they claim to be. The use of shared or generic accounts should be avoided. If shared accounts are required, train and regularly remind users that they must sign out upon completion of activity or whenever they leave the device, even for a moment. Passwords should be changed after each use. Sharing accounts exposes organizations to greater vulnerabilities. For example, the complexity of updating passwords for multiple users on a shared account may result in a compromised password remaining active and allowing unauthorized access over an extended period of time.",0,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,Notes,,,,,,,
+22,How do you ensure users accessing ePHI are who they claim to be?,,,,,,,
+,,,"Users authenticate themselves to access ePHI using the method authorized by our practice's policy and procedure (e.g., user name and password, physical token, or biometric feature) and documentation is available for authentication solutions (e.g., EHR, VPN, Active Directory, admin tools).","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Configure systems and endpoints to automatically lock users out after a specific number of failed login attempts. Implement MFA authentication for the cloud-based systems that your organization uses to store or process sensitive data, such as EHRs. MFA mitigates the risk of access by unauthorized users.",1,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,,,"Users authenticate themselves to access ePHI, but we do not have a policy or procedure prescribing the method.","Requiring that users utilize unique usernames and passwords, or other forms of authentication, helps to reduce the risk that unauthorized users can access ePHI and compromise access controls already in place. Ensure this is consistently implemented at your practice by having a documented procedures to verify that a person or entity seeking access to ePHI is the one claimed. Configure systems and endpoints to automatically lock users out after a specific number of failed login attempts. Implement MFA authentication for the cloud-based systems that your organization uses to store or process sensitive data, such as EHRs. MFA mitigates the risk of access by unauthorized users.",0,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,,,"Users do not always have unique authentication to access ePHI (e.g., inadvisable practices such as sharing user names and passwords between multiple members of the workforce may occur).","Requiring that users utilize unique usernames and passwords, or other forms of authentication, helps to reduce the risk that unauthorized users can access ePHI and compromise access controls already in place. Ensure this is consistently implemented at your practice by having a documented procedures to verify that a person or entity seeking access to ePHI is the one claimed. Configure systems and endpoints to automatically lock users out after a specific number of failed login attempts. Implement MFA authentication for the cloud-based systems that your organization uses to store or process sensitive data, such as EHRs. MFA mitigates the risk of access by unauthorized users.",0,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,,,We do not have a procedure for authenticating users. ,"Requiring that users utilize unique usernames and passwords, or other forms of authentication, helps to reduce the risk that unauthorized users can access ePHI and compromise access controls already in place. Ensure this is consistently implemented at your practice by having a documented procedures to verify that a person or entity seeking access to ePHI is the one claimed. Configure systems and endpoints to automatically lock users out after a specific number of failed login attempts. Implement MFA authentication for the cloud-based systems that your organization uses to store or process sensitive data, such as EHRs. MFA mitigates the risk of access by unauthorized users.",0,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,Notes,,,,,,,
+23,How do you determine the means by which ePHI is accessed?,,,,,,,
+,,,"All systems, devices, and applications which access ePHI are identified, evaluated, approved, and inventoried. Users can only access ePHI through these approved systems, devices, and applications.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Assign a separate user account to each user in your organization. Train and regularly remind users that they must never share their passwords. Require each user to create an account password that is different from the ones used for personal internet or e-mail access (e.g., Gmail, Yahoo, Facebook). For devices that are accessed off site, leverage technologies that use multi-factor authentication (MFA) before permitting users to access data or applications on the device. Logins that use only a username and password are often compromised through phishing e-mails. Implement MFA authentication for the cloud-based systems that your organization uses to store or process sensitive data, such as EHRs. MFA mitigates the risk of access by unauthorized users.",1,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM, PR.PS 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,,,"Applications which access ePHI are identified, evaluated, approved, and inventoried, but we do not manage which devices can access these applications (e.g., workforce members' personal devices accessing a cloud-based EHR without first identifying and approving the device)","Unsecured points could compromise data accessed through an otherwise secure application. Consider implementing a device management process to ensure security standards are in place for all points accessing ePHI. Assign a separate user account to each user in your organization. Train and regularly remind users that they must never share their passwords. Require each user to create an account password that is different from the ones used for personal internet or e-mail access (e.g., Gmail, Yahoo, Facebook). For devices that are accessed off site, leverage technologies that use multi-factor authentication (MFA) before permitting users to access data or applications on the device. Logins that use only a username and password are often compromised through phishing e-mails. Implement MFA authentication for the cloud-based systems that your organization uses to store or process sensitive data, such as EHRs. MFA mitigates the risk of access by unauthorized users.",0,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM, PR.PS 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,,,"Devices and systems which access ePHI are identified, evaluated, approved, and inventoried, but we do not manage which applications can access these applications (e.g., ePHI is maintained in formats which can be used by many applications)","Secure devices can compromise data when the data itself is used by potentially insecure applications. Consider implementing a process to manage which applications access ePHI and how they will securely be enabled to do so. Assign a separate user account to each user in your organization. Train and regularly remind users that they must never share their passwords. Require each user to create an account password that is different from the ones used for personal internet or e-mail access (e.g., Gmail, Yahoo, Facebook). For devices that are accessed off site, leverage technologies that use multi-factor authentication (MFA) before permitting users to access data or applications on the device. Logins that use only a username and password are often compromised through phishing e-mails. Implement MFA authentication for the cloud-based systems that your organization uses to store or process sensitive data, such as EHRs. MFA mitigates the risk of access by unauthorized users.",0,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM, PR.PS 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,,,We do not have a procedure for determining the means by which ePHI can be accessed appropriately. ,"Failing to manage which devices and applications can access ePHI enables widespread access that may not be secure, increasing the chance for the confidentiality, integrity, and availability of ePHI to be compromised. Assign a separate user account to each user in your organization. Train and regularly remind users that they must never share their passwords. Require each user to create an account password that is different from the ones used for personal internet or e-mail access (e.g., Gmail, Yahoo, Facebook). For devices that are accessed off site, leverage technologies that use multi-factor authentication (MFA) before permitting users to access data or applications on the device. Logins that use only a username and password are often compromised through phishing e-mails. Implement MFA authentication for the cloud-based systems that your organization uses to store or process sensitive data, such as EHRs. MFA mitigates the risk of access by unauthorized users.",0,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM, PR.PS 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.312(d) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.MA, DE.CM, PR.PS 
+HPH CPG: 3, 8 
+HICP: TV1 - Practice # 3"
+,Notes,,,,,,,
+24,Do you protect ePHI from unauthorized modification or destruction?,,,,,,,
+,,,Yes. We have developed and implemented policies and procedures to protect ePHI from improper alteration or destruction.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Organizational policies should address all user interactions with sensitive data and reinforce the consequences of lost or compromised data.",1,,Required,"HIPAA: §164.312(c)(1) 
+NIST CSF: PR.DS 
+HPH CPG: N/A 
+HICP: TV1 - Practice # 4"
+,,,Yes. We have some procedures to protect the integrity of our ePHI but these may not be totally comprehensive.,"Implement policies and procedures to protect ePHI from unauthorized modification or destruction, such as user activity monitoring or data validation tools. Organizational policies should address all user interactions with sensitive data and reinforce the consequences of lost or compromised data.",0,,Required,"HIPAA: §164.312(c)(1) 
+NIST CSF: PR.DS 
+HPH CPG: N/A 
+HICP: TV1 - Practice # 4"
+,,,No. We do not have policies or procedures to ensure the protection of ePHI.,"Implement policies and procedures to protect ePHI from unauthorized modification or destruction, such as user activity monitoring or data validation tools. Organizational policies should address all user interactions with sensitive data and reinforce the consequences of lost or compromised data.",0,,Required,"HIPAA: §164.312(c)(1) 
+NIST CSF: PR.DS 
+HPH CPG: N/A 
+HICP: TV1 - Practice # 4"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.312(c)(1) 
+NIST CSF: PR.DS 
+HPH CPG: N/A 
+HICP: TV1 - Practice # 4"
+,Notes,,,,,,,
+25,How do you confirm that ePHI has not been modified or destroyed without authorization?,,,,,,,
+,,,"We have mechanisms (e.g., integrity verification tools) to corroborate that ePHI has not been altered or destroyed in an unauthorized manner or detect if such alteration occurs.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Establish a data classification policy that categorizes data as, for example, Sensitive, Internal Use, or Public Use. Identify the types of records relevant to each category. Implement data loss prevention technologies to mitigate the risk of unauthorized access to PHI.",1,,Addressable,"HIPAA: §164.312(c)(2) 
+NIST CSF: PR.DS, DE.CM, DE.AE 
+HPH CPG: 16, 17, 18 
+HICP: TV1 - Practice # 4"
+,,,"We manually monitor changes made to ePHI in systems with audit log functionality, but do not have automated systems.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. You may want to consider implementing automated electronic mechanisms and/or integrity verification tools. Establish a data classification policy that categorizes data as, for example, Sensitive, Internal Use, or Public Use. Identify the types of records relevant to each category. Implement data loss prevention technologies to mitigate the risk of unauthorized access to PHI.",1,,Addressable,"HIPAA: §164.312(c)(2) 
+NIST CSF: PR.DS, DE.CM, DE.AE 
+HPH CPG: 16, 17, 18 
+HICP: TV1 - Practice # 4"
+,,,We do not have resources or procedures in place to verify the integrity of ePHI.,"Your practice may not be able to safeguard its ePHI if it does not have authentication mechanisms and tools, such as log monitoring or data encryption validation, that can authenticate ePHI. Consider implementing a procedure to validate the integrity of your ePHI. If this is determined to not be reasonable and appropriate, document the reason why and what compensating control is in its place. Establish a data classification policy that categorizes data as, for example, Sensitive, Internal Use, or Public Use. Identify the types of records relevant to each category. Implement data loss prevention technologies to mitigate the risk of unauthorized access to PHI.",0,,Addressable,"HIPAA: §164.312(c)(2) 
+NIST CSF: PR.DS, DE.CM, DE.AE 
+HPH CPG: 16, 17, 18 
+HICP: TV1 - Practice # 4"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.312(c)(2) 
+NIST CSF: PR.DS, DE.CM, DE.AE 
+HPH CPG: 16, 17, 18 
+HICP: TV1 - Practice # 4"
+,Notes,,,,,,,
+26,Do you protect against unauthorized access to or modification of ePHI when it is being transmitted electronically?,,,,,,,
+,,,Yes. We have implemented technical security measures and procedures to prevent unauthorized access to and detect modification of transmitted ePHI.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. When e-mailing PHI, use a secure messaging application such as Direct Secure Messaging (DSM),which is a nationally adopted secure e-mail protocol and network for transmitting PHI. DSM can be obtained from EHR vendors and other health information exchange systems. It was developed and adopted through the Meaningful Use program, and many medical organizations nationwide now use DSM networks. When texting PHI, use a secure texting system.",1,,Required,"HIPAA: §164.312(e)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS 
+HPH CPG: 17 
+HICP: TV1 - Practice # 1, 4"
+,,,"We have developed policies and procedures to guide workforce members on the secure transmission of ePHI, but no resources are in place (e.g., encrypted email).","Implement technical security measures to guard against unauthorized access to ePHI that is transmitted over an electronic communication network in addition to developing protocols and procedures. Consider implementing measures to detect modification of transmitted ePHI; if this is determined to not be reasonable and appropriate, document the reason why along with the compensating control in place. When e-mailing PHI, use a secure messaging application such as Direct Secure Messaging (DSM),which is a nationally adopted secure e-mail protocol and network for transmitting PHI. DSM can be obtained from EHR vendors and other health information exchange systems. It was developed and adopted through the Meaningful Use program, and many medical organizations nationwide now use DSM networks. When texting PHI, use a secure texting system.",0,,Required,"HIPAA: §164.312(e)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS 
+HPH CPG: 17 
+HICP: TV1 - Practice # 1, 4"
+,,,Workforce members are verbally instructed to use secure modes of ePHI transmission.,"Implement technical security measures to guard against unauthorized access to ePHI that is transmitted over an electronic communication network in addition to developing protocols and procedures. Consider implementing measures to detect modification of transmitted ePHI; if this is determined to not be reasonable and appropriate, document the reason why along with the compensating control in place. When e-mailing PHI, use a secure messaging application such as Direct Secure Messaging (DSM),which is a nationally adopted secure e-mail protocol and network for transmitting PHI. DSM can be obtained from EHR vendors and other health information exchange systems. It was developed and adopted through the Meaningful Use program, and many medical organizations nationwide now use DSM networks. When texting PHI, use a secure texting system.",0,,Required,"HIPAA: §164.312(e)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS 
+HPH CPG: 17 
+HICP: TV1 - Practice # 1, 4"
+,,,No. We have not considered how to securely transmit ePHI.,"Implement technical security measures to guard against unauthorized access to ePHI that is transmitted over an electronic communication network in addition to developing protocols and procedures. Consider implementing measures to detect modification of transmitted ePHI; if this is determined to not be reasonable and appropriate, document the reason why along with the compensating control in place. When e-mailing PHI, use a secure messaging application such as Direct Secure Messaging (DSM),which is a nationally adopted secure e-mail protocol and network for transmitting PHI. DSM can be obtained from EHR vendors and other health information exchange systems. It was developed and adopted through the Meaningful Use program, and many medical organizations nationwide now use DSM networks. When texting PHI, use a secure texting system.",0,,Required,"HIPAA: §164.312(e)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS 
+HPH CPG: 17 
+HICP: TV1 - Practice # 1, 4"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.312(e)(1) 
+NIST CSF: PR.AA, PR.IR, PR.DS 
+HPH CPG: 17 
+HICP: TV1 - Practice # 1, 4"
+,Notes,,,,,,,
+27,Have you implemented mechanisms to record activity on information systems that create or use ePHI?,,,,,,,
+,,,"Yes. Activity on systems that create or use ePHI is recorded and examined through monitoring of audit logs, system logs, or other mechanisms. This is documented in our procedures, including a complete inventory of systems that record activity and how it is examined.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Implement single sign-on systems that automatically manage access to all software and tools once users have signed onto the network. Such systems allow the organization to centrally maintain and monitor access.",1,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS, DE.AE, DE.CM, RS.AN, PR.MA 
+HPH CPG: 18 
+HICP: TV1 - Practice # 3"
+,,,"Yes. Activity on systems that create or use ePHI is recorded and examined through hardware, software or procedural mechanisms. However, this process is not formally documented in our procedures.",Mechanisms used to record and examine activity on information systems that contain or use ePHI should be documented in your security documentation. Implement single sign-on systems that automatically manage access to all software and tools once users have signed onto the network. Such systems allow the organization to centrally maintain and monitor access.,0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS, DE.AE, DE.CM, RS.AN, PR.MA 
+HPH CPG: 18 
+HICP: TV1 - Practice # 3"
+,,,"Yes. Activity on systems that create or use ePHI should be recorded and examined per our procedures, but we do not have actual hardware, software or procedural mechanisms in place.",Mechanisms should be in place to record and examine activity on information systems that contain or use ePHI. These mechanisms should be documented in your security documentation. Implement single sign-on systems that automatically manage access to all software and tools once users have signed onto the network. Such systems allow the organization to centrally maintain and monitor access.,0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS, DE.AE, DE.CM, RS.AN, PR.MA 
+HPH CPG: 18 
+HICP: TV1 - Practice # 3"
+,,,No. We do not have procedures or mechanisms to record and examine activities and information systems that create or use ePHI.,Mechanisms should be in place to record and examine activity on information systems that contain or use ePHI. These mechanisms should be documented in your security documentation. Implement single sign-on systems that automatically manage access to all software and tools once users have signed onto the network. Such systems allow the organization to centrally maintain and monitor access.,0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS, DE.AE, DE.CM, RS.AN, PR.MA 
+HPH CPG: 18 
+HICP: TV1 - Practice # 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.312(b) 
+NIST CSF: PR.AA, PR.IR, PR.DS, PR.PS, DE.AE, DE.CM, RS.AN, PR.MA 
+HPH CPG: 18 
+HICP: TV1 - Practice # 3"
+,Notes,,,,,,,
+28,"Does the organization stay up to date or informed (e.g., cybersecurity listserv monitoring) on emerging threats and vulnerabilities that may affect information systems? ",,,,,,,
+,,,"Yes, the organization subscribes to cybersecurity listservs and other informational sources that supply information regarding legal and regulatory requirements pertaining to cybersecurity emerging threats. ","This is the most effective option of those provided to track and manage current legal and regulatory requirements on protection of individuals information and understanding emerging cybersecurity threats. Subscribing to notifications from IT authoritative sources on threats and vulnerabilities such as CISA, ISO/IEC, H-ISAC, or IT-ISAC is a starting point for keeping abreast of the most current information available. ",1,,Required,"HIPAA: N/A 
+NIST CSF: GV.OC 
+HPH CPG: 14, 15 
+HICP: N/A"
+,,,"Yes, the organization receives periodic updates on current or emerging threats but does not follow listservs or other informational sources on a regular basis. ","The organization should consider regularly monitoring or subscribing to receive information from IT authoritative sources on threats and vulnerabilities such as CISA, ISO/IEC, H-ISAC, or IT-ISAC to stay abreast of rules, regulations, emerging threats, and standards of information security. ",0,,Required,"HIPAA: N/A 
+NIST CSF: GV.OC 
+HPH CPG: 14, 15 
+HICP: N/A"
+,,,"No, the organization does not subscribe to cybersecurity listservs and other informational sources that supply information regarding legal and regulatory requirements pertaining to cybersecurity emerging threats. ","The organization should consider regularly monitoring or subscribing to receive information from IT authoritative sources on threats and vulnerabilities such as CISA, ISO/IEC, H-ISAC, or IT-ISAC to stay abreast of rules, regulations, emerging threats, and standards of information security. ",0,,Required,"HIPAA: N/A 
+NIST CSF: GV.OC 
+HPH CPG: 14, 15 
+HICP: N/A"
+,,,Flag this question for later,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: N/A 
+NIST CSF: GV.OC 
+HPH CPG: 14, 15 
+HICP: N/A"
+,Notes,,,,,,,
+29,Is there a process in place to identify and evaluate information systems for potential emerging technical vulnerabilities and how the exposure could affect systems that contain ePHI?,,,,,,,
+,,,"Yes, periodic vulnerability scans or penetration testing are done on a regular, scheduled basis to assess network computing and physical and system architecture for weaknesses, and software systems that may have reached their end of life. ",This is the most effective option among those provided to identify potential new threats and vulnerabilities within the information system. Timely information about technical vulnerabilities should be evaluated to identify the organizations exposure to vulnerabilities and appropriate measures should be taken to address the risk. The organization should identify any patch or software configuration and software end of life that needs to be addressed as well as assess all facilities that house critical computing assets for physical vulnerabilities and resilience issues. The organization should monitor sources of cyber threat intelligence for information on new vulnerabilities in products and services and review processes and procedures for weaknesses that could be exploited to affect cybersecurity. ,1,,Required,"HIPAA: N/A 
+NIST CSF: GV.OC 
+HPH CPG: 1 
+HICP: N/A"
+,,,"Yes, vulnerability scans or penetration testing are done but only on a as needed basis such as when there is a suspected weakness.",Timely information about technical vulnerabilities should be evaluated to identify the organizations exposure to vulnerabilities and appropriate measures should be taken to address the risk. The organization should identify any patch or software configuration and software end of life that needs to be addressed as well as assess all facilities that house critical computing assets for physical vulnerabilities and resilience issues. The organization should monitor sources of cyber threat intelligence for information on new vulnerabilities in products and services and review processes and procedures for weaknesses that could be exploited to affect cybersecurity. ,0,,Required,"HIPAA: N/A 
+NIST CSF: GV.OC 
+HPH CPG: 1 
+HICP: N/A"
+,,,"No, vulnerability testing is not performed.",Consider routine testing for technical vulnerabilities so that timely information can be evaluated to identify the organizations exposure to vulnerabilities and appropriate measures should be taken to address the risk. The organization should identify any patch or software configuration and software end of life that needs to be addressed as well as assess all facilities that house critical computing assets for physical vulnerabilities and resilience issues. The organization should monitor sources of cyber threat intelligence for information on new vulnerabilities in products and services and review processes and procedures for weaknesses that could be exploited to affect cybersecurity. ,0,,Required,"HIPAA: N/A 
+NIST CSF: GV.OC 
+HPH CPG: 1 
+HICP: N/A"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: N/A 
+NIST CSF: GV.OC 
+HPH CPG: 1 
+HICP: N/A"
+,Notes,,,,,,,
+30,"If new threats or vulnerabilities are identified through regular scanning, what is done to mitigate and respond to them?",,,,,,,
+,,,The organization applies their policy and procedures consistent with the risk assessment to mitigate identified vulnerabilities. ,"This is the most effective option among those provided to respond to and mitigate identified risks. The organization applies the policy and procedures consistent with the risk assessment to mitigate any identified vulnerabilities in a risk appropriate way. In addition, the organization tracks the progress of risk response implementation and uses findings to inform risk response decisions and actions. ",1,,Required,"HIPAA: N/A 
+NIST CSF: GV.OC 
+HPH CPG: 16 
+HICP: N/A"
+,,,The vulnerabilities are documented formally and no additional action is taken.,"Consider developing and applying the specific policy and procedures to respond to and mitigate any identified vulnerabilities in a risk appropriate way. In addition, the organization could track and monitor the progress of risk response implementation and uses findings to inform risk response decisions and actions. ",0,,Required,"HIPAA: N/A 
+NIST CSF: GV.OC 
+HPH CPG: 16 
+HICP: N/A"
+,,,No additional attention is given to identified threats and vulnerabilities.,"Consider developing and applying the specific policy and procedures to respond to and mitigate any identified vulnerabilities in a risk appropriate way. In addition, the organization could track and monitor the progress of risk response implementation and uses findings to inform risk response decisions and actions. ",0,,Required,"HIPAA: N/A 
+NIST CSF: GV.OC 
+HPH CPG: 16 
+HICP: N/A"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: N/A 
+NIST CSF: GV.OC 
+HPH CPG: 16 
+HICP: N/A"
+,Notes,,,,,,,
+,,,,,,,,
+Threats & Vulnerabilities,,,,,,Likelihood,Impact,Risk Score
+1,Inadequate access controls ,,,,,,,
+,,,"Information disclosure, loss, or theft (ePHI, proprietary, intellectual, or confidential) ",,,,,
+,,,Disruption of information system function or adversarial access to unauthorized network segments,,,,,
+,,,Malware installation on information systems or devices,,,,,
+,,,Unauthorized modification of sensitive information,,,,,
+,,,Information system access granted to unauthorized persons or entities,,,,,
+2,Lack of documentation for controlling user access,,,,,,,
+,,,Improper or overly broad assignment of access permissions for users,,,,,
+,,,Procedures lack sufficient detail for determining user access,,,,,
+3,Inadequate procedures for evaluating user activity logs,,,,,,,
+,,,"Information disclosure or theft (ePHI, proprietary, intellectual, or confidential) ",,,,,
+,,,Unknown source of a security/privacy related incident,,,,,
+,,,Information system access granted to unauthorized personnel,,,,,
+,,,Unauthorized access to or modification of ePHI/sensitive information,,,,,
+4,Users have more access rights than needed to complete daily tasks,,,,,,,
+,,,"Information disclosure or theft (ePHI, proprietary, intellectual, or confidential)",,,,,
+,,,Unauthorized access to ePHI/sensitive information,,,,,
+,,,Unauthorized modification of critical network systems and data,,,,,
+5,Non-unique login credentials for workforce members,,,,,,,
+,,,Users violate security rules on information systems,,,,,
+,,,Unknown or unidentified security incidents or breaches occur,,,,,
+,,,Unauthorized user impersonating an authorized user,,,,,
+6,Inadequate use of encryption for ePHI ,,,,,,,
+,,,Disclosure of passwords or login information,,,,,
+,,,"Information disclosure, loss, or theft (ePHI, proprietary, intellectual, or confidential)",,,,,
+,,,Fines from regulatory enforcement (due to lack of encryption safe harbor),,,,,
+,,,Information system access granted to unauthorized personnel,,,,,
+,,,Unauthorized access to or modification of ePHI/sensitive information,,,,,
+7,Inadequate review of computer systems to ensure maximum security ,,,,,,,
+,,,Accidental modification to ePHI/sensitive information,,,,,
+,,,Denial of service (DoS) to critical systems,,,,,
+,,,Disclosure of passwords and/or login information,,,,,
+,,,"Information disclosure or theft (ePHI, proprietary, intellectual, or confidential)",,,,,
+,,,Exploitation of unpatched systems and software,,,,,
+,,,Unauthorized access to or modification of ePHI/sensitive information,,,,,
+8,Lack of automatic logoff/screen lock of computer systems,,,,,,,
+,,,Unauthorized access to information systems or devices,,,,,
+,,,Malware installation on information systems or devices,,,,,
+,,,Disclosure of passwords and or login information,,,,,
+,,,Denial of service (DoS) to critical systems,,,,,
+,,,Accidental modification to ePHI,,,,,
+,,,Adversary access to unauthorized network segments,,,,,
+,,,"Information disclosure or theft (ePHI, proprietary, intellectual, or confidential)",,,,,
+,,,Exploitation of unpatched systems and software,,,,,
+,,,Unauthorized access to or modification of ePHI/sensitive information,,,,,
+9,Inadequate integrity verification of ePHI,,,,,,,
+,,,Accidental modification to ePHI,,,,,
+,,,Damage to public reputation via misuse of patient chart data,,,,,
+,,,Inaccurate information given to patients or providers,,,,,
+,,,Unauthorized modification to ePHI,,,,,
+10,ePHI in transit lacking encryption,,,,,,,
+,,,"Information disclosure or theft (ePHI, proprietary, intellectual, or confidential)",,,,,
+,,,Unauthorized access to or modification of ePHI/sensitive information,,,,,
+,,,Fines from regulatory enforcement (due to lack of encryption safe harbor),,,,,

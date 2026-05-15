@@ -1,0 +1,453 @@
+Section 3 - Security & Workforce,,,,,,,,
+Question #,Question Text,Indicator,Question Responses,Education,Risk,Risk Indicated,Required?,Reference
+Section Questions,,,,,,,,
+1,Who within your practice is responsible for developing and implementing information security policies and procedures?,,,,,,,
+,,,The security officer is a member of the workforce identified by name in policy documents.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Describe cybersecurity roles and responsibilities throughout the organization, including who is responsible for implementing security practices and setting and establishing policy.",1,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO, PR.PS, ID.AM 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,"The role of security officer is described in our policy documentation, but the person who occupies that role is not named.","You should have a qualified and capable person appointed to the responsibility of security officer. Having a central point of contact helps ensure that information security practices are coordinated, consistent, and that the organization can be held accountable. Describe cybersecurity roles and responsibilities throughout the organization, including who is responsible for implementing security practices and setting and establishing policy.",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO, PR.PS, ID.AM 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,A member of our workforce. ,"You should have a qualified and capable person appointed to the responsibility of security officer. Having a central point of contact helps ensure that information security practices are coordinated, consistent, and that the organization can be held accountable. Describe cybersecurity roles and responsibilities throughout the organization, including who is responsible for implementing security practices and setting and establishing policy.",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO, PR.PS, ID.AM 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,The security officer is not formally named or otherwise identified in policy.,"You should have a qualified and capable person appointed to the responsibility of security officer. Having a central point of contact helps ensure that information security practices are coordinated, consistent, and that the organization can be held accountable. Describe cybersecurity roles and responsibilities throughout the organization, including who is responsible for implementing security practices and setting and establishing policy.",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO, PR.PS, ID.AM 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,Other.,"You should have a qualified and capable person appointed to the responsibility of security officer. Having a central point of contact helps ensure that information security practices are coordinated, consistent, and that the organization can be held accountable. Describe cybersecurity roles and responsibilities throughout the organization, including who is responsible for implementing security practices and setting and establishing policy.",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO, PR.PS, ID.AM 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO, PR.PS, ID.AM 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,Notes,,,,,,,
+2,Do you identify and document the role and responsibilities of the security officer?,,,,,,,
+,,,"Yes. The security officer is identified by role and this is documented in our practice's information security policies, which describes the role's responsibilities.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Describe cybersecurity roles and responsibilities throughout the organization, including who is responsible for implementing security practices and setting and establishing policy.",1,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,"Yes. Our practice has a security officer, but there is no formal documentation of the position or the responsibilities. ","You should document who is responsible for coordinating information security activities. Describe cybersecurity roles and responsibilities throughout the organization, including who is responsible for implementing security practices and setting and establishing policy.",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,No. We have not identified the role of the security officer.,"You should document who is responsible for coordinating information security activities. Describe cybersecurity roles and responsibilities throughout the organization, including who is responsible for implementing security practices and setting and establishing policy.",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,Notes,,,,,,,
+3,Is your security officer qualified for the position?,,,,,,,
+,,,"Yes. The security officer is an assigned member of the workforce familiar with security and has the authority to design, implement, and enforce security policies and procedures.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI.",1,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: N/A 
+HICP: TV1 - Practice # 8"
+,,,"No. The security officer does not have the ability to design, implement, and enforce security policies and procedures.  ",Assign responsibility of the security officer to a member of the workforce with the ability to ensure security policies are effective and followed consistently.,0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: N/A 
+HICP: TV1 - Practice # 8"
+,,,I don't know. We have not considered what qualifications would be appropriate for the security officer.,Assign responsibility of the security officer to a member of the workforce with the ability to ensure security policies are effective and followed consistently.,0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: N/A 
+HICP: TV1 - Practice # 8"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: N/A 
+HICP: TV1 - Practice # 8"
+,Notes,,,,,,,
+4,Do workforce members know who the security officer is?,,,,,,,
+,,,Yes. Workforce members are aware of who our security officer is. ,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI.",1,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,,,No. Not all workforce members know who our security officer is. ,"If your workforce members do not know the name and contact information of the security officer, they may not be able to raise security concerns or execute mitigating actions when there are security problems.",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,,,I don't know. ,"If your workforce members do not know the name and contact information of the security officer, they may not be able to raise security concerns or execute mitigating actions when there are security problems.",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,Notes,,,,,,,
+5,Do workforce members know how and when to contact the security officer?,,,,,,,
+,,,"Workforce members are made aware of the identity of the security officer and reasons for contacting the security officer as part of their orientation to the practice (upon hire) as well as periodic reminders of our internal policies and procedures (e.g., periodic review).","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI.",1,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,,,"Information about who the security officer is and when they should be contacted is verbally communicated to workforce members, but this is not a formal process.","If your workforce members do not know the contact information and availability of the security officer, they may not be able to execute immediate and appropriate mitigating actions when there are security problems.",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,,,We do not have a process to inform workforce members about the identity of the security officer or when the security officer needs to be contacted.,"If your workforce members do not know the contact information and availability of the security officer, they may not be able to execute immediate and appropriate mitigating actions when there are security problems.",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(2) 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,Notes,,,,,,,
+6,Who do people contact for security considerations if there is no security officer available or identified within the organization?,,,,,,,
+,,,The practice manager.,"You should identify a member of your workforce to serve as the security official and who will be responsible for the development and implementation of security policies and procedures. If no security officer is available, be sure to outline where and how workforce members should communicate security concerns. Having this identified and outlined in procedures will allow your workforce to be able to execute immediate and appropriate mitigating actions when there are security problems.",1,,N/A,"HIPAA: N/A 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,,,Information Technology (IT) Manager.,"You should identify a member of your workforce to serve as the security official and who will be responsible for the development and implementation of security policies and procedures. If no security officer is available, be sure to outline where and how workforce members should communicate security concerns. Having this identified and outlined in procedures will allow your workforce to be able to execute immediate and appropriate mitigating actions when there are security problems.",1,,N/A,"HIPAA: N/A 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,,,Lead physician in the practice.,"You should identify a member of your workforce to serve as the security official and who will be responsible for the development and implementation of security policies and procedures. If no security officer is available, be sure to outline where and how workforce members should communicate security concerns. Having this identified and outlined in procedures will allow your workforce to be able to execute immediate and appropriate mitigating actions when there are security problems.",1,,N/A,"HIPAA: N/A 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,,,Lead nurse in practice.,"You should identify a member of your workforce to serve as the security official and who will be responsible for the development and implementation of security policies and procedures. If no security officer is available, be sure to outline where and how workforce members should communicate security concerns. Having this identified and outlined in procedures will allow your workforce to be able to execute immediate and appropriate mitigating actions when there are security problems.",1,,N/A,"HIPAA: N/A 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,,,Lead consultant for the practice.,"You should identify a member of your workforce to serve as the security official and who will be responsible for the development and implementation of security policies and procedures. If no security officer is available, be sure to outline where and how workforce members should communicate security concerns. Having this identified and outlined in procedures will allow your workforce to be able to execute immediate and appropriate mitigating actions when there are security problems.",1,,N/A,"HIPAA: N/A 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,,,Administrative support for the practice.,"You should identify a member of your workforce to serve as the security official and who will be responsible for the development and implementation of security policies and procedures. If no security officer is available, be sure to outline where and how workforce members should communicate security concerns. Having this identified and outlined in procedures will allow your workforce to be able to execute immediate and appropriate mitigating actions when there are security problems.",1,,N/A,"HIPAA: N/A 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,,,Other.,"You should identify a member of your workforce to serve as the security official and who will be responsible for the development and implementation of security policies and procedures. If no security officer is available, be sure to outline where and how workforce members should communicate security concerns. Having this identified and outlined in procedures will allow your workforce to be able to execute immediate and appropriate mitigating actions when there are security problems.",0,,N/A,"HIPAA: N/A 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,N/A,"HIPAA: N/A 
+NIST CSF: PR.AT, DE.AE, GV.RR, RS.CO 
+HPH CPG: 4 
+HICP: N/A"
+,Notes,,,,,,,
+7,How are staff roles and job duties defined with respect to ePHI access?,,,,,,,
+,,,"We have written job descriptions, roles, and required qualifications documented for all workforce members with access to ePHI.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Health care organizations of all sizes need to clearly identify all users and maintain audit trails that monitor each user's access to data, applications, systems, and endpoints.",1,,Required,"HIPAA: §164.308(a)(3)(ii)(A) 
+NIST CSF: ID.AM, PR.MA, DE.CM, DE.AE, PR.PS 
+HPH CPG: 6, 7 
+HICP: TV1 - Practice #2, 3"
+,,,"We have written job titles, but no written roles or responsibilities for workforce members with access to ePHI.","Consider implementing procedures for the authorization and/or supervision of workforce members who work with ePHI or in locations where it might be accessed. If such procedures are determined to not be reasonable and appropriate, document the reason why and what is being done to compensate for these lack of procedures. Health care organizations of all sizes need to clearly identify all users and maintain audit trails that monitor each user's access to data, applications, systems, and endpoints.",0,,Required,"HIPAA: §164.308(a)(3)(ii)(A) 
+NIST CSF: ID.AM, PR.MA, DE.CM, DE.AE, PR.PS 
+HPH CPG: 6, 7 
+HICP: TV1 - Practice #2, 3"
+,,,We do not have written job roles or responsibilities for workforce members with access to ePHI.,"Consider implementing procedures for the authorization and/or supervision of workforce members who work with ePHI or in locations where it might be accessed. If such procedures are determined to not be reasonable and appropriate, document the reason why and what is being done to compensate for these lack of procedures. Health care organizations of all sizes need to clearly identify all users and maintain audit trails that monitor each user's access to data, applications, systems, and endpoints.",0,,Required,"HIPAA: §164.308(a)(3)(ii)(A) 
+NIST CSF: ID.AM, PR.MA, DE.CM, DE.AE, PR.PS 
+HPH CPG: 6, 7 
+HICP: TV1 - Practice #2, 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(3)(ii)(A) 
+NIST CSF: ID.AM, PR.MA, DE.CM, DE.AE, PR.PS 
+HPH CPG: 6, 7 
+HICP: TV1 - Practice #2, 3"
+,Notes,,,,,,,
+8,"Do you screen your workforce members (e.g., staff, volunteers, interns) with tools like credential verification or background checks to verify trustworthiness?",,,,,,,
+,,,Yes.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI.",1,,Addressable,"HIPAA: §164.308(a)(3)(ii)(B) 
+NIST CSF: DE.AE, PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: N/A"
+,,,No.,"Unqualified or untrustworthy users could access your ePHI if policies and procedures do not require screening workforce members prior to enabling access to facilities, information systems, and ePHI.",0,,Addressable,"HIPAA: §164.308(a)(3)(ii)(B) 
+NIST CSF: DE.AE, PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: N/A"
+,,,I don't know. ,"Unqualified or untrustworthy users could access your ePHI if policies and procedures do not require screening workforce members prior to enabling access to facilities, information systems, and ePHI.",0,,Addressable,"HIPAA: §164.308(a)(3)(ii)(B) 
+NIST CSF: DE.AE, PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: N/A"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.308(a)(3)(ii)(B) 
+NIST CSF: DE.AE, PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: N/A"
+,Notes,,,,,,,
+9,How are your workforce members screened to verify trustworthiness?,,,,,,,
+,,,"Professional references are collected and verified. Criminal background checks are performed in addition to verifying licenses, credentials, certifications, and good standing with relevant agencies (e.g., check workforce members against the List of Excluded Individuals and Entities).","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI.",1,,Addressable,"HIPAA: §164.308(a)(3)(ii)(B) 
+NIST CSF: DE.AE, PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: N/A"
+,,,"Professional references are collected and verified along with licenses, credentials, and certifications. We do not perform criminal background checks. ",Consider which methods of personnel screening are reasonable and appropriate for your organization in order to verify the trustworthiness of workforce members who will access ePHI.,0,,Addressable,"HIPAA: §164.308(a)(3)(ii)(B) 
+NIST CSF: DE.AE, PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: N/A"
+,,,We only collect professional references.,Consider which methods of personnel screening are reasonable and appropriate for your organization in order to verify the trustworthiness of workforce members who will access ePHI.,0,,Addressable,"HIPAA: §164.308(a)(3)(ii)(B) 
+NIST CSF: DE.AE, PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: N/A"
+,,,"We hire through external sources (local school externship or temp agency), and assume their vetting process is sufficient.",Consider which methods of personnel screening are reasonable and appropriate for your organization in order to verify the trustworthiness of workforce members who will access ePHI.,0,,Addressable,"HIPAA: §164.308(a)(3)(ii)(B) 
+NIST CSF: DE.AE, PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: N/A"
+,,,Other.,Consider which methods of personnel screening are reasonable and appropriate for your organization in order to verify the trustworthiness of workforce members who will access ePHI.,0,,Addressable,"HIPAA: §164.308(a)(3)(ii)(B) 
+NIST CSF: DE.AE, PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: N/A"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.308(a)(3)(ii)(B) 
+NIST CSF: DE.AE, PR.AA, PR.IR, PR.PS 
+HPH CPG: 6 
+HICP: N/A"
+,Notes,,,,,,,
+10,Do you ensure that all workforce members (including management) are given security training?,,,,,,,
+,,,"Yes, we ensure all workforce members complete security training on a periodic basis.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Establish and maintain a training program for your workforce that includes a section on phishing attacks. All users in your organization should be able to recognize phishing techniques. Train your workforce to comply with organizational procedures and ONC guidance when transmitting PHI through e-mail. Train staff never to back up data on unapproved storage devices or personal cloud services. Train and regularly remind users that they must never share their passwords. ",1,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT , GV.RM, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4"
+,,,"Yes, we ensure all workforce members complete security training, but this not done periodically.","Provide periodic security trainings to all workforce members. The standard states that periodic security trainings be completed and documented for all workforce members, and the documentation is reviewed by your practice's security officer. Establish and maintain a training program for your workforce that includes a section on phishing attacks. All users in your organization should be able to recognize phishing techniques. Train your workforce to comply with organizational procedures and ONC guidance when transmitting PHI through e-mail. Train staff never to back up data on unapproved storage devices or personal cloud services. Train and regularly remind users that they must never share their passwords. ",0,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT , GV.RM, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4"
+,,,"No, we do not ensure that all workforce members have completed security training or that security training is completed on a periodic basis.","Provide periodic security trainings to all workforce members. The standard states that periodic security trainings be completed and documented for all workforce members, and the documentation is reviewed by your practice's security officer. Establish and maintain a training program for your workforce that includes a section on phishing attacks. All users in your organization should be able to recognize phishing techniques. Train your workforce to comply with organizational procedures and ONC guidance when transmitting PHI through e-mail. Train staff never to back up data on unapproved storage devices or personal cloud services. Train and regularly remind users that they must never share their passwords. ",0,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT , GV.RM, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4"
+,,,I don't know. ,"Provide periodic security trainings to all workforce members. The standard states that periodic security trainings be completed and documented for all workforce members, and the documentation is reviewed by your practice's security officer. Establish and maintain a training program for your workforce that includes a section on phishing attacks. All users in your organization should be able to recognize phishing techniques. Train your workforce to comply with organizational procedures and ONC guidance when transmitting PHI through e-mail. Train staff never to back up data on unapproved storage devices or personal cloud services. Train and regularly remind users that they must never share their passwords. ",0,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT , GV.RM, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT , GV.RM, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4"
+,Notes,,,,,,,
+11,How do you ensure that all workforce members are given security training?,,,,,,,
+,,,We keep a list of workforce members who have completed security training. Trainings are provided upon hire and periodically thereafter. The list is reviewed and verified by the security officer.,"This is an effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Train personnel to comply with organizational policies. At minimum, provide annual training on the most important policy considerations, such as the use of encryption, strong passwords, and PHI transmission restrictions. Provide staff with training on and awareness of phishing e-mails. Describe the mechanisms by which the workforce will be trained on cybersecurity practices, threats, and mitigations.",1,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4, 10"
+,,,Our security training is provided by a vendor who keeps record of the trainings completed. The records are reviewed and verified by the security officer. ,"This is an effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Train personnel to comply with organizational policies. At minimum, provide annual training on the most important policy considerations, such as the use of encryption, strong passwords, and PHI transmission restrictions. Provide staff with training on and awareness of phishing e-mails. Describe the mechanisms by which the workforce will be trained on cybersecurity practices, threats, and mitigations.",1,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4, 10"
+,,,"Documentation of security training is maintained in the workforce members' personnel file, but a single comprehensive record is not kept.","Provide training periodically and maintain a comprehensive record of all personnel who have completed training. Have the security officer review the list. Train personnel to comply with organizational policies. At minimum, provide annual training on the most important policy considerations, such as the use of encryption, strong passwords, and PHI transmission restrictions. Provide staff with training on and awareness of phishing e-mails. Describe the mechanisms by which the workforce will be trained on cybersecurity practices, threats, and mitigations.",0,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4, 10"
+,,,We do not maintain records of privacy and security training for our workforce members.,"Provide training periodically and maintain a comprehensive record of all personnel who have completed training. Have the security officer review the list. Train personnel to comply with organizational policies. At minimum, provide annual training on the most important policy considerations, such as the use of encryption, strong passwords, and PHI transmission restrictions. Provide staff with training on and awareness of phishing e-mails. Describe the mechanisms by which the workforce will be trained on cybersecurity practices, threats, and mitigations.",0,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4, 10"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4, 10"
+,Notes,,,,,,,
+12,How long are records of workforce member security training kept? ,,,,,,,
+,,,Records documenting the completion of required security trainings are kept for all workforce members (including management) and retained for at least six (6) years after completion of the training.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI.",1,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 4 
+HICP: N/A"
+,,,Records documenting the completion of required security trainings are kept for all workforce members. Records are only retained for less than six (6) years.,Records documenting the completion of security trainings for all workforce members (including management) should be kept for a minimum of six (6) years. Your state or jurisdiction may have additional requirements beyond six (6) year retention.,0,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 4 
+HICP: N/A"
+,,,Records documenting the completion of required security training are kept for all workforce members. Records are only kept for the year in which training was completed. ,Records documenting the completion of security trainings for all workforce members (including management) should be kept for a minimum of six (6) years. Your state or jurisdiction may have additional requirements beyond six (6) year retention.,0,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 4 
+HICP: N/A"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(5)(i) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 4 
+HICP: N/A"
+,Notes,,,,,,,
+13,Are procedures in place for monitoring log-in attempts and reporting discrepancies?,,,,,,,
+,,,"Yes, these procedures identify workforce members' roles and responsibilities, log-in monitoring procedure, how to identify a log-in discrepancy and how to respond to an identified discrepancy. ","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Implement access management procedures to track and monitor user access to computers and programs.",1,,Addressable,"HIPAA: §164.308(a)(5)(ii)(C) 
+NIST CSF: DE.AE, DE.CM, RS.CO, PR.AT, PR.PS 
+HPH CPG: 18 
+HICP: TV1 - Practice #2, 3"
+,,,"Yes, we have procedures, but these do not include all of the elements listed above.","Consider revising your procedures to include roles and responsibilities, how to identify a log-in discrepancy, and how to respond to an identified discrepancy. If doing so is determined to not be reasonable and appropriate, document the reason why and what compensating control takes its place. Implement access management procedures to track and monitor user access to computers and programs.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(C) 
+NIST CSF: DE.AE, DE.CM, RS.CO, PR.AT, PR.PS 
+HPH CPG: 18 
+HICP: TV1 - Practice #2, 3"
+,,,Log-in monitoring tools are available but we do not actively utilize them.,"Consider revising your procedures to include roles and responsibilities, how to identify a log-in discrepancy, and how to respond to an identified discrepancy. If doing so is determined to not be reasonable and appropriate, document the reason why and what compensating control takes its place. Implement access management procedures to track and monitor user access to computers and programs.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(C) 
+NIST CSF: DE.AE, DE.CM, RS.CO, PR.AT, PR.PS 
+HPH CPG: 18 
+HICP: TV1 - Practice #2, 3"
+,,,"No, our privacy and security procedures do not include log-in monitoring.","Consider revising your procedures to include roles and responsibilities, how to identify a log-in discrepancy, and how to respond to an identified discrepancy. If doing so is determined to not be reasonable and appropriate, document the reason why and what compensating control takes its place. Implement access management procedures to track and monitor user access to computers and programs.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(C) 
+NIST CSF: DE.AE, DE.CM, RS.CO, PR.AT, PR.PS 
+HPH CPG: 18 
+HICP: TV1 - Practice #2, 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(C) 
+NIST CSF: DE.AE, DE.CM, RS.CO, PR.AT, PR.PS 
+HPH CPG: 18 
+HICP: TV1 - Practice #2, 3"
+,Notes,,,,,,,
+14,Is up-to-date malware protection included in your policies and procedures?,,,,,,,
+,,,"Yes. Software protection is included in our procedures. This includes a review of our procedures for guarding against malware, and the mechanisms in place for protection, and how procedures for workforce members to follow can help to detect and report malicious software. ","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Anti-malware software is readily available at low cost and is effective at protecting endpoints from computer viruses, malware, spam, and ransomware threats. Each endpoint in your organization should be equipped with malware protection software that is configured to update automatically. For medical devices, the medical device manufacturer should directly support anti-malware software, or it should be cleared for operation by the manufacturer. Ensure that malware protection is enabled. If anti-malware cannot be implemented, compensating controls should enforce a detection scan whenever the device is serviced prior to reconnecting to the device network.",1,,Addressable,"HIPAA: §164.308(a)(5)(ii)(B) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 1, 2 
+HICP: TV1 - Practice # 2, 9"
+,,,"Yes. Our security procedures include a review of our practice's procedure for guarding against malicious software, but does not cover how workforce members can detect and report malicious software or the protection mechanisms and system capabilities in place for malware protection. ","Consider including software protection in your procedures, such as: 1. What protection mechanisms and system capabilities are in place for protection against malicious software, 2. Workforce members' roles and responsibilities in malicious software protection procedures, 3. Steps to protect against and detect malicious software, and 4. Actions on how to respond to malicious software infections. Anti-malware software is readily available at low cost and is effective at protecting endpoints from computer viruses, malware, spam, and ransomware threats. Each endpoint in your organization should be equipped with malware protection software that is configured to update automatically. For medical devices, the medical device manufacturer should directly support anti-malware software, or it should be cleared for operation by the manufacturer. Ensure that malware protection is enabled. If anti-malware cannot be implemented, compensating controls should enforce a detection scan whenever the device is serviced prior to reconnecting to the device network.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(B) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 1, 2 
+HICP: TV1 - Practice # 2, 9"
+,,,"Protection from malicious software tools are available, but these are not included in our security procedures.","Consider including software protection in your procedures, such as: 1. What protection mechanisms and system capabilities are in place for protection against malicious software, 2. Workforce members' roles and responsibilities in malicious software protection procedures, 3. Steps to protect against and detect malicious software, and 4. Actions on how to respond to malicious software infections. Anti-malware software is readily available at low cost and is effective at protecting endpoints from computer viruses, malware, spam, and ransomware threats. Each endpoint in your organization should be equipped with malware protection software that is configured to update automatically. For medical devices, the medical device manufacturer should directly support anti-malware software, or it should be cleared for operation by the manufacturer. Ensure that malware protection is enabled. If anti-malware cannot be implemented, compensating controls should enforce a detection scan whenever the device is serviced prior to reconnecting to the device network.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(B) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 1, 2 
+HICP: TV1 - Practice # 2, 9"
+,,,"No, protection from malicious software is not included in our security procedures. ","Consider including software protection in your procedures, such as: 1. What protection mechanisms and system capabilities are in place for protection against malicious software, 2. Workforce members' roles and responsibilities in malicious software protection procedures, 3. Steps to protect against and detect malicious software, and 4. Actions on how to respond to malicious software infections. Anti-malware software is readily available at low cost and is effective at protecting endpoints from computer viruses, malware, spam, and ransomware threats. Each endpoint in your organization should be equipped with malware protection software that is configured to update automatically. For medical devices, the medical device manufacturer should directly support anti-malware software, or it should be cleared for operation by the manufacturer. Ensure that malware protection is enabled. If anti-malware cannot be implemented, compensating controls should enforce a detection scan whenever the device is serviced prior to reconnecting to the device network.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(B) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 1, 2 
+HICP: TV1 - Practice # 2, 9"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(B) 
+NIST CSF: PR.AT, PR.PS 
+HPH CPG: 1, 2 
+HICP: TV1 - Practice # 2, 9"
+,Notes,,,,,,,
+15,What password security elements are covered in your security training?,,,,,,,
+,,,"Our security procedures include what our workforce roles/responsibilities are in password security, how to safeguard passwords, how to respond to a compromised password, and how to properly change a password using various password characteristics (e.g., many characters long, easy to remember, avoiding easy to guess phrases).","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. To stay current with best practices on security procedures consider enforcing password security measures consistent with guidance in NIST SP 800-63-3. Assign a separate user account to each user in your organization. Train and regularly remind users that they must never share their passwords. Require each user to create an account password that is different from the ones used for personal internet or e-mail access (e.g., Gmail, Yahoo, Facebook). For devices that are accessed off site, leverage technologies that use multi-factor authentication (MFA) before permitting users to access data or applications on the device. Logins that use only a username and password are often compromised through phishing e-mails. Implement MFA authentication for the cloud-based systems that your organization uses to store or process sensitive data, such as EHRs. MFA mitigates the risk of access by unauthorized users.",1,,Addressable,"HIPAA: §164.308(a)(5)(ii)(D) 
+NIST CSF: PR.AT 
+HPH CPG: 2, 8 
+HICP: TV1 - Practice # 2, 3"
+,,,Our security procedures include some but not all of the items noted above. ,"Consider enforcing password security measures consistent with guidance in NIST SP 800-63-3 as part of your security training. If this is not determined to be reasonable and appropriate, document the reason why along with your compensating control. Assign a separate user account to each user in your organization. Train and regularly remind users that they must never share their passwords. Require each user to create an account password that is different from the ones used for personal internet or e-mail access (e.g., Gmail, Yahoo, Facebook). For devices that are accessed off site, leverage technologies that use multi-factor authentication (MFA) before permitting users to access data or applications on the device. Logins that use only a username and password are often compromised through phishing e-mails. Implement MFA authentication for the cloud-based systems that your organization uses to store or process sensitive data, such as EHRs. MFA mitigates the risk of access by unauthorized users.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(D) 
+NIST CSF: PR.AT 
+HPH CPG: 2, 8 
+HICP: TV1 - Practice # 2, 3"
+,,,Password security is not covered in our security procedures.,"Consider enforcing password security measures consistent with guidance in NIST SP 800-63-3 as part of your security training. If this is not determined to be reasonable and appropriate, document the reason why along with your compensating control. Assign a separate user account to each user in your organization. Train and regularly remind users that they must never share their passwords. Require each user to create an account password that is different from the ones used for personal internet or e-mail access (e.g., Gmail, Yahoo, Facebook). For devices that are accessed off site, leverage technologies that use multi-factor authentication (MFA) before permitting users to access data or applications on the device. Logins that use only a username and password are often compromised through phishing e-mails. Implement MFA authentication for the cloud-based systems that your organization uses to store or process sensitive data, such as EHRs. MFA mitigates the risk of access by unauthorized users.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(D) 
+NIST CSF: PR.AT 
+HPH CPG: 2, 8 
+HICP: TV1 - Practice # 2, 3"
+,,,Other.,"Consider enforcing password security measures consistent with guidance in NIST SP 800-63-3 as part of your security training. If this is not determined to be reasonable and appropriate, document the reason why along with your compensating control. Assign a separate user account to each user in your organization. Train and regularly remind users that they must never share their passwords. Require each user to create an account password that is different from the ones used for personal internet or e-mail access (e.g., Gmail, Yahoo, Facebook). For devices that are accessed off site, leverage technologies that use multi-factor authentication (MFA) before permitting users to access data or applications on the device. Logins that use only a username and password are often compromised through phishing e-mails. Implement MFA authentication for the cloud-based systems that your organization uses to store or process sensitive data, such as EHRs. MFA mitigates the risk of access by unauthorized users.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(D) 
+NIST CSF: PR.AT 
+HPH CPG: 2, 8 
+HICP: TV1 - Practice # 2, 3"
+,,,I don't know. ,"Consider enforcing password security measures consistent with guidance in NIST SP 800-63-3 as part of your security training. If this is not determined to be reasonable and appropriate, document the reason why along with your compensating control. Assign a separate user account to each user in your organization. Train and regularly remind users that they must never share their passwords. Require each user to create an account password that is different from the ones used for personal internet or e-mail access (e.g., Gmail, Yahoo, Facebook). For devices that are accessed off site, leverage technologies that use multi-factor authentication (MFA) before permitting users to access data or applications on the device. Logins that use only a username and password are often compromised through phishing e-mails. Implement MFA authentication for the cloud-based systems that your organization uses to store or process sensitive data, such as EHRs. MFA mitigates the risk of access by unauthorized users.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(D) 
+NIST CSF: PR.AT 
+HPH CPG: 2, 8 
+HICP: TV1 - Practice # 2, 3"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(D) 
+NIST CSF: PR.AT 
+HPH CPG: 2, 8 
+HICP: TV1 - Practice # 2, 3"
+,Notes,,,,,,,
+16,Do you ensure workforce members maintain ongoing awareness of security requirements? ,,,,,,,
+,,,Yes.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Establish and maintain a training program for your workforce that includes a section on phishing attacks. All users in your organization should be able to recognize phishing techniques. Train your workforce to comply with organizational procedures and ONC guidance when transmitting PHI through e-mail. Train staff never to back up data on uncontrolled storage devices or personal cloud services.",1,,Addressable,"HIPAA: §164.308(a)(5)(ii)(A) 
+NIST CSF: PR.AT, ID.RA, GV.OC, GV.RR, GV.PO, GV.OV 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4"
+,,,No.,"Consider securing your workforce with formal, regular trainings as well as periodic reminders. If these steps are not determined to be reasonable and appropriate, document the reason why along with your compensating control. Establish and maintain a training program for your workforce that includes a section on phishing attacks. All users in your organization should be able to recognize phishing techniques. Train your workforce to comply with organizational procedures and ONC guidance when transmitting PHI through e-mail. Train staff never to back up data on uncontrolled storage devices or personal cloud services.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(A) 
+NIST CSF: PR.AT, ID.RA, GV.OC, GV.RR, GV.PO, GV.OV 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4"
+,,,I don't know. ,"Consider securing your workforce with formal, regular trainings as well as periodic reminders. If these steps are not determined to be reasonable and appropriate, document the reason why along with your compensating control. Establish and maintain a training program for your workforce that includes a section on phishing attacks. All users in your organization should be able to recognize phishing techniques. Train your workforce to comply with organizational procedures and ONC guidance when transmitting PHI through e-mail. Train staff never to back up data on uncontrolled storage devices or personal cloud services.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(A) 
+NIST CSF: PR.AT, ID.RA, GV.OC, GV.RR, GV.PO, GV.OV 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(A) 
+NIST CSF: PR.AT, ID.RA, GV.OC, GV.RR, GV.PO, GV.OV 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4"
+,Notes,,,,,,,
+17,How does your practice ensure workforce members maintain ongoing awareness of security requirements? ,,,,,,,
+,,,Formal trainings and periodic security reminders,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Provide staff with training on and awareness of phishing e-mails. Train personnel to comply with organizational policies. At minimum, provide annual training on the most important policy considerations, such as the use of encryption, strong passwords, and PHI transmission restrictions.",1,,Addressable,"HIPAA: §164.308(a)(5)(ii)(A) 
+NIST CSF: PR.AT, ID.RA, GV.OC, GV.RR, GV.PO, GV.OV 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4"
+,,,"Either formal trainings or periodic security reminders, but not both.","Consider securing your workforce with formal, regular trainings as well as periodic reminders. If these steps are not determined to be reasonable and appropriate, document the reason why along with your compensating control. Provide staff with training on and awareness of phishing e-mails. Train personnel to comply with organizational policies. At minimum, provide annual training on the most important policy considerations, such as the use of encryption, strong passwords, and PHI transmission restrictions.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(A) 
+NIST CSF: PR.AT, ID.RA, GV.OC, GV.RR, GV.PO, GV.OV 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4"
+,,,I don't know. ,"Consider securing your workforce with formal, regular trainings as well as periodic reminders. If these steps are not determined to be reasonable and appropriate, document the reason why along with your compensating control. Provide staff with training on and awareness of phishing e-mails. Train personnel to comply with organizational policies. At minimum, provide annual training on the most important policy considerations, such as the use of encryption, strong passwords, and PHI transmission restrictions.",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(A) 
+NIST CSF: PR.AT, ID.RA, GV.OC, GV.RR, GV.PO, GV.OV 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Addressable,"HIPAA: §164.308(a)(5)(ii)(A) 
+NIST CSF: PR.AT, ID.RA, GV.OC, GV.RR, GV.PO, GV.OV 
+HPH CPG: 4 
+HICP: TV1 - Practice # 1, 4"
+,Notes,,,,,,,
+18,Do you have a sanction policy to enforce security procedures?,,,,,,,
+,,,Yes.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI.",1,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,,,No.,Consider implementing a sanction policy. It is required that your practice be able to apply appropriate sanctions against workforce members who fail to comply with your practice's security policies and procedures.,0,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,,,I don't know. ,Consider looking into whether your practice has a sanction policy. It is required that your practice be able to apply appropriate sanctions against workforce members who fail to comply with your practice's security policies and procedures.,0,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,Notes,,,,,,,
+19,What is included in your sanction policy to hold personnel accountable if they do not follow your security policies and procedures?,,,,,,,
+,,,Formal written documentation of the sanction and the reason for the sanction. ,Consider which sanction policies and procedures are reasonable and appropriate for your organization in order to hold personnel accountable if they do not follow your security policies and procedures. ,0,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.AT, RS.CO, PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,,,A formal corrective action plan. ,Consider which sanction policies and procedures are reasonable and appropriate for your organization in order to hold personnel accountable if they do not follow your security policies and procedures. ,0,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.AT, RS.CO, PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,,,Identification of the sanctions applied to compliance failures.,Consider which sanction policies and procedures are reasonable and appropriate for your organization in order to hold personnel accountable if they do not follow your security policies and procedures. ,0,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.AT, RS.CO, PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,,,Training to mitigate repeat offenses.,Consider which sanction policies and procedures are reasonable and appropriate for your organization in order to hold personnel accountable if they do not follow your security policies and procedures. ,0,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.AT, RS.CO, PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,,,Documentation of the sanction outcome.,Consider which sanction policies and procedures are reasonable and appropriate for your organization in order to hold personnel accountable if they do not follow your security policies and procedures. ,0,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.AT, RS.CO, PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,,,All of the above. ,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI.",1,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.AT, RS.CO, PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,,,None of the above. ,Consider which sanction policies and procedures are reasonable and appropriate for your organization in order to hold personnel accountable if they do not follow your security policies and procedures. ,0,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.AT, RS.CO, PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,,,Other.,Consider which sanction policies and procedures are reasonable and appropriate for your organization in order to hold personnel accountable if they do not follow your security policies and procedures. ,0,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.AT, RS.CO, PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,,,I don't know.,Consider which sanction policies and procedures are reasonable and appropriate for your organization in order to hold personnel accountable if they do not follow your security policies and procedures. ,0,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.AT, RS.CO, PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.308(a)(1)(ii)(C) 
+NIST CSF: PR.AT, RS.CO, PR.PS 
+HPH CPG: N/A 
+HICP: N/A"
+,Notes,,,,,,,
+,,,,,,,,
+Threats & Vulnerabilities,,,,,,Likelihood,Impact,Risk Score
+1,"Unqualified, uninformed, or lack of Security Officer",,,,,,,
+,,,Unqualified workforce or untrained personnel on security standards and procedures,,,,,
+,,,Security policies not followed when not enforced,,,,,
+,,,"Misuse of audit tools, information systems, and/or hardware",,,,,
+,,,Increased chance or spread of unknown threats,,,,,
+,,,Insider carelessness exposing ePHI,,,,,
+,,,"Unauthorized information disclosure (ePHI, proprietary, intellectual, or confidential)",,,,,
+,,,"Disruption of business processes, information system function, and/or prolonged adversarial presence within information systems",,,,,
+2,Untrustworthy employee or business associate,,,,,,,
+,,,"Information disclosure (ePHI, proprietary, intellectual, or confidential)",,,,,
+,,,Disruption of business processes or information system function,,,,,
+,,,Sensitive data exposed or tampered with by insider,,,,,
+,,,Misuse of information systems and/or hardware ,,,,,
+,,,Falsification or destruction of records and/or data corruption,,,,,
+,,,Unauthorized access granted to outsiders ,,,,,
+3,Inadequate cybersecurity & IT training ,,,,,,,
+,,,"Information disclosure (ePHI, proprietary, intellectual, or confidential)",,,,,
+,,,Disruption of business processes or information system function,,,,,
+,,,Social engineering attack or email phishing attack,,,,,
+,,,Misuse of information systems and/or hardware ,,,,,
+,,,Information system or facility access granted to unauthorized personnel,,,,,
+,,,Installation of unauthorized software or applications,,,,,
+4,Failure to hold workforce members accountable for undesired actions,,,,,,,
+,,,Insider carelessness causing disruption to computer systems,,,,,
+,,,Insider carelessness exposing ePHI to unauthorized persons or entities,,,,,
+,,,Lack of interest for protecting sensitive information,,,,,

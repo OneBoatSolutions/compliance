@@ -20,13 +20,10 @@ type ItemStatus =
   | "NOT_APPLICABLE";
 type Severity = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
-const brandPurple = "#6D28D9";
 const brandPurpleDark = "#4C1D95";
-const brandPurpleLight = "#EDE9FE";
 const slate900 = "#0F172A";
 const slate700 = "#334155";
 const slate500 = "#64748B";
-const slate300 = "#CBD5E1";
 const slate200 = "#E2E8F0";
 
 const reportAiKey = process.env.OPENAI_API_KEY?.trim();
@@ -245,7 +242,12 @@ function withTimeout<T>(
 }
 
 function logReportTiming(step: string, startedAt: number) {
+  if (process.env.REPORT_TIMINGS !== "true") {
+    return;
+  }
+
   const durationMs = Math.round(performance.now() - startedAt);
+  process.stdout.write(`[report] ${step}: ${durationMs}ms\n`);
 }
 
 async function measureReportStep<T>(step: string, action: () => Promise<T>): Promise<T> {
@@ -391,7 +393,7 @@ function buildReadinessChartSvg(score: number): string {
 }
 
 function buildFrameworkChartSvg(frameworkScores: ReportBundle["frameworkScores"]): string {
-  const rows = frameworkScores.slice(0, 5);
+  const rows = frameworkScores;
   const height = Math.max(180, 44 + rows.length * 34);
   const maxScore = Math.max(100, ...rows.map((row) => row.score));
 
@@ -412,7 +414,7 @@ function buildFrameworkChartSvg(frameworkScores: ReportBundle["frameworkScores"]
     <svg xmlns="http://www.w3.org/2000/svg" width="320" height="${height}" viewBox="0 0 320 ${height}">
       <rect width="320" height="${height}" rx="24" fill="#ffffff" />
       <text x="16" y="26" font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#0F172A">Framework scores</text>
-      <text x="16" y="40" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#64748B">Top frameworks by weighted readiness</text>
+      <text x="16" y="40" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#64748B">Framework scores by weighted readiness</text>
       ${bars}
     </svg>
   `;
@@ -623,7 +625,7 @@ function buildRemediationItems(assessment: ReportAssessment): RemediationItem[] 
     }))
     .sort((a, b) => b.score - a.score);
 
-  return prioritized.slice(0, 6).map(({ title, priority, effort, rationale, score }) => ({
+  return prioritized.slice(0, 10).map(({ title, priority, effort, rationale, score }) => ({
     title,
     priority,
     effort,
@@ -1002,7 +1004,18 @@ function buildPdf(bundle: ReportBundle): Promise<Buffer> {
       "Remediation Recommendations",
       "Priority actions generated from the remaining control gaps",
     );
-    bundle.remediation.forEach((item, index) => {
+    const remediationBlockHeight = 76;
+    const remediationBottomMargin = 48;
+    for (const [index, item] of bundle.remediation.entries()) {
+      if (doc.y + remediationBlockHeight > doc.page.height - remediationBottomMargin) {
+        doc.addPage();
+        addPageHeader(
+          doc,
+          "Remediation Recommendations",
+          "Priority actions generated from the remaining control gaps",
+        );
+      }
+
       const boxY = doc.y + 6;
       doc
         .roundedRect(48, boxY, 498, 62, 14)
@@ -1030,8 +1043,8 @@ function buildPdf(bundle: ReportBundle): Promise<Buffer> {
         .font("Helvetica")
         .fontSize(9)
         .text(item.rationale, 62, boxY + 44, { width: 460 });
-      doc.y = boxY + 76;
-    });
+      doc.y = boxY + remediationBlockHeight;
+    }
 
     doc.addPage();
     addPageHeader(doc, "Appendix", "Scoring methodology and report generation notes");
