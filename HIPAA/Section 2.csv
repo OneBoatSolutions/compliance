@@ -1,0 +1,193 @@
+Section 2 - Security Policies,,,,,,,,
+Question #,Question Text,Indicator,Question Responses,Education,Risk,Risk Indicated,Required?,Reference
+Section Questions,,,,,,,,
+1,"Do you maintain documentation of policies and procedures regarding risk assessment, risk management and information security activities?",,,,,,,
+,,,"Yes, we have a process by which assigned personnel develop, implement, review, and update security policies and procedures. ","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Establishing and implementing cybersecurity policies, procedures, and processes is one of the most effective means of preventing cyberattacks.",1,,Required,"HIPAA: §164.316(a) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS 
+HPH CPG: 1, 14, 15 
+HICP: TV1 - Practice # 10"
+,,,"Yes, we have some documentation for our information security and risk management activities, but not all of our policies and procedures are documented.","You should document policies and procedures to ensure you consistently make informed decisions on the effective monitoring, identification, and mitigation of risks to ePHI. Establishing and implementing cybersecurity policies, procedures, and processes is one of the most effective means of preventing cyberattacks.",0,,Required,"HIPAA: §164.316(a) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS 
+HPH CPG: 1, 14, 15 
+HICP: TV1 - Practice # 10"
+,,,"No, we do not maintain documentation on our information security activities or risk management.","You should document policies and procedures to ensure you consistently make informed decisions on the effective monitoring, identification, and mitigation of risks to ePHI. Establishing and implementing cybersecurity policies, procedures, and processes is one of the most effective means of preventing cyberattacks.",0,,Required,"HIPAA: §164.316(a) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS 
+HPH CPG: 1, 14, 15 
+HICP: TV1 - Practice # 10"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.316(a) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS 
+HPH CPG: 1, 14, 15 
+HICP: TV1 - Practice # 10"
+,Notes,,,,,,,
+2,"Do you review and update your security documentation, including policies and procedures?",,,,,,,
+,,,"Yes, we review and update our security documentation periodically and as necessary.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Review an appropriate number of policies over a specified timeframe. The goal is to establish a standard practice to review policies and to monitor compliance with this standard.",1,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 7, 14, 15, 19 
+HICP: TV1 - Practice # 10"
+,,,"Yes, we review and update our documentation periodically or as needed, but not both.","You should implement a process to periodically review and update your security policies and procedures. This will help you safeguard your facilities, information systems, and ePHI. Review an appropriate number of policies over a specified timeframe. The goal is to establish a standard practice to review policies and to monitor compliance with this standard.",0,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 7, 14, 15, 19 
+HICP: TV1 - Practice # 10"
+,,,"Yes, we review our security documentation but we have not updated our documentation.","You should implement a process to periodically review and update your security policies and procedures. This will help you safeguard your facilities, information systems, and ePHI. Review an appropriate number of policies over a specified timeframe. The goal is to establish a standard practice to review policies and to monitor compliance with this standard.",0,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 7, 14, 15, 19 
+HICP: TV1 - Practice # 10"
+,,,"No, we have never updated our documentation","You should implement a process to periodically review and update your security policies and procedures. This will help you safeguard your facilities, information systems, and ePHI. Review an appropriate number of policies over a specified timeframe. The goal is to establish a standard practice to review policies and to monitor compliance with this standard.",0,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 7, 14, 15, 19 
+HICP: TV1 - Practice # 10"
+,,,I don't know.,"You should implement a process to periodically review and update your security policies and procedures. This will help you safeguard your facilities, information systems, and ePHI. Review an appropriate number of policies over a specified timeframe. The goal is to establish a standard practice to review policies and to monitor compliance with this standard.",0,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 7, 14, 15, 19 
+HICP: TV1 - Practice # 10"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 7, 14, 15, 19 
+HICP: TV1 - Practice # 10"
+,Notes,,,,,,,
+3,"How do you update your security program documentation, including policies and procedures?",,,,,,,
+,,,We have a periodic review of information security policies that formally evaluates their effectiveness. Policies and procedures are updated as needed. ,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. With clearly articulated cybersecurity policies, your employees, contractors, and third-party vendors know which data, applications, systems, and devices they are authorized to access and the consequences of unauthorized access attempts.",1,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,"We update policies and procedures ad hoc, for example when an immediate need prompts the change.","You should conduct periodic reviews of information security policies and update them as needed. With clearly articulated cybersecurity policies, your employees, contractors, and third-party vendors know which data, applications, systems, and devices they are authorized to access and the consequences of unauthorized access attempts.",0,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,We do not have a process for updating our security documentation.,"You should conduct periodic reviews of information security policies and update them as needed. With clearly articulated cybersecurity policies, your employees, contractors, and third-party vendors know which data, applications, systems, and devices they are authorized to access and the consequences of unauthorized access attempts.",0,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,Notes,,,,,,,
+4,Is the security officer involved in all security policy and procedure updates?,,,,,,,
+,,,Yes.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Describe cybersecurity roles and responsibilities throughout the organization, including who is responsible for implementing security practices and setting and establishing policy.",1,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 7, 15, 19 
+HICP: TV1 - Practice # 10"
+,,,No.,"You should have a designated security officer and any/all policy or procedure updates should be reported to the security officer. Describe cybersecurity roles and responsibilities throughout the organization, including who is responsible for implementing security practices and setting and establishing policy.",0,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 7, 15, 19 
+HICP: TV1 - Practice # 10"
+,,,I don't know.,"You should have a designated security officer and any/all policy or procedure updates should be reported to the security officer. Describe cybersecurity roles and responsibilities throughout the organization, including who is responsible for implementing security practices and setting and establishing policy.",0,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 7, 15, 19 
+HICP: TV1 - Practice # 10"
+,,,Other.,"You should have a designated security officer and any/all policy or procedure updates should be reported to the security officer. Describe cybersecurity roles and responsibilities throughout the organization, including who is responsible for implementing security practices and setting and establishing policy.",0,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 7, 15, 19 
+HICP: TV1 - Practice # 10"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.316(b)(2)(iii) 
+NIST CSF: GV.RR, GV.PO, GV.OV, ID.RA, PR.PS, ID.IM 
+HPH CPG: 7, 15, 19 
+HICP: TV1 - Practice # 10"
+,Notes,,,,,,,
+5,How does documentation for your risk management and security procedures compare to your actual business practices?,,,,,,,
+,,,Our risk management and security documentation completely and accurately reflects our actual business practices.,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. With clearly articulated cybersecurity policies, your employees, contractors, and third-party vendors know which data, applications, systems, and devices they are authorized to access and the consequences of unauthorized access attempts.",1,,Required,"HIPAA: §164.316(b)(1)(i) & (ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 1, 15, 19 
+HICP: TV1 - Practice # 10"
+,,,Our risk management and security documentation somewhat accurately reflects our business practices.,"Risk management and security documentation should accurately reflect business practices. Ensure that your security documentation represents your actual security practices. With clearly articulated cybersecurity policies, your employees, contractors, and third-party vendors know which data, applications, systems, and devices they are authorized to access and the consequences of unauthorized access attempts.",0,,Required,"HIPAA: §164.316(b)(1)(i) & (ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 1, 15, 19 
+HICP: TV1 - Practice # 10"
+,,,Our risk management and security documentation does not accurately reflect our business practices.,"Risk management and security documentation should accurately reflect business practices. Ensure that your security documentation represents your actual security practices. With clearly articulated cybersecurity policies, your employees, contractors, and third-party vendors know which data, applications, systems, and devices they are authorized to access and the consequences of unauthorized access attempts.",0,,Required,"HIPAA: §164.316(b)(1)(i) & (ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 1, 15, 19 
+HICP: TV1 - Practice # 10"
+,,,I don't know. ,"Considering reviewing how your risk management documentation and security procedures compare to your business practices. Risk management and security documentation should accurately reflect business practices. Ensure that your security documentation represents your actual security practices. With clearly articulated cybersecurity policies, your employees, contractors, and third-party vendors know which data, applications, systems, and devices they are authorized to access and the consequences of unauthorized access attempts.",0,,Required,"HIPAA: §164.316(b)(1)(i) & (ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 1, 15, 19 
+HICP: TV1 - Practice # 10"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.316(b)(1)(i) & (ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 1, 15, 19 
+HICP: TV1 - Practice # 10"
+,Notes,,,,,,,
+6,How long are information security management and risk management documents kept?,,,,,,,
+,,,"We maintain documents for at least six (6) years from the date of their creation or when they were last in effect, whichever is longer. These documents are maintained and backed up.","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. The federal requirement is six (6) years retention of documentation, but your state or jurisdiction may have additional requirements.",1,,Required,"HIPAA: §164.316(b)(2)(i) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 7, 18 
+HICP: N/A"
+,,,"We maintain documents for at least six (6) years from the date of their creation or when they were last in effect, whichever is longer. These documents are not backed up.","The federal requirement is six (6) years retention of documentation, but your state or jurisdiction may have additional requirements. Investigate the requirements for your state. Consider backing up information security and risk management documents.",0,,Required,"HIPAA: §164.316(b)(2)(i) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 7, 18 
+HICP: N/A"
+,,,We do not have a set amount of time to keep our documentation. ,"Ensure your policies, procedures, and other security program documentation are retained for at least six (6) years from the date when it was created or last in effect, whichever is longer. Your state or jurisdiction may have additional requirements. Consider backing up these documents.",0,,Required,"HIPAA: §164.316(b)(2)(i) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 7, 18 
+HICP: N/A"
+,,,We do not maintain documents regarding security and risk management.,"Ensure your policies, procedures, and other security program documentation are retained for at least six (6) years from the date when it was created or last in effect, whichever is longer. Your state or jurisdiction may have additional requirements. Consider backing up these documents.",0,,Required,"HIPAA: §164.316(b)(2)(i) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 7, 18 
+HICP: N/A"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.316(b)(2)(i) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 7, 18 
+HICP: N/A"
+,Notes,,,,,,,
+7,Do you make sure that information security and risk management documentation is available to those who need it?,,,,,,,
+,,,"Yes. Documentation is made available to appropriate workforce members in physical and/or electronic formats (for example, our practice's shared drive or intranet). ","This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. With clearly articulated cybersecurity policies, your employees, contractors, and third-party vendors know which data, applications, systems, and devices they are authorized to access and the consequences of unauthorized access attempts.",1,,Required,"HIPAA: §164.316(b)(2)(ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,"Documentation is reviewed with appropriate workforce members upon initial orientation to the practice, but is not reviewed on a periodic basis or available in physical and/or electronic format unless requested. ","Documentation should be available to workforce members who need it to perform the security responsibilities associated with their role and reviewed on a periodic basis. Consider making the documentation available in writing, on a local shared drive, or other accessible place. With clearly articulated cybersecurity policies, your employees, contractors, and third-party vendors know which data, applications, systems, and devices they are authorized to access and the consequences of unauthorized access attempts.",0,,Required,"HIPAA: §164.316(b)(2)(ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,No. We do not have a process to ensure documentation is available to appropriate workforce members who need it.,"Documentation should be available to workforce members who need it to perform the security responsibilities associated with their role and reviewed on a periodic basis. Consider making the documentation available in writing, on a local shared drive, or other accessible place. With clearly articulated cybersecurity policies, your employees, contractors, and third-party vendors know which data, applications, systems, and devices they are authorized to access and the consequences of unauthorized access attempts.",0,,Required,"HIPAA: §164.316(b)(2)(ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,I don't know. ,"Documentation should be available to workforce members who need it to perform the security responsibilities associated with their role and reviewed on a periodic basis. Consider making the documentation available in writing, on a local shared drive, or other accessible place. With clearly articulated cybersecurity policies, your employees, contractors, and third-party vendors know which data, applications, systems, and devices they are authorized to access and the consequences of unauthorized access attempts.",0,,Required,"HIPAA: §164.316(b)(2)(ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.316(b)(2)(ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,Notes,,,,,,,
+8,How do you ensure that security and risk management documentation is available to those who need it?,,,,,,,
+,,,Appropriate workforce members receive instructions on our information security documentation and where to find it as part of their periodic privacy and security training. Documentation is securely made available to workforce members in physical or electronic formats. ,"This is the most effective option among those provided to protect the confidentiality, integrity, and availability of ePHI. Policies are established first and are then supplemented with procedures that enable the policies to be implemented. Policies describe what is expected, and procedures describe how the expectations are met.",1,,Required,"HIPAA: §164.316(b)(2)(ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS, ID.RA 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,Documentation is reviewed with appropriate workforce members upon initial orientation to the practice. Documentation is securely made available to appropriate workforce members in physical or electronic formats and they are verbally instructed as to where it is.,"Review your information security documentation with your appropriate workforce members upon hire and on an ongoing, periodic basis. Make sure workforce members know where to find the documentation for ongoing review. Policies are established first and are then supplemented with procedures that enable the policies to be implemented. Policies describe what is expected, and procedures describe how the expectations are met.",0,,Required,"HIPAA: §164.316(b)(2)(ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS, ID.RA 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,Documentation is securely made available to appropriate workforce members in physical or electronic formats and they are verbally instructed as to where it is.,"Review your information security documentation with your appropriate workforce members upon hire and on an ongoing, periodic basis. Make sure workforce members know where to find the documentation for ongoing review. Policies are established first and are then supplemented with procedures that enable the policies to be implemented. Policies describe what is expected, and procedures describe how the expectations are met.",0,,Required,"HIPAA: §164.316(b)(2)(ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS, ID.RA 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,Other.,"Review your information security documentation with your appropriate workforce members upon hire and on an ongoing, periodic basis. Make sure workforce members know where to find the documentation for ongoing review. Policies are established first and are then supplemented with procedures that enable the policies to be implemented. Policies describe what is expected, and procedures describe how the expectations are met.",0,,Required,"HIPAA: §164.316(b)(2)(ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS, ID.RA 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,,,Flag this question for later.,"This question will be marked as an area for review and will be included in the ""Flagged Questions"" report. ",0,,Required,"HIPAA: §164.316(b)(2)(ii) 
+NIST CSF: GV.OC, GV.RM, PR.PS, ID.RA 
+HPH CPG: 4 
+HICP: TV1 - Practice # 10"
+,Notes,,,,,,,
+,,,,,,,,
+Threats & Vulnerabilities,,,,,,Likelihood,Impact,Risk Score
+1,Failure to update Policies & Procedures,,,,,,,
+,,,Fines/penalties from mandated regulatory requirements,,,,,
+,,,Unstructured guidance for daily tasks and duties within workforce,,,,,
+2,Failure to share security procedure information with appropriate parties,,,,,,,
+,,,Unauthorized access to ePHI or sensitive information permitted,,,,,
+,,,Disruption of information system function,,,,,
+,,,ePHI accessed by unauthorized entities,,,,,
+,,,Insider carelessness causing disruption,,,,,
+,,,Insider carelessness exposing ePHI,,,,,
+3,Inconsistent/unclear risk management documentation,,,,,,,
+,,,Unclear security coordination across workforce ,,,,,
+,,,Unstructured guidance for daily tasks and duties,,,,,
+4,No risk management documentation (or low retention of documentation),,,,,,,
+,,,Fines/penalties from regulatory enforcement,,,,,
+,,,Inability of workforce to perform proper security and privacy-related tasks or access procedural documents,,,,,
+,,,Unstructured workforce coordination of risk management procedures,,,,,

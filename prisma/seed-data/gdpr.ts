@@ -194,7 +194,7 @@ function parseCsv(text: string): string[][] {
 
 function getCsvFilePath(): string {
   const currentFile = fileURLToPath(import.meta.url);
-  return path.resolve(path.dirname(currentFile), "..", "..", "v2_gap_assessment.csv");
+  return path.resolve(path.dirname(currentFile), "..", "..", "GDPR", "v2_gap_assessment.csv");
 }
 
 function formatTitleWord(word: string): string {
