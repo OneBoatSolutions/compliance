@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, User, Building2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { z } from "zod";
@@ -53,6 +53,7 @@ export default function RegisterPage() {
     mode: "onChange",
     defaultValues: {
       name: "",
+      companyName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -73,6 +74,7 @@ export default function RegisterPage() {
     try {
       await registerAuth({
         name: data.name,
+        companyName: data.companyName,
         email: data.email,
         password: data.password,
       });
@@ -118,6 +120,28 @@ export default function RegisterPage() {
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
                     <Input
                       placeholder="Enter your full name"
+                      className="pl-10 pr-3 py-3 text-slate-900 border-slate-200 focus-visible:ring-2 focus-visible:ring-[#6d18ff]/40 focus-visible:border-[#6d18ff]"
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Company Name */}
+          <FormField
+            control={form.control}
+            name="companyName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-sm font-medium text-slate-700">Company Name</FormLabel>
+                <FormControl>
+                  <div className="relative mt-1">
+                    <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                    <Input
+                      placeholder="Your company or organization"
                       className="pl-10 pr-3 py-3 text-slate-900 border-slate-200 focus-visible:ring-2 focus-visible:ring-[#6d18ff]/40 focus-visible:border-[#6d18ff]"
                       {...field}
                     />

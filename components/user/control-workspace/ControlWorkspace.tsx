@@ -10,7 +10,7 @@ import TagsInput from "./TagsInput";
 import EvidenceUploader, { ExistingFile } from "@/components/user/evidence-uploader";
 import { AssigneeDueDate } from "./AssigneeDueDate";
 import WorkspaceHeader from "./WorkspaceHeader";
-import { apiClient } from "@/lib/api-client";
+import { apiClient, ApiClientError } from "@/lib/api-client";
 
 interface ControlData {
   id: string;
@@ -90,23 +90,18 @@ export default function ControlWorkspace({ control }: Props) {
     }
 
     try {
-      const response = await fetch(
+      const responseData = await apiClient.patch<{ score: number }>(
         `/api/assessments/${control.assessmentId}/items/${control.itemId}`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        },
+        { body: payload },
       );
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to save");
-      }
 
       toast.success(type === "draft" ? "Draft saved" : "Changes saved successfully");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to save");
+      if (err instanceof ApiClientError && err.isUnauthorized) {
+        toast.error("Session expired. Please refresh and log in again.");
+      } else {
+        toast.error(err instanceof Error ? err.message : "Failed to save");
+      }
     } finally {
       setIsSaving(false);
     }
