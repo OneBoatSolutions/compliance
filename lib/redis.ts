@@ -2,11 +2,11 @@ import Redis from "ioredis";
 
 const globalForRedis = global as unknown as { redis: Redis };
 
-const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
+const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 
 export const redis =
   globalForRedis.redis ||
-  new Redis(REDIS_URL, {
+  new Redis(redisUrl, {
     retryStrategy(times) {
       const delay = Math.min(times * 50, 2000);
       if (times >= 3) {

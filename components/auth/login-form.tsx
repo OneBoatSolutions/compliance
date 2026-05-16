@@ -12,6 +12,7 @@ import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { ApiClientError } from "@/lib/api-client";
 import { loginSchema } from "@/lib/validations/auth";
 import { useAuthStore } from "@/stores/auth-store";
+import { Input } from "@/components/ui/input";
 
 const schema = loginSchema.extend({
   remember: z.boolean().optional(),
@@ -71,11 +72,7 @@ export default function LoginForm() {
         <div className="relative mt-1">
           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
 
-          <input
-            {...register("email")}
-            placeholder="name@company.com"
-            className="w-full pl-10 pr-10 py-3 text-slate-900 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6d18ff]/40 focus:border-[#6d18ff] transition-all"
-          />
+          <Input {...register("email")} placeholder="name@company.com" className="pl-10 h-11" />
         </div>
 
         {errors.email && <p className="text-xs text-red-500 mt-1">Invalid email</p>}
@@ -88,11 +85,11 @@ export default function LoginForm() {
         <div className="relative mt-1">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
 
-          <input
+          <Input
             {...register("password")}
             type={showPassword ? "text" : "password"}
             placeholder="••••••••"
-            className="w-full pl-10 pr-10 py-3 text-slate-900 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6d18ff]/40 focus:border-[#6d18ff] transition-all"
+            className="pl-10 pr-10 h-11"
           />
 
           <button

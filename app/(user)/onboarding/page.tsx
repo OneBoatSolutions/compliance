@@ -155,7 +155,15 @@ const mapFromBackend = (data: BackendOrganization): OnboardingFormValues => ({
       ].some((known) => r.includes(known));
     }) || "",
 });
-function Stepper({ currentStep }: { currentStep: number }) {
+function Stepper({
+  currentStep,
+  saving,
+  saved,
+}: {
+  currentStep: number;
+  saving: boolean;
+  saved: boolean;
+}) {
   const steps = [
     { id: 1, label: "Business Profile" },
     { id: 2, label: "AI Recommendations & Review" },
@@ -207,9 +215,14 @@ function Stepper({ currentStep }: { currentStep: number }) {
       </div>
 
       {/* Save */}
-      <button className="text-gray-500 hover:text-gray-700 font-medium ml-6 whitespace-nowrap">
-        Save & Exit
-      </button>
+      <div className="flex flex-col items-end">
+        <span className="text-xs text-gray-500 font-medium min-h-[16px] mb-1">
+          {saving ? "Saving..." : saved ? "✔ All changes saved" : ""}
+        </span>
+        <button className="text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap">
+          Save & Exit
+        </button>
+      </div>
     </div>
   );
 }
@@ -494,7 +507,7 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Stepper currentStep={currentStep} />
+      <Stepper currentStep={currentStep} saving={saving} saved={saved} />
       <div className="max-w-3xl mx-auto mt-8 px-4">
         <div className="mb-6">
           <span className="text-sm bg-purple-100 text-purple-600 px-3 py-1 rounded-full">
@@ -525,13 +538,6 @@ export default function OnboardingPage() {
           onSubmit={handleSubmit(onSubmit, onError)}
           className="bg-white p-6 rounded-lg shadow space-y-8"
         >
-          <div className="text-right text-sm min-h-[24px]">
-            <span className="text-gray-500 min-h-[24px] inline-block">
-              {saving && "Saving..."}
-              {!saving && saved && "✔ All changes saved"}
-            </span>
-          </div>
-
           <Section title="Product Information" number={1}>
             <Input
               label="Product Name"

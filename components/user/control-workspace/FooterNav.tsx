@@ -3,7 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Folder } from "lucide-react";
 
-export default function FooterNav({ onSave }: any) {
+interface FooterNavProps {
+  onSave: (type: "draft" | "final") => void;
+}
+
+export default function FooterNav({ onSave }: FooterNavProps) {
   return (
     <div className=" bg-background border-t px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
       {/* 🔙 LEFT BUTTON */}

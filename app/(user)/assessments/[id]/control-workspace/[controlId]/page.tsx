@@ -1,8 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api-client";
 import ControlWorkspace from "@/components/user/control-workspace/ControlWorkspace";
+
+interface ApiItem {
+  id: string;
+  status: string;
+  comments: string | null;
+  owner: string | null;
+  targetDate: string | null;
+  _count?: { evidence: number };
+  control: {
+    id: string;
+    code: string;
+    title: string;
+    description: string;
+    severity: string;
+    weight: number;
+    framework?: { code: string };
+  };
+}
+
+interface ApiResponse {
+  items: ApiItem[];
+}
 
 interface ControlWorkspaceData {
   id: string;
@@ -27,69 +50,47 @@ export default function Page() {
   const assessmentId = params?.id as string;
   const controlId = params?.controlId as string;
 
-  const [control, setControl] = useState<ControlWorkspaceData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    data: control,
+    isLoading: loading,
+    error: queryError,
+  } = useQuery({
+    queryKey: ["control", assessmentId, controlId],
+    queryFn: async () => {
+      const data = await apiClient.get<ApiResponse>(
+        `/api/assessments/${assessmentId}/items?search=${encodeURIComponent(controlId)}&limit=100`,
+      );
 
-  // Fetch the assessment item from the real API
-  useEffect(() => {
-    if (!assessmentId || !controlId) {
-      return;
-    }
+      const items = data.items ?? [];
+      const item = items.find(
+        (i) => i.control.code === controlId || i.control.id === controlId || i.id === controlId,
+      );
 
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Fetch the assessment items and find the one matching this controlId
-        const response = await fetch(
-          `/api/assessments/${assessmentId}/items?search=${encodeURIComponent(controlId)}&limit=100`,
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to load assessment item");
-        }
-
-        const json = await response.json();
-        const items = json.data?.items ?? [];
-
-        // Find the item by control code or control ID
-        const item = items.find(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (i: any) =>
-            i.control.code === controlId || i.control.id === controlId || i.id === controlId,
-        );
-
-        if (!item) {
-          throw new Error("Control not found in this assessment");
-        }
-
-        setControl({
-          id: item.control.code,
-          itemId: item.id,
-          framework: item.control.framework?.code ?? "Unknown",
-          title: item.control.title,
-          description: item.control.description,
-          severity: item.control.severity,
-          status: item.status,
-          weight: item.control.weight,
-          assessmentId,
-          comments: item.comments,
-          owner: item.owner ?? null,
-          targetDate: item.targetDate ?? null,
-          evidenceCount: item._count?.evidence ?? 0,
-        });
-      } catch (err) {
-        console.error("Failed to load control:", err);
-        setError(err instanceof Error ? err.message : "Failed to load control");
-      } finally {
-        setLoading(false);
+      if (!item) {
+        throw new Error("Control not found in this assessment");
       }
-    };
 
-    void fetchData();
-  }, [assessmentId, controlId]);
+      return {
+        id: item.control.code,
+        itemId: item.id,
+        framework: item.control.framework?.code ?? "Unknown",
+        title: item.control.title,
+        description: item.control.description,
+        severity: item.control.severity,
+        status: item.status,
+        weight: item.control.weight,
+        assessmentId,
+        comments: item.comments,
+        owner: item.owner ?? null,
+        targetDate: item.targetDate ?? null,
+        evidenceCount: item._count?.evidence ?? 0,
+      } as ControlWorkspaceData;
+    },
+    enabled: !!assessmentId && !!controlId,
+  });
+
+  const error =
+    queryError instanceof Error ? queryError.message : queryError ? "Failed to load control" : null;
 
   if (!assessmentId || !controlId) {
     return <div className="p-6 text-sm text-red-500">Invalid route</div>;

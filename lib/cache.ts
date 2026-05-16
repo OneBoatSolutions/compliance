@@ -15,7 +15,7 @@ export async function getCache<T>(key: string): Promise<T | null> {
   }
 }
 
-export async function setCache(key: string, data: any, ttlSeconds: number): Promise<void> {
+export async function setCache<T>(key: string, data: T, ttlSeconds: number): Promise<void> {
   try {
     await redis.set(key, JSON.stringify(data), "EX", ttlSeconds);
   } catch (error) {

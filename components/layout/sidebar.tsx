@@ -1,11 +1,28 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronLeft, ChevronRight, LifeBuoy, ShieldCheck } from "lucide-react";
 
-export default function Sidebar({ items = [], collapsed, setCollapsed, isMobile = false }: any) {
+export interface SidebarItem {
+  label: string;
+  href: string;
+  icon?: React.ElementType;
+}
+
+export interface SidebarProps {
+  items?: SidebarItem[];
+  collapsed?: boolean;
+  setCollapsed?: (collapsed: boolean) => void;
+  isMobile?: boolean;
+}
+
+export default function Sidebar({
+  items = [],
+  collapsed,
+  setCollapsed,
+  isMobile = false,
+}: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -29,7 +46,7 @@ export default function Sidebar({ items = [], collapsed, setCollapsed, isMobile 
         {/* Collapse button only desktop */}
         {!isMobile && (
           <button
-            onClick={() => setCollapsed(!collapsed)}
+            onClick={() => setCollapsed?.(!collapsed)}
             className="text-gray-600 hover:text-primary transition"
           >
             {collapsed ? <ChevronRight /> : <ChevronLeft />}
@@ -39,7 +56,7 @@ export default function Sidebar({ items = [], collapsed, setCollapsed, isMobile 
 
       {/*  NAV */}
       <nav className="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
-        {items.map((item: any) => {
+        {items.map((item: SidebarItem) => {
           const isActive = pathname.startsWith(item.href);
           const Icon = item.icon;
 

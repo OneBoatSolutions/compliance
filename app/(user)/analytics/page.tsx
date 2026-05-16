@@ -2,6 +2,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api-client";
 import {
   LineChart,
   Line,
@@ -334,11 +336,20 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
 
 export default function AnalyticsPage() {
   // ── API state ──────────────────────────────────────────────────────────────
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsApiResponse | null>(null);
-  const [analyticsLoading, setAnalyticsLoading] = useState(true);
-  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
-  // ── UI state ──────────────────────────────────────────────────────────────
   const [timeRange, setTimeRange] = useState("Last 30 days");
+
+  const {
+    data: analyticsData = null,
+    isLoading: analyticsLoading,
+    error,
+  } = useQuery({
+    queryKey: ["analytics", timeRange],
+    queryFn: () =>
+      apiClient.get<AnalyticsApiResponse>(`/api/analytics?range=${encodeURIComponent(timeRange)}`),
+  });
+  const analyticsError = error instanceof Error ? error.message : null;
+
+  // ── UI state ──────────────────────────────────────────────────────────────
   const [sortCol, setSortCol] = useState("score");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
@@ -363,37 +374,10 @@ export default function AnalyticsPage() {
 
   // ── Fetch /api/analytics ───────────────────────────────────────────────────
   useEffect(() => {
-    const fetchAnalytics = async () => {
-      try {
-        setAnalyticsLoading(true);
-
-        const res = await fetch("/api/analytics", {
-          cache: "no-store",
-        });
-
-        if (!res.ok) {
-          throw new Error(`Analytics API error: ${res.status}`);
-        }
-
-        const json = await res.json();
-        //console.log("RAW API RESPONSE:", json);
-
-        const payload: AnalyticsApiResponse = json.data ?? json;
-        //console.log("PARSED ANALYTICS PAYLOAD:", payload);
-
-        setAnalyticsData(payload);
-
-        // Animate only once
-        setAnimated(true);
-      } catch (err) {
-        setAnalyticsError(err instanceof Error ? err.message : "Failed to fetch analytics");
-      } finally {
-        setAnalyticsLoading(false);
-      }
-    };
-
-    fetchAnalytics();
-  }, []);
+    if (analyticsData && !animated) {
+      setAnimated(true);
+    }
+  }, [analyticsData, animated]);
 
   // ── Derived data ────────────────────────
   const overallScore = getOverallScore(analyticsData);

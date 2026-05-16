@@ -299,7 +299,10 @@ export function uploadWithProgress<TData>(
   return { promise, abort: () => xhr.abort() };
 }
 
-export async function getBlob(input: string, options?: ApiRequestOptions<never>): Promise<Blob> {
+export async function getBlob(
+  input: string,
+  options: ApiRequestOptions<never> = {},
+): Promise<Blob> {
   const requestInit: RequestInit = {
     ...options,
     method: "GET",
