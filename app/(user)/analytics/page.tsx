@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
+import { toast } from "sonner";
 import {
   LineChart,
   Line,
@@ -367,11 +368,6 @@ export default function AnalyticsPage() {
   const [shareEmail, setShareEmail] = useState("");
   const [scheduleFrequency, setScheduleFrequency] = useState("weekly");
 
-  const [toast, setToast] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
-
   // ── Fetch /api/analytics ───────────────────────────────────────────────────
   useEffect(() => {
     if (analyticsData && !animated) {
@@ -443,9 +439,9 @@ export default function AnalyticsPage() {
 
       document.body.removeChild(link);
 
-      showToast("success", "CSV exported successfully");
+      toast.success("CSV exported successfully");
     } catch {
-      showToast("error", "Failed to export CSV");
+      toast.error("Failed to export CSV");
     } finally {
       setExportLoading(false);
       setExportOpen(false);
@@ -457,9 +453,9 @@ export default function AnalyticsPage() {
 
       window.print();
 
-      showToast("success", "PDF export started");
+      toast.success("PDF export started");
     } catch {
-      showToast("error", "Failed to export PDF");
+      toast.error("Failed to export PDF");
     } finally {
       setExportLoading(false);
       setExportOpen(false);
@@ -471,11 +467,11 @@ export default function AnalyticsPage() {
 
       await navigator.clipboard.writeText(window.location.href);
 
-      showToast("success", "Dashboard link copied");
+      toast.success("Dashboard link copied");
 
       setShareOpen(false);
     } catch {
-      showToast("error", "Failed to share dashboard");
+      toast.error("Failed to share dashboard");
     } finally {
       setShareLoading(false);
     }
@@ -489,11 +485,11 @@ export default function AnalyticsPage() {
 
       await new Promise((resolve) => setTimeout(resolve, 1200));
 
-      showToast("success", `Report scheduled ${scheduleFrequency}`);
+      toast.success(`Report scheduled ${scheduleFrequency}`);
 
       setScheduleOpen(false);
     } catch {
-      showToast("error", "Failed to schedule report");
+      toast.error("Failed to schedule report");
     } finally {
       setScheduleLoading(false);
     }
@@ -542,25 +538,10 @@ export default function AnalyticsPage() {
 
     return insights.slice(0, 3);
   })();
-  const showToast = (type: "success" | "error", message: string) => {
-    setToast({ type, message });
-
-    setTimeout(() => {
-      setToast(null);
-    }, 3000);
-  };
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="bg-background min-h-screen">
-      {toast && (
-        <div
-          className={`fixed top-5 right-5 z-[100] px-4 py-3 rounded-lg shadow-lg text-sm font-semibold text-white transition-all
-      ${toast.type === "success" ? "bg-green-600" : "bg-red-600"}`}
-        >
-          {toast.message}
-        </div>
-      )}
       <div className="max-w-7xl mx-auto p-6 md:p-8 space-y-6">
         {/* ── PAGE HEADER ──────────────────────────────────────────────── */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">

@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { apiClient } from "@/lib/api-client";
+import { Share2, Printer } from "lucide-react";
 
 interface ReportHistoryItem {
   type?: string;
@@ -104,6 +105,23 @@ export default function ReportPage() {
 
   return (
     <div className="space-y-10">
+      <div className="flex justify-end gap-4 mb-6 print:hidden">
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(window.location.href);
+            toast.success("Link copied!");
+          }}
+          className="px-4 py-2 border rounded text-sm flex items-center gap-2 hover:bg-gray-50 bg-white shadow-sm"
+        >
+          <Share2 className="w-4 h-4" /> Share
+        </button>
+        <button
+          onClick={() => window.print()}
+          className="px-4 py-2 bg-purple-600 text-white rounded text-sm flex items-center gap-2 hover:bg-purple-700 shadow-sm"
+        >
+          <Printer className="w-4 h-4" /> Print
+        </button>
+      </div>
       <Cover
         appName={reportData.organization?.name || "Cipherion Report"}
         frameworks={

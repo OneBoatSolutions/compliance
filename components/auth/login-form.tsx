@@ -13,6 +13,7 @@ import { ApiClientError } from "@/lib/api-client";
 import { loginSchema } from "@/lib/validations/auth";
 import { useAuthStore } from "@/stores/auth-store";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const schema = loginSchema.extend({
   remember: z.boolean().optional(),
@@ -119,7 +120,7 @@ export default function LoginForm() {
 
       {/* SIGN IN BUTTON */}
 
-      <button
+      <Button
         type="submit"
         disabled={isLoading}
         className="w-full h-11 bg-[#6d18ff] hover:bg-[#5412cc] text-white font-semibold rounded-md flex items-center justify-center transition-all duration-200 hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-[#6d18ff] focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed"
@@ -129,7 +130,7 @@ export default function LoginForm() {
         ) : (
           "Sign in"
         )}
-      </button>
+      </Button>
 
       {/* DIVIDER */}
       <div className="flex items-center gap-4">
@@ -141,9 +142,11 @@ export default function LoginForm() {
       {/* GOOGLE */}
       <button
         type="button"
-        className="w-full border rounded-md py-2.5 flex items-center justify-center gap-2 border-slate-200 shadow-sm text-slate-700 hover:bg-slate-50 transition-colors"
+        disabled
+        title="Google OAuth currently unavailable"
+        className="w-full border rounded-md py-2.5 flex items-center justify-center gap-2 border-slate-200 shadow-sm text-slate-400 bg-slate-50 cursor-not-allowed opacity-60"
       >
-        <svg className="w-5 h-5" viewBox="0 0 48 48">
+        <svg className="w-5 h-5 grayscale opacity-70" viewBox="0 0 48 48">
           <path
             fill="#EA4335"
             d="M24 9.5c3.54 0 6.7 1.22 9.2 3.6l6.9-6.9C35.9 2.3 30.3 0 24 0 14.6 0 6.4 5.4 2.5 13.3l8.1 6.3C12.4 13.5 17.7 9.5 24 9.5z"
@@ -161,7 +164,7 @@ export default function LoginForm() {
             d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-6.8-5.3c-1.9 1.3-4.5 2.2-9.1 2.2-6.3 0-11.6-4-13.5-9.9l-8.1 6.3C6.4 42.6 14.6 48 24 48z"
           />
         </svg>
-        Continue with Google
+        Google OAuth (Unavailable)
       </button>
     </form>
   );

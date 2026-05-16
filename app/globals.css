@@ -174,8 +174,8 @@ body {
   }
 }*/
 html.dark {
-  --background: #fafafa;
-  --foreground: #171717;
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
@@ -217,11 +217,13 @@ html.dark {
 @keyframes authFadeSlide {
   0% {
     opacity: 0;
-    transform: translateY(12px);
+    filter: blur(4px);
+    transform: translateY(16px) scale(0.98);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    filter: blur(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -236,7 +238,7 @@ html.dark {
 }
 
 .auth-route-enter {
-  animation: authFadeSlide 280ms ease-out;
+  animation: authFadeSlide 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .auth-float {
@@ -291,4 +293,26 @@ html.dark {
 
 .animate-fade-in {
   animation: fade-in 0.4s ease-in-out;
+}
+
+@media print {
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+  .print\:hidden {
+    display: none !important;
+  }
+  nav, header, footer, aside {
+    display: none !important;
+  }
+  main, .content {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  /* Avoid page breaks inside sections */
+  section, .card {
+    page-break-inside: avoid;
+  }
 }
