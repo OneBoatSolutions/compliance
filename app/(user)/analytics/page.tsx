@@ -567,7 +567,7 @@ export default function AnalyticsPage() {
               onChange={(e) => setTimeRange(e.target.value)}
               className="px-4 py-2 rounded-lg border border-border bg-card text-sm text-foreground font-medium cursor-pointer focus:ring-2 focus:ring-primary/50"
             >
-              {["Last 30 days", "Last 90 days", "All time", "Custom range"].map((o) => (
+              {["Last 30 days", "Last 90 days", "All time"].map((o) => (
                 <option key={o}>{o}</option>
               ))}
             </select>

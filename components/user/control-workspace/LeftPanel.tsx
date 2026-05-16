@@ -2,6 +2,13 @@
 
 import { CheckCircle, AlertTriangle, XCircle, MinusCircle } from "lucide-react";
 
+type AssessmentItemStatus =
+  | "NOT_STARTED"
+  | "COMPLIANT"
+  | "PARTIALLY_COMPLIANT"
+  | "NOT_COMPLIANT"
+  | "NOT_APPLICABLE";
+
 export default function LeftPanel({
   status,
   setStatus,
@@ -9,8 +16,8 @@ export default function LeftPanel({
   setComments,
   control,
 }: {
-  status: string;
-  setStatus: (s: string) => void;
+  status: AssessmentItemStatus;
+  setStatus: (s: AssessmentItemStatus) => void;
   comments: string;
   setComments: (c: string) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,21 +25,25 @@ export default function LeftPanel({
 }) {
   const options = [
     {
+      value: "COMPLIANT" as const,
       label: "Compliant",
       desc: "Full adherence verified",
       icon: <CheckCircle className="text-green-500" size={18} />,
     },
     {
+      value: "PARTIALLY_COMPLIANT" as const,
       label: "Partially Compliant",
       desc: "Gaps identified in implementation",
       icon: <AlertTriangle className="text-yellow-500" size={18} />,
     },
     {
+      value: "NOT_COMPLIANT" as const,
       label: "Not Compliant",
       desc: "Critical gaps or no evidence",
       icon: <XCircle className="text-red-500" size={18} />,
     },
     {
+      value: "NOT_APPLICABLE" as const,
       label: "Not Applicable",
       desc: "Outside of assessment scope",
       icon: <MinusCircle className="text-gray-400" size={18} />,
@@ -70,12 +81,12 @@ export default function LeftPanel({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {options.map((item, i) => {
-            const isActive = status === item.label;
+            const isActive = status === item.value;
 
             return (
               <div
                 key={i}
-                onClick={() => setStatus(item.label)}
+                onClick={() => setStatus(item.value)}
                 className={`cursor-pointer border rounded-xl p-4 transition-all duration-200
               ${
                 isActive

@@ -82,7 +82,7 @@ export default function ReportPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-10">
+      <div className="report-print-root space-y-10">
         <Skeleton className="h-[90vh] w-full rounded-xl" />
         <ExecutiveSummarySkeleton />
         <Skeleton className="h-32 w-full rounded-xl" />
@@ -104,7 +104,7 @@ export default function ReportPage() {
   }
 
   return (
-    <div className="space-y-10">
+    <div className="report-print-root space-y-10">
       <div className="flex justify-end gap-4 mb-6 print:hidden">
         <button
           onClick={() => {

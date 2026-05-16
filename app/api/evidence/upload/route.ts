@@ -10,12 +10,13 @@ import { parseMultipartRequest } from "@/lib/multipart";
 import { prisma } from "@/lib/prisma";
 import {
   evidenceUploadFieldsSchema,
-  MAX_EVIDENCE_FILES_PER_ITEM,
-  MAX_EVIDENCE_FILE_SIZE_BYTES,
+  maxEvidenceFilesPerItem,
+  maxEvidenceFileSizeBytes,
 } from "@/lib/validations/evidence";
 import { uploadFileToStorage } from "@/services/storage-service";
 
-async function scanFileBuffer(_fileBuffer: Buffer): Promise<void> {
+async function scanFileBuffer(fileBuffer: Buffer): Promise<void> {
+  void fileBuffer;
   // ClamAV integration stub (fail-open for now).
 }
 
@@ -37,7 +38,7 @@ export const POST = withErrorHandler(async (req: Request) => {
   }
 
   for (const file of parsed.files) {
-    if (file.size > MAX_EVIDENCE_FILE_SIZE_BYTES) {
+    if (file.size > maxEvidenceFileSizeBytes) {
       return errorResponse("File too large. Maximum supported size is 10MB", 413);
     }
   }
@@ -64,9 +65,9 @@ export const POST = withErrorHandler(async (req: Request) => {
     where: { assessmentItemId },
   });
 
-  if (existingFileCount + parsed.files.length > MAX_EVIDENCE_FILES_PER_ITEM) {
+  if (existingFileCount + parsed.files.length > maxEvidenceFilesPerItem) {
     return errorResponse(
-      `Maximum ${MAX_EVIDENCE_FILES_PER_ITEM} files are allowed per assessment item`,
+      `Maximum ${maxEvidenceFilesPerItem} files are allowed per assessment item`,
       400,
     );
   }

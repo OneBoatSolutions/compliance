@@ -56,6 +56,10 @@ export interface ExistingFile {
   uploaderName?: string;
 }
 
+interface EvidenceUploadResponse {
+  evidence: ExistingFile[];
+}
+
 interface EvidenceUploaderProps {
   assessmentItemId: string;
   existingFiles?: ExistingFile[];
@@ -149,7 +153,7 @@ export default function EvidenceUploader({
       formData.append("assessmentItemId", assessmentItemId);
       formData.append("description", "");
 
-      const { promise, abort } = apiClient.upload<{ id: string; uploaderName?: string }>(
+      const { promise, abort } = apiClient.upload<EvidenceUploadResponse>(
         "/api/evidence/upload",
         formData,
         (progress) => {
@@ -161,15 +165,16 @@ export default function EvidenceUploader({
 
       promise
         .then((response) => {
+          const uploadedEvidence = response.evidence?.[0];
           setFiles((prev) =>
             prev.map((f) =>
               f.id === id
                 ? {
                     ...f,
-                    id: response.id || id,
+                    id: uploadedEvidence?.id || id,
                     progress: 100,
                     status: "success",
-                    uploaderName: response.uploaderName,
+                    uploaderName: uploadedEvidence?.uploaderName,
                   }
                 : f,
             ),
@@ -258,9 +263,9 @@ export default function EvidenceUploader({
         next.add(fileObj.id);
         return next;
       });
-      const data = await apiClient.get<{ url: string }>(`/api/evidence/${fileObj.id}`);
-      if (data && data.url) {
-        window.open(data.url, "_blank");
+      const data = await apiClient.get<{ downloadUrl: string }>(`/api/evidence/${fileObj.id}`);
+      if (data && data.downloadUrl) {
+        window.open(data.downloadUrl, "_blank");
       } else {
         toast.error("Download URL not found in response");
       }

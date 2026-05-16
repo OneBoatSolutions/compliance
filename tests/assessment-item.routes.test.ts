@@ -2,7 +2,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { prisma } from "@/lib/prisma";
 import * as authHelpers from "@/lib/auth-helpers";
-import { PATCH as assessmentItemPatch } from "@/app/api/assessments/[id]/items/[itemId]/route";
+import {
+  GET as assessmentItemGet,
+  PATCH as assessmentItemPatch,
+} from "@/app/api/assessments/[id]/items/[itemId]/route";
 
 vi.mock("@/lib/prisma", () => {
   return {
@@ -14,6 +17,9 @@ vi.mock("@/lib/prisma", () => {
         findFirst: vi.fn(),
         findMany: vi.fn(),
         update: vi.fn(),
+      },
+      assessmentScoreLog: {
+        create: vi.fn(),
       },
       $transaction: vi.fn(),
     },
@@ -92,6 +98,74 @@ describe("Assessment item API route", () => {
     expect(prisma.assessment.updateMany).toHaveBeenCalledWith({
       where: { id: "asm_1" },
       data: { score: 50 },
+    });
+    expect(prisma.assessmentScoreLog.create).toHaveBeenCalledWith({
+      data: {
+        assessmentId: "asm_1",
+        overallScore: 50,
+        frameworkScores: [
+          {
+            frameworkId: "fw_1",
+            frameworkCode: "GDPR",
+            frameworkName: "GDPR",
+            score: 50,
+          },
+        ],
+      },
+    });
+  });
+
+  it("returns evidence for an owned assessment item", async () => {
+    vi.spyOn(prisma.assessmentItem, "findFirst").mockResolvedValue({
+      id: "item_1",
+      evidence: [
+        {
+          id: "ev_1",
+          originalName: "policy.pdf",
+          fileSize: 1024,
+          mimeType: "application/pdf",
+          description: "Access policy",
+          uploadedAt: new Date("2026-04-23T00:00:00.000Z"),
+        },
+      ],
+    } as never);
+
+    const req = new Request("http://localhost/api/assessments/asm_1/items/item_1", {
+      method: "GET",
+    });
+    const res = (await assessmentItemGet(req, {
+      params: { id: "asm_1", itemId: "item_1" },
+    })) as Response;
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(json.success).toBe(true);
+    expect(json.data.evidence).toHaveLength(1);
+    expect(json.data.evidence[0].id).toBe("ev_1");
+    expect(prisma.assessmentItem.findFirst).toHaveBeenCalledWith({
+      where: {
+        id: "item_1",
+        assessmentId: "asm_1",
+        assessment: {
+          userId: "user_1",
+        },
+      },
+      select: {
+        id: true,
+        evidence: {
+          orderBy: {
+            uploadedAt: "desc",
+          },
+          select: {
+            id: true,
+            originalName: true,
+            fileSize: true,
+            mimeType: true,
+            description: true,
+            uploadedAt: true,
+          },
+        },
+      },
     });
   });
 

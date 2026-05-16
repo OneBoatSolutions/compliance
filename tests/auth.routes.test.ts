@@ -40,6 +40,7 @@ describe("Auth API routes", () => {
       method: "POST",
       body: JSON.stringify({
         name: "Test User",
+        companyName: "Test Company",
         email: "test@example.com",
         password: "StrongP@ssw0rd",
       }),

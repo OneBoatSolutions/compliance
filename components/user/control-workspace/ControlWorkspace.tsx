@@ -27,12 +27,21 @@ interface ControlData {
   targetDate: string | null;
 }
 
+type AssessmentItemStatus =
+  | "NOT_STARTED"
+  | "COMPLIANT"
+  | "PARTIALLY_COMPLIANT"
+  | "NOT_COMPLIANT"
+  | "NOT_APPLICABLE";
+
 interface Props {
   control: ControlData;
 }
 
 export default function ControlWorkspace({ control }: Props) {
-  const [status, setStatus] = useState(control?.status || "NOT_STARTED");
+  const [status, setStatus] = useState<AssessmentItemStatus>(
+    (control?.status as AssessmentItemStatus) || "NOT_STARTED",
+  );
   const [comments, setComments] = useState(control?.comments || "");
   const [assignee, setAssignee] = useState(control?.owner || "");
   const [dueDate, setDueDate] = useState(control?.targetDate || "");
@@ -58,7 +67,7 @@ export default function ControlWorkspace({ control }: Props) {
     fetchEvidence();
   }, [control?.assessmentId, control?.itemId]);
 
-  const handleSave = async (type = "final") => {
+  const handleSave = async (type: "draft" | "final" = "final") => {
     if (!control?.assessmentId || !control?.itemId) {
       toast.error("Missing assessment or item reference");
       return;
@@ -90,7 +99,7 @@ export default function ControlWorkspace({ control }: Props) {
     }
 
     try {
-      const responseData = await apiClient.patch<{ score: number }>(
+      await apiClient.patch<{ score: number }>(
         `/api/assessments/${control.assessmentId}/items/${control.itemId}`,
         { body: payload },
       );

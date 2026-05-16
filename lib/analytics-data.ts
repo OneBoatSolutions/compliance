@@ -12,7 +12,8 @@ import type {
 } from "@/types/analytics";
 
 const analyticsRevalidateSec = 60;
-const trendWindowDays = 30;
+
+export type AnalyticsRangeDays = 30 | 90 | null;
 
 function formatDateKey(date: Date): string {
   return date.toISOString().slice(0, 10);
@@ -34,8 +35,11 @@ function initCategoryEntry(): AnalyticsCategoryCompletion {
   };
 }
 
-async function buildAnalyticsData(userId: string): Promise<AnalyticsApiData> {
-  const since = new Date(Date.now() - trendWindowDays * 24 * 60 * 60 * 1000);
+async function buildAnalyticsData(
+  userId: string,
+  rangeDays: AnalyticsRangeDays,
+): Promise<AnalyticsApiData> {
+  const since = rangeDays === null ? null : new Date(Date.now() - rangeDays * 24 * 60 * 60 * 1000);
   const scoreLogClient = prisma as unknown as {
     assessmentScoreLog: {
       findMany: (args: unknown) => Promise<Array<{ createdAt: Date; overallScore: number }>>;
@@ -70,7 +74,7 @@ async function buildAnalyticsData(userId: string): Promise<AnalyticsApiData> {
     scoreLogClient.assessmentScoreLog.findMany({
       where: {
         assessment: { userId },
-        createdAt: { gte: since },
+        ...(since ? { createdAt: { gte: since } } : {}),
       },
       orderBy: { createdAt: "asc" },
       select: {
@@ -158,7 +162,8 @@ async function buildAnalyticsData(userId: string): Promise<AnalyticsApiData> {
 }
 
 export const getCachedAnalyticsData = unstable_cache(
-  async (userId: string) => buildAnalyticsData(userId),
+  async (userId: string, rangeDays: AnalyticsRangeDays = 30) =>
+    buildAnalyticsData(userId, rangeDays),
   ["analytics"],
   { revalidate: analyticsRevalidateSec },
 );

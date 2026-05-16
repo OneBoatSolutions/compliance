@@ -296,6 +296,11 @@ html.dark {
 }
 
 @media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
   body {
     background-color: white !important;
     color: black !important;
@@ -314,5 +319,31 @@ html.dark {
   /* Avoid page breaks inside sections */
   section, .card {
     page-break-inside: avoid;
+  }
+
+  .report-print-root {
+    background: white !important;
+    color: black !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  .report-print-root section {
+    break-inside: avoid;
+    box-shadow: none !important;
+    border-color: #d1d5db !important;
+  }
+
+  .report-print-root table {
+    break-inside: auto;
+  }
+
+  .report-print-root tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .report-print-root a[href]::after {
+    content: "";
   }
 }
