@@ -1,12 +1,16 @@
 import { apiClient } from "@/lib/api-client";
-import { ReportData } from "./report-types";
+import { ReportData, ReportViewResponse } from "./report-types";
 
 export const fetchReport = async (assessmentId: string) => {
   return await apiClient.get<ReportData>(`/api/reports/${assessmentId}`);
 };
 
+export const fetchReportView = async (assessmentId: string) => {
+  return await apiClient.get<ReportViewResponse>(`/api/reports/${assessmentId}/view`);
+};
+
 export const generateReport = async (assessmentId: string) => {
-  return await apiClient.post(`/api/reports/${assessmentId}/generate`);
+  return await apiClient.post<{ fileUrl: string }>(`/api/reports/${assessmentId}/generate`);
 };
 
 export const downloadReport = async (assessmentId: string) => {

@@ -10,8 +10,8 @@ interface Props {
       low: number;
     };
     heatmap: {
-      impact: number;
-      likelihood: number;
+      severity: string;
+      status: string;
       count: number;
     }[];
     remediation: {
@@ -35,11 +35,6 @@ export default function RiskAnalysis({ data }: Props) {
     low: 0,
   };
 
-  const getCellValue = (likelihood: number, impact: number) => {
-    const cell = heatmap.find((h) => h.impact === impact && h.likelihood === likelihood);
-    return cell?.count || 0;
-  };
-
   const total = distribution.critical + distribution.high + distribution.medium + distribution.low;
 
   const safeTotal = total || 1;
@@ -55,6 +50,9 @@ export default function RiskAnalysis({ data }: Props) {
     { value: distribution.medium, color: "#eab308" },
     { value: distribution.low, color: "#22c55e" },
   ];
+  const severities = ["CRITICAL", "HIGH", "MEDIUM", "LOW"];
+
+  const statuses = ["NOT_COMPLIANT", "PARTIALLY_COMPLIANT", "COMPLIANT"];
 
   return (
     <section className="bg-white rounded-xl shadow p-8 space-y-10">
@@ -124,33 +122,58 @@ export default function RiskAnalysis({ data }: Props) {
           <div className="flex items-center justify-center gap-3">
             <p className="text-xs text-gray-500 -rotate-90 whitespace-nowrap">Likelihood</p>
 
-            <div className="grid grid-cols-5 gap-2">
-              {[5, 4, 3, 2, 1].map((likelihood) =>
-                [1, 2, 3, 4, 5].map((impact) => {
-                  const value = getCellValue(likelihood, impact);
+            <div className="grid grid-cols-3 gap-2">
+              {severities.map((severity) =>
+                statuses.map((status) => {
+                  const cell = heatmap.find((h) => h.severity === severity && h.status === status);
+
+                  const value = cell?.count ?? 0;
 
                   let color = "bg-gray-100";
-                  if (value > 10) {
-                    color = "bg-red-500";
-                  } else if (value > 5) {
-                    color = "bg-yellow-400";
-                  } else if (value > 0) {
-                    color = "bg-green-500";
+
+                  if (severity === "CRITICAL") {
+                    color =
+                      status === "NOT_COMPLIANT"
+                        ? "bg-red-500"
+                        : status === "PARTIALLY_COMPLIANT"
+                          ? "bg-red-400"
+                          : "bg-red-300";
+                  } else if (severity === "HIGH") {
+                    color =
+                      status === "NOT_COMPLIANT"
+                        ? "bg-orange-500"
+                        : status === "PARTIALLY_COMPLIANT"
+                          ? "bg-orange-400"
+                          : "bg-orange-300";
+                  } else if (severity === "MEDIUM") {
+                    color =
+                      status === "NOT_COMPLIANT"
+                        ? "bg-yellow-500"
+                        : status === "PARTIALLY_COMPLIANT"
+                          ? "bg-yellow-400"
+                          : "bg-yellow-300";
+                  } else {
+                    color =
+                      status === "NOT_COMPLIANT"
+                        ? "bg-green-500"
+                        : status === "PARTIALLY_COMPLIANT"
+                          ? "bg-green-400"
+                          : "bg-green-300";
                   }
 
                   return (
-                    <div key={`${impact}-${likelihood}`} className="relative group">
+                    <div key={`${severity}-${status}`} className="relative group">
                       <div
-                        className={`h-12 w-12 rounded flex items-center justify-center text-xs font-medium text-white ${color}`}
+                        className={`h-16 w-24 rounded flex flex-col items-center justify-center text-xs font-medium text-white ${color}`}
                       >
-                        {value || ""}
+                        <span>{value}</span>
+
+                        <span className="text-[10px]">{severity}</span>
                       </div>
 
-                      {value > 0 && (
-                        <div className="absolute bottom-full mb-2 hidden group-hover:block bg-black text-white text-[10px] px-2 py-1 rounded whitespace-nowrap z-10">
-                          {value} risks • Impact {impact}, Likelihood {likelihood}
-                        </div>
-                      )}
+                      <div className="absolute bottom-full mb-2 hidden group-hover:block bg-black text-white text-[10px] px-2 py-1 rounded whitespace-nowrap z-10">
+                        {status} • {value} controls
+                      </div>
                     </div>
                   );
                 }),

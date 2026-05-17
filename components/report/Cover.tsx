@@ -62,7 +62,7 @@ export default function Cover({
             ) : (
               <FileDown size={14} />
             )}
-            {isGenerating ? "Exporting..." : "Export"}
+            {isGenerating ? "Generating..." : "Generate Report"}
           </button>
 
           {/* ⬇ Download */}

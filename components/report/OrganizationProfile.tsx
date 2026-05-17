@@ -25,14 +25,19 @@ export default function OrganizationProfile({ organization }: Props) {
   const dataInventory = organization?.dataInventory ?? [];
   const frameworks = organization?.frameworks ?? [];
 
-  const getRiskColor = (risk: string) => {
+  const getRiskColor = (risk: "LOW" | "MED" | "HIGH" | string) => {
     switch (risk) {
       case "HIGH":
         return "bg-red-100 text-red-600";
+
       case "MED":
         return "bg-yellow-100 text-yellow-600";
+
       case "LOW":
         return "bg-blue-100 text-blue-600";
+
+      default:
+        return "";
     }
   };
 

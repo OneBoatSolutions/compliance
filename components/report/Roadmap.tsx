@@ -87,7 +87,7 @@ export default function Roadmap({ roadmap }: Props) {
                   <h4 className="text-sm font-semibold text-gray-700">{item.title}</h4>
 
                   <span className={`text-xs px-2 py-1 rounded ${getStatusColor(item.status)}`}>
-                    {item.status.replace("_", " ")}
+                    {item.status?.replaceAll("_", " ") ?? "UNKNOWN"}
                   </span>
                 </div>
 

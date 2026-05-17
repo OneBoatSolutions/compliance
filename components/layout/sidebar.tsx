@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronLeft, ChevronRight, LifeBuoy, ShieldCheck } from "lucide-react";
+import { isNavItemActive } from "@/lib/nav-utils";
 
 export interface SidebarItem {
   label: string;
@@ -57,7 +58,8 @@ export default function Sidebar({
       {/*  NAV */}
       <nav className="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
         {items.map((item: SidebarItem) => {
-          const isActive = pathname.startsWith(item.href);
+          // Use the shared nav matcher from dev (fixes Reports/Assessments active-tab collision)
+          const isActive = isNavItemActive(item, pathname);
           const Icon = item.icon;
 
           return (
@@ -91,7 +93,7 @@ export default function Sidebar({
               Reach out to support or check documentation.
             </p>
 
-            <button className="w-full text-sm bg-primary text-white rounded-md py-1.5 hover:bg-primary-dark transition">
+            <button className="w-full text-sm bg-primary text-white rounded-md py-1.5 hover:opacity-90 transition">
               Contact Support
             </button>
           </div>

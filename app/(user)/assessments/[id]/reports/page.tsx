@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import ExecutiveSummary, { ExecutiveSummarySkeleton } from "@/components/report/ExecutiveSummary";
 
 import Cover from "@/components/report/Cover";
@@ -10,9 +11,8 @@ import OrganizationProfile from "@/components/report/OrganizationProfile";
 import RiskAnalysis from "@/components/report/RiskAnalysis";
 import Roadmap from "@/components/report/Roadmap";
 
-import { generateReport, downloadReport, fetchReport } from "@/lib/report-api";
+import { generateReport, downloadReport, fetchReportView } from "@/lib/report-api";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { apiClient } from "@/lib/api-client";
 import { Share2, Printer } from "lucide-react";
@@ -25,36 +25,47 @@ interface ReportHistoryItem {
 }
 
 export default function ReportPage() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const [isGenerating, setIsGenerating] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const {
-    data: reportData,
-    isLoading,
-    isError,
-    refetch,
-  } = useQuery({
-    queryKey: ["report", id],
-    queryFn: () => fetchReport(id as string),
+  // Primary data: use the rich /view endpoint introduced in feat/fe1/report-integration
+  // This provides typed ReportViewResponse with real backend calculations
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["reportView", id],
+    queryFn: () => fetchReportView(id as string),
     enabled: !!id,
     retry: 1,
   });
 
+  // Report history sidebar: preserved from our branch fix (investigate.md: Missing Report History)
   const { data: historyData } = useQuery({
     queryKey: ["report-history", id],
     queryFn: () => apiClient.get<ReportHistoryItem[]>(`/api/reports/${id}/history`),
     enabled: !!id,
   });
 
-  // 🔹 Handlers
+  // 🔹 Generate: use dev's approach — extract fileUrl from generate response
+  // and open the PDF directly (resolves race condition of separate generate + download calls)
   const handleGenerate = async () => {
-    setIsGenerating(true);
     const toastId = toast.loading("Generating report...");
 
     try {
-      await generateReport(id as string);
+      setIsGenerating(true);
+
+      // Generate report and get download URL directly from the response
+      const { fileUrl: url } = await generateReport(id as string);
+
+      // Open PDF in new tab
+      const link = document.createElement("a");
+      link.href = url;
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
       toast.success("Report generated successfully", { id: toastId });
+      // Refetch to update history section
       refetch();
     } catch (err) {
       console.error(err);
@@ -64,6 +75,7 @@ export default function ReportPage() {
     }
   };
 
+  // 🔹 Download: preserved from our branch (dev's version dropped this entirely)
   const handleDownload = async () => {
     setIsDownloading(true);
     const toastId = toast.loading("Preparing download...");
@@ -92,7 +104,7 @@ export default function ReportPage() {
     );
   }
 
-  if (isError || !reportData) {
+  if (isError || !data) {
     return (
       <div className="flex flex-col items-center justify-center h-64 space-y-4">
         <p className="text-gray-500">Failed to load report data.</p>
@@ -103,8 +115,70 @@ export default function ReportPage() {
     );
   }
 
+  // ── Data mapping: transform ReportViewResponse into component prop shapes ──
+
+  // OrganizationProfile shape — maps risk strings including CRITICAL → HIGH
+  const organizationUI = {
+    name: data.organization.productName,
+    systems: data.organization.services,
+    reportId: data.assessment.id,
+    dataInventory: data.evidenceRows.map((e) => ({
+      category: e.code,
+      inScope: e.count > 0,
+      examples: e.examples,
+      risk: (["CRITICAL", "HIGH"].includes(e.risk.toUpperCase())
+        ? "HIGH"
+        : e.risk.toUpperCase() === "MEDIUM"
+          ? "MED"
+          : e.risk.toUpperCase() === "LOW"
+            ? "LOW"
+            : "HIGH") as "LOW" | "MED" | "HIGH",
+    })),
+    frameworks: data.frameworkScores.map((f) => ({
+      name: f.frameworkName,
+      score: f.score,
+      controls: 0,
+      minorGaps: 0,
+      highRisk: 0,
+    })),
+  };
+
+  // RiskAnalysis shape — uses real backend heatmap (2D severity × status matrix)
+  const riskUI = {
+    total: data.riskSummary.totalRiskScore,
+    distribution: data.distribution,
+    heatmap: data.heatmap,
+    remediation: data.controlRows.map((c) => ({
+      id: c.code,
+      action: c.title,
+      owner: c.owner,
+      dueDate: c.targetDate,
+      progress: c.progress,
+    })),
+  };
+
+  // Roadmap shape — uses uiStatus from backend (COMPLETED/IN_PROGRESS/OVERDUE)
+  // Excludes NOT_STARTED from progress counts per dev's audit fix
+  const roadmapUI = {
+    summary: {
+      total: data.controlRows.length,
+      completed: data.controlRows.filter((c) => c.status === "COMPLIANT").length,
+      inProgress: data.controlRows.filter((c) => c.status === "PARTIALLY_COMPLIANT").length,
+      overdue: data.controlRows.filter((c) => c.uiStatus === "OVERDUE").length,
+    },
+    items: data.controlRows.map((c) => ({
+      id: c.code || "",
+      title: c.title || "",
+      owner: c.owner || "",
+      dueDate: c.targetDate || "",
+      status: (c.uiStatus || "IN_PROGRESS") as "COMPLETED" | "IN_PROGRESS" | "OVERDUE",
+      priority: (c.priority || "LOW") as "HIGH" | "MED" | "LOW",
+    })),
+  };
+
   return (
     <div className="report-print-root space-y-10">
+      {/* Share / Print bar — preserved from our branch (investigate.md: Missing share link) */}
       <div className="flex justify-end gap-4 mb-6 print:hidden">
         <button
           onClick={() => {
@@ -122,15 +196,12 @@ export default function ReportPage() {
           <Printer className="w-4 h-4" /> Print
         </button>
       </div>
+
       <Cover
-        appName={reportData.organization?.name || "Cipherion Report"}
-        frameworks={
-          reportData.organization?.frameworkScores?.map(
-            (f: { name: string; score: number }) => f.name,
-          ) || []
-        }
-        generatedAt={new Date().toISOString()}
-        preparedFor={reportData.organization?.name || "Customer"}
+        appName={data.organization.productName}
+        frameworks={data.frameworkScores.map((f) => f.frameworkCode)}
+        generatedAt={data.generatedAt}
+        preparedFor={data.organization.productName}
         version="1.0"
         isGenerating={isGenerating}
         isDownloading={isDownloading}
@@ -138,79 +209,17 @@ export default function ReportPage() {
         onDownload={handleDownload}
       />
 
-      <ExecutiveSummary
-        score={reportData.summary?.score || 0}
-        findings={(reportData.summary?.keyFindings || []).map((text: string) => ({
-          type: "info" as const,
-          text,
-        }))}
-        alerts={[]}
-      />
+      {/* Executive Summary — uses real findings/alerts from /view endpoint */}
+      <ExecutiveSummary score={data.overallScore} findings={data.findings} alerts={data.alerts} />
 
       <div className="border-t border-gray-200 my-4" />
-      <OrganizationProfile
-        organization={{
-          name: reportData.organization?.name || "",
-          systems: "All Systems",
-          reportId: reportData.id,
-          dataInventory: [],
-          frameworks: (reportData.organization?.frameworkScores || []).map(
-            (f: { name: string; score: number }) => ({
-              name: f.name,
-              score: f.score,
-              controls: 10,
-              minorGaps: 0,
-              highRisk: 0,
-            }),
-          ),
-        }}
-      />
-
+      <OrganizationProfile organization={organizationUI} />
       <div className="border-t border-gray-200 my-4" />
-      <RiskAnalysis
-        data={{
-          total: reportData.risks?.total || 0,
-          distribution: {
-            critical: 0,
-            high: reportData.risks?.high || 0,
-            medium: reportData.risks?.medium || 0,
-            low: reportData.risks?.low || 0,
-          },
-          heatmap: [],
-          remediation: (reportData.remediation?.items || []).map(
-            (item: { title: string; priority: string; effort: string }, i: number) => ({
-              id: `R-${i + 1}`,
-              action: item.title,
-              owner: "System",
-              dueDate: new Date().toISOString().split("T")[0],
-              progress: 0,
-            }),
-          ),
-        }}
-      />
-
+      <RiskAnalysis data={riskUI} />
       <div className="border-t border-gray-200 my-4" />
-      <Roadmap
-        roadmap={{
-          summary: {
-            total: reportData.remediation?.items?.length || 0,
-            completed: 0,
-            inProgress: reportData.remediation?.items?.length || 0,
-            overdue: 0,
-          },
-          items: (reportData.remediation?.items || []).map(
-            (item: { title: string; priority: string; effort: string }, i: number) => ({
-              id: `R-${i + 1}`,
-              title: item.title,
-              owner: "System",
-              dueDate: new Date().toISOString().split("T")[0],
-              status: "IN_PROGRESS" as const,
-              priority: item.priority as "HIGH" | "MED" | "LOW",
-            }),
-          ),
-        }}
-      />
+      <Roadmap roadmap={roadmapUI} />
 
+      {/* Report History — preserved from our branch (investigate.md: Missing Report History) */}
       <div className="border-t border-gray-200 my-4" />
       <section className="bg-white rounded-xl shadow p-8 space-y-6">
         <h2 className="text-lg font-semibold text-purple-600 uppercase">REPORT HISTORY</h2>
