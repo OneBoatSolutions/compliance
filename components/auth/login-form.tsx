@@ -73,7 +73,11 @@ export default function LoginForm() {
         <div className="relative mt-1">
           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
 
-          <Input {...register("email")} placeholder="name@company.com" className="pl-10 h-11" />
+          <Input
+            {...register("email")}
+            placeholder="name@company.com"
+            className="pl-10 h-11 text-slate-900"
+          />
         </div>
 
         {errors.email && <p className="text-xs text-red-500 mt-1">Invalid email</p>}
@@ -90,7 +94,7 @@ export default function LoginForm() {
             {...register("password")}
             type={showPassword ? "text" : "password"}
             placeholder="••••••••"
-            className="pl-10 pr-10 h-11"
+            className="pl-10 pr-10 h-11 text-slate-900"
           />
 
           <button
