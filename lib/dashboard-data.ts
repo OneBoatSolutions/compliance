@@ -261,8 +261,4 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
   };
 }
 
-export const getCachedDashboardData = unstable_cache(
-  async (userId: string) => buildDashboardData(userId),
-  ["dashboard"],
-  { revalidate: dashboardRevalidateSec },
-);
+export const getCachedDashboardData = async (userId: string) => buildDashboardData(userId);

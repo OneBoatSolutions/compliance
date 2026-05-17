@@ -22,6 +22,8 @@ export default function DashboardPage() {
   } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => apiClient.get<DashboardApiData>("/api/dashboard"),
+    staleTime: 0,
+    refetchOnMount: true,
   });
 
   if (isLoading) {

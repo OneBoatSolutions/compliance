@@ -240,13 +240,9 @@ async function buildAnalyticsData(
   };
 }
 
-export const getCachedAnalyticsData = unstable_cache(
-  async (
-    userId: string,
-    rangeKind: AnalyticsRangeKind = "LAST_30",
-    startDateKey: string | null = null,
-    endDateKey: string | null = null,
-  ) => buildAnalyticsData(userId, rangeKind, startDateKey, endDateKey),
-  ["analytics"],
-  { revalidate: analyticsRevalidateSec },
-);
+export const getCachedAnalyticsData = async (
+  userId: string,
+  rangeKind: AnalyticsRangeKind = "LAST_30",
+  startDateKey: string | null = null,
+  endDateKey: string | null = null,
+) => buildAnalyticsData(userId, rangeKind, startDateKey, endDateKey);
