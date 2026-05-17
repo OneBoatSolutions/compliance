@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronLeft, ChevronRight, LifeBuoy, ShieldCheck } from "lucide-react";
+import { isNavItemActive } from "@/lib/nav-utils";
 
 export default function Sidebar({ items = [], collapsed, setCollapsed, isMobile = false }: any) {
   const pathname = usePathname();
@@ -40,7 +41,7 @@ export default function Sidebar({ items = [], collapsed, setCollapsed, isMobile 
       {/*  NAV */}
       <nav className="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
         {items.map((item: any) => {
-          const isActive = pathname.startsWith(item.href);
+          const isActive = isNavItemActive(item, pathname);
           const Icon = item.icon;
 
           return (

@@ -577,11 +577,11 @@ export default function ChecklistPage() {
             </button>
 
             <button
-              onClick={handleGenerateReport}
+              onClick={() => router.push("/reports")}
               disabled={isHeaderActionPending}
               className="flex items-center gap-2 px-4 py-2 text-sm border border-primary text-primary rounded-lg hover:bg-purple-50 disabled:opacity-60"
             >
-              <FileText className="w-4 h-4" /> Generate Report
+              <FileText className="w-4 h-4" /> View Report
             </button>
             <MoreActionsDropdown
               onExportCsv={exportChecklistCsv}

@@ -13,6 +13,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/stores/auth-store";
+import { isNavItemActive } from "@/lib/nav-utils";
 
 interface HeaderItem {
   label: string;
@@ -59,7 +60,7 @@ export default function Header({ items = [] }: HeaderProps) {
       {/*  CENTER NAV */}
       <nav className="hidden md:flex items-center gap-8">
         {headerItems.map((item) => {
-          const isActive = pathname.startsWith(item.href);
+          const isActive = isNavItemActive(item, pathname);
 
           return (
             <a
