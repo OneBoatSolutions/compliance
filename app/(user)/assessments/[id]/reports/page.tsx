@@ -1,7 +1,8 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import ExecutiveSummary, { ExecutiveSummarySkeleton } from "@/components/report/ExecutiveSummary";
 
 import Cover from "@/components/report/Cover";
@@ -10,43 +11,18 @@ import OrganizationProfile from "@/components/report/OrganizationProfile";
 import RiskAnalysis from "@/components/report/RiskAnalysis";
 import Roadmap from "@/components/report/Roadmap";
 
-import { generateReport, downloadReport } from "@/lib/report-api";
+import { generateReport, downloadReport, fetchReportView } from "@/lib/report-api";
 import { toast } from "sonner";
 import { ReportViewResponse } from "@/lib/report-types";
-export async function fetchReportView(assessmentId: string): Promise<ReportViewResponse> {
-  const res = await fetch(`/api/reports/${assessmentId}/view`);
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch report");
-  }
-
-  return res.json();
-}
 
 export default function ReportPage() {
   const { id } = useParams<{ id: string }>();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [data, setData] = useState<ReportViewResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!id) {
-      return;
-    }
-
-    (async () => {
-      try {
-        setLoading(true);
-        const res = await fetchReportView(id);
-        setData(res);
-      } catch (err) {
-        console.error(err);
-        setData(null);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [id]);
+  const { data, isLoading: loading } = useQuery({
+    queryKey: ["reportView", id],
+    queryFn: () => fetchReportView(id as string),
+    enabled: !!id,
+  });
 
   if (loading) {
     return (
@@ -68,11 +44,8 @@ export default function ReportPage() {
       // START LOADING
       setIsGenerating(true);
 
-      // 1. GENERATE REPORT
-      await generateReport(id as string);
-
-      // 2. GET DOWNLOAD URL
-      const url = await downloadReport(id as string);
+      // 1. GENERATE REPORT & GET DOWNLOAD URL
+      const { fileUrl: url } = await generateReport(id as string);
 
       // 3. OPEN PDF
       const link = document.createElement("a");
@@ -138,12 +111,13 @@ export default function ReportPage() {
       inScope: e.count > 0,
       examples: e.examples,
 
-      risk:
-        e.risk.toUpperCase() === "HIGH"
-          ? "HIGH"
-          : e.risk.toUpperCase() === "MEDIUM"
-            ? "MED"
-            : "LOW",
+      risk: ["CRITICAL", "HIGH"].includes(e.risk.toUpperCase())
+        ? "HIGH"
+        : e.risk.toUpperCase() === "MEDIUM"
+          ? "MED"
+          : e.risk.toUpperCase() === "LOW"
+            ? "LOW"
+            : "HIGH",
     })),
 
     frameworks: data.frameworkScores.map((f) => ({
@@ -184,11 +158,9 @@ export default function ReportPage() {
 
       completed: data.controlRows.filter((c) => c.status === "COMPLIANT").length,
 
-      inProgress: data.controlRows.filter(
-        (c) => c.status === "PARTIALLY_COMPLIANT" || c.status === "NOT_STARTED",
-      ).length,
+      inProgress: data.controlRows.filter((c) => c.status === "PARTIALLY_COMPLIANT").length,
 
-      overdue: 0,
+      overdue: data.controlRows.filter((c) => c.uiStatus === "OVERDUE").length,
     },
 
     items: data.controlRows.map((c) => ({

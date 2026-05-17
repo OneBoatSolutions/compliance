@@ -132,13 +132,33 @@ export default function RiskAnalysis({ data }: Props) {
                   let color = "bg-gray-100";
 
                   if (severity === "CRITICAL") {
-                    color = "bg-red-500";
+                    color =
+                      status === "NOT_COMPLIANT"
+                        ? "bg-red-500"
+                        : status === "PARTIALLY_COMPLIANT"
+                          ? "bg-red-400"
+                          : "bg-red-300";
                   } else if (severity === "HIGH") {
-                    color = "bg-orange-500";
+                    color =
+                      status === "NOT_COMPLIANT"
+                        ? "bg-orange-500"
+                        : status === "PARTIALLY_COMPLIANT"
+                          ? "bg-orange-400"
+                          : "bg-orange-300";
                   } else if (severity === "MEDIUM") {
-                    color = "bg-yellow-400";
+                    color =
+                      status === "NOT_COMPLIANT"
+                        ? "bg-yellow-500"
+                        : status === "PARTIALLY_COMPLIANT"
+                          ? "bg-yellow-400"
+                          : "bg-yellow-300";
                   } else {
-                    color = "bg-green-500";
+                    color =
+                      status === "NOT_COMPLIANT"
+                        ? "bg-green-500"
+                        : status === "PARTIALLY_COMPLIANT"
+                          ? "bg-green-400"
+                          : "bg-green-300";
                   }
 
                   return (
