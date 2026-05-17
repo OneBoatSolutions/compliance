@@ -1,11 +1,12 @@
 import { redirect } from "next/navigation";
 
 interface ReportAliasPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function ReportAliasPage({ params }: ReportAliasPageProps) {
-  redirect(`/assessments/${params.id}/reports`);
+export default async function ReportAliasPage({ params }: ReportAliasPageProps) {
+  const { id } = await params;
+  redirect(`/assessments/${id}/reports`);
 }
