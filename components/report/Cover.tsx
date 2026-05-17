@@ -11,6 +11,7 @@ interface CoverProps {
   version: string;
 
   onGenerate: () => void;
+  isGenerating?: boolean;
   onDownload: () => void;
 }
 
@@ -21,6 +22,7 @@ export default function Cover({
   preparedFor,
   version,
   onGenerate,
+  isGenerating,
   onDownload,
 }: CoverProps) {
   const formattedDate = new Date(generatedAt).toLocaleDateString(undefined, {
@@ -49,11 +51,12 @@ export default function Cover({
           {/*  Export (Generate) */}
           <button
             onClick={onGenerate}
+            disabled={isGenerating}
             className="flex items-center gap-1 px-3 py-1 border rounded 
-            hover:bg-gray-100 hover:shadow-sm transition"
+            hover:bg-gray-100 hover:shadow-sm transition disabled:opacity-50"
           >
+            {isGenerating ? "Generating..." : "Generate Report"}
             <FileDown size={14} />
-            Export
           </button>
 
           {/* ⬇ Download */}

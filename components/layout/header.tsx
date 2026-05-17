@@ -59,7 +59,17 @@ export default function Header({ items = [] }: HeaderProps) {
       {/*  CENTER NAV */}
       <nav className="hidden md:flex items-center gap-8">
         {headerItems.map((item) => {
-          const isActive = pathname.startsWith(item.href);
+          const isReportsPage = pathname.includes("/reports");
+
+          const isAssessmentPage =
+            pathname.includes("/assessments") && !pathname.includes("/reports");
+
+          const isActive =
+            item.label === "Reports"
+              ? isReportsPage
+              : item.label === "Assessments"
+                ? isAssessmentPage
+                : pathname.startsWith(item.href);
 
           return (
             <a

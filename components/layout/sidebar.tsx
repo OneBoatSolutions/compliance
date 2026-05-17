@@ -40,7 +40,17 @@ export default function Sidebar({ items = [], collapsed, setCollapsed, isMobile 
       {/*  NAV */}
       <nav className="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
         {items.map((item: any) => {
-          const isActive = pathname.startsWith(item.href);
+          const isReportsPage = pathname.includes("/reports");
+
+          const isAssessmentPage =
+            pathname.includes("/assessments") && !pathname.includes("/reports");
+
+          const isActive =
+            item.label === "Reports"
+              ? isReportsPage
+              : item.label === "Assessments"
+                ? isAssessmentPage
+                : pathname.startsWith(item.href);
           const Icon = item.icon;
 
           return (
