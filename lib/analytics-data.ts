@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import type {
   AnalyticsApiData,
   AnalyticsCategoryCompletion,
+  AnalyticsRemediationProgress,
   AnalyticsRiskHeatmapCell,
   AnalyticsStatusDistribution,
   AnalyticsTrendPoint,
@@ -13,7 +14,12 @@ import type {
 
 const analyticsRevalidateSec = 60;
 
-export type AnalyticsRangeDays = 30 | 90 | null;
+export type AnalyticsRangeKind = "LAST_30" | "LAST_90" | "ALL_TIME" | "CUSTOM";
+
+interface AnalyticsDateBounds {
+  start: Date | null;
+  end: Date | null;
+}
 
 function formatDateKey(date: Date): string {
   return date.toISOString().slice(0, 10);
@@ -35,54 +41,116 @@ function initCategoryEntry(): AnalyticsCategoryCompletion {
   };
 }
 
+function parseDateBoundary(value: string | null, boundary: "start" | "end"): Date | null {
+  if (!value) {
+    return null;
+  }
+
+  return new Date(`${value}T${boundary === "start" ? "00:00:00.000" : "23:59:59.999"}Z`);
+}
+
+function getDateBounds(
+  rangeKind: AnalyticsRangeKind,
+  startDateKey: string | null,
+  endDateKey: string | null,
+): AnalyticsDateBounds {
+  if (rangeKind === "ALL_TIME") {
+    return { start: null, end: null };
+  }
+
+  if (rangeKind === "CUSTOM") {
+    return {
+      start: parseDateBoundary(startDateKey, "start"),
+      end: parseDateBoundary(endDateKey, "end"),
+    };
+  }
+
+  const days = rangeKind === "LAST_90" ? 90 : 30;
+  return {
+    start: new Date(Date.now() - days * 24 * 60 * 60 * 1000),
+    end: null,
+  };
+}
+
 async function buildAnalyticsData(
   userId: string,
-  rangeDays: AnalyticsRangeDays,
+  rangeKind: AnalyticsRangeKind,
+  startDateKey: string | null,
+  endDateKey: string | null,
 ): Promise<AnalyticsApiData> {
-  const since = rangeDays === null ? null : new Date(Date.now() - rangeDays * 24 * 60 * 60 * 1000);
+  const bounds = getDateBounds(rangeKind, startDateKey, endDateKey);
+  const createdAtFilter =
+    bounds.start || bounds.end
+      ? {
+          ...(bounds.start ? { gte: bounds.start } : {}),
+          ...(bounds.end ? { lte: bounds.end } : {}),
+        }
+      : undefined;
   const scoreLogClient = prisma as unknown as {
     assessmentScoreLog: {
       findMany: (args: unknown) => Promise<Array<{ createdAt: Date; overallScore: number }>>;
     };
   };
 
-  const [items, trendRows] = await Promise.all([
-    prisma.assessmentItem.findMany({
-      where: {
-        assessment: { userId },
-      },
-      select: {
-        status: true,
-        control: {
-          select: {
-            weight: true,
-            isGateway: true,
-            frameworkId: true,
-            framework: {
-              select: {
-                id: true,
-                code: true,
-                name: true,
+  const [items, trendRows, totalRemediationSteps, completedRemediationSteps, activePlans] =
+    await Promise.all([
+      prisma.assessmentItem.findMany({
+        where: {
+          assessment: { userId },
+        },
+        select: {
+          status: true,
+          control: {
+            select: {
+              weight: true,
+              isGateway: true,
+              frameworkId: true,
+              framework: {
+                select: {
+                  id: true,
+                  code: true,
+                  name: true,
+                },
               },
+              category: true,
+              severity: true,
             },
-            category: true,
-            severity: true,
           },
         },
-      },
-    }),
-    scoreLogClient.assessmentScoreLog.findMany({
-      where: {
-        assessment: { userId },
-        ...(since ? { createdAt: { gte: since } } : {}),
-      },
-      orderBy: { createdAt: "asc" },
-      select: {
-        createdAt: true,
-        overallScore: true,
-      },
-    }),
-  ]);
+      }),
+      scoreLogClient.assessmentScoreLog.findMany({
+        where: {
+          assessment: { userId },
+          ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
+        },
+        orderBy: { createdAt: "asc" },
+        select: {
+          createdAt: true,
+          overallScore: true,
+        },
+      }),
+      prisma.remediationStep.count({
+        where: {
+          plan: {
+            userId,
+          },
+        },
+      }),
+      prisma.remediationStep.count({
+        where: {
+          status: "DONE",
+          plan: {
+            userId,
+          },
+        },
+      }),
+      prisma.remediationPlan.count({
+        where: {
+          userId,
+          status: "ACTIVE",
+        },
+      }),
+    ]);
 
   const frameworkComparison = computeFrameworkScores(items as ScoreItemRow[]);
 
@@ -152,18 +220,33 @@ async function buildAnalyticsData(
     }))
     .sort((a, b) => a.date.localeCompare(b.date));
 
+  const remediationProgress: AnalyticsRemediationProgress = {
+    totalSteps: totalRemediationSteps,
+    completedSteps: completedRemediationSteps,
+    activePlans,
+    completionRate:
+      totalRemediationSteps > 0
+        ? Math.round((completedRemediationSteps / totalRemediationSteps) * 100)
+        : 0,
+  };
+
   return {
     trend,
     frameworkComparison,
     statusDistribution,
     categoryCompletion,
     riskHeatmap,
+    remediationProgress,
   };
 }
 
 export const getCachedAnalyticsData = unstable_cache(
-  async (userId: string, rangeDays: AnalyticsRangeDays = 30) =>
-    buildAnalyticsData(userId, rangeDays),
+  async (
+    userId: string,
+    rangeKind: AnalyticsRangeKind = "LAST_30",
+    startDateKey: string | null = null,
+    endDateKey: string | null = null,
+  ) => buildAnalyticsData(userId, rangeKind, startDateKey, endDateKey),
   ["analytics"],
   { revalidate: analyticsRevalidateSec },
 );

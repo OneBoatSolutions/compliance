@@ -32,10 +32,18 @@ export interface AnalyticsRiskHeatmapCell {
   count: number;
 }
 
+export interface AnalyticsRemediationProgress {
+  totalSteps: number;
+  completedSteps: number;
+  activePlans: number;
+  completionRate: number;
+}
+
 export interface AnalyticsApiData {
   trend: AnalyticsTrendPoint[];
   frameworkComparison: AnalyticsFrameworkComparison[];
   statusDistribution: AnalyticsStatusDistribution[];
   categoryCompletion: AnalyticsCategoryCompletion[];
   riskHeatmap: AnalyticsRiskHeatmapCell[];
+  remediationProgress: AnalyticsRemediationProgress;
 }

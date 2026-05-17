@@ -150,7 +150,7 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
         score: true,
         updatedAt: true,
         organization: {
-          select: { productName: true },
+          select: { name: true, productName: true },
         },
         items: {
           select: {
@@ -228,7 +228,7 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
       status: string;
       score: number | null;
       updatedAt: Date;
-      organization: { productName: string };
+      organization: { name: string; productName: string | null };
       items: ItemWithControlFramework[];
     }) => {
       const items = a.items as ItemWithControlFramework[];
@@ -242,7 +242,7 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
 
       return {
         id: a.id,
-        organizationName: a.organization.productName,
+        organizationName: a.organization.productName ?? a.organization.name,
         status: a.status,
         score,
         updatedAt: a.updatedAt.toISOString(),

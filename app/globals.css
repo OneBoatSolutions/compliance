@@ -308,16 +308,21 @@ html.dark {
   .print\:hidden {
     display: none !important;
   }
-  nav, header, footer, aside {
+  nav,
+  header,
+  footer,
+  aside {
     display: none !important;
   }
-  main, .content {
+  main,
+  .content {
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
   }
   /* Avoid page breaks inside sections */
-  section, .card {
+  section,
+  .card {
     page-break-inside: avoid;
   }
 
@@ -345,5 +350,33 @@ html.dark {
 
   .report-print-root a[href]::after {
     content: "";
+  }
+
+  body:has(.remediation-print-root) * {
+    visibility: hidden;
+  }
+
+  body:has(.remediation-print-root) .remediation-print-root,
+  body:has(.remediation-print-root) .remediation-print-root * {
+    visibility: visible;
+  }
+
+  .remediation-print-root {
+    position: absolute !important;
+    inset: auto !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    color: black !important;
+    background: white !important;
+  }
+
+  .remediation-print-root * {
+    box-shadow: none !important;
   }
 }
