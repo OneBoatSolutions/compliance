@@ -14,6 +14,7 @@ interface RightSidebarProps {
     description: string;
     framework: string;
     severity: string;
+    assessmentId: string;
   };
   status: string;
 }
@@ -27,18 +28,18 @@ export default function RightSidebar({ control, status }: RightSidebarProps) {
 
       {/* Requirements */}
       <div>
-        <ControlRequirements />
+        <ControlRequirements controlId={control?.id} />
       </div>
       <div>
-        <RelatedControls />
+        <RelatedControls controlId={control?.id} />
       </div>
       <div>
-        <DiscussionPanel />
+        <DiscussionPanel assessmentId={control?.assessmentId} assessmentItemId={control?.itemId} />
       </div>
 
       {/* Audit Trail */}
       <div>
-        <AuditTrail />
+        <AuditTrail assessmentId={control?.assessmentId} assessmentItemId={control?.itemId} />
       </div>
 
       {/* Remediation Drawer */}

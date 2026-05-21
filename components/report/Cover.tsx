@@ -12,6 +12,7 @@ interface CoverProps {
 
   isGenerating?: boolean;
   isDownloading?: boolean;
+  hasReport?: boolean;
   onGenerate: () => void;
   onDownload: () => void;
 }
@@ -24,6 +25,7 @@ export default function Cover({
   version,
   isGenerating,
   isDownloading,
+  hasReport,
   onGenerate,
   onDownload,
 }: CoverProps) {
@@ -68,9 +70,10 @@ export default function Cover({
           {/* ⬇ Download */}
           <button
             onClick={onDownload}
-            disabled={isDownloading}
+            disabled={isDownloading || !hasReport}
+            title={!hasReport ? "Generate a report first" : "Download PDF report"}
             className={`flex items-center gap-1 px-3 py-1 bg-purple-600 text-white rounded transition
-            ${isDownloading ? "opacity-50 cursor-not-allowed" : "hover:bg-purple-700 hover:shadow-md"}`}
+            ${isDownloading || !hasReport ? "opacity-50 cursor-not-allowed" : "hover:bg-purple-700 hover:shadow-md"}`}
           >
             {isDownloading ? (
               <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white" />

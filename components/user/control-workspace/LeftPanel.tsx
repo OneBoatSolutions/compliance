@@ -54,7 +54,7 @@ export default function LeftPanel({
     <div className="bg-white shadow-md border border-slate-200 rounded-2xl p-6 space-y-8">
       {/* 🔹 1. HEADER (FULL WIDTH) */}
       <div>
-        <p className="text-xs text-muted-foreground mb-1">{control?.id}</p>
+        <p className="text-xs text-muted-foreground mb-1">{control?.code || control?.id}</p>
 
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">{control?.title}</h2>

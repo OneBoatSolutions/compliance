@@ -217,6 +217,7 @@ model AssessmentItem {
   control         Control          @relation(fields: [controlId], references: [id])
   evidence        Evidence[]
   remediationPlan RemediationPlan?
+  discussionComments Comment[]
 
   @@unique([assessmentId, controlId])
   @@index([assessmentId])
@@ -276,6 +277,21 @@ model Evidence {
   @@index([assessmentItemId])
   @@index([uploadedAt])
   @@map("evidence")
+}
+
+model Comment {
+  id               String   @id @default(cuid())
+  assessmentItemId String
+  userId           String
+  userName         String
+  content          String
+  createdAt        DateTime @default(now())
+  
+  assessmentItem AssessmentItem @relation(fields: [assessmentItemId], references: [id], onDelete: Cascade)
+  
+  @@index([assessmentItemId])
+  @@index([assessmentItemId, createdAt(sort: Desc)])
+  @@map("comments")
 }
 
 // --- Reports ---

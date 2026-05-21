@@ -502,10 +502,6 @@ export default function ChecklistPage() {
     toast.success("Checklist CSV exported.");
   };
 
-  const handleGenerateReport = () => {
-    exportChecklistCsv();
-  };
-
   const handleDuplicateAssessment = async () => {
     if (!assessmentId) {
       return;

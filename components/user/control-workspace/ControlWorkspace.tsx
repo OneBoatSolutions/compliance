@@ -13,7 +13,8 @@ import WorkspaceHeader from "./WorkspaceHeader";
 import { apiClient, ApiClientError } from "@/lib/api-client";
 
 interface ControlData {
-  id: string;
+  id: string; // The database control ID for API calls
+  code: string; // The visual code like GDPR-D1.0
   itemId: string;
   framework: string;
   title: string;
@@ -47,6 +48,13 @@ export default function ControlWorkspace({ control }: Props) {
   const [dueDate, setDueDate] = useState(control?.targetDate || "");
   const [isSaving, setIsSaving] = useState(false);
   const [existingFiles, setExistingFiles] = useState<ExistingFile[]>([]);
+  const [sectionProgress, setSectionProgress] = useState({
+    total: 0,
+    compliant: 0,
+    partiallyCompliant: 0,
+    nonCompliant: 0,
+    notStarted: 0,
+  });
 
   useEffect(() => {
     if (!control?.assessmentId || !control?.itemId) {
@@ -64,8 +72,25 @@ export default function ControlWorkspace({ control }: Props) {
         console.error("Failed to fetch existing evidence", error);
       }
     };
+    const fetchProgress = async () => {
+      try {
+        const data = await apiClient.get<{
+          total: number;
+          compliant: number;
+          partiallyCompliant: number;
+          nonCompliant: number;
+          notStarted: number;
+        }>(`/api/assessments/${control.assessmentId}/section-progress?controlId=${control.id}`);
+        if (data) {
+          setSectionProgress(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch section progress", error);
+      }
+    };
     fetchEvidence();
-  }, [control?.assessmentId, control?.itemId]);
+    fetchProgress();
+  }, [control?.assessmentId, control?.itemId, control?.id]);
 
   const handleSave = async (type: "draft" | "final" = "final") => {
     if (!control?.assessmentId || !control?.itemId) {
@@ -121,7 +146,7 @@ export default function ControlWorkspace({ control }: Props) {
       {/* Header */}
       <div className="space-y-6">
         <WorkspaceHeader control={control} />
-        <ProgressSection />
+        <ProgressSection {...sectionProgress} />
       </div>
 
       {/* Layout */}

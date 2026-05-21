@@ -45,6 +45,8 @@ export default function ReportPage() {
     enabled: !!id,
   });
 
+  const hasReport = Boolean(historyData && historyData.length > 0 && historyData[0].url);
+
   // 🔹 Generate: use dev's approach — extract fileUrl from generate response
   // and open the PDF directly (resolves race condition of separate generate + download calls)
   const handleGenerate = async () => {
@@ -205,6 +207,7 @@ export default function ReportPage() {
         version="1.0"
         isGenerating={isGenerating}
         isDownloading={isDownloading}
+        hasReport={hasReport}
         onGenerate={handleGenerate}
         onDownload={handleDownload}
       />

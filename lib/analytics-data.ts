@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 import type { ItemStatus, Severity } from "@prisma/client";
 
 import { computeFrameworkScores, type ScoreItemRow } from "@/lib/assessment-score";
@@ -11,8 +10,6 @@ import type {
   AnalyticsStatusDistribution,
   AnalyticsTrendPoint,
 } from "@/types/analytics";
-
-const analyticsRevalidateSec = 60;
 
 export type AnalyticsRangeKind = "LAST_30" | "LAST_90" | "ALL_TIME" | "CUSTOM";
 

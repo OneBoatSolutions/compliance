@@ -7,6 +7,7 @@ This document contains the design tokens defined in the Cipherion codebase (`app
 The application uses OKLCH color space for better interpolation and contrast.
 
 ### Light Mode
+
 - `--background`: `oklch(1 0 0)` (White)
 - `--foreground`: `oklch(0.2 0.02 260)` / `oklch(0.145 0 0)` (Dark Gray)
 - `--card`: `oklch(1 0 0)`
@@ -28,6 +29,7 @@ The application uses OKLCH color space for better interpolation and contrast.
 - `--ring`: `oklch(0.708 0 0)`
 
 #### Semantic Colors
+
 - `--success`: `oklch(0.72 0.18 162)` (Green: #10B981)
 - `--success-foreground`: `oklch(1 0 0)`
 - `--warning`: `oklch(0.8 0.18 85)` (Amber: #F59E0B)
@@ -37,6 +39,7 @@ The application uses OKLCH color space for better interpolation and contrast.
 - `--primary-pale`: `oklch(0.93 0.05 295)` (Light Purple: #E9DDFF)
 
 ### Dark Mode (`html.dark`)
+
 - `--background`: `oklch(0.145 0 0)`
 - `--foreground`: `oklch(0.985 0 0)`
 - `--card`: `oklch(0.205 0 0)`
@@ -61,10 +64,12 @@ The application uses OKLCH color space for better interpolation and contrast.
 - `--primary-pale`: `oklch(0.3 0.08 295)`
 
 ## Typography
+
 - `--font-sans`: `var(--font-inter)`
 - `--font-mono`: `var(--font-roboto-mono)`
 
 ## Borders and Spacing
+
 - `--radius`: `0.625rem` (10px base radius)
 - `--radius-sm`: `calc(var(--radius) - 4px)` (6px)
 - `--radius-md`: `calc(var(--radius) - 2px)` (8px)
@@ -76,6 +81,7 @@ The application uses OKLCH color space for better interpolation and contrast.
 - `--sidebar-width`: `240px`
 
 ## Animations
+
 - `authFadeSlide`: Used for route transitions (`.auth-route-enter`).
 - `authFloat` & `authFloatDelayed`: Decorative float animations for the auth layout blobs.
 - `fadeIn`: Standard fade in effect (`.animate-fadeIn`).

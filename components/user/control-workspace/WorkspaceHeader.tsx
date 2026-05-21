@@ -4,7 +4,7 @@ import { CheckCircle } from "lucide-react";
 export default function WorkspaceHeader({
   control,
 }: {
-  control?: { framework?: string; id?: string; title?: string };
+  control?: { framework?: string; id?: string; code?: string; title?: string };
 }) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
@@ -12,7 +12,8 @@ export default function WorkspaceHeader({
       <div className="py-5">
         {/* Breadcrumb */}
         <p className="text-sm font-medium text-purple-600 mb-1">
-          Assessment / {control?.framework || "Framework"} / {control?.id || "Control"}
+          Assessment / {control?.framework || "Framework"} /{" "}
+          {control?.code || control?.id || "Control"}
         </p>
 
         {/* Title */}

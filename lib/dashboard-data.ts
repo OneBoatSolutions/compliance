@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 import type { ItemStatus } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
@@ -74,7 +73,6 @@ function frameworkScoresFromItems(items: ItemWithControlFramework[]): DashboardF
   return out;
 }
 
-const dashboardRevalidateSec = 60;
 /** If created/updated within this window, treat as initial "created" only (one event). */
 const assessmentCreatedWindowMs = 2000;
 

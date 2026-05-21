@@ -28,7 +28,8 @@ interface ApiResponse {
 }
 
 interface ControlWorkspaceData {
-  id: string;
+  id: string; // The database control ID
+  code: string; // The visual alphanumeric code
   itemId: string;
   framework: string;
   title: string;
@@ -71,7 +72,8 @@ export default function Page() {
       }
 
       return {
-        id: item.control.code,
+        id: item.control.id,
+        code: item.control.code,
         itemId: item.id,
         framework: item.control.framework?.code ?? "Unknown",
         title: item.control.title,

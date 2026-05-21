@@ -707,30 +707,35 @@ export default function OnboardingPage() {
                 </button>
 
                 {/* Next */}
-                <button
-                  type="submit"
-                  disabled={
-                    isSubmitting ||
-                    (currentStep === 1 && !isStep1Valid) ||
-                    (currentStep === 2 && values.dataTypes.length === 0) ||
-                    (currentStep === 3 && values.regions.length === 0)
-                  }
-                  className={`
-          px-6 py-2.5 rounded-md text-sm font-semibold text-white transition-all
-          flex items-center gap-2
-          ${
-            isStep1Valid
-              ? "bg-purple-600 hover:bg-purple-700 shadow-sm hover:shadow-md"
-              : "bg-gray-300 cursor-not-allowed"
-          }
-        `}
+                <span
+                  title={!isStep1Valid ? "Please fill in all required fields above" : undefined}
+                  className="inline-block"
                 >
-                  {phase === "savingOrg"
-                    ? "Saving organization..."
-                    : phase === "aiLoading"
-                      ? "Generating AI suggestions..."
-                      : "Next: AI Recommendations →"}
-                </button>
+                  <button
+                    type="submit"
+                    disabled={
+                      isSubmitting ||
+                      (currentStep === 1 && !isStep1Valid) ||
+                      (currentStep === 2 && values.dataTypes.length === 0) ||
+                      (currentStep === 3 && values.regions.length === 0)
+                    }
+                    className={`
+            px-6 py-2.5 rounded-md text-sm font-semibold text-white transition-all
+            flex items-center gap-2
+            ${
+              isStep1Valid
+                ? "bg-purple-600 hover:bg-purple-700 shadow-sm hover:shadow-md"
+                : "bg-gray-300 cursor-not-allowed"
+            }
+          `}
+                  >
+                    {phase === "savingOrg"
+                      ? "Saving organization..."
+                      : phase === "aiLoading"
+                        ? "Generating AI suggestions..."
+                        : "Next: AI Recommendations →"}
+                  </button>
+                </span>
               </div>
             </div>
           </div>
