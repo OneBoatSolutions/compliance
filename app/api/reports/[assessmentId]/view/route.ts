@@ -236,6 +236,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       // Organization and assessment metadata
       organization: {
         id: bundle.assessment.organization.id,
+        name: bundle.assessment.organization.name,
         productName: bundle.assessment.organization.productName,
         description: bundle.assessment.organization.description,
         services: bundle.assessment.organization.services,

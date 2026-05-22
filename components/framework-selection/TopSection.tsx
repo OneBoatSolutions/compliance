@@ -1,6 +1,6 @@
 "use client";
 
-import { ShieldCheck, X } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
 export default function TopSection() {
   return (

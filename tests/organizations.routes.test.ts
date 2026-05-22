@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { prisma } from "@/lib/prisma";
 import * as authHelpers from "@/lib/auth-helpers";
-import { POST as organizationsPost } from "@/app/api/organizations/route";
+import { GET as organizationsGet, POST as organizationsPost } from "@/app/api/organizations/route";
 import {
   GET as organizationGet,
   PATCH as organizationPatch,
@@ -13,6 +13,7 @@ vi.mock("@/lib/prisma", () => {
     prisma: {
       organization: {
         create: vi.fn(),
+        findMany: vi.fn(),
         findUnique: vi.fn(),
         update: vi.fn(),
       },
@@ -24,6 +25,7 @@ describe("Organizations API routes", () => {
   const session = { user: { id: "user_1", role: "USER" } };
 
   const validCreatePayload = {
+    name: "Acme",
     productName: "Acme Secure",
     description: "Compliance management platform",
     services: "Security monitoring",
@@ -59,6 +61,25 @@ describe("Organizations API routes", () => {
     expect(res.status).toBe(201);
     expect(json.success).toBe(true);
     expect(json.data.userId).toBe(session.user.id);
+  });
+
+  it("lists organizations for the authenticated user", async () => {
+    vi.spyOn(prisma.organization, "findMany").mockResolvedValue([
+      {
+        id: "org_1",
+        ...validCreatePayload,
+        userId: session.user.id,
+      },
+    ] as never);
+
+    const res = (await organizationsGet(
+      new Request("http://localhost/api/organizations"),
+    )) as Response;
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(json.success).toBe(true);
+    expect(json.data[0].id).toBe("org_1");
   });
 
   it("rejects create when required fields are missing", async () => {

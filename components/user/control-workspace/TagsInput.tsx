@@ -17,7 +17,7 @@ export default function TagsInput() {
   };
 
   const removeTag = (index: number) => {
-    setTags(tags.filter((_, i) => i !== index));
+    setTags(tags.filter((tag, i) => i !== index));
   };
 
   return (

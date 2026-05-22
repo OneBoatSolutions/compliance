@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import path from "node:path";
+import fs from "node:fs";
 import {
   DeleteObjectCommand,
   GetObjectCommand,
@@ -7,7 +8,7 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { SIGNED_DOWNLOAD_URL_EXPIRES_IN_SECONDS } from "@/lib/validations/evidence";
+import { signedDownloadUrlExpiresInSeconds } from "@/lib/validations/evidence";
 
 interface UploadInput {
   buffer: Buffer;
@@ -55,26 +56,44 @@ const bucketName = isMinioConfigured
   ? process.env.MINIO_BUCKET || process.env.S3_BUCKET_NAME
   : process.env.S3_BUCKET_NAME;
 
+const localStorageDir = path.join(process.cwd(), ".local-storage");
+const useLocalFallback = !bucketName;
+
 if (!bucketName) {
-  throw new Error("S3_BUCKET_NAME (or MINIO_BUCKET) environment variable is not set");
+  console.warn("[storage] No S3/MinIO bucket configured — using local filesystem fallback");
 }
 
-const s3Client = new S3Client({
-  region,
-  endpoint: isMinioConfigured ? minioEndpoint : undefined,
-  forcePathStyle: isMinioConfigured,
-  credentials: isMinioConfigured
-    ? {
-        accessKeyId: process.env.MINIO_ACCESS_KEY || "",
-        secretAccessKey: process.env.MINIO_SECRET_KEY || "",
-      }
-    : process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY
-      ? {
-          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-        }
-      : undefined,
-});
+const s3Client = bucketName
+  ? new S3Client({
+      region,
+      endpoint: isMinioConfigured ? minioEndpoint : undefined,
+      forcePathStyle: isMinioConfigured,
+      credentials: isMinioConfigured
+        ? {
+            accessKeyId: process.env.MINIO_ACCESS_KEY || "",
+            secretAccessKey: process.env.MINIO_SECRET_KEY || "",
+          }
+        : process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY
+          ? {
+              accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+              secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+            }
+          : undefined,
+    })
+  : null;
+
+function ensureLocalDir(dirPath: string) {
+  fs.mkdirSync(dirPath, { recursive: true });
+}
+
+async function uploadToLocalDisk(key: string, input: UploadInput): Promise<UploadResult> {
+  const filePath = path.join(localStorageDir, key);
+  ensureLocalDir(path.dirname(filePath));
+  fs.writeFileSync(filePath, input.buffer);
+
+  const url = `/api/storage/${key}`;
+  return { key, url };
+}
 
 function normalizeFilename(input: string) {
   return input.replace(/[^a-zA-Z0-9._-]/g, "_");
@@ -102,7 +121,10 @@ export async function uploadFileToStorage(
 ): Promise<UploadResult> {
   const keyPrefix = options.keyPrefix ?? "evidence";
   const key = buildObjectKey(input.originalName, keyPrefix);
-  const startedAt = Date.now();
+
+  if (!s3Client || useLocalFallback) {
+    return uploadToLocalDisk(key, input);
+  }
 
   const abortController = new AbortController();
   const timeoutMs = 15000;
@@ -121,8 +143,8 @@ export async function uploadFileToStorage(
       { abortSignal: abortController.signal },
     );
   } catch (error) {
-    console.error("[storage] PutObjectCommand send failed", error);
-    throw error;
+    console.warn("[storage] S3 upload failed, falling back to local:", (error as Error).message);
+    return uploadToLocalDisk(key, input);
   } finally {
     clearTimeout(timeoutHandle);
   }
@@ -134,17 +156,36 @@ export async function uploadFileToStorage(
 }
 
 export async function generateSignedDownloadUrl(key: string) {
+  const localPath = path.join(localStorageDir, key);
+  if (fs.existsSync(localPath)) {
+    return `/api/storage/${key}`;
+  }
+
+  if (!s3Client) {
+    throw new Error("No storage backend available");
+  }
+
   return await getSignedUrl(
     s3Client,
     new GetObjectCommand({
       Bucket: bucketName,
       Key: key,
     }),
-    { expiresIn: SIGNED_DOWNLOAD_URL_EXPIRES_IN_SECONDS },
+    { expiresIn: signedDownloadUrlExpiresInSeconds },
   );
 }
 
 export async function deleteFileFromStorage(key: string) {
+  const localPath = path.join(localStorageDir, key);
+  if (fs.existsSync(localPath)) {
+    fs.unlinkSync(localPath);
+    return;
+  }
+
+  if (!s3Client) {
+    return;
+  }
+
   await s3Client.send(
     new DeleteObjectCommand({
       Bucket: bucketName,
@@ -154,6 +195,10 @@ export async function deleteFileFromStorage(key: string) {
 }
 
 export function extractStorageKeyFromUrl(fileUrl: string): string | null {
+  if (fileUrl.startsWith("/api/storage/")) {
+    return fileUrl.replace(/^\/api\/storage\//, "");
+  }
+
   try {
     const url = new URL(fileUrl);
     const normalizedPath = url.pathname.replace(/^\/+/, "");

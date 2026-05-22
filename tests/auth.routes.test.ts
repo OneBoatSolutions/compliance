@@ -40,6 +40,7 @@ describe("Auth API routes", () => {
       method: "POST",
       body: JSON.stringify({
         name: "Test User",
+        companyName: "Test Company",
         email: "test@example.com",
         password: "StrongP@ssw0rd",
       }),
@@ -53,6 +54,17 @@ describe("Auth API routes", () => {
     const json = await res.json();
     expect(json.success).toBe(true);
     expect(json.data.email).toBe("test@example.com");
+    expect(prisma.user.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          organizations: {
+            create: {
+              name: "Test Company",
+            },
+          },
+        }),
+      }),
+    );
   });
 
   it("rejects invalid login credentials", async () => {

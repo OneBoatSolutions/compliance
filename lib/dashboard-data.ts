@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 import type { ItemStatus } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
@@ -74,7 +73,6 @@ function frameworkScoresFromItems(items: ItemWithControlFramework[]): DashboardF
   return out;
 }
 
-const dashboardRevalidateSec = 60;
 /** If created/updated within this window, treat as initial "created" only (one event). */
 const assessmentCreatedWindowMs = 2000;
 
@@ -150,7 +148,7 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
         score: true,
         updatedAt: true,
         organization: {
-          select: { productName: true },
+          select: { name: true, productName: true },
         },
         items: {
           select: {
@@ -228,7 +226,7 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
       status: string;
       score: number | null;
       updatedAt: Date;
-      organization: { productName: string };
+      organization: { name: string; productName: string | null };
       items: ItemWithControlFramework[];
     }) => {
       const items = a.items as ItemWithControlFramework[];
@@ -242,7 +240,7 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
 
       return {
         id: a.id,
-        organizationName: a.organization.productName,
+        organizationName: a.organization.productName ?? a.organization.name,
         status: a.status,
         score,
         updatedAt: a.updatedAt.toISOString(),
@@ -261,8 +259,4 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
   };
 }
 
-export const getCachedDashboardData = unstable_cache(
-  async (userId: string) => buildDashboardData(userId),
-  ["dashboard"],
-  { revalidate: dashboardRevalidateSec },
-);
+export const getCachedDashboardData = async (userId: string) => buildDashboardData(userId);

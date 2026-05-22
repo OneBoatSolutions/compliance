@@ -157,6 +157,7 @@ async function main() {
     org = await prisma.organization.create({
       data: {
         userId: testUser.id,
+        name: "HealthTrack",
         productName: "HealthTrack App",
         description:
           "A digital health platform offering telehealth, EHR access, and subscription billing for US and EU patients.",

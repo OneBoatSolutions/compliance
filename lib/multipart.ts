@@ -6,8 +6,8 @@ import { errorResponse } from "@/lib/api-helpers";
 import {
   isAllowedEvidenceExtension,
   isAllowedEvidenceMimeType,
-  MAX_EVIDENCE_FILE_SIZE_BYTES,
-  MAX_EVIDENCE_FILES_PER_ITEM,
+  maxEvidenceFileSizeBytes,
+  maxEvidenceFilesPerItem,
 } from "@/lib/validations/evidence";
 
 export interface ParsedMultipartFile {
@@ -26,8 +26,8 @@ interface ParseResult {
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: MAX_EVIDENCE_FILE_SIZE_BYTES,
-    files: MAX_EVIDENCE_FILES_PER_ITEM,
+    fileSize: maxEvidenceFileSizeBytes,
+    files: maxEvidenceFilesPerItem,
   },
   fileFilter: (
     req: IncomingMessage,

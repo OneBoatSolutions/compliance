@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@custom-variant dark (&:is(.dark *));
+
 /* Root variables for light mode */
 :root {
   /* 🎨 BRAND COLORS */
@@ -35,9 +37,6 @@
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.2 0.02 260);
-
-  --primary: oklch(0.56 0.26 295);
-  --muted-foreground: oklch(0.5 0.02 260);
 
   --font-sans: var(--font-inter);
   --font-mono: var(--font-roboto-mono);
@@ -85,15 +84,6 @@
 
   --primary-pale: oklch(0.93 0.05 295); /* #E9DDFF */
   /*--background: oklch(0.97 0.02 90); /* cream / beige */
-  --foreground: oklch(0.2 0.02 260);
-
-  --card: oklch(1 0 0);
-  --sidebar: oklch(1 0 0);
-
-  --primary: oklch(0.6 0.2 300); /* purple */
-  --primary-foreground: oklch(1 0 0);
-
-  --muted-foreground: oklch(0.5 0.02 260);
 }
 
 /* Theme inline mapping for Tailwind (optional if using custom variables) */
@@ -185,58 +175,20 @@ body {
     @apply bg-background text-foreground;
   }
 }*/
-html.dark {
-  --background: #fafafa;
-  --foreground: #171717;
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.48 0.24 295); /* #5412CC */
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.6 0.21 27);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-  --success: oklch(0.65 0.15 162);
-  --warning: oklch(0.7 0.16 85);
-  --info: oklch(0.6 0.18 280);
-  --primary-pale: oklch(0.3 0.08 295);
-}
 :root {
   --sidebar-width: 240px;
-}
-* {
-  transition: all 0.2s ease;
 }
 
 @keyframes authFadeSlide {
   0% {
     opacity: 0;
-    transform: translateY(12px);
+    filter: blur(4px);
+    transform: translateY(16px) scale(0.98);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    filter: blur(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -251,7 +203,7 @@ html.dark {
 }
 
 .auth-route-enter {
-  animation: authFadeSlide 280ms ease-out;
+  animation: authFadeSlide 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .auth-float {
@@ -306,4 +258,90 @@ html.dark {
 
 .animate-fade-in {
   animation: fade-in 0.4s ease-in-out;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+  .print\:hidden {
+    display: none !important;
+  }
+  nav,
+  header,
+  footer,
+  aside {
+    display: none !important;
+  }
+  main,
+  .content {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  /* Avoid page breaks inside sections */
+  section,
+  .card {
+    page-break-inside: avoid;
+  }
+
+  .report-print-root {
+    background: white !important;
+    color: black !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  .report-print-root section {
+    break-inside: avoid;
+    box-shadow: none !important;
+    border-color: #d1d5db !important;
+  }
+
+  .report-print-root table {
+    break-inside: auto;
+  }
+
+  .report-print-root tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .report-print-root a[href]::after {
+    content: "";
+  }
+
+  body:has(.remediation-print-root) * {
+    visibility: hidden;
+  }
+
+  body:has(.remediation-print-root) .remediation-print-root,
+  body:has(.remediation-print-root) .remediation-print-root * {
+    visibility: visible;
+  }
+
+  .remediation-print-root {
+    position: absolute !important;
+    inset: auto !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    color: black !important;
+    background: white !important;
+  }
+
+  .remediation-print-root * {
+    box-shadow: none !important;
+  }
 }
