@@ -57,7 +57,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   getRoleHomePath(role) {
     if (role === "ADMIN") {
-      return "/admin/frameworks";
+      return "/frameworks";
     }
 
     return "/dashboard";

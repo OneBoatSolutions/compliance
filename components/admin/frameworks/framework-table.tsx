@@ -35,7 +35,7 @@ export function FrameworkTable({ frameworks }: Props) {
             <tr key={framework.id} className="border-t border-neutral-100 hover:bg-primary-pale/30">
               <td className="p-4 font-mono text-sm">
                 <Link
-                  href={`/admin/frameworks/${framework.id}`}
+                  href={`/frameworks/${framework.id}`}
                   className="text-primary hover:text-primary-dark"
                 >
                   {framework.code}

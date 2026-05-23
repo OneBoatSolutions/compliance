@@ -4,6 +4,7 @@ import { errorResponse, successResponse, validationErrorResponse } from "@/lib/a
 import { requireAdmin } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { createFrameworkAdminSchema, frameworkListQuerySchema } from "@/lib/validations/framework";
+import { listFrameworks } from "@/services/framework-admin-service";
 
 export const GET = withErrorHandler(async (req: Request) => {
   await requireAdmin();
@@ -16,46 +17,11 @@ export const GET = withErrorHandler(async (req: Request) => {
     return validationErrorResponse(parsed.error.format());
   }
 
-  const { page, limit, region, category, status } = parsed.data;
-  const where: Prisma.FrameworkWhereInput = {
-    ...(region ? { region } : {}),
-    ...(category ? { category } : {}),
-    ...(status ? { status } : {}),
-  };
-
-  const skip = (page - 1) * limit;
-
-  const [items, total] = await Promise.all([
-    prisma.framework.findMany({
-      where,
-      skip,
-      take: limit,
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        code: true,
-        name: true,
-        description: true,
-        region: true,
-        category: true,
-        version: true,
-        effectiveDate: true,
-        sourceLink: true,
-        status: true,
-        publishedAt: true,
-        createdAt: true,
-        updatedAt: true,
-        _count: { select: { controls: true } },
-      },
-    }),
-    prisma.framework.count({ where }),
-  ]);
-
-  const totalPages = Math.max(1, Math.ceil(total / limit));
+  const result = await listFrameworks(parsed.data);
 
   return successResponse({
-    items,
-    meta: { total, page, limit, totalPages: totalPages },
+    items: result.items,
+    meta: result.meta,
   });
 });
 

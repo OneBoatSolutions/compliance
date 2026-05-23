@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 import { ApiResponse, CreateControlPayload, Framework } from "@/types/framework";
 
 import { ControlTable } from "./control-table";
-import { StatusBadge } from "./status-badge";
 import { CsvImport } from "./csv-import";
+import { FrameworkEditForm } from "./framework-edit-form";
+import { StatusBadge } from "./status-badge";
 
 interface Props {
   frameworkId: string;
@@ -16,17 +17,11 @@ interface FormErrors {
   general?: string;
 }
 
-const REGIONS = ["US", "EU", "UK", "Global", "India"];
-
-const CATEGORIES = ["Privacy", "Security", "Healthcare", "Financial"];
-
 export function FrameworkDetails({ frameworkId }: Props) {
   const [framework, setFramework] = useState<Framework | null>(null);
 
   const [initialLoading, setInitialLoading] = useState(true);
-  const [refreshingControls, setRefreshingControls] = useState(false);
-
-  const [saving, setSaving] = useState<boolean>(false);
+  // Deleted unused state
 
   const [errors, setErrors] = useState<FormErrors>({});
   useEffect(() => {
@@ -81,49 +76,8 @@ export function FrameworkDetails({ frameworkId }: Props) {
   }
   useEffect(() => {
     void fetchFramework(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [frameworkId]);
-
-  async function updateFramework() {
-    if (!framework) {
-      return;
-    }
-
-    try {
-      setSaving(true);
-
-      const response = await fetch(`/api/frameworks/${frameworkId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          code: framework.code,
-          name: framework.name,
-          description: framework.description,
-          region: framework.region,
-          category: framework.category,
-        }),
-      });
-
-      const result: ApiResponse<Framework> = await response.json();
-
-      if (!result.success) {
-        setErrors({
-          general: result.message,
-        });
-
-        return;
-      }
-
-      setFramework(result.data);
-    } catch {
-      setErrors({
-        general: "Failed to update framework",
-      });
-    } finally {
-      setSaving(false);
-    }
-  }
 
   async function addControl() {
     try {
@@ -324,95 +278,11 @@ export function FrameworkDetails({ frameworkId }: Props) {
           ) : null}
         </div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <input
-            value={framework.code}
-            disabled={isLocked}
-            onChange={(event) =>
-              setFramework({
-                ...framework,
-                code: event.target.value,
-              })
-            }
-            placeholder="Framework Code"
-            className={inputClass}
-          />
-
-          <input
-            value={framework.name}
-            disabled={isLocked}
-            onChange={(event) =>
-              setFramework({
-                ...framework,
-                name: event.target.value,
-              })
-            }
-            placeholder="Framework Name"
-            className={inputClass}
-          />
-
-          <select
-            value={framework.region}
-            disabled={isLocked}
-            onChange={(event) =>
-              setFramework({
-                ...framework,
-                region: event.target.value,
-              })
-            }
-            className={inputClass}
-          >
-            {REGIONS.map((region) => (
-              <option key={region} value={region}>
-                {region}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={framework.category}
-            disabled={isLocked}
-            onChange={(event) =>
-              setFramework({
-                ...framework,
-                category: event.target.value,
-              })
-            }
-            className={inputClass}
-          >
-            {CATEGORIES.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <textarea
-          value={framework.description}
+        <FrameworkEditForm
+          framework={framework}
           disabled={isLocked}
-          onChange={(event) =>
-            setFramework({
-              ...framework,
-              description: event.target.value,
-            })
-          }
-          rows={5}
-          placeholder="Framework Description"
-          className={`${inputClass} mt-6 w-full`}
+          onSaved={(updated) => setFramework(updated)}
         />
-
-        {!isLocked ? (
-          <div className="mt-8 flex justify-end">
-            <button
-              onClick={() => void updateFramework()}
-              disabled={saving}
-              className="rounded-2xl bg-[#6d18ff] px-6 py-4 font-semibold text-white shadow-lg transition hover:scale-[1.02] hover:bg-[#5412cc]"
-            >
-              {saving ? "Saving..." : "Save Changes"}
-            </button>
-          </div>
-        ) : null}
       </div>
 
       {/* ADD CONTROL */}
