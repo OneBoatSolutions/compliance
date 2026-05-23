@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       where: { email },
     });
 
-    if (!user) {
+    if (!user || !user.isActive) {
       recordFailedAttempt(identifier);
       return errorResponse("Invalid email or password", 401);
     }
