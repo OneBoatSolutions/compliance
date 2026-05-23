@@ -313,7 +313,7 @@ export function FrameworkForm() {
           <div className="mt-12 flex flex-col gap-4 border-t border-[#f5f5f5] pt-8 sm:flex-row sm:items-center sm:justify-end">
             <button
               type="button"
-              onClick={() => router.push("/frameworks")}
+              onClick={() => router.push("/admin/frameworks")}
               className="rounded-2xl border border-[#d4d4d4] bg-white px-6 py-4 text-sm font-semibold text-[#525252] transition hover:bg-[#fafafa]"
             >
               Cancel

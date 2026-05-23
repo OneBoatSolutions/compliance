@@ -29,6 +29,17 @@ export function FrameworkDetails({ frameworkId }: Props) {
   const [saving, setSaving] = useState<boolean>(false);
 
   const [errors, setErrors] = useState<FormErrors>({});
+  useEffect(() => {
+    if (!errors.general) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setErrors({});
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, [errors.general]);
 
   const [controlForm, setControlForm] = useState<CreateControlPayload>({
     code: "",
@@ -412,6 +423,11 @@ export function FrameworkDetails({ frameworkId }: Props) {
 
           <p className="mt-2 text-[#525252]">Create controls and compliance checkpoints.</p>
         </div>
+        {errors.general ? (
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-6 py-5 text-red-600 shadow-sm mb-4">
+            {errors.general}
+          </div>
+        ) : null}
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <input
