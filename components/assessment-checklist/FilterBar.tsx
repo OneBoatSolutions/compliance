@@ -255,7 +255,7 @@ export default function FilterBar({
           </span>
         ))}
 
-        {(frameworks.length || status.length || severity.length) && (
+        {(frameworks.length > 0 || status.length > 0 || severity.length > 0) && (
           <button
             onClick={() => {
               setFrameworks([]);

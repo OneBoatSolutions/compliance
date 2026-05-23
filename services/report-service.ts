@@ -142,6 +142,7 @@ interface ReportAssessment {
   completedAt: Date | null;
   organization: {
     id: string;
+    name: string;
     productName: string;
     description: string;
     services: string;
@@ -493,6 +494,7 @@ async function fetchAssessmentBundle(context: ReportRequestContext): Promise<Rep
       organization: {
         select: {
           id: true,
+          name: true,
           productName: true,
           description: true,
           services: true,
@@ -553,7 +555,20 @@ async function fetchAssessmentBundle(context: ReportRequestContext): Promise<Rep
     throw new Error("404: Assessment not found");
   }
 
-  return assessment;
+  return {
+    ...assessment,
+    organization: {
+      id: assessment.organization.id,
+      name: assessment.organization.name,
+      productName: assessment.organization.productName ?? assessment.organization.name,
+      description: assessment.organization.description ?? "Not provided",
+      services: assessment.organization.services ?? "Not provided",
+      targetCustomers: assessment.organization.targetCustomers ?? "Not provided",
+      problemSolved: assessment.organization.problemSolved ?? "Not provided",
+      dataHandled: assessment.organization.dataHandled ?? [],
+      regions: assessment.organization.regions ?? [],
+    },
+  };
 }
 
 function toScoreRows(assessment: ReportAssessment): ScoreItemRow[] {

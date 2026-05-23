@@ -178,6 +178,8 @@ export interface ReportViewResponse {
   organization: {
     id: string;
 
+    name: string;
+
     productName: string;
 
     description: string;

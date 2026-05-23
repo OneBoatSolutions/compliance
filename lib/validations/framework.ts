@@ -28,7 +28,8 @@ const versionSemver = z
 /** Admin API: list query (GET /api/frameworks) */
 export const frameworkListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
-  limit: z.coerce.number().int().min(1).max(100).default(20),
+  limit: z.coerce.number().int().min(1).max(100).default(10),
+  search: z.string().trim().max(200).optional(),
   region: z.string().trim().optional(),
   category: z.string().trim().optional(),
   status: z.nativeEnum(FrameworkStatus).optional(),
@@ -89,5 +90,47 @@ export const updateControlSchema = createControlSchema
 
 export type UpdateControlInput = z.infer<typeof updateControlSchema>;
 
-/** Single CSV row — same shape as create control */
-export const controlCsvRowSchema = createControlSchema;
+/** Single CSV row for import — all fields required; no silent defaults */
+export const controlCsvRowSchema = z.object({
+  code: z.string().trim().min(1, "Code is required").max(100),
+  title: z.string().trim().min(1, "Title is required").max(500),
+  description: z.string().trim().min(1, "Description is required").max(5000),
+  category: z.string().trim().min(1, "Category is required").max(100),
+  severity: z.nativeEnum(Severity, { message: "Severity must be LOW, MEDIUM, HIGH, or CRITICAL" }),
+  weight: z
+    .number({ message: "Weight must be a number" })
+    .min(0.1, "Weight must be at least 0.1")
+    .max(10, "Weight must be at most 10"),
+});
+
+export type ControlCsvRowInput = z.infer<typeof controlCsvRowSchema>;
+
+/** Admin UI: create framework form */
+export const frameworkFormSchema = z.object({
+  code: z
+    .string()
+    .trim()
+    .min(1, "Framework code is required")
+    .max(20)
+    .regex(/^[A-Z0-9_-]+$/, "Code must be uppercase with no spaces"),
+  name: z.string().trim().min(1, "Framework name is required").max(200),
+  description: z.string().trim().min(1, "Description is required").max(1000),
+  region: z.string().trim().min(1, "Region is required"),
+  category: z.string().trim().min(1, "Category is required"),
+  version: z
+    .string()
+    .regex(/^\d+\.\d+\.\d+$/, "Version must follow semantic versioning (e.g. 1.0.0)"),
+  effectiveDate: z.string().min(1, "Effective date is required"),
+  sourceLink: z.union([z.string().url("Enter a valid URL"), z.literal("")]).optional(),
+});
+
+export type FrameworkFormValues = z.infer<typeof frameworkFormSchema>;
+
+/** Admin UI: edit framework metadata (draft only) */
+export const frameworkEditSchema = frameworkFormSchema.pick({
+  code: true,
+  name: true,
+  description: true,
+  region: true,
+  category: true,
+});

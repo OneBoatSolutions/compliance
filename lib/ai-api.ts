@@ -9,6 +9,8 @@ export const requestRemediation = (
   });
 };
 
-export default {
+const aiApi = {
   requestRemediation,
 };
+
+export default aiApi;

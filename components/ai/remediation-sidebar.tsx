@@ -1,86 +1,54 @@
-import { Wrench, Clock, DollarSign } from "lucide-react";
-import { mockRemediationData } from "./mock-remediation";
+import { Clock, ListChecks, ShieldCheck } from "lucide-react";
 
-export default function RemediationSidebar() {
-  const data = mockRemediationData;
+import type { RemediationData } from "@/services/types";
+
+export default function RemediationSidebar({ data }: { data: RemediationData }) {
+  const totalHours = data.steps.reduce((sum, step) => sum + step.estimatedHours, 0);
+  const completedSteps = data.steps.filter((step) => step.status === "DONE").length;
+  const completionRate =
+    data.steps.length > 0 ? Math.round((completedSteps / data.steps.length) * 100) : 0;
 
   return (
     <div className="space-y-6 text-sm">
-      {/* 🔧 TOOLS */}
       <div className="bg-card border rounded-xl p-4">
         <div className="flex items-center gap-2 mb-3">
-          <Wrench size={16} />
-          <p className="font-medium">Recommended Tooling</p>
-        </div>
-
-        <div className="space-y-3">
-          {data.tools.map((tool, i) => (
-            <div key={i} className="flex justify-between items-center">
-              <div>
-                <p className="font-medium">{tool.name}</p>
-                <span className="text-xs px-2 py-0.5 rounded bg-green-100 text-green-600">
-                  {tool.badge}
-                </span>
-              </div>
-
-              <a href={tool.link} className="text-purple-600 text-xs hover:underline">
-                Learn More
-              </a>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ⏳ TIMELINE */}
-      <div className="bg-card border rounded-xl p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Clock size={16} />
-          <p className="font-medium">Implementation Timeline</p>
+          <ListChecks size={16} />
+          <p className="font-medium">Plan Progress</p>
         </div>
 
         <div className="space-y-3">
           <div className="flex justify-between text-xs text-muted-foreground">
-            <span>WK 1</span>
-            <span>WK 6</span>
-            <span>WK 12</span>
+            <span>{completedSteps} completed</span>
+            <span>{data.steps.length} total</span>
           </div>
-
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden flex">
-            <div className="bg-purple-600 w-[50%]" />
-            <div className="bg-purple-300 w-[30%]" />
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-purple-600" style={{ width: `${completionRate}%` }} />
           </div>
-
-          <div className="space-y-1 text-xs">
-            {data.timeline.phases.map((p, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-purple-600" />
-                {p.label}
-              </div>
-            ))}
-          </div>
+          <p className="text-xs text-muted-foreground">{completionRate}% complete</p>
         </div>
       </div>
 
-      {/* 💰 COST */}
       <div className="bg-card border rounded-xl p-4">
         <div className="flex items-center gap-2 mb-3">
-          <DollarSign size={16} />
-          <p className="font-medium">Cost Estimation</p>
+          <Clock size={16} />
+          <p className="font-medium">Estimated Effort</p>
         </div>
 
-        <div className="space-y-2 text-xs">
-          {data.cost.items.map((item, i) => (
-            <div key={i} className="flex justify-between">
-              <span>{item.label}</span>
-              <span>{item.value}</span>
-            </div>
+        <p className="text-2xl font-semibold">{totalHours}h</p>
+        <p className="text-xs text-muted-foreground mt-1">Based on AI-generated step estimates.</p>
+      </div>
+
+      <div className="bg-card border rounded-xl p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <ShieldCheck size={16} />
+          <p className="font-medium">Technical Controls</p>
+        </div>
+
+        <ul className="space-y-2 text-xs text-muted-foreground">
+          {data.technicalControls.map((control) => (
+            <li key={control}>{control}</li>
           ))}
-
-          <div className="border-t pt-2 flex justify-between font-medium text-purple-600">
-            <span>Total</span>
-            <span>{data.cost.total}</span>
-          </div>
-        </div>
+        </ul>
       </div>
     </div>
   );

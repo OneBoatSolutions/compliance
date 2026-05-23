@@ -13,7 +13,7 @@ export async function POST(req: Request) {
       return validationErrorResponse(parsed.error);
     }
 
-    const { name, email, password } = parsed.data;
+    const { name, companyName, email, password } = parsed.data;
 
     const existing = await prisma.user.findUnique({
       where: { email },
@@ -30,6 +30,11 @@ export async function POST(req: Request) {
         name,
         email,
         password: hashedPassword,
+        organizations: {
+          create: {
+            name: companyName,
+          },
+        },
       },
       select: {
         id: true,

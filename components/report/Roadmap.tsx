@@ -1,5 +1,4 @@
 "use client";
-import { mockReportData } from "@/lib/report-mockData";
 import { CheckCircle, Clock, AlertTriangle } from "lucide-react";
 interface Props {
   roadmap: {
@@ -29,7 +28,6 @@ export default function Roadmap({ roadmap }: Props) {
   };
 
   const items = roadmap?.items ?? [];
-  const data = mockReportData;
 
   const getStatusColor = (status: string) => {
     if (status === "COMPLETED") {
@@ -39,16 +37,6 @@ export default function Roadmap({ roadmap }: Props) {
       return "bg-yellow-100 text-yellow-600";
     }
     return "bg-red-100 text-red-600";
-  };
-
-  const getPriorityDot = (priority: string) => {
-    if (priority === "HIGH") {
-      return "bg-red-500";
-    }
-    if (priority === "MED") {
-      return "bg-yellow-400";
-    }
-    return "bg-green-500";
   };
 
   return (

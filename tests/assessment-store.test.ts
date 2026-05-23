@@ -94,11 +94,20 @@ describe("assessment onboarding store", () => {
         jsonResponse(
           {
             success: true,
+            data: [{ id: "org_1" }],
+          },
+          200,
+        ),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(
+          {
+            success: true,
             data: {
               id: "org_1",
             },
           },
-          201,
+          200,
         ),
       )
       .mockResolvedValueOnce(
@@ -139,7 +148,9 @@ describe("assessment onboarding store", () => {
     expect(state.organizationId).toBe("org_1");
     expect(state.suggestions).toHaveLength(2);
     expect(state.selectedFrameworkIds).toEqual(["fw_gdpr"]);
-    expect(fetchSpy).toHaveBeenCalledTimes(2);
+    expect(fetchSpy).toHaveBeenCalledTimes(3);
+    expect(fetchSpy.mock.calls[1]?.[0]).toBe("/api/organizations/org_1");
+    expect((fetchSpy.mock.calls[1]?.[1] as RequestInit).method).toBe("PATCH");
   });
 
   it("auto-retries assessment creation once on timeout", async () => {

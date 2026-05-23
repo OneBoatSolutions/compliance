@@ -25,16 +25,6 @@ interface Props {
 }
 
 export default function FrameworkCard({ framework, selected, onToggle }: Props) {
-  const getConfidenceColor = () => {
-    if (framework.confidence > 80) {
-      return "bg-green-500";
-    }
-    if (framework.confidence > 50) {
-      return "bg-yellow-500";
-    }
-    return "bg-red-500";
-  };
-
   // ✅ THIS is correct placement
   const Icon = frameworkIcons[framework.name];
 

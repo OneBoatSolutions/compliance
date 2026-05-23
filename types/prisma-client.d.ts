@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/naming-convention */
 declare module "@prisma/client" {
   export const Role: {
     ADMIN: "ADMIN";
@@ -65,7 +65,10 @@ declare module "@prisma/client" {
     [key: string]: any;
     constructor(options?: Record<string, unknown>);
     $transaction<T>(operations: readonly Promise<T>[]): Promise<T[]>;
-    $transaction<T>(callback: (tx: Prisma.TransactionClient) => Promise<T>): Promise<T>;
+    $transaction<T>(
+      callback: (tx: Prisma.TransactionClient) => Promise<T>,
+      options?: { isolationLevel?: Prisma.TransactionIsolationLevel },
+    ): Promise<T>;
     $disconnect(): Promise<void>;
   }
 
@@ -81,6 +84,17 @@ declare module "@prisma/client" {
     export type ControlCreateManyInput = Record<string, unknown>;
     export type FrameworkUpdateInput = Record<string, unknown>;
     export type FrameworkWhereInput = Record<string, unknown>;
+    export type UserWhereInput = Record<string, unknown>;
+    export type UserUpdateInput = Record<string, unknown>;
+    export type UserSelect = Record<string, unknown>;
+    export type UserGetPayload<T> = Record<string, unknown>;
+
+    export enum TransactionIsolationLevel {
+      ReadUncommitted = "ReadUncommitted",
+      ReadCommitted = "ReadCommitted",
+      RepeatableRead = "RepeatableRead",
+      Serializable = "Serializable",
+    }
 
     export type TransactionClient = PrismaClient;
     export class PrismaClientKnownRequestError extends Error {

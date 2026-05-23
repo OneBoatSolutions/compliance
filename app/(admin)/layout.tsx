@@ -18,7 +18,7 @@ interface LayoutProps {
 const adminNavItems = [
   {
     label: "Frameworks",
-    href: "/admin/frameworks",
+    href: "/frameworks",
     icon: Layers,
   },
   {
