@@ -5,7 +5,7 @@ const actions = [
   {
     title: "Create Framework",
     icon: ShieldPlus,
-    route: "/admin/frameworks",
+    route: "/frameworks/new",
   },
   {
     title: "Add User",
@@ -15,12 +15,12 @@ const actions = [
   {
     title: "Import Controls",
     icon: Upload,
-    route: "/admin/frameworks",
+    route: "/frameworks",
   },
   {
     title: "Publish Drafts",
     icon: FilePlus2,
-    route: "/admin/frameworks",
+    route: "/frameworks",
   },
 ];
 
