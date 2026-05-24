@@ -1,48 +1,62 @@
-import { RefreshCw, Save, FileDown } from "lucide-react";
+import { FileText, Printer, RefreshCw, Save } from "lucide-react";
 
 export default function RemediationFooter({
   onRegenerate,
   onSave,
-  onExport,
+  onExportPdf,
+  onExportMarkdown,
   regenerating,
+  saving,
+  disabled,
 }: {
   onRegenerate: () => void;
   onSave: () => void;
-  onExport: () => void;
+  onExportPdf: () => void;
+  onExportMarkdown: () => void;
   regenerating: boolean;
+  saving: boolean;
+  disabled: boolean;
 }) {
   return (
-    <div className="p-4 flex justify-end gap-3 bg-white">
-      {/* REGENERATE */}
+    <div className="p-4 flex flex-wrap justify-end gap-3 bg-white print:hidden">
       <button
+        type="button"
         onClick={onRegenerate}
-        disabled={regenerating}
-        className="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-md 
-             hover:bg-gray-100 transition disabled:opacity-50"
+        disabled={disabled || regenerating}
+        className="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-100 transition disabled:opacity-50"
       >
         <RefreshCw size={14} className={regenerating ? "animate-spin" : ""} />
         {regenerating ? "Regenerating..." : "Regenerate"}
       </button>
 
-      {/* SAVE */}
       <button
+        type="button"
         onClick={onSave}
-        className="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-md 
-                   hover:bg-gray-100 transition"
+        disabled={disabled || saving}
+        className="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-100 transition disabled:opacity-50"
       >
         <Save size={14} />
-        Save Plan
+        {saving ? "Saving..." : "Save Plan"}
       </button>
 
-      {/* EXPORT */}
       <button
-        onClick={onExport}
-        className="flex items-center gap-2 px-3 py-1.5 text-sm 
-                   bg-purple-600 text-white rounded-md 
-                   hover:bg-purple-700 transition"
+        type="button"
+        onClick={onExportMarkdown}
+        disabled={disabled}
+        className="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-100 transition disabled:opacity-50"
       >
-        <FileDown size={14} />
-        Export TXT
+        <FileText size={14} />
+        Markdown
+      </button>
+
+      <button
+        type="button"
+        onClick={onExportPdf}
+        disabled={disabled}
+        className="flex items-center gap-2 px-3 py-1.5 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700 transition disabled:opacity-50"
+      >
+        <Printer size={14} />
+        PDF
       </button>
     </div>
   );

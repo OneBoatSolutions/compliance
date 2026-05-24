@@ -1,7 +1,10 @@
 // app/(user)/analytics/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api-client";
+import { toast } from "sonner";
 import {
   LineChart,
   Line,
@@ -21,7 +24,6 @@ import {
 } from "recharts";
 import {
   Download,
-  CalendarDays,
   Sparkles,
   Lightbulb,
   TrendingDown,
@@ -29,6 +31,7 @@ import {
   FileText,
   Clock4,
   Share2,
+  CheckCircle2,
 } from "lucide-react";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
@@ -82,6 +85,23 @@ interface AnalyticsApiResponse {
   categoryCompletion: CategoryCompletionItem[];
 
   riskHeatmap: RiskHeatmapItem[];
+
+  remediationProgress: {
+    totalSteps: number;
+    completedSteps: number;
+    activePlans: number;
+    completionRate: number;
+  };
+}
+
+const rangeOptions = ["Last 30 days", "Last 90 days", "All time", "Custom range"] as const;
+
+function toDateInputValue(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
+
+function daysAgo(days: number): string {
+  return toDateInputValue(new Date(Date.now() - days * 24 * 60 * 60 * 1000));
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -334,11 +354,35 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
 
 export default function AnalyticsPage() {
   // ── API state ──────────────────────────────────────────────────────────────
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsApiResponse | null>(null);
-  const [analyticsLoading, setAnalyticsLoading] = useState(true);
-  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
-  // ── UI state ──────────────────────────────────────────────────────────────
   const [timeRange, setTimeRange] = useState("Last 30 days");
+  const [customStartDate, setCustomStartDate] = useState(daysAgo(30));
+  const [customEndDate, setCustomEndDate] = useState(toDateInputValue(new Date()));
+  const isCustomRange = timeRange === "Custom range";
+  const customRangeValid =
+    !isCustomRange || (!!customStartDate && !!customEndDate && customStartDate <= customEndDate);
+  const analyticsUrl = useMemo(() => {
+    if (isCustomRange) {
+      return `/api/analytics?startDate=${encodeURIComponent(
+        customStartDate,
+      )}&endDate=${encodeURIComponent(customEndDate)}`;
+    }
+
+    return `/api/analytics?range=${encodeURIComponent(timeRange)}`;
+  }, [customEndDate, customStartDate, isCustomRange, timeRange]);
+
+  const {
+    data: analyticsData = null,
+    isLoading: analyticsLoading,
+    error,
+  } = useQuery({
+    queryKey: ["analytics", timeRange, customStartDate, customEndDate],
+    queryFn: () => apiClient.get<AnalyticsApiResponse>(analyticsUrl),
+    enabled: customRangeValid,
+  });
+  const analyticsError = error instanceof Error ? error.message : null;
+  const rangeError = customRangeValid ? null : "Choose a valid custom start and end date range";
+
+  // ── UI state ──────────────────────────────────────────────────────────────
   const [sortCol, setSortCol] = useState("score");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
@@ -356,44 +400,12 @@ export default function AnalyticsPage() {
   const [shareEmail, setShareEmail] = useState("");
   const [scheduleFrequency, setScheduleFrequency] = useState("weekly");
 
-  const [toast, setToast] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
-
   // ── Fetch /api/analytics ───────────────────────────────────────────────────
   useEffect(() => {
-    const fetchAnalytics = async () => {
-      try {
-        setAnalyticsLoading(true);
-
-        const res = await fetch("/api/analytics", {
-          cache: "no-store",
-        });
-
-        if (!res.ok) {
-          throw new Error(`Analytics API error: ${res.status}`);
-        }
-
-        const json = await res.json();
-        //console.log("RAW API RESPONSE:", json);
-
-        const payload: AnalyticsApiResponse = json.data ?? json;
-        //console.log("PARSED ANALYTICS PAYLOAD:", payload);
-
-        setAnalyticsData(payload);
-
-        // Animate only once
-        setAnimated(true);
-      } catch (err) {
-        setAnalyticsError(err instanceof Error ? err.message : "Failed to fetch analytics");
-      } finally {
-        setAnalyticsLoading(false);
-      }
-    };
-
-    fetchAnalytics();
-  }, []);
+    if (analyticsData && !animated) {
+      setAnimated(true);
+    }
+  }, [analyticsData, animated]);
 
   // ── Derived data ────────────────────────
   const overallScore = getOverallScore(analyticsData);
@@ -402,8 +414,18 @@ export default function AnalyticsPage() {
   const frameworkTable = getFrameworkTableData(analyticsData);
   const { rows: riskRows, total: riskTotal } = getRiskRows(analyticsData);
   const categoryData = getCategoryBarData(analyticsData);
-  const trendData = analyticsData?.trend ?? [];
+  const trendData =
+    analyticsData?.trend.map((point) => ({
+      day: String(point.date),
+      Score: Number(point.score),
+    })) ?? [];
   const totalControls = donutData.reduce((s, d) => s + d.value, 0);
+  const remediationProgress = analyticsData?.remediationProgress ?? {
+    totalSteps: 0,
+    completedSteps: 0,
+    activePlans: 0,
+    completionRate: 0,
+  };
 
   const sortedTable = [...frameworkTable].sort((a, b) => {
     const av =
@@ -459,9 +481,9 @@ export default function AnalyticsPage() {
 
       document.body.removeChild(link);
 
-      showToast("success", "CSV exported successfully");
+      toast.success("CSV exported successfully");
     } catch {
-      showToast("error", "Failed to export CSV");
+      toast.error("Failed to export CSV");
     } finally {
       setExportLoading(false);
       setExportOpen(false);
@@ -473,9 +495,9 @@ export default function AnalyticsPage() {
 
       window.print();
 
-      showToast("success", "PDF export started");
+      toast.success("PDF export started");
     } catch {
-      showToast("error", "Failed to export PDF");
+      toast.error("Failed to export PDF");
     } finally {
       setExportLoading(false);
       setExportOpen(false);
@@ -487,11 +509,11 @@ export default function AnalyticsPage() {
 
       await navigator.clipboard.writeText(window.location.href);
 
-      showToast("success", "Dashboard link copied");
+      toast.success("Dashboard link copied");
 
       setShareOpen(false);
     } catch {
-      showToast("error", "Failed to share dashboard");
+      toast.error("Failed to share dashboard");
     } finally {
       setShareLoading(false);
     }
@@ -505,11 +527,11 @@ export default function AnalyticsPage() {
 
       await new Promise((resolve) => setTimeout(resolve, 1200));
 
-      showToast("success", `Report scheduled ${scheduleFrequency}`);
+      toast.success(`Report scheduled ${scheduleFrequency}`);
 
       setScheduleOpen(false);
     } catch {
-      showToast("error", "Failed to schedule report");
+      toast.error("Failed to schedule report");
     } finally {
       setScheduleLoading(false);
     }
@@ -558,25 +580,10 @@ export default function AnalyticsPage() {
 
     return insights.slice(0, 3);
   })();
-  const showToast = (type: "success" | "error", message: string) => {
-    setToast({ type, message });
-
-    setTimeout(() => {
-      setToast(null);
-    }, 3000);
-  };
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="bg-background min-h-screen">
-      {toast && (
-        <div
-          className={`fixed top-5 right-5 z-[100] px-4 py-3 rounded-lg shadow-lg text-sm font-semibold text-white transition-all
-      ${toast.type === "success" ? "bg-green-600" : "bg-red-600"}`}
-        >
-          {toast.message}
-        </div>
-      )}
       <div className="max-w-7xl mx-auto p-6 md:p-8 space-y-6">
         {/* ── PAGE HEADER ──────────────────────────────────────────────── */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -589,23 +596,46 @@ export default function AnalyticsPage() {
                   <span className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin inline-block" />
                   <span>Loading...</span>
                 </span>
-              ) : analyticsError ? (
-                <span className="text-warning text-xs">⚠ {analyticsError}</span>
+              ) : analyticsError || rangeError ? (
+                <span className="text-warning text-xs">
+                  Warning: {analyticsError || rangeError}
+                </span>
               ) : (
                 "Last updated: just now"
               )}
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <select
-              value={timeRange}
-              onChange={(e) => setTimeRange(e.target.value)}
-              className="px-4 py-2 rounded-lg border border-border bg-card text-sm text-foreground font-medium cursor-pointer focus:ring-2 focus:ring-primary/50"
-            >
-              {["Last 30 days", "Last 90 days", "All time", "Custom range"].map((o) => (
-                <option key={o}>{o}</option>
-              ))}
-            </select>
+            <div className="flex flex-wrap items-center gap-2">
+              <select
+                value={timeRange}
+                onChange={(e) => setTimeRange(e.target.value)}
+                className="px-4 py-2 rounded-lg border border-border bg-card text-sm text-foreground font-medium cursor-pointer focus:ring-2 focus:ring-primary/50"
+              >
+                {rangeOptions.map((option) => (
+                  <option key={option}>{option}</option>
+                ))}
+              </select>
+              {isCustomRange && (
+                <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
+                  <input
+                    type="date"
+                    value={customStartDate}
+                    onChange={(event) => setCustomStartDate(event.target.value)}
+                    className="bg-transparent text-sm outline-none"
+                    aria-label="Analytics start date"
+                  />
+                  <span className="text-xs text-muted-foreground">to</span>
+                  <input
+                    type="date"
+                    value={customEndDate}
+                    onChange={(event) => setCustomEndDate(event.target.value)}
+                    className="bg-transparent text-sm outline-none"
+                    aria-label="Analytics end date"
+                  />
+                </div>
+              )}
+            </div>
             <div className="relative">
               <button
                 onClick={(e) => {
@@ -770,15 +800,40 @@ export default function AnalyticsPage() {
           <Card className="flex flex-col">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <p className="text-sm font-semibold text-muted-foreground">Assessment Progress</p>
+                <p className="text-sm font-semibold text-muted-foreground">Steps Completed</p>
 
-                <p className="text-xs text-muted-foreground mt-1">Progress tracking unavailable</p>
+                <h3 className="text-3xl font-black text-foreground mt-1">
+                  {remediationProgress.completedSteps}/{remediationProgress.totalSteps}
+                </h3>
+
+                <p className="text-xs text-success font-semibold mt-1">
+                  {remediationProgress.activePlans} active remediation plans
+                </p>
               </div>
 
-              <CalendarDays className="w-9 h-9 text-muted-foreground opacity-60" />
+              <CheckCircle2 className="w-9 h-9 text-muted-foreground opacity-60" />
             </div>
 
-            <EmptyState title="No progress metrics" description="" />
+            {remediationProgress.totalSteps === 0 ? (
+              <EmptyState
+                title="No remediation steps"
+                description="Saved AI remediation plans will populate this metric."
+              />
+            ) : (
+              <div className="mt-auto space-y-3">
+                <div className="h-3 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-primary transition-all duration-1000"
+                    style={{
+                      width: animated ? `${remediationProgress.completionRate}%` : "0%",
+                    }}
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {remediationProgress.completionRate}% completion across saved remediation steps.
+                </p>
+              </div>
+            )}
           </Card>
         </div>
 

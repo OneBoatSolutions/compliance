@@ -222,6 +222,14 @@ function mapToAIProfile(values: OnboardingFormValues) {
   };
 }
 
+async function fetchCurrentOrganizationId(): Promise<string | null> {
+  const organizations = await fetchWithTimeout<Array<{ id: string }>>("/api/organizations", {
+    method: "GET",
+  });
+
+  return organizations[0]?.id ?? null;
+}
+
 async function parseJsonPayload(response: Response): Promise<unknown> {
   const contentType = response.headers.get("content-type") ?? "";
 
@@ -470,22 +478,33 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
       let organizationId = knownOrganizationId;
 
       if (!organizationId) {
-        const createdOrganization = await executeWithRetry(() =>
-          fetchWithTimeout<{ id: string }>("/api/organizations", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(mapToOrganizationPayload(data)),
-          }),
-        );
-
-        if (!createdOrganization?.id) {
-          throw new OnboardingRequestError("Organization ID missing from response", {
-            retryable: false,
-          });
-        }
-
-        organizationId = createdOrganization.id;
+        organizationId = await executeWithRetry(() => fetchCurrentOrganizationId());
       }
+
+      if (!organizationId) {
+        throw new OnboardingRequestError(
+          "Workspace is missing. Please register again or contact support.",
+          {
+            retryable: false,
+          },
+        );
+      }
+
+      const updatedOrganization = await executeWithRetry(() =>
+        fetchWithTimeout<{ id: string }>(`/api/organizations/${organizationId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(mapToOrganizationPayload(data)),
+        }),
+      );
+
+      if (!updatedOrganization?.id) {
+        throw new OnboardingRequestError("Organization ID missing from response", {
+          retryable: false,
+        });
+      }
+
+      organizationId = updatedOrganization.id;
 
       set({
         organizationId,

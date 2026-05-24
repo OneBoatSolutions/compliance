@@ -9,7 +9,7 @@ const protectedUserRoutes = ["/dashboard", "/assessments", "/onboarding", "/repo
 const userOnlyRoutes: string[] = [];
 
 /** Routes that ONLY the ADMIN role may access. */
-const adminRoutes = ["/admin"];
+const adminRoutes = ["/admin", "/frameworks"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -26,7 +26,7 @@ export async function middleware(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  const roleHome = token?.role === "ADMIN" ? "/admin/frameworks" : "/dashboard";
+  const roleHome = token?.role === "ADMIN" ? "/frameworks" : "/dashboard";
 
   // ✅ Redirect authenticated users away from auth pages
   if (token && isAuthPage) {
@@ -56,7 +56,7 @@ export async function middleware(req: NextRequest) {
   // ✅ Protect user-only routes (if any exist in the future)
   const isUserOnlyRoute = userOnlyRoutes.some((route) => pathname.startsWith(route));
   if (isUserOnlyRoute && token?.role === "ADMIN") {
-    return NextResponse.redirect(new URL("/admin/frameworks", req.url));
+    return NextResponse.redirect(new URL("/frameworks", req.url));
   }
 
   const response = NextResponse.next();
@@ -76,6 +76,7 @@ export const config = {
     "/login",
     "/register",
     "/admin/:path*",
+    "/frameworks/:path*",
     "/user/:path*",
     "/dashboard/:path*",
     "/assessments/:path*",

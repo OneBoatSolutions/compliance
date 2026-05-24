@@ -28,6 +28,8 @@ export default function AssessmentsIndexPage() {
   const assessmentsQuery = useQuery({
     queryKey: ["assessments", "index"],
     queryFn: () => apiClient.get<AssessmentListItem[]>("/api/assessments"),
+    staleTime: 0,
+    refetchOnMount: true,
   });
 
   useEffect(() => {

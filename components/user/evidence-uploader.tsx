@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Upload,
   X,
@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { apiClient } from "@/lib/api-client";
 
 const maxFileSize = 10 * 1024 * 1024; // 10MB
 const allowedExtensions = ["pdf", "docx", "xlsx", "txt", "png", "jpg", "jpeg", "csv", "zip"];
@@ -34,21 +35,72 @@ function formatBytes(bytes: number, decimals = 2) {
 
 export interface UploadedFile {
   id: string;
-  file: File;
+  file?: File; // Optional since existing files won't have it
   name: string;
   size: number;
   type: string;
   progress: number;
   status: "uploading" | "success" | "error";
   uploadDate: string;
-  uploaderName: string;
+  uploaderName?: string;
   description: string;
 }
 
-export default function EvidenceUploader() {
+export interface ExistingFile {
+  id: string;
+  originalName: string;
+  fileSize: number;
+  mimeType: string;
+  description: string | null;
+  uploadedAt: string;
+  uploaderName?: string;
+}
+
+interface EvidenceUploadResponse {
+  evidence: ExistingFile[];
+}
+
+interface EvidenceUploaderProps {
+  assessmentItemId: string;
+  existingFiles?: ExistingFile[];
+}
+
+export default function EvidenceUploader({
+  assessmentItemId,
+  existingFiles,
+}: EvidenceUploaderProps) {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const activeUploads = useRef<{ [key: string]: () => void }>({});
+  const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (existingFiles && existingFiles.length > 0) {
+      setFiles((prev) => {
+        const newFiles = existingFiles.map((f) => ({
+          id: f.id,
+          name: f.originalName,
+          size: f.fileSize,
+          type: f.mimeType,
+          progress: 100,
+          status: "success" as const,
+          uploadDate: new Date(f.uploadedAt).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          uploaderName: f.uploaderName,
+          description: f.description || "",
+        }));
+
+        const prevLocal = prev.filter((p) => !existingFiles.some((ex) => ex.id === p.id));
+        return [...prevLocal, ...newFiles];
+      });
+    }
+  }, [existingFiles]);
 
   const validateFile = (file: File) => {
     const extension = file.name.split(".").pop()?.toLowerCase();
@@ -64,6 +116,11 @@ export default function EvidenceUploader() {
   };
 
   const processFiles = (newFiles: File[]) => {
+    if (files.length + newFiles.length > 20) {
+      toast.error("Maximum 20 files per item allowed.");
+      return;
+    }
+
     const validFiles = newFiles.filter(validateFile);
     if (validFiles.length === 0) {
       return;
@@ -86,29 +143,53 @@ export default function EvidenceUploader() {
           hour: "2-digit",
           minute: "2-digit",
         }),
-        uploaderName: "Current User", // Mock user name
         description: "",
       };
 
       setFiles((prev) => [...prev, newUpload]);
 
-      // Mock upload progress
-      let currentProgress = 0;
-      const interval = setInterval(() => {
-        currentProgress += Math.random() * 25 + 5; // increment by 5-30%
-        if (currentProgress >= 100) {
-          currentProgress = 100;
-          clearInterval(interval);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("assessmentItemId", assessmentItemId);
+      formData.append("description", "");
+
+      const { promise, abort } = apiClient.upload<EvidenceUploadResponse>(
+        "/api/evidence/upload",
+        formData,
+        (progress) => {
+          setFiles((prev) => prev.map((f) => (f.id === id ? { ...f, progress } : f)));
+        },
+      );
+
+      activeUploads.current[id] = abort;
+
+      promise
+        .then((response) => {
+          const uploadedEvidence = response.evidence?.[0];
           setFiles((prev) =>
-            prev.map((f) => (f.id === id ? { ...f, progress: 100, status: "success" } : f)),
+            prev.map((f) =>
+              f.id === id
+                ? {
+                    ...f,
+                    id: uploadedEvidence?.id || id,
+                    progress: 100,
+                    status: "success",
+                    uploaderName: uploadedEvidence?.uploaderName,
+                  }
+                : f,
+            ),
           );
           toast.success(`${file.name} uploaded successfully.`);
-        } else {
-          setFiles((prev) =>
-            prev.map((f) => (f.id === id ? { ...f, progress: currentProgress } : f)),
-          );
-        }
-      }, 500);
+        })
+        .catch((err) => {
+          if (err?.message !== "Aborted") {
+            setFiles((prev) => prev.map((f) => (f.id === id ? { ...f, status: "error" } : f)));
+            toast.error(`Failed to upload ${file.name}`);
+          }
+        })
+        .finally(() => {
+          delete activeUploads.current[id];
+        });
     });
   };
 
@@ -143,23 +224,60 @@ export default function EvidenceUploader() {
     }
   };
 
-  const removeFile = (id: string) => {
-    setFiles((prev) => prev.filter((f) => f.id !== id));
+  const removeFile = async (id: string) => {
+    const fileToRemove = files.find((f) => f.id === id);
+    if (!fileToRemove) {
+      return;
+    }
+
+    if (fileToRemove.status === "uploading") {
+      const abortFn = activeUploads.current[id];
+      if (abortFn) {
+        abortFn();
+      }
+      setFiles((prev) => prev.filter((f) => f.id !== id));
+      return;
+    }
+
+    if (fileToRemove.status === "success") {
+      try {
+        await apiClient.delete(`/api/evidence/${fileToRemove.id}`);
+        setFiles((prev) => prev.filter((f) => f.id !== id));
+        toast.success("File deleted successfully");
+      } catch {
+        toast.error("Failed to delete file from server");
+      }
+    } else {
+      setFiles((prev) => prev.filter((f) => f.id !== id));
+    }
   };
 
   const updateDescription = (id: string, description: string) => {
     setFiles((prev) => prev.map((f) => (f.id === id ? { ...f, description } : f)));
   };
 
-  const downloadFile = (fileObj: UploadedFile) => {
-    const url = URL.createObjectURL(fileObj.file);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = fileObj.name;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const downloadFile = async (fileObj: UploadedFile) => {
+    try {
+      setDownloadingIds((prev) => {
+        const next = new Set(prev);
+        next.add(fileObj.id);
+        return next;
+      });
+      const data = await apiClient.get<{ downloadUrl: string }>(`/api/evidence/${fileObj.id}`);
+      if (data && data.downloadUrl) {
+        window.open(data.downloadUrl, "_blank");
+      } else {
+        toast.error("Download URL not found in response");
+      }
+    } catch {
+      toast.error("Failed to download file");
+    } finally {
+      setDownloadingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(fileObj.id);
+        return next;
+      });
+    }
   };
 
   const getFileIcon = (fileName: string) => {
@@ -234,8 +352,12 @@ export default function EvidenceUploader() {
                         <span>{formatBytes(file.size)}</span>
                         <span>•</span>
                         <span>{file.uploadDate}</span>
-                        <span>•</span>
-                        <span>{file.uploaderName}</span>
+                        {file.uploaderName && (
+                          <>
+                            <span>•</span>
+                            <span>{file.uploaderName}</span>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -246,10 +368,15 @@ export default function EvidenceUploader() {
                         variant="ghost"
                         size="icon"
                         onClick={() => downloadFile(file)}
+                        disabled={downloadingIds.has(file.id)}
                         title="Download file"
-                        className="text-slate-500 hover:text-primary"
+                        className="text-slate-500 hover:text-primary disabled:opacity-50"
                       >
-                        <Download size={16} />
+                        {downloadingIds.has(file.id) ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" />
+                        ) : (
+                          <Download size={16} />
+                        )}
                       </Button>
                     )}
                     <Button

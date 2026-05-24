@@ -5,6 +5,7 @@ vi.mock("@/lib/prisma", () => ({
     framework: {
       findMany: vi.fn(),
       count: vi.fn(),
+      groupBy: vi.fn(),
       create: vi.fn(),
       findUnique: vi.fn(),
       update: vi.fn(),
@@ -62,6 +63,9 @@ describe("Framework Admin API", () => {
       },
     ] as never);
     vi.mocked(prisma.framework.count).mockResolvedValue(1);
+    vi.mocked(prisma.framework.groupBy).mockResolvedValue([
+      { status: "DRAFT", _count: { status: 1 } },
+    ] as never);
 
     const res = (await listFrameworks(
       new Request("http://localhost/api/frameworks?page=1&limit=20"),
@@ -77,6 +81,26 @@ describe("Framework Admin API", () => {
       limit: 20,
       totalPages: 1,
     });
+  });
+
+  it("GET /api/frameworks applies search filter", async () => {
+    vi.mocked(prisma.framework.findMany).mockResolvedValue([] as never);
+    vi.mocked(prisma.framework.count).mockResolvedValue(0);
+    vi.mocked(prisma.framework.groupBy).mockResolvedValue([] as never);
+
+    await listFrameworks(
+      new Request("http://localhost/api/frameworks?search=gdpr&page=1&limit=10"),
+    );
+
+    expect(prisma.framework.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          OR: expect.arrayContaining([
+            expect.objectContaining({ name: { contains: "gdpr", mode: "insensitive" } }),
+          ]),
+        }),
+      }),
+    );
   });
 
   it("GET /api/frameworks returns 401 when not admin", async () => {

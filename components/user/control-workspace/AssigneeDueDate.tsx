@@ -1,6 +1,18 @@
 import { User, Calendar } from "lucide-react";
 
-export function AssigneeDueDate({ assignee, setAssignee, dueDate, setDueDate }: any) {
+interface AssigneeDueDateProps {
+  assignee: string;
+  setAssignee: (value: string) => void;
+  dueDate: string;
+  setDueDate: (value: string) => void;
+}
+
+export function AssigneeDueDate({
+  assignee,
+  setAssignee,
+  dueDate,
+  setDueDate,
+}: AssigneeDueDateProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {/* 👤 Assignee */}

@@ -22,7 +22,10 @@ export default function RemediationHeader({ data, onClose }: Props) {
       </div>
 
       {/* CLOSE BUTTON */}
-      <button onClick={onClose} className="p-1 rounded-md hover:bg-gray-100 transition">
+      <button
+        onClick={onClose}
+        className="p-1 rounded-md hover:bg-gray-100 transition print:hidden"
+      >
         <X size={18} />
       </button>
     </div>

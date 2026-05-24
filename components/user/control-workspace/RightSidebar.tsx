@@ -3,27 +3,59 @@ import RelatedControls from "./RelatedControls";
 import ControlRequirements from "./ControlRequirements";
 import AuditTrail from "./AuditTrail";
 import AIAssistantCard from "./AIAssisstentCard";
-export default function RightSidebar({ status }: any) {
+import RemediationDrawer from "@/components/ai/remediation-drawer";
+import { useState } from "react";
+
+interface RightSidebarProps {
+  control?: {
+    id: string;
+    itemId: string;
+    title: string;
+    description: string;
+    framework: string;
+    severity: string;
+    assessmentId: string;
+  };
+  status: string;
+}
+
+export default function RightSidebar({ control, status }: RightSidebarProps) {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   return (
     <div className="space-y-4 ">
       {/* AI Assistant */}
-      <AIAssistantCard status={status} />
+      <AIAssistantCard status={status} onOpenDrawer={() => setIsDrawerOpen(true)} />
 
       {/* Requirements */}
       <div>
-        <ControlRequirements />
+        <ControlRequirements controlId={control?.id} />
       </div>
       <div>
-        <RelatedControls />
+        <RelatedControls controlId={control?.id} />
       </div>
       <div>
-        <DiscussionPanel />
+        <DiscussionPanel assessmentId={control?.assessmentId} assessmentItemId={control?.itemId} />
       </div>
 
       {/* Audit Trail */}
       <div>
-        <AuditTrail />
+        <AuditTrail assessmentId={control?.assessmentId} assessmentItemId={control?.itemId} />
       </div>
+
+      {/* Remediation Drawer */}
+      {control && (
+        <RemediationDrawer
+          open={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          controlId={control.id}
+          assessmentItemId={control.itemId}
+          controlTitle={control.title}
+          controlDescription={control.description}
+          framework={control.framework}
+          status={status}
+          severity={control.severity}
+        />
+      )}
     </div>
   );
 }

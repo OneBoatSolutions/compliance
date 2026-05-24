@@ -72,13 +72,15 @@ const mapToBackend = (values: OnboardingFormValues) => ({
   }),
 });
 interface BackendOrganization {
-  productName: string;
-  description: string;
-  services: string;
-  targetCustomers: string;
-  problemSolved: string;
-  dataHandled: string[];
-  regions: string[];
+  id: string;
+  name: string;
+  productName?: string | null;
+  description?: string | null;
+  services?: string | null;
+  targetCustomers?: string | null;
+  problemSolved?: string | null;
+  dataHandled?: string[] | null;
+  regions?: string[] | null;
 }
 const mapFromBackend = (data: BackendOrganization): OnboardingFormValues => ({
   productName: data.productName || "",
@@ -155,7 +157,15 @@ const mapFromBackend = (data: BackendOrganization): OnboardingFormValues => ({
       ].some((known) => r.includes(known));
     }) || "",
 });
-function Stepper({ currentStep }: { currentStep: number }) {
+function Stepper({
+  currentStep,
+  saving,
+  saved,
+}: {
+  currentStep: number;
+  saving: boolean;
+  saved: boolean;
+}) {
   const steps = [
     { id: 1, label: "Business Profile" },
     { id: 2, label: "AI Recommendations & Review" },
@@ -207,9 +217,14 @@ function Stepper({ currentStep }: { currentStep: number }) {
       </div>
 
       {/* Save */}
-      <button className="text-gray-500 hover:text-gray-700 font-medium ml-6 whitespace-nowrap">
-        Save & Exit
-      </button>
+      <div className="flex flex-col items-end">
+        <span className="text-xs text-gray-500 font-medium min-h-[16px] mb-1">
+          {saving ? "Saving..." : saved ? "✔ All changes saved" : ""}
+        </span>
+        <button className="text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap">
+          Save & Exit
+        </button>
+      </div>
     </div>
   );
 }
@@ -218,6 +233,7 @@ export default function OnboardingPage() {
   const {
     organizationId,
     onboardingData,
+    setOrganizationId,
     submitOnboarding,
     retryLastAction,
     phase,
@@ -262,39 +278,10 @@ export default function OnboardingPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [orgId, setOrgId] = useState<string | null>(null);
-  const [creating, setCreating] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
   const [lastSavedValues, setLastSavedValues] = useState<string>("");
   const abortRef = useRef<AbortController | null>(null);
   const isSubmitting = phase === "savingOrg" || phase === "aiLoading";
-
-  const createOrganization = async (values: OnboardingFormValues) => {
-    const controller = new AbortController();
-    abortRef.current = controller;
-
-    const res = await fetch("/api/organizations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(mapToBackend(values)),
-      signal: controller.signal,
-    });
-    if (!res.ok) {
-      throw new Error("Failed to create organization");
-    }
-
-    const data = (await res.json()) as {
-      id?: string;
-      data?: { id?: string };
-    };
-
-    const id = data.data?.id ?? data.id;
-    if (!id) {
-      throw new Error("Failed to create organization");
-    }
-
-    setOrgId(id);
-  };
 
   const updateOrganization = async (values: OnboardingFormValues) => {
     if (!orgId) {
@@ -334,7 +321,7 @@ export default function OnboardingPage() {
     if (!isReadyForSave) {
       return;
     }
-    if (orgId && !hasFetched) {
+    if (!orgId || !hasFetched) {
       return;
     }
 
@@ -346,10 +333,6 @@ export default function OnboardingPage() {
         return;
       }
 
-      // ✅ MOVE GUARD BEFORE setting saving
-      if (!orgId && creating) {
-        return;
-      }
       const minSavingTime = 500;
 
       try {
@@ -359,19 +342,7 @@ export default function OnboardingPage() {
 
         abortRef.current?.abort();
 
-        if (!orgId) {
-          if (!isReadyForSave) {
-            return;
-          }
-          try {
-            setCreating(true);
-            await createOrganization(values);
-          } finally {
-            setCreating(false);
-          }
-        } else {
-          await updateOrganization(values);
-        }
+        await updateOrganization(values);
         const elapsed = Date.now() - start;
         const remaining = minSavingTime - elapsed;
 
@@ -383,8 +354,6 @@ export default function OnboardingPage() {
         // ✅ keep "saved" visible
         setSaving(false);
         setSaved(true);
-        // eslint-disable-next-line no-console
-        console.log("SAVED TRIGGERED");
       } catch (error: unknown) {
         if (error instanceof DOMException && error.name === "AbortError") {
           return;
@@ -395,7 +364,39 @@ export default function OnboardingPage() {
 
     return () => clearTimeout(handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values, orgId, hasFetched, lastSavedValues, creating, isReadyForSave]);
+  }, [values, orgId, hasFetched, lastSavedValues, isReadyForSave]);
+
+  //FETCH EXISTING DATA
+  useEffect(() => {
+    if (orgId) {
+      return;
+    }
+
+    const fetchCurrentOrg = async () => {
+      try {
+        const res = await fetch("/api/organizations", {
+          credentials: "include",
+        });
+        const data = (await res.json()) as {
+          success?: boolean;
+          data?: BackendOrganization[];
+        };
+
+        const organization = data.success ? data.data?.[0] : null;
+        if (organization) {
+          setOrgId(organization.id);
+          setOrganizationId(organization.id);
+          reset(mapFromBackend(organization));
+          setHasFetched(true);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchCurrentOrg();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orgId, setOrganizationId]);
 
   //FETCH EXISTING DATA
   useEffect(() => {
@@ -405,7 +406,9 @@ export default function OnboardingPage() {
 
     const fetchOrg = async () => {
       try {
-        const res = await fetch(`/api/organizations/${orgId}`);
+        const res = await fetch(`/api/organizations/${orgId}`, {
+          credentials: "include",
+        });
         const data = await res.json();
 
         if (data.success) {
@@ -419,7 +422,7 @@ export default function OnboardingPage() {
 
     fetchOrg();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orgId, creating]);
+  }, [orgId]);
 
   // CHECKBOX HANDLER
   const handleCheckbox = (field: "dataTypes" | "regions", value: string) => {
@@ -457,7 +460,7 @@ export default function OnboardingPage() {
   const router = useRouter();
 
   const onSubmit = async (data: OnboardingFormValues) => {
-    if (creating || isSubmitting) {
+    if (isSubmitting) {
       return;
     }
 
@@ -494,7 +497,7 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Stepper currentStep={currentStep} />
+      <Stepper currentStep={currentStep} saving={saving} saved={saved} />
       <div className="max-w-3xl mx-auto mt-8 px-4">
         <div className="mb-6">
           <span className="text-sm bg-purple-100 text-purple-600 px-3 py-1 rounded-full">
@@ -525,13 +528,6 @@ export default function OnboardingPage() {
           onSubmit={handleSubmit(onSubmit, onError)}
           className="bg-white p-6 rounded-lg shadow space-y-8"
         >
-          <div className="text-right text-sm min-h-[24px]">
-            <span className="text-gray-500 min-h-[24px] inline-block">
-              {saving && "Saving..."}
-              {!saving && saved && "✔ All changes saved"}
-            </span>
-          </div>
-
           <Section title="Product Information" number={1}>
             <Input
               label="Product Name"
@@ -711,30 +707,35 @@ export default function OnboardingPage() {
                 </button>
 
                 {/* Next */}
-                <button
-                  type="submit"
-                  disabled={
-                    isSubmitting ||
-                    (currentStep === 1 && !isStep1Valid) ||
-                    (currentStep === 2 && values.dataTypes.length === 0) ||
-                    (currentStep === 3 && values.regions.length === 0)
-                  }
-                  className={`
-          px-6 py-2.5 rounded-md text-sm font-semibold text-white transition-all
-          flex items-center gap-2
-          ${
-            isStep1Valid
-              ? "bg-purple-600 hover:bg-purple-700 shadow-sm hover:shadow-md"
-              : "bg-gray-300 cursor-not-allowed"
-          }
-        `}
+                <span
+                  title={!isStep1Valid ? "Please fill in all required fields above" : undefined}
+                  className="inline-block"
                 >
-                  {phase === "savingOrg"
-                    ? "Saving organization..."
-                    : phase === "aiLoading"
-                      ? "Generating AI suggestions..."
-                      : "Next: AI Recommendations →"}
-                </button>
+                  <button
+                    type="submit"
+                    disabled={
+                      isSubmitting ||
+                      (currentStep === 1 && !isStep1Valid) ||
+                      (currentStep === 2 && values.dataTypes.length === 0) ||
+                      (currentStep === 3 && values.regions.length === 0)
+                    }
+                    className={`
+            px-6 py-2.5 rounded-md text-sm font-semibold text-white transition-all
+            flex items-center gap-2
+            ${
+              isStep1Valid
+                ? "bg-purple-600 hover:bg-purple-700 shadow-sm hover:shadow-md"
+                : "bg-gray-300 cursor-not-allowed"
+            }
+          `}
+                  >
+                    {phase === "savingOrg"
+                      ? "Saving organization..."
+                      : phase === "aiLoading"
+                        ? "Generating AI suggestions..."
+                        : "Next: AI Recommendations →"}
+                  </button>
+                </span>
               </div>
             </div>
           </div>

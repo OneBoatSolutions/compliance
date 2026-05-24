@@ -10,8 +10,10 @@ interface CoverProps {
   preparedFor: string;
   version: string;
 
-  onGenerate: () => void;
   isGenerating?: boolean;
+  isDownloading?: boolean;
+  hasReport?: boolean;
+  onGenerate: () => void;
   onDownload: () => void;
 }
 
@@ -21,8 +23,10 @@ export default function Cover({
   generatedAt,
   preparedFor,
   version,
-  onGenerate,
   isGenerating,
+  isDownloading,
+  hasReport,
+  onGenerate,
   onDownload,
 }: CoverProps) {
   const formattedDate = new Date(generatedAt).toLocaleDateString(undefined, {
@@ -52,21 +56,31 @@ export default function Cover({
           <button
             onClick={onGenerate}
             disabled={isGenerating}
-            className="flex items-center gap-1 px-3 py-1 border rounded 
-            hover:bg-gray-100 hover:shadow-sm transition disabled:opacity-50"
+            className={`flex items-center gap-1 px-3 py-1 border rounded transition
+            ${isGenerating ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100 hover:shadow-sm"}`}
           >
+            {isGenerating ? (
+              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-900" />
+            ) : (
+              <FileDown size={14} />
+            )}
             {isGenerating ? "Generating..." : "Generate Report"}
-            <FileDown size={14} />
           </button>
 
           {/* ⬇ Download */}
           <button
             onClick={onDownload}
-            className="flex items-center gap-1 px-3 py-1 bg-purple-600 text-white rounded 
-            hover:bg-purple-700 hover:shadow-md transition"
+            disabled={isDownloading || !hasReport}
+            title={!hasReport ? "Generate a report first" : "Download PDF report"}
+            className={`flex items-center gap-1 px-3 py-1 bg-purple-600 text-white rounded transition
+            ${isDownloading || !hasReport ? "opacity-50 cursor-not-allowed" : "hover:bg-purple-700 hover:shadow-md"}`}
           >
-            <Download size={14} />
-            Download
+            {isDownloading ? (
+              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white" />
+            ) : (
+              <Download size={14} />
+            )}
+            {isDownloading ? "Downloading..." : "Download"}
           </button>
         </div>
       </div>

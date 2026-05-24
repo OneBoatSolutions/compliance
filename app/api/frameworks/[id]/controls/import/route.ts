@@ -1,11 +1,8 @@
 /**
  * POST /api/frameworks/:id/controls/import
  * Body: raw CSV text (Content-Type: text/csv or text/plain).
- * Expected columns: code, title, description, category, severity, weight
- * (header row required; column names are matched case-insensitively).
  */
 import { Prisma } from "@prisma/client";
-import Papa from "papaparse";
 import { withErrorHandler } from "@/lib/api-handler";
 import {
   errorResponse,
@@ -14,29 +11,11 @@ import {
   validationErrorResponse,
 } from "@/lib/api-helpers";
 import { requireAdmin } from "@/lib/auth-helpers";
+import { csvMaxBytes, parseControlCsvText } from "@/lib/csv/parse-control-csv";
 import { prisma } from "@/lib/prisma";
-import { controlCsvRowSchema } from "@/lib/validations/framework";
 
 interface RouteContext {
   params: { id: string };
-}
-
-const expectedImportColumns = [
-  "code",
-  "title",
-  "description",
-  "category",
-  "severity",
-  "weight",
-] as const;
-
-function normalizeHeaderRecord(row: Record<string, unknown>): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const [k, v] of Object.entries(row)) {
-    const key = k.toLowerCase().trim();
-    out[key] = v === null || v === undefined ? "" : String(v).trim();
-  }
-  return out;
 }
 
 export const POST = withErrorHandler(async (req: Request, { params }: RouteContext) => {
@@ -51,76 +30,49 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
     return notFoundResponse("Framework not found");
   }
 
+  const contentType = req.headers.get("content-type") ?? "";
+  if (contentType && !contentType.includes("text/csv") && !contentType.includes("text/plain")) {
+    return errorResponse("Content-Type must be text/csv or text/plain", 415);
+  }
+
   const raw = await req.text();
 
   if (!raw.trim()) {
     return errorResponse("Request body must contain CSV data", 400);
   }
 
-  const parsedCsv = Papa.parse<Record<string, unknown>>(raw, {
-    header: true,
-    skipEmptyLines: true,
-    transformHeader: (h) => h.trim(),
-  });
-
-  if (parsedCsv.errors.length > 0) {
-    return validationErrorResponse(parsedCsv.errors);
+  if (Buffer.byteLength(raw, "utf8") > csvMaxBytes) {
+    return errorResponse(`CSV exceeds the ${csvMaxBytes / (1024 * 1024)}MB limit`, 413);
   }
 
-  const rows = parsedCsv.data.filter((r) => Object.keys(r).length > 0);
+  const { rows, fileError } = parseControlCsvText(raw);
 
-  if (rows.length === 0) {
-    return errorResponse("CSV contains no data rows", 400);
+  if (fileError) {
+    return errorResponse(fileError, 422);
   }
 
-  const first = normalizeHeaderRecord(rows[0]);
-  const missing = expectedImportColumns.filter((k) => !(k in first));
-  if (missing.length > 0) {
-    return errorResponse(
-      `CSV must include columns: ${expectedImportColumns.join(", ")}. Missing: ${missing.join(", ")}`,
-      422,
-    );
-  }
+  const invalid = rows.filter((row) => row.errors.length > 0);
 
-  const rowErrors: { row: number; message: string; details?: unknown }[] = [];
-  const validated: Prisma.ControlCreateManyInput[] = [];
-
-  for (let i = 0; i < rows.length; i++) {
-    const normalized = normalizeHeaderRecord(rows[i]);
-    const candidate = {
-      code: normalized.code ?? "",
-      title: normalized.title ?? "",
-      description: normalized.description ?? "",
-      category: normalized.category === "" ? undefined : (normalized.category ?? undefined),
-      severity: normalized.severity === "" ? undefined : normalized.severity,
-      weight: normalized.weight === "" ? undefined : Number.parseFloat(normalized.weight),
-    };
-
-    const result = controlCsvRowSchema.safeParse(candidate);
-
-    if (!result.success) {
-      rowErrors.push({
-        row: i + 2,
-        message: "Validation failed",
-        details: result.error.format(),
-      });
-      continue;
-    }
-
-    validated.push({
-      frameworkId: params.id,
-      code: result.data.code,
-      title: result.data.title,
-      description: result.data.description,
-      category: result.data.category ?? null,
-      severity: result.data.severity,
-      weight: result.data.weight,
+  if (invalid.length > 0) {
+    return validationErrorResponse({
+      rows: invalid.map((row) => ({
+        row: row.rowNumber,
+        message: row.errors.join("; "),
+      })),
     });
   }
 
-  if (rowErrors.length > 0) {
-    return validationErrorResponse({ rows: rowErrors });
-  }
+  const validated: Prisma.ControlCreateManyInput[] = rows
+    .filter((row) => row.data)
+    .map((row) => ({
+      frameworkId: params.id,
+      code: row.data!.code,
+      title: row.data!.title,
+      description: row.data!.description,
+      category: row.data!.category,
+      severity: row.data!.severity,
+      weight: row.data!.weight,
+    }));
 
   try {
     await prisma.$transaction(
