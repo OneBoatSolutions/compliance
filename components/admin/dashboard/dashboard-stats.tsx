@@ -1,51 +1,61 @@
-"use client";
-
 import { FileCheck, FileClock, ShieldCheck, Users } from "lucide-react";
 
-const stats = [
-  {
-    title: "Total Users",
-    value: "128",
-    icon: Users,
-    styles: {
-      bg: "bg-blue-500",
-      hover: "hover:shadow-blue-300/60",
-      iconGlow: "shadow-blue-200/70",
-    },
-  },
-  {
-    title: "Published Frameworks",
-    value: "12",
-    icon: ShieldCheck,
-    styles: {
-      bg: "bg-emerald-500",
-      hover: "hover:shadow-emerald-300/60",
-      iconGlow: "shadow-emerald-200/70",
-    },
-  },
-  {
-    title: "Draft Frameworks",
-    value: "4",
-    icon: FileClock,
-    styles: {
-      bg: "bg-violet-500",
-      hover: "hover:shadow-violet-300/60",
-      iconGlow: "shadow-violet-200/70",
-    },
-  },
-  {
-    title: "Total Controls",
-    value: "342",
-    icon: FileCheck,
-    styles: {
-      bg: "bg-pink-500",
-      hover: "hover:shadow-pink-300/60",
-      iconGlow: "shadow-pink-200/70",
-    },
-  },
-];
+interface DashboardStatsProps {
+  totalUsers: number;
+  publishedFrameworks: number;
+  draftFrameworks: number;
+  totalAssessments: number;
+}
 
-export default function DashboardStats() {
+export default function DashboardStats({
+  totalUsers,
+  publishedFrameworks,
+  draftFrameworks,
+  totalAssessments,
+}: DashboardStatsProps) {
+  const stats = [
+    {
+      title: "Total Users",
+      value: totalUsers.toLocaleString(),
+      icon: Users,
+      styles: {
+        bg: "bg-blue-500",
+        hover: "hover:shadow-blue-300/60",
+        iconGlow: "shadow-blue-200/70",
+      },
+    },
+    {
+      title: "Published Frameworks",
+      value: publishedFrameworks.toLocaleString(),
+      icon: ShieldCheck,
+      styles: {
+        bg: "bg-emerald-500",
+        hover: "hover:shadow-emerald-300/60",
+        iconGlow: "shadow-emerald-200/70",
+      },
+    },
+    {
+      title: "Draft Frameworks",
+      value: draftFrameworks.toLocaleString(),
+      icon: FileClock,
+      styles: {
+        bg: "bg-violet-500",
+        hover: "hover:shadow-violet-300/60",
+        iconGlow: "shadow-violet-200/70",
+      },
+    },
+    {
+      title: "Total Assessments",
+      value: totalAssessments.toLocaleString(),
+      icon: FileCheck,
+      styles: {
+        bg: "bg-pink-500",
+        hover: "hover:shadow-pink-300/60",
+        iconGlow: "shadow-pink-200/70",
+      },
+    },
+  ];
+
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => {

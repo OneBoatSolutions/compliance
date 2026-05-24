@@ -6,6 +6,18 @@ export const adminUserListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
   search: z.string().trim().optional(),
+  role: z.nativeEnum(Role).optional(),
+  isActive: z.preprocess((val) => {
+    if (typeof val === "string") {
+      if (val === "true") {
+        return true;
+      }
+      if (val === "false") {
+        return false;
+      }
+    }
+    return val;
+  }, z.boolean().optional()),
 });
 
 export type AdminUserListQuery = z.infer<typeof adminUserListQuerySchema>;

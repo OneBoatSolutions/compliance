@@ -161,6 +161,68 @@ describe("Admin Users API", () => {
         }),
       );
     });
+
+    it("filters by role", async () => {
+      vi.mocked(prisma.user.findMany).mockResolvedValue([] as never);
+      vi.mocked(prisma.user.count).mockResolvedValue(0);
+
+      const res = (await listUsersGet(
+        new Request("http://localhost/api/admin/users?role=ADMIN"),
+      )) as Response;
+      const json = await res.json();
+
+      expect(res.status).toBe(200);
+      expect(prisma.user.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            role: "ADMIN",
+          }),
+        }),
+      );
+    });
+
+    it("filters by isActive status", async () => {
+      vi.mocked(prisma.user.findMany).mockResolvedValue([] as never);
+      vi.mocked(prisma.user.count).mockResolvedValue(0);
+
+      const res = (await listUsersGet(
+        new Request("http://localhost/api/admin/users?isActive=false"),
+      )) as Response;
+      const json = await res.json();
+
+      expect(res.status).toBe(200);
+      expect(prisma.user.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            isActive: false,
+          }),
+        }),
+      );
+    });
+
+    it("filters by search, role and isActive combined", async () => {
+      vi.mocked(prisma.user.findMany).mockResolvedValue([] as never);
+      vi.mocked(prisma.user.count).mockResolvedValue(0);
+
+      const res = (await listUsersGet(
+        new Request("http://localhost/api/admin/users?search=bob&role=USER&isActive=true"),
+      )) as Response;
+      const json = await res.json();
+
+      expect(res.status).toBe(200);
+      expect(prisma.user.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            OR: [
+              { email: { contains: "bob", mode: "insensitive" } },
+              { name: { contains: "bob", mode: "insensitive" } },
+            ],
+            role: "USER",
+            isActive: true,
+          },
+        }),
+      );
+    });
   });
 
   describe("POST /api/admin/users", () => {

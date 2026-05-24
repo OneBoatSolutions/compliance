@@ -61,17 +61,21 @@ export function removesAdminAccess(
 }
 
 export async function listUsers(query: AdminUserListQuery) {
-  const { page, limit, search } = query;
+  const { page, limit, search, role, isActive } = query;
   const skip = (page - 1) * limit;
 
-  const where: Prisma.UserWhereInput = search
-    ? {
-        OR: [
-          { email: { contains: search, mode: "insensitive" } },
-          { name: { contains: search, mode: "insensitive" } },
-        ],
-      }
-    : {};
+  const where: Prisma.UserWhereInput = {
+    ...(search
+      ? {
+          OR: [
+            { email: { contains: search, mode: "insensitive" } },
+            { name: { contains: search, mode: "insensitive" } },
+          ],
+        }
+      : {}),
+    ...(role ? { role } : {}),
+    ...(isActive !== undefined ? { isActive } : {}),
+  };
 
   const [items, total] = await Promise.all([
     prisma.user.findMany({
