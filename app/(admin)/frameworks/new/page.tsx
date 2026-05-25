@@ -1,6 +1,19 @@
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+
+import { authOptions } from "@/lib/auth";
 import { FrameworkForm } from "@/components/admin/frameworks/framework-form";
 
-export default function NewFrameworkPage() {
+export default async function NewFrameworkPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  if (session.user.role !== "ADMIN") {
+    redirect("/dashboard");
+  }
   return (
     <div className="min-h-screen bg-[#fafafa] px-6 py-10 lg:px-10">
       <div className="mx-auto max-w-6xl">

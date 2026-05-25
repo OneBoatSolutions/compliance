@@ -10,6 +10,7 @@ vi.mock("@/lib/prisma", () => ({
       findUnique: vi.fn(),
       create: vi.fn(),
       update: vi.fn(),
+      delete: vi.fn(),
     },
     passwordResetToken: {
       deleteMany: vi.fn(),
@@ -32,7 +33,10 @@ import { prisma } from "@/lib/prisma";
 import * as authHelpers from "@/lib/auth-helpers";
 import { sendPasswordResetEmail } from "@/services/email-service";
 import { GET as listUsersGet, POST as createUserPost } from "@/app/api/admin/users/route";
-import { PATCH as updateUserPatch } from "@/app/api/admin/users/[id]/route";
+import {
+  PATCH as updateUserPatch,
+  DELETE as deleteUserDelete,
+} from "@/app/api/admin/users/[id]/route";
 import { POST as resetPasswordPost } from "@/app/api/admin/users/[id]/reset-password/route";
 
 const adminSession = { user: { id: "admin_1", role: "ADMIN" as const } };
@@ -376,6 +380,60 @@ describe("Admin Users API", () => {
       expect(res.status).toBe(200);
       expect(json.success).toBe(true);
       expect(json.data.name).toBe("Updated Name");
+    });
+  });
+
+  describe("DELETE /api/admin/users/:id", () => {
+    it("rejects self deletion", async () => {
+      const res = (await deleteUserDelete(
+        new Request("http://localhost/api/admin/users/admin_1", {
+          method: "DELETE",
+        }),
+        { params: { id: "admin_1" } },
+      )) as Response;
+      const json = await res.json();
+
+      expect(res.status).toBe(400);
+      expect(json.error).toContain("own account");
+    });
+
+    it("rejects deleting the last admin", async () => {
+      vi.mocked(prisma.user.findUnique).mockResolvedValue({
+        role: "ADMIN",
+        isActive: true,
+      } as never);
+      vi.mocked(prisma.user.count).mockResolvedValue(1);
+
+      const res = (await deleteUserDelete(
+        new Request("http://localhost/api/admin/users/admin_only", {
+          method: "DELETE",
+        }),
+        { params: { id: "admin_only" } },
+      )) as Response;
+      const json = await res.json();
+
+      expect(res.status).toBe(400);
+      expect(json.error).toContain("last admin");
+    });
+
+    it("deletes user successfully", async () => {
+      vi.mocked(prisma.user.findUnique).mockResolvedValue({
+        role: "USER",
+        isActive: true,
+      } as never);
+      vi.mocked(prisma.user.delete).mockResolvedValue({} as never);
+
+      const res = (await deleteUserDelete(
+        new Request("http://localhost/api/admin/users/user_1", {
+          method: "DELETE",
+        }),
+        { params: { id: "user_1" } },
+      )) as Response;
+      const json = await res.json();
+
+      expect(res.status).toBe(200);
+      expect(json.success).toBe(true);
+      expect(prisma.user.delete).toHaveBeenCalledWith({ where: { id: "user_1" } });
     });
   });
 
