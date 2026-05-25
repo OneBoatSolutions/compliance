@@ -1,47 +1,100 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { CheckCircle2, Database, Server, ShieldCheck } from "lucide-react";
 
-const healthItems = [
-  {
-    title: "API Services",
-    status: "Operational",
-    icon: Server,
-    color: {
-      bg: "bg-emerald-500",
-      glow: "shadow-emerald-200/70",
-    },
-  },
-  {
-    title: "Database",
-    status: "Healthy",
-    icon: Database,
-    color: {
-      bg: "bg-blue-500",
-      glow: "shadow-blue-200/70",
-    },
-  },
-  {
-    title: "Compliance Engine",
-    status: "Running",
-    icon: ShieldCheck,
-    color: {
-      bg: "bg-violet-500",
-      glow: "shadow-violet-200/70",
-    },
-  },
-  {
-    title: "Background Jobs",
-    status: "Stable",
-    icon: CheckCircle2,
-    color: {
-      bg: "bg-fuchsia-500",
-      glow: "shadow-fuchsia-200/70",
-    },
-  },
-];
-
 export default function SystemHealth() {
+  const [isHealthy, setIsHealthy] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const checkHealth = async () => {
+      try {
+        const res = await fetch("/api/health");
+        if (mounted) {
+          setIsHealthy(res.ok);
+        }
+      } catch {
+        if (mounted) {
+          setIsHealthy(false);
+        }
+      }
+    };
+
+    checkHealth();
+    const interval = setInterval(checkHealth, 30000);
+
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
+  const healthItems = [
+    {
+      title: "API Services",
+      status: isHealthy === null ? "Checking..." : isHealthy ? "Operational" : "Offline",
+      icon: Server,
+      color: {
+        bg: isHealthy === null ? "bg-slate-500" : isHealthy ? "bg-emerald-500" : "bg-rose-500",
+        glow:
+          isHealthy === null
+            ? "shadow-slate-200/70"
+            : isHealthy
+              ? "shadow-emerald-200/70"
+              : "shadow-rose-200/70",
+      },
+    },
+    {
+      title: "Database",
+      status: isHealthy === null ? "Checking..." : isHealthy ? "Healthy" : "Unreachable",
+      icon: Database,
+      color: {
+        bg: isHealthy === null ? "bg-slate-500" : isHealthy ? "bg-blue-500" : "bg-rose-500",
+        glow:
+          isHealthy === null
+            ? "shadow-slate-200/70"
+            : isHealthy
+              ? "shadow-blue-200/70"
+              : "shadow-rose-200/70",
+      },
+    },
+    {
+      title: "Compliance Engine",
+      status: isHealthy === null ? "Checking..." : isHealthy ? "Running" : "Halted",
+      icon: ShieldCheck,
+      color: {
+        bg: isHealthy === null ? "bg-slate-500" : isHealthy ? "bg-violet-500" : "bg-rose-500",
+        glow:
+          isHealthy === null
+            ? "shadow-slate-200/70"
+            : isHealthy
+              ? "shadow-violet-200/70"
+              : "shadow-rose-200/70",
+      },
+    },
+    {
+      title: "Background Jobs",
+      status: isHealthy === null ? "Checking..." : isHealthy ? "Stable" : "Failing",
+      icon: CheckCircle2,
+      color: {
+        bg: isHealthy === null ? "bg-slate-500" : isHealthy ? "bg-fuchsia-500" : "bg-rose-500",
+        glow:
+          isHealthy === null
+            ? "shadow-slate-200/70"
+            : isHealthy
+              ? "shadow-fuchsia-200/70"
+              : "shadow-rose-200/70",
+      },
+    },
+  ];
+
+  const dotColor =
+    isHealthy === null
+      ? "bg-slate-400 shadow-slate-200"
+      : isHealthy
+        ? "bg-emerald-500 shadow-emerald-200"
+        : "bg-rose-500 shadow-rose-200";
   return (
     <section
       className="
@@ -205,14 +258,12 @@ export default function SystemHealth() {
 
                   {/* STATUS DOT */}
                   <div
-                    className="
+                    className={`
                       h-2.5
                       w-2.5
                       rounded-full
-                      bg-emerald-500
-                      shadow-md
-                      shadow-emerald-200
-                    "
+                      ${dotColor}
+                    `}
                   />
                 </div>
               </div>

@@ -195,7 +195,7 @@ export async function updateUser(
 export async function deleteUser(currentUserId: string, targetUserId: string) {
   // Prevent self delete
   if (currentUserId === targetUserId) {
-    throw new Error("You cannot delete your own account");
+    throw new ApiError("You cannot delete your own account", 400);
   }
 
   const targetUser = await prisma.user.findUnique({
@@ -217,7 +217,7 @@ export async function deleteUser(currentUserId: string, targetUserId: string) {
     });
 
     if (adminCount <= 1) {
-      throw new Error("Cannot delete the last admin");
+      throw new ApiError("Cannot delete the last admin", 400);
     }
   }
 
