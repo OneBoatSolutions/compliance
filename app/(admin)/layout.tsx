@@ -8,7 +8,7 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 
 //  Icons
-import { Layers, Users } from "lucide-react";
+import { Layers, Users, LayoutDashboard } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -16,6 +16,11 @@ interface LayoutProps {
 
 //  ADMIN NAV ITEMS
 const adminNavItems = [
+  {
+    label: "Dashboard",
+    href: "/admin/dashboard",
+    icon: LayoutDashboard,
+  },
   {
     label: "Frameworks",
     href: "/frameworks",

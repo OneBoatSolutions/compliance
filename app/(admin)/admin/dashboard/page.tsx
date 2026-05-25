@@ -2,9 +2,10 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
 import { authOptions } from "@/lib/auth";
-import { UserManagementClient } from "@/components/admin/users/user-management-client";
+import { getAdminDashboardStats } from "@/services/admin-dashboard-service";
+import DashboardClient from "@/components/admin/dashboard/dashboard-client";
 
-export default async function AdminUsersPage() {
+export default async function AdminDashboardPage() {
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -15,5 +16,7 @@ export default async function AdminUsersPage() {
     redirect("/dashboard");
   }
 
-  return <UserManagementClient currentUserId={session.user.id} />;
+  const stats = await getAdminDashboardStats();
+
+  return <DashboardClient stats={stats} />;
 }

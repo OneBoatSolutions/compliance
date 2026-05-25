@@ -61,17 +61,21 @@ export function removesAdminAccess(
 }
 
 export async function listUsers(query: AdminUserListQuery) {
-  const { page, limit, search } = query;
+  const { page, limit, search, role, isActive } = query;
   const skip = (page - 1) * limit;
 
-  const where: Prisma.UserWhereInput = search
-    ? {
-        OR: [
-          { email: { contains: search, mode: "insensitive" } },
-          { name: { contains: search, mode: "insensitive" } },
-        ],
-      }
-    : {};
+  const where: Prisma.UserWhereInput = {
+    ...(search
+      ? {
+          OR: [
+            { email: { contains: search, mode: "insensitive" } },
+            { name: { contains: search, mode: "insensitive" } },
+          ],
+        }
+      : {}),
+    ...(role ? { role } : {}),
+    ...(isActive !== undefined ? { isActive } : {}),
+  };
 
   const [items, total] = await Promise.all([
     prisma.user.findMany({
@@ -186,6 +190,44 @@ export async function updateUser(
     },
     { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
   );
+}
+
+export async function deleteUser(currentUserId: string, targetUserId: string) {
+  // Prevent self delete
+  if (currentUserId === targetUserId) {
+    throw new Error("You cannot delete your own account");
+  }
+
+  const targetUser = await prisma.user.findUnique({
+    where: {
+      id: targetUserId,
+    },
+  });
+
+  if (!targetUser) {
+    throw new Error("User not found");
+  }
+
+  // Prevent deleting last admin
+  if (targetUser.role === Role.ADMIN) {
+    const adminCount = await prisma.user.count({
+      where: {
+        role: Role.ADMIN,
+      },
+    });
+
+    if (adminCount <= 1) {
+      throw new Error("Cannot delete the last admin");
+    }
+  }
+
+  await prisma.user.delete({
+    where: {
+      id: targetUserId,
+    },
+  });
+
+  return true;
 }
 
 export async function triggerPasswordReset(targetId: string): Promise<void> {
