@@ -31,8 +31,8 @@ const formatDate = (date: Date | string | null) => {
 export function UsersTable({ users, currentUserId, onEdit }: UsersTableProps) {
   return (
     <div className="overflow-hidden rounded-2xl border border-[#e5e5e5] bg-white shadow-sm">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[800px] border-collapse text-left text-sm text-slate-500">
+      <div className="w-full overflow-x-auto">
+        <table className="w-full border-collapse text-left text-sm text-slate-500">
           <thead className="bg-[#fafafa] text-xs font-semibold uppercase tracking-wider text-slate-700 border-b border-[#e5e5e5]">
             <tr>
               <th scope="col" className="px-6 py-4 font-semibold text-slate-900">
@@ -78,7 +78,7 @@ export function UsersTable({ users, currentUserId, onEdit }: UsersTableProps) {
                       )}
                     </div>
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-slate-600">{user.email}</td>
+                  <td className=" px-6 py-4 text-slate-600">{user.email}</td>
                   <td className="whitespace-nowrap px-6 py-4">
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
@@ -90,12 +90,8 @@ export function UsersTable({ users, currentUserId, onEdit }: UsersTableProps) {
                       {user.role}
                     </span>
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-slate-600">
-                    {formatDate(user.createdAt)}
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-slate-600">
-                    {formatDate(user.lastLoginAt)}
-                  </td>
+                  <td className=" px-6 py-4 text-slate-600">{formatDate(user.createdAt)}</td>
+                  <td className=" px-6 py-4 text-slate-600">{formatDate(user.lastLoginAt)}</td>
                   <td className="whitespace-nowrap px-6 py-4">
                     <UserStatusBadge isActive={user.isActive} />
                   </td>

@@ -36,7 +36,7 @@ export function UserManagementClient({ currentUserId }: UserManagementClientProp
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserPublic | null>(null);
-
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   // Extract query filters from URL
   const page = Number(searchParams.get("page") ?? "1");
   const search = searchParams.get("search") ?? "";
@@ -77,8 +77,8 @@ export function UserManagementClient({ currentUserId }: UserManagementClientProp
   };
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
-      <div className="mx-auto max-w-7xl px-8 py-10">
+    <div className="min-h-screen bg-[#fafafa] overflow-x-hidden">
+      <div className="mx-auto w-full max-w-full px-4 md:px-6 lg:px-8 py-10">
         <div className="space-y-8">
           <UsersToolbar total={data?.meta?.total ?? 0} onCreateClick={() => setCreateOpen(true)} />
 

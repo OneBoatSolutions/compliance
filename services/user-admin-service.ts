@@ -192,6 +192,44 @@ export async function updateUser(
   );
 }
 
+export async function deleteUser(currentUserId: string, targetUserId: string) {
+  // Prevent self delete
+  if (currentUserId === targetUserId) {
+    throw new Error("You cannot delete your own account");
+  }
+
+  const targetUser = await prisma.user.findUnique({
+    where: {
+      id: targetUserId,
+    },
+  });
+
+  if (!targetUser) {
+    throw new Error("User not found");
+  }
+
+  // Prevent deleting last admin
+  if (targetUser.role === Role.ADMIN) {
+    const adminCount = await prisma.user.count({
+      where: {
+        role: Role.ADMIN,
+      },
+    });
+
+    if (adminCount <= 1) {
+      throw new Error("Cannot delete the last admin");
+    }
+  }
+
+  await prisma.user.delete({
+    where: {
+      id: targetUserId,
+    },
+  });
+
+  return true;
+}
+
 export async function triggerPasswordReset(targetId: string): Promise<void> {
   const user = await prisma.user.findUnique({
     where: { id: targetId },
