@@ -1,9 +1,18 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import ControlWorkspace from "@/components/user/control-workspace/ControlWorkspace";
 import { getControl } from "@/services/control.services";
+
+const ControlWorkspace = dynamic(
+  () => import("@/components/user/control-workspace/ControlWorkspace"),
+  {
+    loading: () => (
+      <div className="p-6 text-sm text-muted-foreground">Loading control workspace...</div>
+    ),
+  },
+);
 
 interface ControlWorkspaceData {
   id: string;

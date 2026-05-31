@@ -20,17 +20,40 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
       id,
       userId: session.user.id,
     },
-    include: {
+    select: {
+      id: true,
+      organizationId: true,
+      status: true,
+      score: true,
+      createdAt: true,
+      updatedAt: true,
       items: {
-        include: {
-          control: {
-            include: {
-              framework: true,
-            },
-          },
+        select: {
+          id: true,
+          status: true,
+          comments: true,
+          createdAt: true,
+          updatedAt: true,
           _count: {
             select: {
               evidence: true,
+            },
+          },
+          control: {
+            select: {
+              id: true,
+              code: true,
+              title: true,
+              description: true,
+              severity: true,
+              weight: true,
+              framework: {
+                select: {
+                  id: true,
+                  code: true,
+                  name: true,
+                },
+              },
             },
           },
         },

@@ -1,8 +1,15 @@
 "use client";
+import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { useAssessmentStore } from "@/stores/assessment-store";
-import ActiveDashboard from "./components/active-dashboard";
-import EmptyDashboard from "./components/empty-dashboard";
+
+const ActiveDashboard = dynamic(() => import("./components/active-dashboard"), {
+  loading: () => <div className="p-6 text-sm text-muted-foreground">Loading dashboard...</div>,
+});
+
+const EmptyDashboard = dynamic(() => import("./components/empty-dashboard"), {
+  loading: () => <div className="p-6 text-sm text-muted-foreground">Loading dashboard...</div>,
+});
 
 export default function DashboardPage() {
   const reset = useAssessmentStore((s) => s.reset);

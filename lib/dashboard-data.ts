@@ -1,77 +1,14 @@
 import { unstable_cache } from "next/cache";
-import type { ItemStatus } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 import type {
   DashboardActivityItem,
   DashboardApiData,
   DashboardAssessmentSummary,
-  DashboardFrameworkScore,
 } from "@/types/dashboard";
-
-/** Same window as assessment-score SQL: exclude N/A and gateway rows from denominator; partial = 0.5 weight. */
-function weightedScorePercent(
-  items: Array<{
-    status: ItemStatus;
-    control: { weight: number; isGateway: boolean };
-  }>,
-): number {
-  let numerator = 0;
-  let denominator = 0;
-  for (const item of items) {
-    const { weight, isGateway } = item.control;
-    if (isGateway) {
-      continue;
-    }
-    if (item.status === "NOT_APPLICABLE") {
-      continue;
-    }
-    denominator += weight;
-    if (item.status === "COMPLIANT") {
-      numerator += weight;
-    } else if (item.status === "PARTIALLY_COMPLIANT") {
-      numerator += weight * 0.5;
-    }
-  }
-  if (denominator <= 0) {
-    return 0;
-  }
-  return (numerator / denominator) * 100;
-}
 
 function roundScore(n: number): number {
   return Math.round(n * 100) / 100;
-}
-
-interface ItemWithControlFramework {
-  status: ItemStatus;
-  control: {
-    weight: number;
-    isGateway: boolean;
-    frameworkId: string;
-    framework: { code: string; name: string };
-  };
-}
-
-function frameworkScoresFromItems(items: ItemWithControlFramework[]): DashboardFrameworkScore[] {
-  const byFw = new Map<string, ItemWithControlFramework[]>();
-  for (const item of items) {
-    const fid = item.control.frameworkId;
-    const list = byFw.get(fid) ?? [];
-    list.push(item);
-    byFw.set(fid, list);
-  }
-  const out: DashboardFrameworkScore[] = [];
-  for (const group of byFw.values()) {
-    const fw = group[0].control.framework;
-    out.push({
-      frameworkCode: fw.code,
-      frameworkName: fw.name,
-      score: roundScore(weightedScorePercent(group)),
-    });
-  }
-  out.sort((a, b) => a.frameworkCode.localeCompare(b.frameworkCode));
-  return out;
 }
 
 const dashboardRevalidateSec = 60;
@@ -94,7 +31,6 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
       where: { userId, score: { not: null } },
       _avg: { score: true },
     }),
-    // Critical gaps: CRITICAL controls not fully met (non-compliant or partial).
     prisma.assessmentItem.count({
       where: {
         assessment: { userId },
@@ -152,21 +88,6 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
         organization: {
           select: { productName: true },
         },
-        items: {
-          select: {
-            status: true,
-            control: {
-              select: {
-                weight: true,
-                isGateway: true,
-                frameworkId: true,
-                framework: {
-                  select: { code: true, name: true },
-                },
-              },
-            },
-          },
-        },
       },
     }),
   ]);
@@ -223,14 +144,8 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
   const recentActivity = activities.slice(0, 10);
 
   const assessments: DashboardAssessmentSummary[] = assessmentRows.map((a) => {
-    const items = a.items as ItemWithControlFramework[];
-    const computed = roundScore(weightedScorePercent(items));
     const score =
-      a.score !== null && a.score !== undefined
-        ? roundScore(Number(a.score))
-        : items.length > 0
-          ? computed
-          : null;
+      a.score !== null && a.score !== undefined ? roundScore(Number(a.score)) : null;
 
     return {
       id: a.id,
@@ -238,7 +153,7 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
       status: a.status,
       score,
       updatedAt: a.updatedAt.toISOString(),
-      frameworkScores: frameworkScoresFromItems(items),
+      frameworkScores: [],
     };
   });
 

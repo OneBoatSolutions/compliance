@@ -8,6 +8,12 @@
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: compliance_db
+    command:
+      - postgres
+      - -c
+      - log_min_duration_statement=200
+      - -c
+      - log_statement=none
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d compliance_db"]
       interval: 10s

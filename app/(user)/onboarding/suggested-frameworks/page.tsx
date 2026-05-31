@@ -1,17 +1,21 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
-
-import TopSection from "@/components/framework-selection/TopSection";
-import FrameworkCard from "@/components/framework-selection/framework-card";
-import SidebarSummary from "@/components/framework-selection/SidebarSummary";
-import LoadingScreen from "@/components/framework-selection/LoadingScreen";
-import SearchInput from "@/components/framework-selection/SearchInput";
-import FilterTabs from "@/components/framework-selection/FilterTabs";
-import Stepper from "@/components/framework-selection/Stepper";
-import { useAssessmentStore } from "@/stores/assessment-store";
-import BottomNavigation from "@/components/framework-selection/bottomNavigation";
 import { useRouter } from "next/navigation";
+
+import LoadingScreen from "@/components/framework-selection/LoadingScreen";
+import { useAssessmentStore } from "@/stores/assessment-store";
+
+const TopSection = dynamic(() => import("@/components/framework-selection/TopSection"));
+const FrameworkCard = dynamic(() => import("@/components/framework-selection/framework-card"));
+const SidebarSummary = dynamic(() => import("@/components/framework-selection/SidebarSummary"));
+const SearchInput = dynamic(() => import("@/components/framework-selection/SearchInput"));
+const FilterTabs = dynamic(() => import("@/components/framework-selection/FilterTabs"));
+const Stepper = dynamic(() => import("@/components/framework-selection/Stepper"));
+const BottomNavigation = dynamic(
+  () => import("@/components/framework-selection/bottomNavigation"),
+);
 
 /* ---------------- PAGE ---------------- */
 

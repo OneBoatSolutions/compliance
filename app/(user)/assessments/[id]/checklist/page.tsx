@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { FileText } from "lucide-react";
@@ -15,13 +16,22 @@ import {
 import { useAssessmentQuery } from "@/lib/hooks/use-assessment-query";
 import { useUpdateAssessmentItemMutation } from "@/lib/hooks/use-update-assessment-item-mutation";
 import { type AssessmentSortField, useAssessmentStore } from "@/stores/assessment-store";
-import MetricsBar from "@/components/assessment-checklist/MetricsBar";
-import FilterBar from "@/components/assessment-checklist/FilterBar";
-import ChecklistGroup from "@/components/assessment-checklist/ChecklistGroup";
-import Pagination from "@/components/assessment-checklist/Pagination";
 import Skeleton from "@/components/assessment-checklist/Skeleton";
-import EmptyState from "@/components/assessment-checklist/EmptyState";
-import MoreActionsDropdown from "@/components/assessment-checklist/MoreActionsDropdown";
+
+const MetricsBar = dynamic(() => import("@/components/assessment-checklist/MetricsBar"), {
+  loading: () => <div className="h-24 animate-pulse rounded-xl bg-muted" />,
+});
+const FilterBar = dynamic(() => import("@/components/assessment-checklist/FilterBar"), {
+  loading: () => <div className="h-12 animate-pulse rounded-xl bg-muted" />,
+});
+const ChecklistGroup = dynamic(() => import("@/components/assessment-checklist/ChecklistGroup"), {
+  loading: () => <div className="h-40 animate-pulse rounded-xl bg-muted" />,
+});
+const Pagination = dynamic(() => import("@/components/assessment-checklist/Pagination"));
+const EmptyState = dynamic(() => import("@/components/assessment-checklist/EmptyState"));
+const MoreActionsDropdown = dynamic(
+  () => import("@/components/assessment-checklist/MoreActionsDropdown"),
+);
 import {
   type AssessmentDetailResponse,
   type ChecklistSort,

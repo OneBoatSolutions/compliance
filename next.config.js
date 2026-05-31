@@ -1,7 +1,24 @@
 /** @type {import('next').NextConfig} */
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+
 const nextConfig = {
+  compress: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  experimental: {
+    optimizePackageImports: ["lucide-react", "@tanstack/react-query"],
+  },
   images: {
-    domains: ["example.com", "images.unsplash.com"],
+    formats: ["image/avif", "image/webp"],
+    remotePatterns: [
+      { protocol: "https", hostname: "example.com" },
+      { protocol: "https", hostname: "images.unsplash.com" },
+    ],
   },
   async headers() {
     return [
@@ -13,10 +30,6 @@ const nextConfig = {
           { key: "X-DNS-Prefetch-Control", value: "off" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           {
-            //key: "Content-Security-Policy",
-            //value:
-            //"default-src 'self'; img-src 'self' https://example.com https://images.unsplash.com;",
-
             key: "Content-Security-Policy",
             value: `
                default-src 'self';
@@ -32,8 +45,17 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
     ];
   },
 };
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);

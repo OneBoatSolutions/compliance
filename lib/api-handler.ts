@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { forbiddenResponse, unauthorizedResponse } from "@/lib/api-helpers";
+import { maybeCompressJsonResponse } from "@/lib/compress-response";
 
 type HandlerWithoutContext = (req: Request) => Promise<Response>;
 type HandlerWithContext<TContext> = (req: Request, ctx: TContext) => Promise<Response>;
@@ -14,11 +15,16 @@ export function withErrorHandler<TContext>(
 ) {
   return async (req: Request, ctx?: TContext) => {
     try {
-      if (ctx === undefined) {
-        return await (handler as HandlerWithoutContext)(req);
+      const response =
+        ctx === undefined
+          ? await (handler as HandlerWithoutContext)(req)
+          : await (handler as HandlerWithContext<TContext>)(req, ctx);
+
+      if (req.url.includes("/api/")) {
+        return maybeCompressJsonResponse(req, response);
       }
 
-      return await (handler as HandlerWithContext<TContext>)(req, ctx);
+      return response;
     } catch (error: unknown) {
       console.error("API Error:", error);
 
