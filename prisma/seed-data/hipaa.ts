@@ -1,419 +1,1707 @@
-import { readFileSync, readdirSync } from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import type { SeedControl } from "./types";
 
-// ─── CSV Parser (shared pattern with GDPR) ────────────────────────────────────
-
-function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let currentRow: string[] = [];
-  let currentCell = "";
-  let inQuotes = false;
-
-  for (let index = 0; index < text.length; index += 1) {
-    const char = text[index];
-    const nextChar = text[index + 1];
-
-    if (char === '"') {
-      if (inQuotes && nextChar === '"') {
-        currentCell += '"';
-        index += 1;
-      } else {
-        inQuotes = !inQuotes;
-      }
-      continue;
-    }
-
-    if (char === "," && !inQuotes) {
-      currentRow.push(currentCell);
-      currentCell = "";
-      continue;
-    }
-
-    if ((char === "\n" || char === "\r") && !inQuotes) {
-      if (char === "\r" && nextChar === "\n") {
-        index += 1;
-      }
-
-      currentRow.push(currentCell);
-      rows.push(currentRow);
-      currentRow = [];
-      currentCell = "";
-      continue;
-    }
-
-    currentCell += char;
-  }
-
-  if (currentCell || currentRow.length > 0) {
-    currentRow.push(currentCell);
-    rows.push(currentRow);
-  }
-
-  return rows;
-}
-
-// ─── Title derivation (shared pattern with GDPR) ──────────────────────────────
-
-const titleStopwords = new Set([
-  "a",
-  "all",
-  "an",
-  "and",
-  "are",
-  "at",
-  "be",
-  "by",
-  "can",
-  "do",
-  "does",
-  "for",
-  "has",
-  "have",
-  "how",
-  "in",
-  "is",
-  "its",
-  "of",
-  "on",
-  "or",
-  "the",
-  "there",
-  "to",
-  "we",
-  "what",
-  "who",
-  "with",
-  "within",
-  "you",
-  "your",
-]);
-
-function formatTitleWord(word: string): string {
-  const cleanedWord = word.replace(/[^A-Za-z0-9/-]/g, "");
-  if (!cleanedWord) {
-    return "";
-  }
-
-  if (/^[A-Z0-9/-]+$/.test(cleanedWord)) {
-    return cleanedWord;
-  }
-
-  return cleanedWord[0].toUpperCase() + cleanedWord.slice(1).toLowerCase();
-}
-
-function deriveTitle(description: string): string {
-  const cleanedDescription = description
-    .replace(/\([^)]*\)/g, " ")
-    .replace(/e\.g\./gi, "")
-    .replace(/['"".,?]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  const sourceWords = cleanedDescription.split(" ");
-  const meaningfulWords = sourceWords.filter(
-    (word) => word && !titleStopwords.has(word.toLowerCase()),
-  );
-  const titleWords = (meaningfulWords.length >= 3 ? meaningfulWords : sourceWords)
-    .map(formatTitleWord)
-    .filter(Boolean)
-    .slice(0, 6);
-
-  return titleWords.join(" ");
-}
-
-// ─── Severity / weight mapping ────────────────────────────────────────────────
-
-type RequiredSpec = "Required" | "Addressable" | "Required & Addressable" | "N/A";
-
-const severityBySpec: Record<RequiredSpec, "HIGH" | "MEDIUM"> = {
-  Required: "HIGH",
-  "Required & Addressable": "HIGH",
-  Addressable: "MEDIUM",
-  "N/A": "MEDIUM",
-};
-
-const weightBySpec: Record<RequiredSpec, number> = {
-  Required: 3.0,
-  "Required & Addressable": 3.0,
-  Addressable: 2.0,
-  "N/A": 2.0,
-};
-
-function toRequiredSpec(value: string): RequiredSpec {
-  const trimmed = value.trim();
-  if (
-    trimmed === "Required" ||
-    trimmed === "Addressable" ||
-    trimmed === "Required & Addressable" ||
-    trimmed === "N/A"
-  ) {
-    return trimmed;
-  }
-
-  throw new Error(
-    `Unsupported HIPAA "Required?" value: "${trimmed}". Expected "Required", "Addressable", "Required & Addressable", or "N/A".`,
-  );
-}
-
-// ─── Reference cleanup ───────────────────────────────────────────────────────
-
-/**
- * The CSV files are encoded in Latin-1 / CP1252 where byte 0xA7 is the
- * section sign (§). The reference field often contains multi-framework
- * references separated by newlines (HIPAA, NIST CSF, HPH CPG, HICP).
- * This function extracts just the primary HIPAA CFR reference.
- */
-function cleanReference(raw: string): string {
-  // Split multi-line references and find the HIPAA-specific line
-  const lines = raw
-    .split(/\n/)
-    .map((l) => l.trim())
-    .filter(Boolean);
-  const hipaaLine = lines.find((l) => l.startsWith("HIPAA:"));
-  if (hipaaLine) {
-    return hipaaLine.replace(/^HIPAA:\s*/, "").trim();
-  }
-
-  // If no explicit "HIPAA:" prefix, the raw value itself may be a bare CFR ref
-  const bareCfr = lines.find((l) => /§?\d{3}\.\d{3}/.test(l));
-  if (bareCfr) {
-    return bareCfr.trim();
-  }
-
-  return raw.trim();
-}
-
-// ─── CSV column indices (from header row) ─────────────────────────────────────
-
-// Header: Question #, Question Text, Indicator, Question Responses, Education,
-//         Risk, Risk Indicated, Required?, Reference
-const colQuestionNum = 0;
-const colQuestionText = 1;
-const colQuestionResponses = 3;
-const colRequired = 7;
-const colReference = 8;
-
-// ─── Core parser ──────────────────────────────────────────────────────────────
-
-interface ParsedQuestion {
-  questionNum: number;
-  questionText: string;
-  requiredSpec: RequiredSpec;
-  reference: string;
-}
-
-function parseSection(
-  csvText: string,
-  sectionNum: number,
-): {
-  sectionLabel: string;
-  questions: ParsedQuestion[];
-} {
-  const rows = parseCsv(csvText.replace(/^\uFEFF/, ""));
-
-  if (rows.length < 3) {
-    throw new Error(`HIPAA Section ${sectionNum} CSV has fewer than 3 rows (got ${rows.length}).`);
-  }
-
-  // Row 0 = section label (e.g. "Section 1 - SRA Basics")
-  const sectionLabel = (rows[0][0] ?? "").trim();
-  if (!sectionLabel) {
-    throw new Error(`HIPAA Section ${sectionNum} CSV is missing its section label in row 1.`);
-  }
-
-  // Row 1 = header; Row 2 = "Section Questions"
-  // Validate header
-  const header = rows[1];
-  if (!header || header[colQuestionNum]?.trim() !== "Question #") {
-    throw new Error(
-      `HIPAA Section ${sectionNum} CSV header mismatch — expected "Question #" in column 1, ` +
-        `got "${header?.[colQuestionNum]?.trim() ?? "(empty)"}".`,
-    );
-  }
-
-  const questions: ParsedQuestion[] = [];
-
-  // Track current question being built
-  let currentQuestion: {
-    questionNum: number;
-    questionText: string;
-    requiredSpec: RequiredSpec | null;
-    reference: string;
-  } | null = null;
-
-  // Data rows start after header (row 1) and "Section Questions" (row 2)
-  const dataRows = rows.slice(3);
-
-  for (const row of dataRows) {
-    const col0 = (row[colQuestionNum] ?? "").trim();
-    const col1 = (row[colQuestionText] ?? "").trim();
-
-    // ── Detect end of questions section ──
-    // "Threats & Vulnerabilities" or similar non-question sections appear
-    // at the bottom. We stop when we encounter a row whose first cell
-    // is NOT a number, NOT empty, and NOT "Notes".
-    if (col0 !== "" && !/^\d+$/.test(col0) && col0 !== "Notes") {
-      // This is a section divider like "Threats & Vulnerabilities"
-      break;
-    }
-
-    // ── Question row: col0 is a number AND col1 has text ──
-    if (/^\d+$/.test(col0) && col1 !== "") {
-      // Flush previous question if present
-      if (currentQuestion) {
-        // Some questions have no Required? value in any response row.
-        // Default to "N/A" (→ MEDIUM severity) for those.
-        const spec = currentQuestion.requiredSpec ?? "N/A";
-        questions.push({
-          questionNum: currentQuestion.questionNum,
-          questionText: currentQuestion.questionText,
-          requiredSpec: spec,
-          reference: currentQuestion.reference,
-        });
-      }
-
-      currentQuestion = {
-        questionNum: parseInt(col0, 10),
-        questionText: col1,
-        requiredSpec: null,
-        reference: "",
-      };
-      continue;
-    }
-
-    // ── Response/metadata row: col0 is empty, Question Responses is populated ──
-    if (currentQuestion && col0 === "") {
-      // "Notes" rows (col1 === "Notes") are skipped
-      if (col1 === "Notes") {
-        continue;
-      }
-
-      const responseText = (row[colQuestionResponses] ?? "").trim();
-      if (!responseText) {
-        continue;
-      }
-
-      // Capture Required? and Reference from the first response row that has them
-      if (currentQuestion.requiredSpec === null) {
-        const rawRequired = (row[colRequired] ?? "").trim();
-        if (rawRequired) {
-          currentQuestion.requiredSpec = toRequiredSpec(rawRequired);
-        }
-
-        const rawRef = (row[colReference] ?? "").trim();
-        if (rawRef) {
-          currentQuestion.reference = cleanReference(rawRef);
-        }
-      }
-    }
-  }
-
-  // Flush the last question
-  if (currentQuestion) {
-    const spec = currentQuestion.requiredSpec ?? "N/A";
-    questions.push({
-      questionNum: currentQuestion.questionNum,
-      questionText: currentQuestion.questionText,
-      requiredSpec: spec,
-      reference: currentQuestion.reference,
-    });
-  }
-
-  if (questions.length === 0) {
-    throw new Error(`HIPAA Section ${sectionNum} CSV parsed zero questions.`);
-  }
-
-  return { sectionLabel, questions };
-}
-
-// ─── File discovery & loading ─────────────────────────────────────────────────
-
-function getHipaaDir(): string {
-  const currentFile = fileURLToPath(import.meta.url);
-  return path.resolve(path.dirname(currentFile), "..", "..", "HIPAA");
-}
-
-function discoverSectionFiles(hipaaDir: string): { filePath: string; sectionNum: number }[] {
-  const entries = readdirSync(hipaaDir);
-  const sectionPattern = /^Section (\d+)\.csv$/i;
-
-  const sections: { filePath: string; sectionNum: number }[] = [];
-
-  for (const entry of entries) {
-    const match = sectionPattern.exec(entry);
-    if (match) {
-      sections.push({
-        filePath: path.join(hipaaDir, entry),
-        sectionNum: parseInt(match[1], 10),
-      });
-    }
-  }
-
-  // Sort by section number for deterministic ordering
-  sections.sort((a, b) => a.sectionNum - b.sectionNum);
-
-  if (sections.length === 0) {
-    throw new Error(
-      `No HIPAA Section CSV files found in ${hipaaDir}. Expected files named "Section N.csv".`,
-    );
-  }
-
-  return sections;
-}
-
-// ─── Build SeedControl[] ──────────────────────────────────────────────────────
-
-function loadHipaaControls(): SeedControl[] {
-  const hipaaDir = getHipaaDir();
-  const sectionFiles = discoverSectionFiles(hipaaDir);
-  const controls: SeedControl[] = [];
-  const seenCodes = new Set<string>();
-
-  for (const { filePath, sectionNum } of sectionFiles) {
-    const csvText = readFileSync(filePath, "latin1");
-    const { sectionLabel, questions } = parseSection(csvText, sectionNum);
-
-    for (const q of questions) {
-      const code = `HIPAA-S${sectionNum}-Q${q.questionNum}`;
-
-      // Guard against duplicate codes (should not happen with well-formed CSVs)
-      if (seenCodes.has(code)) {
-        throw new Error(
-          `Duplicate HIPAA control code "${code}" — Section ${sectionNum} has ` +
-            `duplicate question number ${q.questionNum}.`,
-        );
-      }
-      seenCodes.add(code);
-
-      controls.push({
-        code,
-        title: deriveTitle(q.questionText),
-        description: q.questionText,
-        category: sectionLabel,
-        severity: severityBySpec[q.requiredSpec],
-        weight: weightBySpec[q.requiredSpec],
-        metadata: {
-          cfrReference: q.reference || null,
-          specification: q.requiredSpec,
-          section: sectionLabel,
-        },
-      });
-    }
-  }
-
-  if (controls.length === 0) {
-    throw new Error("HIPAA CSV parsing produced zero controls.");
-  }
-
-  process.stdout.write(
-    `📋  HIPAA: parsed ${controls.length} controls from ${sectionFiles.length} sections\n`,
-  );
-
-  return controls;
-}
-
-// ─── Export ───────────────────────────────────────────────────────────────────
-
-export const hipaaControls: SeedControl[] = loadHipaaControls();
+export const hipaaControls: SeedControl[] = [
+  {
+    code: "HIPAA-S1-Q1",
+    title: "Practice Completed Security Risk Assessment Before",
+    description: "Has your practice completed a security risk assessment (SRA) before?",
+    category: "Section 1 - SRA Basics",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(1)(ii)(A)",
+      specification: "Required",
+      section: "Section 1 - SRA Basics",
+    },
+  },
+  {
+    code: "HIPAA-S1-Q2",
+    title: "Review Update SRA",
+    description: "Do you review and update your SRA?",
+    category: "Section 1 - SRA Basics",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(1)(ii)(A)",
+      specification: "Required",
+      section: "Section 1 - SRA Basics",
+    },
+  },
+  {
+    code: "HIPAA-S1-Q3",
+    title: "Often Review Update SRA",
+    description: "How often do you review and update your SRA?",
+    category: "Section 1 - SRA Basics",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(1)(ii)(A)",
+      specification: "Required",
+      section: "Section 1 - SRA Basics",
+    },
+  },
+  {
+    code: "HIPAA-S1-Q4",
+    title: "Include Information Systems Containing Processing And/or",
+    description:
+      "Do you include all information systems containing, processing, and/or transmitting ePHI in your SRA?",
+    category: "Section 1 - SRA Basics",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "N/A",
+      specification: "N/A",
+      section: "Section 1 - SRA Basics",
+    },
+  },
+  {
+    code: "HIPAA-S1-Q5",
+    title: "Verify That That Security Measures Comply",
+    description:
+      "How do you verify that that your security measures comply with current HIPAA requirements?",
+    category: "Section 1 - SRA Basics",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(1)(ii)(B)",
+      specification: "Required",
+      section: "Section 1 - SRA Basics",
+    },
+  },
+  {
+    code: "HIPAA-S1-Q6",
+    title: "Include SRA Documentation",
+    description: "What do you include in your SRA documentation?",
+    category: "Section 1 - SRA Basics",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(1)(ii)(A)",
+      specification: "Required",
+      section: "Section 1 - SRA Basics",
+    },
+  },
+  {
+    code: "HIPAA-S1-Q7",
+    title: "Respond Threats Vulnerabilities Identified SRA",
+    description: "Do you respond to the threats and vulnerabilities identified in your SRA?",
+    category: "Section 1 - SRA Basics",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(1)(ii)(B)",
+      specification: "Required",
+      section: "Section 1 - SRA Basics",
+    },
+  },
+  {
+    code: "HIPAA-S1-Q8",
+    title: "Identify Specific Personnel Respond Mitigate Threats",
+    description:
+      "Do you identify specific personnel to respond to and mitigate the threats and vulnerabilities found in your SRA?",
+    category: "Section 1 - SRA Basics",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(1)(ii)(B)",
+      specification: "Required",
+      section: "Section 1 - SRA Basics",
+    },
+  },
+  {
+    code: "HIPAA-S1-Q9",
+    title: "Communicate SRA Results Personnel Involved Responding",
+    description:
+      "Do you communicate SRA results to personnel involved in responding to threats or vulnerabilities?",
+    category: "Section 1 - SRA Basics",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(1)(ii)(B)",
+      specification: "Required",
+      section: "Section 1 - SRA Basics",
+    },
+  },
+  {
+    code: "HIPAA-S1-Q10",
+    title: "Communicate SRA Results Personnel Involved Responding",
+    description:
+      "How do you communicate SRA results to personnel involved in responding to identified threats or vulnerabilities?",
+    category: "Section 1 - SRA Basics",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(1)(ii)(B)",
+      specification: "Required",
+      section: "Section 1 - SRA Basics",
+    },
+  },
+  {
+    code: "HIPAA-S2-Q1",
+    title: "Maintain Documentation Policies Procedures Regarding Risk",
+    description:
+      "Do you maintain documentation of policies and procedures regarding risk assessment, risk management and information security activities?",
+    category: "Section 2 - Security Policies",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.316(a)",
+      specification: "Required",
+      section: "Section 2 - Security Policies",
+    },
+  },
+  {
+    code: "HIPAA-S2-Q2",
+    title: "Review Update Security Documentation Including Policies",
+    description:
+      "Do you review and update your security documentation, including policies and procedures?",
+    category: "Section 2 - Security Policies",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.316(b)(2)(iii)",
+      specification: "Required",
+      section: "Section 2 - Security Policies",
+    },
+  },
+  {
+    code: "HIPAA-S2-Q3",
+    title: "Update Security Program Documentation Including Policies",
+    description:
+      "How do you update your security program documentation, including policies and procedures?",
+    category: "Section 2 - Security Policies",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.316(b)(2)(iii)",
+      specification: "Required",
+      section: "Section 2 - Security Policies",
+    },
+  },
+  {
+    code: "HIPAA-S2-Q4",
+    title: "Security Officer Involved Security Policy Procedure",
+    description: "Is the security officer involved in all security policy and procedure updates?",
+    category: "Section 2 - Security Policies",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.316(b)(2)(iii)",
+      specification: "Required",
+      section: "Section 2 - Security Policies",
+    },
+  },
+  {
+    code: "HIPAA-S2-Q5",
+    title: "Documentation Risk Management Security Procedures Compare",
+    description:
+      "How does documentation for your risk management and security procedures compare to your actual business practices?",
+    category: "Section 2 - Security Policies",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.316(b)(1)(i) & (ii)",
+      specification: "Required",
+      section: "Section 2 - Security Policies",
+    },
+  },
+  {
+    code: "HIPAA-S2-Q6",
+    title: "Long Information Security Management Risk Management",
+    description: "How long are information security management and risk management documents kept?",
+    category: "Section 2 - Security Policies",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.316(b)(2)(i)",
+      specification: "Required",
+      section: "Section 2 - Security Policies",
+    },
+  },
+  {
+    code: "HIPAA-S2-Q7",
+    title: "Make Sure That Information Security Risk",
+    description:
+      "Do you make sure that information security and risk management documentation is available to those who need it?",
+    category: "Section 2 - Security Policies",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.316(b)(2)(ii)",
+      specification: "Required",
+      section: "Section 2 - Security Policies",
+    },
+  },
+  {
+    code: "HIPAA-S2-Q8",
+    title: "Ensure That Security Risk Management Documentation",
+    description:
+      "How do you ensure that security and risk management documentation is available to those who need it?",
+    category: "Section 2 - Security Policies",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.316(b)(2)(ii)",
+      specification: "Required",
+      section: "Section 2 - Security Policies",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q1",
+    title: "Practice Responsible Developing Implementing Information Security",
+    description:
+      "Who within your practice is responsible for developing and implementing information security policies and procedures?",
+    category: "Section 3 - Security & Workforce",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(2)",
+      specification: "Required",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q2",
+    title: "Identify Document Role Responsibilities Security Officer",
+    description:
+      "Do you identify and document the role and responsibilities of the security officer?",
+    category: "Section 3 - Security & Workforce",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(2)",
+      specification: "Required",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q3",
+    title: "Security Officer Qualified Position",
+    description: "Is your security officer qualified for the position?",
+    category: "Section 3 - Security & Workforce",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(2)",
+      specification: "Required",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q4",
+    title: "Workforce Members Know Security Officer",
+    description: "Do workforce members know who the security officer is?",
+    category: "Section 3 - Security & Workforce",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(2)",
+      specification: "Required",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q5",
+    title: "Workforce Members Know When Contact Security",
+    description: "Do workforce members know how and when to contact the security officer?",
+    category: "Section 3 - Security & Workforce",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(2)",
+      specification: "Required",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q6",
+    title: "People Contact Security Considerations If No",
+    description:
+      "Who do people contact for security considerations if there is no security officer available or identified within the organization?",
+    category: "Section 3 - Security & Workforce",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "N/A",
+      specification: "N/A",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q7",
+    title: "Staff Roles Job Duties Defined Respect",
+    description: "How are staff roles and job duties defined with respect to ePHI access?",
+    category: "Section 3 - Security & Workforce",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(3)(ii)(A)",
+      specification: "Required",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q8",
+    title: "Screen Workforce Members Tools Like Credential",
+    description:
+      "Do you screen your workforce members (e.g., staff, volunteers, interns) with tools like credential verification or background checks to verify trustworthiness?",
+    category: "Section 3 - Security & Workforce",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.308(a)(3)(ii)(B)",
+      specification: "Addressable",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q9",
+    title: "Workforce Members Screened Verify Trustworthiness",
+    description: "How are your workforce members screened to verify trustworthiness?",
+    category: "Section 3 - Security & Workforce",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.308(a)(3)(ii)(B)",
+      specification: "Addressable",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q10",
+    title: "Ensure That Workforce Members Given Security",
+    description:
+      "Do you ensure that all workforce members (including management) are given security training?",
+    category: "Section 3 - Security & Workforce",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(5)(i)",
+      specification: "Required",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q11",
+    title: "Ensure That Workforce Members Given Security",
+    description: "How do you ensure that all workforce members are given security training?",
+    category: "Section 3 - Security & Workforce",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(5)(i)",
+      specification: "Required",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q12",
+    title: "Long Records Workforce Member Security Training",
+    description: "How long are records of workforce member security training kept?",
+    category: "Section 3 - Security & Workforce",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(5)(i)",
+      specification: "Required",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q13",
+    title: "Procedures Place Monitoring Log-in Attempts Reporting",
+    description:
+      "Are procedures in place for monitoring log-in attempts and reporting discrepancies?",
+    category: "Section 3 - Security & Workforce",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.308(a)(5)(ii)(C)",
+      specification: "Addressable",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q14",
+    title: "Up-to-date Malware Protection Included Policies Procedures",
+    description: "Is up-to-date malware protection included in your policies and procedures?",
+    category: "Section 3 - Security & Workforce",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.308(a)(5)(ii)(B)",
+      specification: "Addressable",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q15",
+    title: "Password Security Elements Covered Security Training",
+    description: "What password security elements are covered in your security training?",
+    category: "Section 3 - Security & Workforce",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.308(a)(5)(ii)(D)",
+      specification: "Addressable",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q16",
+    title: "Ensure Workforce Members Maintain Ongoing Awareness",
+    description:
+      "Do you ensure workforce members maintain ongoing awareness of security requirements?",
+    category: "Section 3 - Security & Workforce",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.308(a)(5)(ii)(A)",
+      specification: "Addressable",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q17",
+    title: "Practice Ensure Workforce Members Maintain Ongoing",
+    description:
+      "How does your practice ensure workforce members maintain ongoing awareness of security requirements?",
+    category: "Section 3 - Security & Workforce",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.308(a)(5)(ii)(A)",
+      specification: "Addressable",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q18",
+    title: "Sanction Policy Enforce Security Procedures",
+    description: "Do you have a sanction policy to enforce security procedures?",
+    category: "Section 3 - Security & Workforce",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(1)(ii)(C)",
+      specification: "Required",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S3-Q19",
+    title: "Included Sanction Policy Hold Personnel Accountable",
+    description:
+      "What is included in your sanction policy to hold personnel accountable if they do not follow your security policies and procedures?",
+    category: "Section 3 - Security & Workforce",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(1)(ii)(C)",
+      specification: "Required",
+      section: "Section 3 - Security & Workforce",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q1",
+    title: "Manage Control Personnel Access Ephi Systems",
+    description: "Do you manage and control personnel access to ePHI, systems, and facilities?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(3)(i)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q2",
+    title: "Manage Control Personnel Access Ephi Systems",
+    description: "How do you manage and control personnel access to ePHI, systems, and facilities?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(3)(i)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q3",
+    title: "Process Authorizing Establishing Modifying Access Ephi",
+    description:
+      "What is your process for authorizing, establishing, and modifying access to ePHI?",
+    category: "Section 4 - Security & Data",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.308(a)(4)(ii)(B) §164.308(a)(4)(ii)(C )",
+      specification: "Addressable",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q4",
+    title: "Much Access Ephi Granted Users Other",
+    description: "How much access to ePHI is granted to users or other entities?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.502(b)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q5",
+    title: "Individual Users Identified When Accessing Ephi",
+    description: "How are individual users identified when accessing ePHI?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(a)(2)(i)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q6",
+    title: "Ensure Workforce Members Appropriate Access Ephi",
+    description: "Do you ensure all of your workforce members have appropriate access to ePHI?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(3)(i)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q7",
+    title: "Make Sure That Workforce S Designated",
+    description:
+      "How do you make sure that your workforce's designated access to ePHI is logical, consistent, and appropriate?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(3)(i)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q8",
+    title: "Use Encryption Everywhere Ephi Stored Throughout",
+    description: "Do you use encryption everywhere ePHI is stored throughout your organization?",
+    category: "Section 4 - Security & Data",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.312(a)(2)(iv)",
+      specification: "Addressable",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q9",
+    title: "Procedures Place Encrypt Ephi When Deemed",
+    description:
+      "What procedures do you have in place to encrypt ePHI when deemed reasonable and appropriate?",
+    category: "Section 4 - Security & Data",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.312(e)(2)(ii)",
+      specification: "Addressable",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q10",
+    title: "Use Alternative Safeguards Place Encryption",
+    description: "Do you use alternative safeguards in place of encryption?",
+    category: "Section 4 - Security & Data",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "N/A",
+      specification: "Addressable",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q11",
+    title: "When Encryption Deemed Unreasonable Inappropriate Implement",
+    description:
+      "When encryption is deemed unreasonable or inappropriate to implement, do you document the use of an alternative safeguard?",
+    category: "Section 4 - Security & Data",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "N/A",
+      specification: "Addressable",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q12",
+    title: "Evaluated Implementing Any Following Encryption Solutions",
+    description:
+      "Have you evaluated implementing any of the following encryption solutions in your local environment to protect ePHI: full disk encryption, file/folder/volume encryption, database encryption, encryption of thumb drives or other external media (including backup media)?",
+    category: "Section 4 - Security & Data",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.312(e)(2)(ii)",
+      specification: "Addressable",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q13",
+    title: "Evaluated Implementing Encryption Solutions Any Following",
+    description:
+      "Have you evaluated implementing encryption solutions for any of the following cloud services to protect ePHI: email service, file storage, web applications, databases, remote system backups?",
+    category: "Section 4 - Security & Data",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.312(e)(2)(ii)",
+      specification: "Addressable",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q14",
+    title: "Evaluated Implementing Any Following Encryption Solutions",
+    description:
+      "Have you evaluated implementing any of the following encryption solutions for ePHI in transit: encryption of internet traffic by means of a VPN, web traffic over HTTP encrypted using Transport Layer Security (TLS), or secure file transfer?",
+    category: "Section 4 - Security & Data",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.312(e)(2)(ii)",
+      specification: "Addressable",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q15",
+    title: "Periodically Review Information Systems Security Settings",
+    description:
+      "Do you periodically review your information systems for how security settings can be implemented to safeguard ePHI?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(a)(1)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q16",
+    title: "Aware Security Settings Information Systems Which",
+    description:
+      "How are you aware of the security settings for information systems which process, store, or transmit ePHI?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(a)(1)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q17",
+    title: "Use Security Settings Mechanisms Record Examine",
+    description:
+      "Do you use security settings and mechanisms to record and examine information system activity?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(b)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q18",
+    title: "Mechanisms Place Monitor Log System Activity",
+    description: "What mechanisms are in place to monitor or log system activity?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(b)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q19",
+    title: "Monitor Track Ephi System Activity",
+    description: "How do you monitor or track ePHI system activity?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(1)(ii)(D)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q20",
+    title: "Automatic Logoff Enabled Devices Platforms Accessing",
+    description: "Do you have automatic logoff enabled on devices and platforms accessing ePHI?",
+    category: "Section 4 - Security & Data",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.312(a)(2)(iii)",
+      specification: "Addressable",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q21",
+    title: "Ensure Users Accessing Ephi They Claim",
+    description: "Do you ensure users accessing ePHI are who they claim to be?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(d)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q22",
+    title: "Ensure Users Accessing Ephi They Claim",
+    description: "How do you ensure users accessing ePHI are who they claim to be?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(d)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q23",
+    title: "Determine Means Which Ephi Accessed",
+    description: "How do you determine the means by which ePHI is accessed?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(d)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q24",
+    title: "Protect Ephi From Unauthorized Modification Destruction",
+    description: "Do you protect ePHI from unauthorized modification or destruction?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(c)(1)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q25",
+    title: "Confirm That Ephi Not Been Modified",
+    description:
+      "How do you confirm that ePHI has not been modified or destroyed without authorization?",
+    category: "Section 4 - Security & Data",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.312(c)(2)",
+      specification: "Addressable",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q26",
+    title: "Protect Against Unauthorized Access Modification Ephi",
+    description:
+      "Do you protect against unauthorized access to or modification of ePHI when it is being transmitted electronically?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(e)(1)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q27",
+    title: "Implemented Mechanisms Record Activity Information Systems",
+    description:
+      "Have you implemented mechanisms to record activity on information systems that create or use ePHI?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(b)",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q28",
+    title: "Organization Stay Up Date Informed Emerging",
+    description:
+      "Does the organization stay up to date or informed (e.g., cybersecurity listserv monitoring) on emerging threats and vulnerabilities that may affect information systems?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "N/A",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q29",
+    title: "Process Place Identify Evaluate Information Systems",
+    description:
+      "Is there a process in place to identify and evaluate information systems for potential emerging technical vulnerabilities and how the exposure could affect systems that contain ePHI?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "N/A",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S4-Q30",
+    title: "If New Threats Vulnerabilities Identified Through",
+    description:
+      "If new threats or vulnerabilities are identified through regular scanning, what is done to mitigate and respond to them?",
+    category: "Section 4 - Security & Data",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "N/A",
+      specification: "Required",
+      section: "Section 4 - Security & Data",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q1",
+    title: "Manage Access Use Facility Facilities",
+    description:
+      "Do you manage access to and use of your facility or facilities (i.e., that house information systems and ePHI)?",
+    category: "Section 5 - Security and the Practice",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.310(a)(1)",
+      specification: "Required",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q2",
+    title: "Physical Protections Place Manage Facility Security",
+    description:
+      "What physical protections do you have in place to manage facility security risks?",
+    category: "Section 5 - Security and the Practice",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.310(a)(2)(ii)",
+      specification: "Addressable",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q3",
+    title: "Restrict Physical Access Use Equipment",
+    description:
+      "Do you restrict physical access to and use of your equipment (i.e., equipment that house ePHI)?",
+    category: "Section 5 - Security and the Practice",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.310(a)(1)",
+      specification: "Required",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q4",
+    title: "Manage Workforce Member Visitor Third-party Access",
+    description:
+      "Do you manage workforce member, visitor, and third-party access to electronic devices?",
+    category: "Section 5 - Security and the Practice",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.310(b)",
+      specification: "Required",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q5",
+    title: "Physical Protections Place Such As Cable",
+    description:
+      "Do you have physical protections in place, such as cable locks for portable laptops, screen filters for screens visible in high traffic areas, to manage electronic device security risks?",
+    category: "Section 5 - Security and the Practice",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.310(c)",
+      specification: "Required",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q6",
+    title: "Physical Protections Place Electronic Devices Access",
+    description:
+      "What physical protections do you have in place for electronic devices with access to ePHI?",
+    category: "Section 5 - Security and the Practice",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.310(c)",
+      specification: "Required",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q7",
+    title: "Keep Inventory Location Record Electronic Devices",
+    description: "Do you keep an inventory and a location record of all electronic devices?",
+    category: "Section 5 - Security and the Practice",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.310(b)",
+      specification: "Required",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q8",
+    title: "Authorized User Approves Access Levels Information",
+    description:
+      "Do you have an authorized user who approves access levels within information systems and locations that use ePHI?",
+    category: "Section 5 - Security and the Practice",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.308(a)(3)(ii)(A)",
+      specification: "Addressable",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q9",
+    title: "Validate Person S Access Facilities Based",
+    description:
+      "Do you validate a person's access to facilities (including workforce members and visitors) based on their role or function?",
+    category: "Section 5 - Security and the Practice",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.310(a)(2)(iii)",
+      specification: "Addressable",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q10",
+    title: "Validate Person S Access Facility",
+    description: "How do you validate a person's access to your facility?",
+    category: "Section 5 - Security and the Practice",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.310(a)(2)(iii)",
+      specification: "Addressable",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q11",
+    title: "Access Validation Requirements Personnel Visitors Seeking",
+    description:
+      "Do you have access validation requirements for personnel and visitors seeking access to your critical systems (such as IT/OT, software developers, or network admins)?",
+    category: "Section 5 - Security and the Practice",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.310(a)(2)(iii)",
+      specification: "Addressable",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q12",
+    title: "This Include Controlling Access Software Programs",
+    description:
+      "Does this include controlling access to your software programs for testing and revisions?",
+    category: "Section 5 - Security and the Practice",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.310(a)(2)(iii)",
+      specification: "Addressable",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q13",
+    title: "Procedures Validating Third-party Person S Access",
+    description:
+      "Do you have procedures for validating a third-party person's access to the facility based on their role or function?",
+    category: "Section 5 - Security and the Practice",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.310(a)(2)(iii)",
+      specification: "Addressable",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q14",
+    title: "Hardware Software Other Mechanisms That Record",
+    description:
+      "Do you have hardware, software, or other mechanisms that record and examine activity on information systems with access to ePHI?",
+    category: "Section 5 - Security and the Practice",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(b)",
+      specification: "Required",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q15",
+    title: "Requirements Mechanisms Controls Place Retention Audit",
+    description:
+      "What requirements, mechanisms, or controls are in place for retention of audit reports?",
+    category: "Section 5 - Security and the Practice",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(b)",
+      specification: "Required",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q16",
+    title: "Maintain Records Physical Changes Upgrades Modifications",
+    description:
+      "Do you maintain records of physical changes upgrades, and modifications to your facility?",
+    category: "Section 5 - Security and the Practice",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.310(a)(2)(iv)",
+      specification: "Addressable",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q17",
+    title: "Maintain Awareness Movement Electronic Devices Media",
+    description: "How do you maintain awareness of the movement of electronic devices and media?",
+    category: "Section 5 - Security and the Practice",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.310(d)(2)(iii)",
+      specification: "Addressable",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q18",
+    title: "Back Up Ephi Ensure Availability When",
+    description: "Do you back up ePHI to ensure availability when devices are moved?",
+    category: "Section 5 - Security and the Practice",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.310(d)(2)(iv)",
+      specification: "Addressable",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q19",
+    title: "Ensure Devices Which Created Maintained Received",
+    description:
+      "Do you ensure devices which created, maintained, received, or transmitted ePHI are effectively sanitized when they are disposed of?",
+    category: "Section 5 - Security and the Practice",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.310(d)(1)",
+      specification: "Required",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q20",
+    title: "Determine Considered Appropriate Use Electronic Devices",
+    description:
+      "How do you determine what is considered appropriate use of electronic devices and connected network devices?",
+    category: "Section 5 - Security and the Practice",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.310(b)",
+      specification: "Required",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q21",
+    title: "Ensure Access Ephi Terminated When Employment",
+    description:
+      "Do you ensure access to ePHI is terminated when employment or other arrangements with the workforce member ends?",
+    category: "Section 5 - Security and the Practice",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.308(a)(3)(ii)(C)",
+      specification: "Addressable",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q22",
+    title: "Procedures Terminating Changing Third-party Access Across",
+    description:
+      "Do you have procedures for terminating or changing third-party access across your organization when the contract, business associate agreement, or other arrangement with the third party ends or is changed?",
+    category: "Section 5 - Security and the Practice",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.308(a)(3)(ii)(C)",
+      specification: "Addressable",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S5-Q23",
+    title: "Ensure Media Sanitized Prior Re-use",
+    description: "How do you ensure media is sanitized prior to re-use?",
+    category: "Section 5 - Security and the Practice",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.310(d)(2)(ii)",
+      specification: "Required",
+      section: "Section 5 - Security and the Practice",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q1",
+    title: "Contract Business Associates Other Third-party Vendors",
+    description: "Do you contract with business associates or other third-party vendors?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "N/A",
+      specification: "Required",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q2",
+    title: "Allow Third-party Vendors Access Information Systems",
+    description: "Do you allow third-party vendors to access your information systems and/or ePHI?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "N/A",
+      specification: "Required",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q3",
+    title: "Identify Which Third-party Vendors Business Associates",
+    description:
+      "How do you identify which third-party vendors are business associates and need to create, receive, maintain, or transmit ePHI?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(b)(1)",
+      specification: "Required",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q4",
+    title: "Practice Enforce Monitor Access Each These",
+    description:
+      "How does your practice enforce or monitor access for each of these business associates?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(b)(1)",
+      specification: "Required",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q5",
+    title: "Business Associates Communicate Important Changes Security",
+    description:
+      "How do business associates communicate important changes in security practices, personnel, etc. to you?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "N/A",
+      specification: "Required",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q6",
+    title: "Executed Business Associate Agreements Business Associates",
+    description:
+      "Have you executed business associate agreements with all business associates who create, receive, maintain, or transmit ePHI on your behalf?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(b)(3)",
+      specification: "Required",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q7",
+    title: "Maintain Awareness Business Associate Security Practices",
+    description:
+      "How do you maintain awareness of business associate security practices (i.e., in addition to Business Associate Agreements)?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "N/A",
+      specification: "Required",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q8",
+    title: "Include Satisfactory Assurances Business Associate Agreements",
+    description:
+      "Do you include satisfactory assurances within your Business Associate Agreements pertaining to how your business associates safeguard ePHI?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.314(a)(1)(i)",
+      specification: "Required",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q9",
+    title: "Terms Baas Outline Business Associates Ensure",
+    description:
+      "What terms are in your BAAs to outline how your business associates ensure subcontractors access ePHI securely?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.314(a)(2)(iii)",
+      specification: "Required",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q10",
+    title: "Baas Require Third-party Vendors Report Security",
+    description:
+      "Do your BAAs require your third-party vendors to report security incidents to your practice in a timely manner?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.314(a)(2)(i)( c)",
+      specification: "Required",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q11",
+    title: "Updated Baas Reflect Requirements 2013 Omnibus",
+    description:
+      "Have you updated all your BAAs to reflect the requirements in the 2013 Omnibus Rule updates to HIPAA?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.314(a)(1)",
+      specification: "Required",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q12",
+    title: "Practice Document Business Associates Requiring Access",
+    description:
+      "How does your practice document all of its business associates requiring access to ePHI?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(b)(1)",
+      specification: "Required",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q13",
+    title: "Obtain Business Associate Agreements From Business",
+    description:
+      "Do you obtain Business Associate Agreements (BAAs) from business associates who access another covered entity's ePHI on your behalf?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(b)(2)",
+      specification: "Required",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q14",
+    title: "Organization Require Business Associates Third-party Vendors",
+    description:
+      "Does the organization require business associates and third-party vendors to implement security requirements more stringent than required in the HIPAA Rules?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "N/A",
+      specification: "N/A",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S6-Q15",
+    title: "Track Verify Business Associate Third-party Vendor",
+    description:
+      "How do you track and verify business associate and third-party vendor compliance to security policies and where are these policies documented?",
+    category: "Section 6 - Security and Business Associates",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "N/A",
+      specification: "N/A",
+      section: "Section 6 - Security and Business Associates",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q1",
+    title: "Practice Contingency Plan Event Emergency",
+    description: "Does your practice have a contingency plan in the event of an emergency?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(7)(i)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q2",
+    title: "Contingency Plan Documented",
+    description: "Is your contingency plan documented?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(7)(i)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q3",
+    title: "Periodically Update Contingency Plan",
+    description: "Do you periodically update your contingency plan?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(7)(i)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q4",
+    title: "Ensure That Contingency Plan Effective Updated",
+    description:
+      "How do you ensure that your contingency plan is effective and updated appropriately?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(7)(ii)(D)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q5",
+    title: "Considered Kind Emergencies Could Damage Critical",
+    description:
+      "Have you considered what kind of emergencies could damage critical information systems or prevent access to ePHI within your practice?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(7)(i)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q6",
+    title: "Types Emergencies Considered",
+    description: "What types of emergencies have you considered?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(7)(i)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q7",
+    title: "Documented Policies Procedures Various Emergency Types",
+    description:
+      "Have you documented in your policies and procedures various emergency types and how you would respond to them?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(7)(i)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q8",
+    title: "Practice Policies Procedures Place Prevent Detect",
+    description:
+      "Does your practice have policies and procedures in place to prevent, detect, and respond to security incidents?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(6)(i)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q9",
+    title: "Practice Prevent Detect Respond Security Incidents",
+    description: "How does your practice prevent, detect, and respond to security incidents?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(6)(i)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q10",
+    title: "Practice Identified Specific Personnel As Incident",
+    description: "Has your practice identified specific personnel as your incident response team?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(6)(ii)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q11",
+    title: "Members Incident Response Team Identified Trained",
+    description: "How are members of your incident response team identified and trained?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(6)(ii)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q12",
+    title: "Practice Evaluated Determined Which Systems Ephi",
+    description:
+      "Has your practice evaluated and determined which systems and ePHI are necessary for maintaining business-as-usual in the event of an emergency?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(7)(i)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q13",
+    title: "Would Practice Maintain Access Ephi Event",
+    description:
+      "How would your practice maintain access to ePHI in the event of an emergency, system failure, or physical disaster?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(a)(2)(ii)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q14",
+    title: "Would Practice Maintain Security Ephi Crucial",
+    description:
+      "How would your practice maintain security of ePHI and crucial business processes before, during, and after an emergency?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(7)(ii)(C)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q15",
+    title: "Plan Backing Up Restoring Critical Data",
+    description: "Do you have a plan for backing up and restoring critical data?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(7)(ii)(A),§164.308(a)(7)(ii)(B), and §164.308(a)(7)(ii)(E)",
+      specification: "Required & Addressable",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q16",
+    title: "Practice S Emergency Procedure Activated",
+    description: "How is your practice's emergency procedure activated?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(a)(2)(ii)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q17",
+    title: "Access Facility Coordinated Event Disasters Emergency",
+    description:
+      "How is access to your facility coordinated in the event of disasters or emergency situations?",
+    category: "Section 7 - Contingency Planning",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      cfrReference: "§164.310(a)(2)(i)",
+      specification: "Addressable",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q18",
+    title: "Emergency Procedure Terminated After Emergency Circumstance",
+    description:
+      "How is your emergency procedure terminated after the emergency circumstance is over?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.312(a)(2)(ii)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q19",
+    title: "Formally Evaluate Effectiveness Security Safeguards Including",
+    description:
+      "Do you formally evaluate the effectiveness of your security safeguards, including physical safeguards?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(8)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+  {
+    code: "HIPAA-S7-Q20",
+    title: "Evaluate Effectiveness Security Safeguards Including Physical",
+    description:
+      "How do you evaluate the effectiveness of your security safeguards, including physical safeguards?",
+    category: "Section 7 - Contingency Planning",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      cfrReference: "§164.308(a)(8)",
+      specification: "Required",
+      section: "Section 7 - Contingency Planning",
+    },
+  },
+];

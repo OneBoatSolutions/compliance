@@ -1,337 +1,2223 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import type { SeedControl } from "./types";
 
-type RiskCode = "H" | "M" | "L";
-type AreaCode = "Discover" | "Manage" | "Protect" | "Report";
-
-interface RawSeedControl {
-  code: string;
-  article: string;
-  area: AreaCode;
-  description: string;
-  evidenceRequired: string;
-  risk: RiskCode;
-  isGateway?: boolean;
-}
-
-const categoryByArea: Record<AreaCode, string> = {
-  Discover: "Data Discovery & Inventory",
-  Manage: "Data Governance & Rights",
-  Protect: "Data Protection & Security",
-  Report: "Regulatory Compliance & Reporting",
-};
-
-const severityByRisk = {
-  H: "HIGH",
-  M: "MEDIUM",
-  L: "LOW",
-} as const;
-
-const weightByRisk = {
-  H: 3.0,
-  M: 2.0,
-  L: 1.0,
-} as const;
-
-const titleStopwords = new Set([
-  "a",
-  "all",
-  "an",
-  "and",
-  "are",
-  "be",
-  "by",
-  "can",
-  "data",
-  "does",
-  "for",
-  "have",
-  "how",
-  "in",
-  "is",
-  "its",
-  "of",
-  "on",
-  "or",
-  "organization",
-  "org",
-  "personal",
-  "place",
-  "the",
-  "there",
-  "timely",
-  "to",
-  "used",
-  "using",
-  "where",
-  "with",
-]);
-
-const gatewayConfigMap: Record<
-  string,
+export const gdprControls: SeedControl[] = [
   {
-    title: string;
-    description: string;
-    area: AreaCode;
-    article: string;
-    evidenceRequired: string;
-  }
-> = {
-  "GW-CH": {
+    code: "GDPR-D1.0",
+    title: "Generally Identify Locations Stored Across Enterprise",
+    description:
+      "Can the organization generally identify all locations where personal data is stored across the enterprise?",
+    category: "Data Discovery & Inventory",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 15(3)",
+      evidenceRequired: "Data map, Asset inventory, Cloud storage list",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D1.1",
+    title: "Ability Locate Instances Pertaining Given Subject",
+    description:
+      "Does the organization have the ability to locate all instances of personal data pertaining to a given data subject?",
+    category: "Data Discovery & Inventory",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 15(3)",
+      evidenceRequired: "Search logs, Data discovery tool report",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D1.2",
+    title: "Formal Process Search Consistent Manner",
+    description:
+      "Does the organization have a formal process in place to search for personal data in a consistent and timely manner?",
+    category: "Data Discovery & Inventory",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 15(3)",
+      evidenceRequired: "Standard Operating Procedure (SOP)",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D1.3",
+    title: "Technology Single Search Return Instances Given",
+    description:
+      "Does the organization have technology for a single search to return all instances of personal data for a given subject?",
+    category: "Data Discovery & Inventory",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 15(3)",
+      evidenceRequired: "Tool documentation, UI screenshot",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D2.0",
+    title: "Categorize Types It Uses",
+    description: "Can the organization categorize the types of personal data it uses?",
+    category: "Data Discovery & Inventory",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 30, 32",
+      evidenceRequired: "Data classification policy, Data schema",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D2.1",
+    title: "Does The Organization Label Data Sensitivity",
+    description:
+      "Does the organization label data sensitivity (e.g., 'sensitive', 'confidential')?",
+    category: "Data Discovery & Inventory",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 30, 32",
+      evidenceRequired: "Metadata tags, Classification labels",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D2.2",
+    title: "Label Applicable Geographic Restrictions",
+    description: "Does the organization label data with applicable geographic restrictions?",
+    category: "Data Discovery & Inventory",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 30, 32",
+      evidenceRequired: "Regional data tags, Data residency policy",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D2.3",
+    title: "Does The Organization Label The Origin",
+    description: "Does the organization label the origin of data (subject vs. third-party)?",
+    category: "Data Discovery & Inventory",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 30, 32",
+      evidenceRequired: "Data lineage records, Source metadata",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D2.4",
+    title: "Classification Activities Performed Consistent Manner",
+    description: "Are data classification activities performed in a consistent and timely manner?",
+    category: "Data Discovery & Inventory",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 30, 32",
+      evidenceRequired: "Audit logs of classification runs",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D2.5",
+    title: "Automatically Perform Classification Activities",
+    description: "Does the organization automatically perform all classification activities?",
+    category: "Data Discovery & Inventory",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 30, 32",
+      evidenceRequired: "Automation scripts, AI/ML tool logs",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D3.0",
+    title: "Does The Organization Have A Tool",
+    description: "Does the organization have a tool to catalog how/where personal data is used?",
+    category: "Data Discovery & Inventory",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 30",
+      evidenceRequired: "Inventory tool access, Data catalog",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D3.1",
+    title: "Complete Inventory Instances Documented",
+    description: "Does the organization have a complete inventory with all instances documented?",
+    category: "Data Discovery & Inventory",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 30",
+      evidenceRequired: "Master Data Inventory (RoPA)",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D3.2",
+    title: "Technology Automate Updates Inventory",
+    description: "Is there technology in place to automate updates to the inventory?",
+    category: "Data Discovery & Inventory",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 30",
+      evidenceRequired: "Integration logs, API documentation",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D3.3",
+    title: "Process Regularly Keep Inventory Up Date",
+    description: "Is there a process used regularly to keep the inventory up to date?",
+    category: "Data Discovery & Inventory",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 30",
+      evidenceRequired: "Review schedule, Sign-off logs",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D3.4",
+    title: "Inventory Processing Activities Being Obtained",
+    description: "Is there an inventory of all processing activities where data is being obtained?",
+    category: "Data Discovery & Inventory",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 30",
+      evidenceRequired: "Processing activity registry",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-D3.5",
+    title: "Details Processing Documented Each Activity",
+    description:
+      "Are details of processing (scope, purpose, consent) documented for each activity?",
+    category: "Data Discovery & Inventory",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 30",
+      evidenceRequired: "RoPA detailed entries",
+      area: "Discover",
+    },
+  },
+  {
+    code: "GDPR-M1.0",
+    title: "Does The Organization Have A Data",
+    description: "Does the organization have a data governance program?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 5, 24",
+      evidenceRequired: "Governance framework, Charter",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M1.1",
+    title: "Organizational Structure Formal Charter Program",
+    description: "Is there an organizational structure and formal charter for the program?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 5, 24",
+      evidenceRequired: "Org chart, Signed Charter",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M1.2",
+    title: "Governance Integrated Across Departments Consistency",
+    description: "Is data governance integrated across departments for consistency?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 5, 24",
+      evidenceRequired: "Cross-functional committee minutes",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M1.3",
+    title: "Privacy Protection Policies",
+    description: "Are there data privacy and protection policies?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 5, 24",
+      evidenceRequired: "Published Privacy Policies",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M1.4",
+    title: "Technology Monitor Report Policy Violations",
+    description: "Is there technology to monitor and report policy violations?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 5, 24",
+      evidenceRequired: "DLP logs, Monitoring alerts",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M1.5",
+    title: "Do Policies Enforce Accountability Within",
+    description: "Do policies enforce accountability within the organization?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 5, 24",
+      evidenceRequired: "Performance reviews, Signed NDAs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-GW-CH",
     title: "Children's data processing gateway",
     description: "Does the organization collect or process personal data of children?",
-    area: "Manage",
-    article: "Art. 8",
-    evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls M1.6-M1.8 as N/A",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    isGateway: true,
+    metadata: {
+      article: "Art. 8",
+      evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls M1.6-M1.8 as N/A",
+      area: "Manage",
+    },
   },
-  "GW-SC": {
+  {
+    code: "GDPR-M1.6",
+    title: "Specific Protections Children S",
+    description: "Are there specific protections for children's personal data?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 5, 24",
+      evidenceRequired: "Children's privacy policy, Age gates",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M1.7",
+    title: "Requirements Children S Consent Fulfilled",
+    description: "Are requirements for children's data consent fulfilled?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 8",
+      evidenceRequired: "Parental consent forms",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M1.8",
+    title: "Validate Age Child Guardian Identity",
+    description: "Can the organization validate the age of a child and guardian identity?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 8",
+      evidenceRequired: "ID verification logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-GW-SC",
     title: "Special category data gateway",
     description:
       "Does the organization process special category personal data (health, biometric, religion, racial origin etc.)?",
-    area: "Manage",
-    article: "Art. 9",
-    evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls M1.9-M1.10 as N/A",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    isGateway: true,
+    metadata: {
+      article: "Art. 9",
+      evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls M1.9-M1.10 as N/A",
+      area: "Manage",
+    },
   },
-  "GW-ADM": {
+  {
+    code: "GDPR-M1.9",
+    title: "Legal Justification Documented Special Categories",
+    description: "Is legal justification documented for using special categories of data?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 9",
+      evidenceRequired: "Legal opinion, Consent forms",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M1.10",
+    title: "Explicit Consent Obtained Sensitive",
+    description: "Is explicit consent obtained for sensitive (racial/religious) data?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 9",
+      evidenceRequired: "Affirmative action logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M2.0",
+    title: "Provide Privacy Notices Subjects",
+    description: "Does the organization provide privacy notices to data subjects?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 12-14",
+      evidenceRequired: "Public Privacy Notice",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M2.1",
+    title: "Privacy Notices Written Clear Plain Language",
+    description: "Are the privacy notices written in clear and plain language?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 12-14",
+      evidenceRequired: "Readability assessment",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M2.2",
+    title: "Notices Governed Formal Policy/process Sharing",
+    description: "Are notices governed by a formal policy/process for timely sharing?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 12-14",
+      evidenceRequired: "Notice management SOP",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M2.3",
+    title: "Do Notices Include Contact Details Purposes",
+    description: "Do notices include contact details and purposes for data use?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 12-14",
+      evidenceRequired: "Notice checklist audit",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M2.4",
+    title: "Notices Shared At First Contact When",
+    description: "Are notices shared at first contact when informing subjects of objections?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 12-14",
+      evidenceRequired: "Customer journey flowcharts",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M2.5",
+    title: "Notices Generated Shared Automated Means",
+    description: "Are notices generated and shared by automated means?",
+    category: "Data Governance & Rights",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 12-14",
+      evidenceRequired: "System workflow diagrams",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M2.6",
+    title: "Notices Shared At Points Collected",
+    description: "Are notices shared at all points where personal data is collected?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 12-14",
+      evidenceRequired: "Web/App screenshots",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M2.7",
+    title: "Notices Shared When Obtained From Third-party",
+    description: "Are notices shared when data is obtained from third-party sources?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 12-14",
+      evidenceRequired: "Third-party notice logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M2.8",
+    title: "Notices Shared Before New Purposes",
+    description: "Are notices shared before using data for new purposes?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 12-14",
+      evidenceRequired: "Change management logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M3.0",
+    title: "Discontinue Processing Some Forms Request",
+    description: "Can the organization discontinue processing some forms of data on request?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 21",
+      evidenceRequired: "Opt-out mechanism proof",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M3.1",
+    title: "Stop Processing Request",
+    description: "Can the organization stop all processing (especially marketing) on request?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 21",
+      evidenceRequired: "Suppression lists",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M3.2",
+    title: "Justification Provided Subject If Request Rejected",
+    description: "Is justification provided to the subject if a request is rejected?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 21",
+      evidenceRequired: "Email templates, Legal review",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M3.3",
+    title: "Maintain Evidence Discontinued Use",
+    description: "Does the organization maintain evidence of discontinued data use?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 21",
+      evidenceRequired: "Audit trail of opt-outs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M3.4",
+    title: "Process Respond Stop-processing Requests Promptly",
+    description: "Is there a process to respond to stop-processing requests promptly?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 21",
+      evidenceRequired: "Request handling SOP",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M3.5",
+    title: "Stop-processing Activities Performed Automatically",
+    description: "Are stop-processing activities performed automatically?",
+    category: "Data Governance & Rights",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 21",
+      evidenceRequired: "API logs, Automated workflow",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M4.0",
+    title: "Obtain Consent From Subjects",
+    description: "Can the organization obtain consent from data subjects?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 7, 8, 9",
+      evidenceRequired: "Consent banners/forms",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M4.1",
+    title: "Consent Obtained Prior Processing",
+    description: "Is consent obtained prior to processing?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 7, 8, 9",
+      evidenceRequired: "Consent logs (Timestamped)",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M4.2",
+    title: "Consent Obtained Promptly Required Activities",
+    description: "Is consent obtained promptly for all required activities?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 7, 8, 9",
+      evidenceRequired: "Compliance audit report",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M4.3",
+    title: "Automatically Obtain Necessary Consent",
+    description: "Does the organization automatically obtain all necessary consent?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 7",
+      evidenceRequired: "Cookie bot/Consent Manager",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M5.0",
+    title: "Published Way Subjects Communicate Privacy",
+    description: "Is there a published way for subjects to communicate on privacy?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 15-20",
+      evidenceRequired: "Contact page, DPO email",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M5.1",
+    title: "Online Portal Erasure/objection Requests",
+    description: "Is there an online portal for erasure/objection requests (DSAR)?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 15-20",
+      evidenceRequired: "DSAR Portal screenshot",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M5.2",
+    title: "Backend Tools Track Requests Resolution",
+    description: "Are there backend tools to track requests to resolution?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 15-20",
+      evidenceRequired: "Ticketing system (e.g., Jira, OneTrust)",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M5.3",
+    title: "Validate Identity Requestors",
+    description: "Can the organization validate the identity of requestors?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 12",
+      evidenceRequired: "Identity verification policy",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M5.4",
+    title: "Personnel Trained Respond Privacy Requests",
+    description: "Is personnel trained to respond to privacy requests?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 12",
+      evidenceRequired: "Training records",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M5.5",
+    title: "Notify Recipients About Erasure/restrictions",
+    description: "Can the organization notify recipients of data about erasure/restrictions?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 19",
+      evidenceRequired: "Downstream notification logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M5.6",
+    title: "Subjects/regulators View Status Their Requests",
+    description: "Can subjects/regulators view the status of their requests?",
+    category: "Data Governance & Rights",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 12",
+      evidenceRequired: "Portal tracking UI",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M5.7",
+    title: "Response Times Defined Requestors",
+    description: "Are response times (e.g., 30 days) defined for requestors?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 12",
+      evidenceRequired: "Service Level Agreement (SLA)",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M5.8",
+    title: "Automatically Respond Inquiries",
+    description: "Can the organization automatically respond to inquiries?",
+    category: "Data Governance & Rights",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 12",
+      evidenceRequired: "Auto-reply logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M6.0",
+    title: "Correct/complete When Requested",
+    description: "Can the organization correct/complete data when requested?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 16",
+      evidenceRequired: "Correction workflow proof",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M6.1",
+    title: "Correct Subject Instances",
+    description: "Can the organization correct ALL data subject instances?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 16",
+      evidenceRequired: "Database update logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M6.2",
+    title: "Evidence Corrections Recorded Shareable",
+    description: "Is evidence of corrections recorded and shareable?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 16",
+      evidenceRequired: "Change logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M6.3",
+    title: "Corrections Performed Consistently Promptly",
+    description: "Are corrections performed consistently and promptly?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 16",
+      evidenceRequired: "Response time reports",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M6.4",
+    title: "Some Corrections Performed Automatically",
+    description: "Are some corrections performed automatically?",
+    category: "Data Governance & Rights",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 16",
+      evidenceRequired: "Self-service portal logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M6.5",
+    title: "Corrections Performed Automatically",
+    description: "Are all corrections performed automatically?",
+    category: "Data Governance & Rights",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 16",
+      evidenceRequired: "System architecture diagrams",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M7.0",
+    title: "Mechanism Locate Erase Request",
+    description: "Is there a mechanism to locate and erase data on request?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 17",
+      evidenceRequired: "Erasure SOP",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M7.1",
+    title: "Personnel Trained Locate Erase",
+    description: "Is personnel trained on how to locate and erase data?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 17",
+      evidenceRequired: "Training certificates",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M7.2",
+    title: "Personnel Determine When Erasure Should Fulfilled",
+    description: "Can personnel determine when erasure should be fulfilled vs. denied?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 17",
+      evidenceRequired: "Erasure criteria checklist",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M7.3",
+    title: "Process Erase Completely Accurately",
+    description: "Is there a process to erase data completely and accurately?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 17",
+      evidenceRequired: "Data destruction policy",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M7.4",
+    title: "Record That Erasure Request Was Fulfilled",
+    description: "Is there a record that an erasure request was fulfilled?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 17",
+      evidenceRequired: "Certificate of destruction",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M7.5",
+    title: "Contact Other Controllers Fulfill Erasure",
+    description: "Can the organization contact other controllers to fulfill erasure?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 17",
+      evidenceRequired: "Communication logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M7.6",
+    title: "Technology Erase Across Multiple Stores",
+    description: "Is there technology to erase data across multiple data stores?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 17",
+      evidenceRequired: "Orchestration tool logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M7.7",
+    title: "Erasure Performed Automatically",
+    description: "Can erasure be performed automatically?",
+    category: "Data Governance & Rights",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 17",
+      evidenceRequired: "Script/API logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M8.0",
+    title: "Subjects Get Copy Their Electronic Format",
+    description: "Can subjects get a copy of their data in electronic format?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 20",
+      evidenceRequired: "Sample data export",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M8.1",
+    title: "Provided Common Machine-readable Format",
+    description: "Is data provided in a common, machine-readable format (.xls/.xml)?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 20",
+      evidenceRequired: "Export file sample",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M8.2",
+    title: "Provided Automatically Subject",
+    description: "Is data provided automatically to the subject?",
+    category: "Data Governance & Rights",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 20",
+      evidenceRequired: "Download link logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M8.3",
+    title: "Sent Directly Another Controller",
+    description: "Can data be sent directly to another controller?",
+    category: "Data Governance & Rights",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 20",
+      evidenceRequired: "Portability process flow",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M9.0",
+    title: "Policy Restrict Processing When Required",
+    description: "Is there a policy to restrict processing when required?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 18",
+      evidenceRequired: "Restriction policy",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M9.1",
+    title: "Suspend/restrict Processing Request",
+    description: "Can the organization suspend/restrict processing on request?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 18",
+      evidenceRequired: "'Freeze' flag in database",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M9.2",
+    title: "Procedures Notify Processors Restrict Processing",
+    description: "Are there procedures to notify processors to restrict processing?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 18",
+      evidenceRequired: "Processor notification logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M9.3",
+    title: "Recipients Notified Automatically Restrictions",
+    description: "Are recipients notified automatically of restrictions?",
+    category: "Data Governance & Rights",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 18",
+      evidenceRequired: "Automated email/API logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M9.4",
+    title: "Process Notify Subjects If Restriction Lifted",
+    description: "Is there a process to notify subjects if a restriction is lifted?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 18",
+      evidenceRequired: "Notification templates",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M9.5",
+    title: "Subjects Notified Automatically When Processing Resumes",
+    description: "Are subjects notified automatically when processing resumes?",
+    category: "Data Governance & Rights",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 18",
+      evidenceRequired: "System trigger logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M9.6",
+    title: "Record Maintained Restricted Processing Instances",
+    description: "Is a record maintained of restricted processing instances?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 18",
+      evidenceRequired: "Restriction audit logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M9.7",
+    title: "Record Maintained Why Restrictions Were Resumed",
+    description: "Is a record maintained of why restrictions were resumed?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 18",
+      evidenceRequired: "Justification logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-GW-ADM",
     title: "Automated decisions gateway",
     description:
       "Does the organization use automated decision-making or profiling that produces legal or similarly significant effects on individuals?",
-    area: "Manage",
-    article: "Art. 22",
-    evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls M10.0-M10.4 as N/A",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    isGateway: true,
+    metadata: {
+      article: "Art. 22",
+      evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls M10.0-M10.4 as N/A",
+      area: "Manage",
+    },
   },
-  "GW-DPO": {
+  {
+    code: "GDPR-M10.0",
+    title: "Identify Fully Automated Decisions",
+    description: "Can the organization identify fully automated decisions?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 22",
+      evidenceRequired: "Algorithmic inventory",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M10.1",
+    title: "Automated Decisions Evaluated Legal Justification",
+    description: "Are automated decisions evaluated for legal justification?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 22",
+      evidenceRequired: "DPIA, Legal review",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M10.2",
+    title: "Policy When Human Intervention Necessary",
+    description: "Is there a policy for when human intervention is necessary?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 22",
+      evidenceRequired: "Automation policy",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M10.3",
+    title: "Procedure Human Review Inconsistent Decisions",
+    description: "Is there a procedure for human review of inconsistent decisions?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 22",
+      evidenceRequired: "Reviewer logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M10.4",
+    title: "Subjects Challenge Explain Their View Decision",
+    description: "Can subjects challenge or explain their view on a decision?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 22",
+      evidenceRequired: "Appeal process documentation",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-GW-DPO",
     title: "DPO requirement gateway",
     description:
       "Is the organization required to appoint a Data Protection Officer (public authority, large-scale processing, or special category data)?",
-    area: "Manage",
-    article: "Art. 37",
-    evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls M11.0-M11.6 as N/A",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    isGateway: true,
+    metadata: {
+      article: "Art. 37",
+      evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls M11.0-M11.6 as N/A",
+      area: "Manage",
+    },
   },
-  "GW-ENC": {
+  {
+    code: "GDPR-M11.0",
+    title: "Appointed Protection Officer",
+    description: "Is there an appointed Data Protection Officer (DPO)?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 37",
+      evidenceRequired: "Appointment letter, Job desc.",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M11.1",
+    title: "DPO Conduct Regular Privacy Training",
+    description: "Does the DPO conduct regular privacy training?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 39",
+      evidenceRequired: "Training attendance logs",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M11.2",
+    title: "DPO Maintain Professional Peer Network",
+    description: "Does the DPO maintain a professional peer network?",
+    category: "Data Governance & Rights",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 38",
+      evidenceRequired: "Association memberships",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M11.3",
+    title: "DPO Perform Independent Review Oversight",
+    description: "Does the DPO perform independent review and oversight?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 39",
+      evidenceRequired: "Internal audit reports",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M11.4",
+    title: "DPO Stay Up Date Regulatory Requirements",
+    description: "Does the DPO stay up to date with regulatory requirements?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 37",
+      evidenceRequired: "CPD records, Certifications",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M11.5",
+    title: "DPO Provide Guidance Defining Privacy Roles",
+    description: "Does the DPO provide guidance on defining privacy roles?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 39",
+      evidenceRequired: "Responsibility matrix (RACI)",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M11.6",
+    title: "DPO Review Compliance Regulations",
+    description: "Does the DPO review all compliance regulations (GDPR, etc.)?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 39",
+      evidenceRequired: "Regulatory gap analysis",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M12.0",
+    title: "Include Privacy Risk Management",
+    description: "Does the organization include privacy in risk management?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 24, 32",
+      evidenceRequired: "Risk Register",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M12.1",
+    title: "Principles Addressing Risk Across",
+    description: "Are there principles for addressing risk across the org?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 24",
+      evidenceRequired: "ERM Framework",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M12.2",
+    title: "Framework Assess Manage Threats",
+    description: "Is there a framework to assess and manage threats?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 24",
+      evidenceRequired: "Risk assessment methodology",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M12.3",
+    title: "Mitigation Transfer Strategies Defined",
+    description: "Are mitigation or transfer strategies defined?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 24",
+      evidenceRequired: "Risk Treatment Plan",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M12.4",
+    title: "Risk Prioritized Focus High-value Assets",
+    description: "Is risk prioritized to focus on high-value assets?",
+    category: "Data Governance & Rights",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 24",
+      evidenceRequired: "Heat maps, Asset criticality",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-M12.5",
+    title: "Financial/reputational Risks Mishandling Included",
+    description: "Are financial/reputational risks of data mishandling included?",
+    category: "Data Governance & Rights",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 24",
+      evidenceRequired: "Impact analysis reports",
+      area: "Manage",
+    },
+  },
+  {
+    code: "GDPR-P1.0",
+    title: "Privacy Design Integrated Into Tech Structure",
+    description: "Is 'Privacy by Design' integrated into tech and structure?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 25",
+      evidenceRequired: "Product design docs",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P1.1",
+    title: "Does The Organization Have The Ability",
+    description: "Does the organization have the ability to pseudonymize data?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 25",
+      evidenceRequired: "De-identification protocol",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P1.2",
+    title: "Is There A Process For Data",
+    description: "Is there a process for data minimization (needed data only)?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 25",
+      evidenceRequired: "Data collection review logs",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P1.3",
+    title: "Access Controls Established",
+    description: "Are access controls (Segregation of Duties) established?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 25",
+      evidenceRequired: "IAM policy, Access matrix",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P1.4",
+    title: "Access Provided Principle Least Privilege",
+    description: "Is access provided using the 'Principle of Least Privilege'?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 25",
+      evidenceRequired: "User access review logs",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P1.5",
+    title: "Privacy Integrated Into Relevant Policies Processes",
+    description: "Is privacy integrated into all relevant policies and processes?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 25",
+      evidenceRequired: "Global Policy review",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P1.6",
+    title: "Privacy Culture Embedded Through Ongoing Training",
+    description: "Is a privacy culture embedded through ongoing training?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 25",
+      evidenceRequired: "Awareness campaign stats",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P1.7",
+    title: "Privacy Integrated Into SDLC",
+    description: "Is privacy integrated into the SDLC?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 25",
+      evidenceRequired: "Security/Privacy gates in Jira",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-GW-ENC",
     title: "Sensitive data encryption gateway",
     description:
       "Does the organization store or transmit sensitive personal data requiring encryption (e.g., IDs, financial, health data)?",
-    area: "Protect",
-    article: "Art. 32",
-    evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls P2.0-P2.4 as N/A",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    isGateway: true,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls P2.0-P2.4 as N/A",
+      area: "Protect",
+    },
   },
-  "GW-INT": {
+  {
+    code: "GDPR-P2.0",
+    title: "Is Sensitive Data Encrypted",
+    description: "Is sensitive data (IDs, Bank Nos) encrypted?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Encryption scan results",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P2.1",
+    title: "Is There An Encryption Policy",
+    description: "Is there an encryption policy (what/how/why)?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Encryption Policy",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P2.2",
+    title: "Protection Standard Document Encryption Criteria",
+    description: "Does a data protection standard document encryption criteria?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Technical Standard doc",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P2.3",
+    title: "Appropriate Technologies Encryption",
+    description: "Are appropriate technologies in place for encryption?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Tool list (HSM, KMS)",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P2.4",
+    title: "New Encryption Technology Regularly Analyzed",
+    description: "Is new encryption technology regularly analyzed?",
+    category: "Data Protection & Security",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Tech roadmap, research logs",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P3.0",
+    title: "Ongoing Effort Identify CIA Controls",
+    description: "Is there an ongoing effort to identify CIA controls?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Security Roadmap",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P3.1",
+    title: "CIA Requirements Formally Defined",
+    description: "Are CIA requirements formally defined for personal data?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Data Security Standard",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P3.2",
+    title: "Measures Defined Meet CIA Requirements",
+    description: "Are measures defined to meet CIA requirements?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Control mapping",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P3.3",
+    title: "Program Regular Investment Security",
+    description: "Is there a program for regular investment in security?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "IT budget, Training spend",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P3.4",
+    title: "Controls Use Only As Authorized",
+    description: "Are controls in place to use data only as authorized?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 29",
+      evidenceRequired: "RBAC logs",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P3.5",
+    title: "Partner Agreements Limited Authorized Use",
+    description: "Are partner agreements limited to authorized data use?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 29",
+      evidenceRequired: "Data Processing Agreement (DPA)",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P3.6",
+    title: "Availability Restored After Incident",
+    description: "Can data availability be restored timely after an incident?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "DR/BCP test results",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P3.7",
+    title: "Safeguards Implemented International Transfers",
+    description: "Are safeguards implemented for international data transfers?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 46",
+      evidenceRequired: "SCCs, BCRs",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P3.8",
+    title: "Are Confidentiality Measures In Place",
+    description: "Are confidentiality measures (ACLs, physical) in place?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Physical security audit",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P3.9",
+    title: "Are Integrity Measures In Place",
+    description: "Are integrity measures (hashing, backups) in place?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Backup verification logs",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P4.0",
+    title: "Breach Response Plan",
+    description: "Is there a breach response plan in place?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 33, 34",
+      evidenceRequired: "Incident Response Plan (IRP)",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P4.1",
+    title: "Notify Authorities Within 72 Hours",
+    description: "Does the org notify authorities within 72 hours?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 33",
+      evidenceRequired: "Breach notification logs",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P4.2",
+    title: "Breach Notices Clear Inclusive Nature/remedy",
+    description: "Are breach notices clear and inclusive of nature/remedy?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 34",
+      evidenceRequired: "Subject notification templates",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P4.3",
+    title: "Technology Detect Breaches",
+    description: "Is technology in place to detect breaches?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 33",
+      evidenceRequired: "SIEM, IDS/IPS logs",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P4.4",
+    title: "Detailed Records Breaches Maintained",
+    description: "Are detailed records of breaches maintained?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 33",
+      evidenceRequired: "Breach register",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P4.5",
+    title: "Lessons Learned From Breaches Documented/applied",
+    description: "Are lessons learned from breaches documented/applied?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 33",
+      evidenceRequired: "Post-mortem reports",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P4.6",
+    title: "Breach Response Procedures Regularly Updated",
+    description: "Are breach response procedures regularly updated?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 33",
+      evidenceRequired: "Annual IRP review",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P4.7",
+    title: "Metrics Maintained Breach Detection/remediation",
+    description: "Are metrics maintained for breach detection/remediation?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 33",
+      evidenceRequired: "SOC Dashboards",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P5.0",
+    title: "Perform Security Testing",
+    description: "Does the org perform security testing (technical/social)?",
+    category: "Data Protection & Security",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Pentest reports",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P5.1",
+    title: "Process Regularly Evaluate Security Measures",
+    description: "Is there a process to regularly evaluate security measures?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Vulnerability Mgmt Policy",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P5.2",
+    title: "Do External Partners Periodically Test Security",
+    description: "Do external partners periodically test security?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "3rd party audit report",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P5.3",
+    title: "Technology Regularly Test Security Measures",
+    description: "Is technology in place to regularly test security measures?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Vulnerability scanner logs",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-P5.4",
+    title: "Appropriate Personnel Perform Testing",
+    description: "Are appropriate personnel in place to perform testing?",
+    category: "Data Protection & Security",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 32",
+      evidenceRequired: "Security team org chart",
+      area: "Protect",
+    },
+  },
+  {
+    code: "GDPR-R1.0",
+    title: "Maintain Ropa Purpose/scope",
+    description: "Does the org maintain RoPA with purpose/scope?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 30",
+      evidenceRequired: "Completed RoPA",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R1.1",
+    title: "Ropa Include Justification Contact Categories",
+    description: "Does RoPA include justification and contact categories?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 30",
+      evidenceRequired: "RoPA audit",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R1.2",
+    title: "Personnel Support Recording",
+    description: "Is personnel in place to support data recording?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 30",
+      evidenceRequired: "Data stewards list",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R1.3",
+    title: "Technology Record Required Information",
+    description: "Is technology in place to record required information?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 30",
+      evidenceRequired: "GRC tool (e.g., TrustArc)",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R1.4",
+    title: "Processes Defined Record Required Information",
+    description: "Are processes defined to record required information?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 30",
+      evidenceRequired: "Data entry SOP",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R1.5",
+    title: "Process Stay Updated Codes Conduct",
+    description: "Is there a process to stay updated on Codes of Conduct?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 30",
+      evidenceRequired: "Regulatory feed logs",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R1.6",
+    title: "Demonstrate Adherence Standards/bcrs",
+    description: "Can the org demonstrate adherence to standards/BCRs?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 24",
+      evidenceRequired: "Compliance certifications",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-GW-INT",
     title: "International transfers gateway",
     description: "Does the organization transfer personal data outside the EU/EEA?",
-    area: "Report",
-    article: "Art. 45, 46",
-    evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls R2.0-R2.5 as N/A",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    isGateway: true,
+    metadata: {
+      article: "Art. 45, 46",
+      evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls R2.0-R2.5 as N/A",
+      area: "Report",
+    },
   },
-  "GW-3P": {
+  {
+    code: "GDPR-R2.0",
+    title: "Documentation EU Transfers",
+    description: "Is there documentation of EU data transfers?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 45, 46",
+      evidenceRequired: "Data flow diagrams",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R2.1",
+    title: "Record Ongoing Ad-hoc EU Transfers",
+    description: "Is there a record of ongoing and ad-hoc EU transfers?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 30",
+      evidenceRequired: "Transfer registry",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R2.2",
+    title: "Process Monitor Country Adequacy Status",
+    description: "Is there a process to monitor country adequacy status?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 45",
+      evidenceRequired: "Legal update logs",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R2.3",
+    title: "Personnel Assigned Track International Transfers",
+    description: "Are personnel assigned to track international transfers?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 46",
+      evidenceRequired: "Trade/Privacy officer roles",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R2.4",
+    title: "Technology Track Transfer Locations/safeguards",
+    description: "Is technology used to track transfer locations/safeguards?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 46",
+      evidenceRequired: "CASB/DLP location logs",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R2.5",
+    title: "Processes Defined Track/record Geo-transfers",
+    description: "Are processes defined to track/record geo-transfers?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 46",
+      evidenceRequired: "Transfer SOP",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-GW-3P",
     title: "Third-party sharing gateway",
     description:
       "Does the organization share personal data with third-party service providers / processors?",
-    area: "Report",
-    article: "Art. 28",
-    evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls R3.0-R3.5 as N/A",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    isGateway: true,
+    metadata: {
+      article: "Art. 28",
+      evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls R3.0-R3.5 as N/A",
+      area: "Report",
+    },
   },
-  "GW-DPIA": {
+  {
+    code: "GDPR-R3.0",
+    title: "Inventory Third-party Processors",
+    description: "Is there an inventory of third-party data processors?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 28",
+      evidenceRequired: "Vendor Inventory",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R3.1",
+    title: "Third-parties Assessed Compliance",
+    description: "Are third-parties assessed for data compliance?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 28",
+      evidenceRequired: "Vendor Risk Assessment (VRA)",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R3.2",
+    title: "Protection Requirements Defined Third-parties",
+    description: "Are protection requirements defined for all third-parties?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 28",
+      evidenceRequired: "Security Addendum",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R3.3",
+    title: "Requirements Embedded Third-party Contracts",
+    description: "Are requirements embedded in third-party contracts?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 28",
+      evidenceRequired: "Signed DPAs",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R3.4",
+    title: "Procedures Auditing Third-party Compliance",
+    description: "Are there procedures for auditing third-party compliance?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 28",
+      evidenceRequired: "Right-to-audit logs",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R3.5",
+    title: "Ongoing Communication Third-parties",
+    description: "Is there ongoing communication with third-parties?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 28",
+      evidenceRequired: "Vendor review meetings",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-GW-DPIA",
     title: "High-risk processing gateway",
     description:
       "Does the organization perform high-risk processing activities that require a Data Protection Impact Assessment (DPIA)?",
-    area: "Report",
-    article: "Art. 35",
-    evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls R4.0-R4.6 as N/A",
-  },
-};
-
-function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let currentRow: string[] = [];
-  let currentCell = "";
-  let inQuotes = false;
-
-  for (let index = 0; index < text.length; index += 1) {
-    const char = text[index];
-    const nextChar = text[index + 1];
-
-    if (char === '"') {
-      if (inQuotes && nextChar === '"') {
-        currentCell += '"';
-        index += 1;
-      } else {
-        inQuotes = !inQuotes;
-      }
-      continue;
-    }
-
-    if (char === "," && !inQuotes) {
-      currentRow.push(currentCell);
-      currentCell = "";
-      continue;
-    }
-
-    if ((char === "\n" || char === "\r") && !inQuotes) {
-      if (char === "\r" && nextChar === "\n") {
-        index += 1;
-      }
-
-      currentRow.push(currentCell);
-      rows.push(currentRow);
-      currentRow = [];
-      currentCell = "";
-      continue;
-    }
-
-    currentCell += char;
-  }
-
-  if (currentCell || currentRow.length > 0) {
-    currentRow.push(currentCell);
-    rows.push(currentRow);
-  }
-
-  return rows;
-}
-
-function getCsvFilePath(): string {
-  const currentFile = fileURLToPath(import.meta.url);
-  return path.resolve(path.dirname(currentFile), "..", "..", "GDPR", "v2_gap_assessment.csv");
-}
-
-function formatTitleWord(word: string): string {
-  const cleanedWord = word.replace(/[^A-Za-z0-9/-]/g, "");
-  if (!cleanedWord) {
-    return "";
-  }
-
-  if (/^[A-Z0-9/-]+$/.test(cleanedWord)) {
-    return cleanedWord;
-  }
-
-  return cleanedWord[0].toUpperCase() + cleanedWord.slice(1).toLowerCase();
-}
-
-function deriveTitle(description: string): string {
-  const cleanedDescription = description
-    .replace(/\([^)]*\)/g, " ")
-    .replace(/how\/where/gi, "how where")
-    .replace(/e\.g\./gi, "")
-    .replace(/['".,?]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  const sourceWords = cleanedDescription.split(" ");
-  const meaningfulWords = sourceWords.filter(
-    (word) => word && !titleStopwords.has(word.toLowerCase()),
-  );
-  const titleWords = (meaningfulWords.length >= 3 ? meaningfulWords : sourceWords)
-    .map(formatTitleWord)
-    .filter(Boolean)
-    .slice(0, 6);
-
-  return titleWords.join(" ");
-}
-
-function toAreaCode(value: string): AreaCode {
-  if (value === "Discover" || value === "Manage" || value === "Protect" || value === "Report") {
-    return value;
-  }
-
-  throw new Error(`Unsupported GDPR area value: ${value}`);
-}
-
-function toRiskCode(value: string): RiskCode {
-  if (value === "H" || value === "M" || value === "L") {
-    return value;
-  }
-
-  throw new Error(`Unsupported GDPR risk value: ${value}`);
-}
-
-function loadRawControls(): RawSeedControl[] {
-  const csvText = readFileSync(getCsvFilePath(), "utf8").replace(/^\uFEFF/, "");
-  const rows = parseCsv(csvText);
-  const headerIndex = rows.findIndex((row) => row[0]?.trim() === "Control ID");
-
-  if (headerIndex === -1) {
-    throw new Error("Could not find the GDPR CSV header row.");
-  }
-
-  const rawControls: RawSeedControl[] = [];
-  const dataRows = rows.slice(headerIndex + 1);
-
-  for (const row of dataRows) {
-    const [
-      rawCode = "",
-      rawArticle = "",
-      rawArea = "",
-      rawQuestion = "",
-      rawEvidence = "",
-      rawRisk = "",
-    ] = row;
-    const code = rawCode.trim();
-
-    if (!code) {
-      continue;
-    }
-
-    if (/^SECTION\s+/i.test(code) || /^[A-Z]\.\d+:/.test(code)) {
-      continue;
-    }
-
-    if (code.startsWith("GW-")) {
-      const gateway = gatewayConfigMap[code];
-      if (!gateway) {
-        throw new Error(`Missing gateway config for ${code}`);
-      }
-
-      rawControls.push({
-        code: `GDPR-${code}`,
-        article: gateway.article || rawArticle.trim(),
-        area: gateway.area,
-        description: gateway.description,
-        evidenceRequired: gateway.evidenceRequired,
-        risk: "H",
-        isGateway: true,
-      });
-      continue;
-    }
-
-    rawControls.push({
-      code: `GDPR-${code}`,
-      article: rawArticle.trim(),
-      area: toAreaCode(rawArea.trim()),
-      description: rawQuestion.trim(),
-      evidenceRequired: rawEvidence.trim(),
-      risk: toRiskCode(rawRisk.trim()),
-    });
-  }
-
-  if (rawControls.length !== 169) {
-    throw new Error(`Expected 169 GDPR controls but parsed ${rawControls.length}.`);
-  }
-
-  return rawControls;
-}
-
-const rawControls = loadRawControls();
-
-export const gdprControls: SeedControl[] = rawControls.map((control) => {
-  const gatewayKey = control.code.replace(/^GDPR-/, "");
-  const gatewayConfig = gatewayConfigMap[gatewayKey];
-  const title = control.isGateway ? gatewayConfig.title : deriveTitle(control.description);
-
-  return {
-    code: control.code,
-    title,
-    description: control.description,
-    category: categoryByArea[control.area],
-    severity: control.isGateway ? "HIGH" : severityByRisk[control.risk],
-    weight: control.isGateway ? 3.0 : weightByRisk[control.risk],
-    ...(control.isGateway ? { isGateway: true } : {}),
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    isGateway: true,
     metadata: {
-      article: control.article,
-      evidenceRequired: control.evidenceRequired,
-      area: control.area,
+      article: "Art. 35",
+      evidenceRequired: "Answer YES or NO. If NO -> mark sub-controls R4.0-R4.6 as N/A",
+      area: "Report",
     },
-  };
-});
+  },
+  {
+    code: "GDPR-R4.0",
+    title: "Formal Process Determine When DPIA Required",
+    description:
+      "Does the organization have a formal process to determine when a DPIA is required?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 35(1)",
+      evidenceRequired: "DPIA Threshold Assessment",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R4.1",
+    title: "Conduct Dpias High-risk Processing Activities",
+    description: "Does the organization conduct DPIAs for high-risk processing activities?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 35(7)",
+      evidenceRequired: "Completed DPIA Reports",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R4.2",
+    title: "DPO Consulted During Performance DPIA",
+    description: "Is the DPO consulted during the performance of a DPIA?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 35(2)",
+      evidenceRequired: "DPO Sign-off/Review logs",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R4.3",
+    title: "DPIA Include Measures Address Risks Demonstrate",
+    description: "Does the DPIA include measures to address risks and demonstrate compliance?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 35(7)(d)",
+      evidenceRequired: "Risk Treatment Plan",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R4.4",
+    title: "Seek Views Subjects Intended Processing",
+    description: "Does the organization seek the views of data subjects on intended processing?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "LOW",
+    weight: 1,
+    metadata: {
+      article: "Art. 35(9)",
+      evidenceRequired: "Consultation records",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R4.5",
+    title: "Consult Supervisory Authority Prior High-risk Processing",
+    description:
+      "Does the organization consult the Supervisory Authority prior to high-risk processing?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "HIGH",
+    weight: 3,
+    metadata: {
+      article: "Art. 36(1)",
+      evidenceRequired: "Regulator correspondence",
+      area: "Report",
+    },
+  },
+  {
+    code: "GDPR-R4.6",
+    title: "Process Review Update Dpias When Processing",
+    description: "Is there a process to review and update DPIAs when processing risk changes?",
+    category: "Regulatory Compliance & Reporting",
+    severity: "MEDIUM",
+    weight: 2,
+    metadata: {
+      article: "Art. 35(11)",
+      evidenceRequired: "Revision history logs",
+      area: "Report",
+    },
+  },
+];
