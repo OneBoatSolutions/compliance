@@ -39,12 +39,20 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
 
   const existing = await prisma.framework.findUnique({
     where: { id: params.id },
-    select: { id: true },
+    select: { id: true, status: true },
   });
 
   if (!existing) {
     return notFoundResponse("Framework not found");
   }
+
+  // Block edits to published frameworks — they are immutable
+  // if (existing.status === "PUBLISHED") {
+  // return errorResponse(
+  // "Published frameworks cannot be edited. Create a new version instead.",
+  //  403,
+  // );
+  // }
 
   const body = await req.json();
   const parsed = updateFrameworkAdminSchema.safeParse(body);
@@ -54,7 +62,13 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
   }
 
   const data = parsed.data;
-
+  // Allow only archive transition for published frameworks
+  if (existing.status === "PUBLISHED" && data.status !== "ARCHIVED") {
+    return errorResponse(
+      "Published frameworks cannot be edited. Create a new version instead.",
+      403,
+    );
+  }
   const updateData: Prisma.FrameworkUpdateInput = {};
 
   if (data.code !== undefined) {

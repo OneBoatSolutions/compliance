@@ -23,6 +23,7 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
     select: {
       id: true,
       userId: true,
+      name: true,
       productName: true,
       description: true,
       services: true,

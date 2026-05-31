@@ -1,7 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { generateText } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
+import { z } from "zod";
+import type {
+  GenerateRemediationInput,
+  RemediationPriority,
+  RemediationResponse,
+} from "@/types/ai";
 import crypto from "crypto";
+import { getCache, setCache } from "@/lib/cache";
 
 const groq = createOpenAI({
   baseURL: "https://api.groq.com/openai/v1",
@@ -38,9 +45,37 @@ interface FrameworkCatalogEntry {
   controls: number;
 }
 
-const cache = new Map<string, { data: FrameworkSuggestion[]; expiry: number }>();
-const cacheTtl = 24 * 60 * 60 * 1000; // 24 hours
+interface FrameworkCatalogSelectRow {
+  id: string;
+  code: string;
+  name: string;
+  _count: {
+    controls: number;
+  };
+}
+
 const frameworkCatalogCacheTtl = 5 * 60 * 1000; // 5 minutes
+const remediationTimeoutMs = 10_000;
+const remediationMaxRetries = 3;
+const aiCacheTtlSeconds = 24 * 60 * 60;
+let cacheKeySalt = "";
+
+const remediationResponseSchema = z.object({
+  steps: z
+    .array(
+      z.object({
+        title: z.string().trim().min(1),
+        description: z.string().trim().min(1),
+        priority: z.enum(["HIGH", "MEDIUM", "LOW"]),
+        owner: z.string().trim().min(1),
+        estimatedHours: z.coerce.number().int().min(1).max(1000),
+      }),
+    )
+    .min(3)
+    .max(5),
+  policies: z.array(z.string().trim().min(1)).min(2).max(3),
+  technicalControls: z.array(z.string().trim().min(1)).min(2).max(3),
+});
 
 let frameworkCatalogCache: { data: FrameworkCatalogEntry[]; expiry: number } = {
   data: [],
@@ -116,7 +151,7 @@ async function getFrameworkCatalog(): Promise<FrameworkCatalogEntry[]> {
     },
   });
 
-  const catalog = frameworks.map((framework) => ({
+  const catalog = frameworks.map((framework: FrameworkCatalogSelectRow) => ({
     id: framework.id,
     code: framework.code,
     name: framework.name,
@@ -213,6 +248,276 @@ Regions: ${org.regions.join(", ")}
 `;
 }
 
+class RemediationParseError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "RemediationParseError";
+  }
+}
+
+function buildRemediationPrompt(input: GenerateRemediationInput): string {
+  return `
+You are a compliance expert. Generate a remediation plan.
+
+Framework: ${input.frameworkName}
+Control: ${input.controlId} - ${input.controlTitle}
+Description: ${input.controlDescription}
+Current Status: ${input.currentStatus}
+Severity: ${input.severity}
+
+Requirements:
+- Return ONLY valid JSON (no extra text)
+- Provide 3-5 actionable steps
+- Include priority (HIGH, MEDIUM, LOW)
+- Assign realistic owner roles
+- Include estimated hours
+- Suggest 2-3 policies
+- Suggest 2-3 technical controls
+- Prioritize based on severity
+- Prefer real-world tools where relevant
+
+Output format:
+{
+  "steps": [
+    {
+      "title": "Action title",
+      "description": "Detailed steps...",
+      "priority": "HIGH|MEDIUM|LOW",
+      "owner": "IT Security|Compliance|HR|...",
+      "estimatedHours": 24
+    }
+  ],
+  "policies": ["Policy 1", "Policy 2"],
+  "technicalControls": ["Control 1", "Control 2"]
+}
+`;
+}
+
+function getRemediationCacheKey(input: GenerateRemediationInput): string {
+  const keyPayload = JSON.stringify({
+    frameworkName: input.frameworkName.trim().toLowerCase(),
+    controlId: input.controlId.trim().toLowerCase(),
+    controlDescription: input.controlDescription.trim().toLowerCase(),
+    currentStatus: input.currentStatus.trim().toLowerCase(),
+    severity: input.severity.trim().toLowerCase(),
+    cacheKeySalt,
+  });
+  const key = `remediation:${keyPayload}`;
+  return crypto.createHash("md5").update(key).digest("hex");
+}
+
+function getPriorityFromSeverity(severity: string): RemediationPriority {
+  const normalized = severity.trim().toUpperCase();
+
+  if (normalized === "CRITICAL" || normalized === "HIGH") {
+    return "HIGH";
+  }
+
+  if (normalized === "MEDIUM") {
+    return "MEDIUM";
+  }
+
+  return "LOW";
+}
+
+function getFallbackRemediation(input: GenerateRemediationInput): RemediationResponse {
+  const defaultPriority = getPriorityFromSeverity(input.severity);
+
+  return {
+    steps: [
+      {
+        title: `Perform a targeted gap assessment for ${input.controlId}`,
+        description:
+          "Review current implementation evidence, compare it against control expectations, and document exact gaps with owners and due dates.",
+        priority: defaultPriority,
+        owner: "Compliance",
+        estimatedHours: 8,
+      },
+      {
+        title: "Implement and document remediation controls",
+        description:
+          "Deploy required technical and process changes, update procedures, and capture verifiable evidence that maps to the control.",
+        priority: defaultPriority,
+        owner: "IT Security",
+        estimatedHours: 16,
+      },
+      {
+        title: "Validate effectiveness and close findings",
+        description:
+          "Run control testing, confirm residual risks are addressed, and obtain sign-off from compliance stakeholders.",
+        priority: "MEDIUM",
+        owner: "Internal Audit",
+        estimatedHours: 6,
+      },
+    ],
+    policies: ["Access Control Policy", "Information Security Policy", "Risk Management Policy"],
+    technicalControls: [
+      "SIEM alerting and log retention",
+      "Multi-factor authentication enforcement",
+      "Centralized endpoint configuration baseline",
+    ],
+  };
+}
+
+async function withTimeout<T>(
+  promise: Promise<T>,
+  timeoutMs: number,
+  timeoutMessage: string,
+): Promise<T> {
+  return await new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(timeoutMessage));
+    }, timeoutMs);
+
+    promise
+      .then((value) => {
+        clearTimeout(timer);
+        resolve(value);
+      })
+      .catch((error) => {
+        clearTimeout(timer);
+        reject(error);
+      });
+  });
+}
+
+export function parseRemediationResponse(text: string): RemediationResponse {
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    throw new RemediationParseError("No JSON found in AI remediation response");
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(jsonMatch[0]);
+  } catch {
+    throw new RemediationParseError("Invalid JSON in AI remediation response");
+  }
+
+  if (
+    parsed &&
+    typeof parsed === "object" &&
+    "policySuggestions" in parsed &&
+    !("policies" in parsed)
+  ) {
+    const candidate = parsed as { policySuggestions: unknown; policies?: unknown };
+    candidate.policies = candidate.policySuggestions;
+    parsed = candidate;
+  }
+
+  const result = remediationResponseSchema.safeParse(parsed);
+
+  if (!result.success) {
+    throw new RemediationParseError("AI remediation response failed schema validation");
+  }
+
+  return result.data;
+}
+
+async function logRemediationInteraction(
+  input: GenerateRemediationInput,
+  output: RemediationResponse,
+  model: string,
+  tokensUsed: number,
+) {
+  try {
+    await prisma.aIInteraction.create({
+      data: {
+        type: "REMEDIATION" as never,
+        input: JSON.stringify(input),
+        output: JSON.stringify(output),
+        model,
+        tokensUsed,
+      },
+    });
+  } catch (error) {
+    try {
+      await prisma.aIInteraction.create({
+        data: {
+          type: "REMEDIATION_PLAN",
+          input: JSON.stringify(input),
+          output: JSON.stringify(output),
+          model,
+          tokensUsed,
+        },
+      });
+    } catch (fallbackError) {
+      console.error("Failed to log remediation AI interaction", error, fallbackError);
+    }
+  }
+}
+
+export async function generateRemediation(
+  input: GenerateRemediationInput,
+): Promise<RemediationResponse> {
+  const cacheKey = getRemediationCacheKey(input);
+
+  if (!input.regenerate) {
+    const cached = await getCache<RemediationResponse>(cacheKey);
+    if (cached) {
+      void logRemediationInteraction(input, cached, "cache", 0);
+      return cached;
+    }
+  }
+
+  const prompt = buildRemediationPrompt(input);
+  let lastError: Error | null = null;
+
+  for (let attempt = 1; attempt <= remediationMaxRetries; attempt++) {
+    try {
+      const result = await withTimeout(
+        generateText({
+          model: groq("llama-3.3-70b-versatile"),
+          prompt,
+        }),
+        remediationTimeoutMs,
+        "AI remediation request timed out",
+      );
+
+      const parsed = parseRemediationResponse(result.text);
+
+      await setCache(cacheKey, parsed, aiCacheTtlSeconds);
+
+      void logRemediationInteraction(
+        input,
+        parsed,
+        "llama-3.3-70b",
+        result.usage?.totalTokens ?? 0,
+      );
+
+      return parsed;
+    } catch (error) {
+      const resolvedError =
+        error instanceof Error ? error : new Error("Unknown AI remediation error");
+      lastError = resolvedError;
+
+      console.error(`Remediation attempt ${attempt} failed`, resolvedError);
+
+      const shouldRetry = resolvedError instanceof RemediationParseError;
+
+      if (!shouldRetry || attempt === remediationMaxRetries) {
+        break;
+      }
+    }
+  }
+
+  const fallback = getFallbackRemediation(input);
+
+  await setCache(cacheKey, fallback, aiCacheTtlSeconds);
+
+  void logRemediationInteraction(input, fallback, lastError?.message ?? "fallback", 0);
+
+  return fallback;
+}
+
+export function clearAIServiceCachesForTests() {
+  cacheKeySalt = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  frameworkCatalogCache = {
+    data: [],
+    expiry: 0,
+  };
+}
+
 async function parseAIResponse(text: string): Promise<AIFrameworkSuggestion[]> {
   try {
     const jsonMatch = text.match(/\{[\s\S]*\}/);
@@ -249,11 +554,15 @@ async function parseAIResponse(text: string): Promise<AIFrameworkSuggestion[]> {
 export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestion[]> {
   const prompt = buildPrompt(org);
 
-  const key = crypto.createHash("md5").update(JSON.stringify(org)).digest("hex");
+  const keyPayload = JSON.stringify({
+    org,
+    cacheKeySalt,
+  });
+  const key = crypto.createHash("md5").update(`compliance:${keyPayload}`).digest("hex");
 
-  const cached = cache.get(key);
-  if (cached && cached.expiry > Date.now()) {
-    return cached.data;
+  const cached = await getCache<FrameworkSuggestion[]>(key);
+  if (cached) {
+    return cached;
   }
 
   const maxRetries = 3;
@@ -274,10 +583,7 @@ export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestio
         throw new Error("No mapped frameworks found in AI response");
       }
 
-      cache.set(key, {
-        data: mappedSuggestions,
-        expiry: Date.now() + cacheTtl,
-      });
+      await setCache(key, mappedSuggestions, aiCacheTtlSeconds);
 
       prisma.aIInteraction
         .create({
@@ -289,7 +595,7 @@ export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestio
             tokensUsed: result.usage?.totalTokens ?? 0,
           },
         })
-        .catch((logError) => {
+        .catch((logError: unknown) => {
           console.error("Failed to log AI interaction", logError);
         });
 
@@ -304,10 +610,7 @@ export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestio
 
   const fallback = await getComplianceFallback();
 
-  cache.set(key, {
-    data: fallback,
-    expiry: Date.now() + cacheTtl,
-  });
+  await setCache(key, fallback, aiCacheTtlSeconds);
 
   prisma.aIInteraction
     .create({
@@ -319,7 +622,7 @@ export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestio
         tokensUsed: 0,
       },
     })
-    .catch((logError) => {
+    .catch((logError: unknown) => {
       console.error("Failed to log fallback AI interaction", logError);
     });
 

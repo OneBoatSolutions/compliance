@@ -7,7 +7,12 @@ const options = [
   { label: "Not Applicable", color: "info" },
 ];
 
-export default function StatusSelector({ status, setStatus }: any) {
+interface StatusSelectorProps {
+  status: string;
+  setStatus: (status: string) => void;
+}
+
+export default function StatusSelector({ status, setStatus }: StatusSelectorProps) {
   const handleChange = (value: string) => {
     setStatus(value);
     toast.success("Status updated");

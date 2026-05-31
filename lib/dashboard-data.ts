@@ -12,7 +12,6 @@ function roundScore(n: number): number {
 }
 
 const dashboardRevalidateSec = 60;
-/** If created/updated within this window, treat as initial "created" only (one event). */
 const assessmentCreatedWindowMs = 2000;
 
 async function buildDashboardData(userId: string): Promise<DashboardApiData> {
@@ -86,7 +85,7 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
         score: true,
         updatedAt: true,
         organization: {
-          select: { productName: true },
+          select: { name: true, productName: true },
         },
       },
     }),
@@ -149,7 +148,7 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
 
     return {
       id: a.id,
-      organizationName: a.organization.productName,
+      organizationName: a.organization.productName ?? a.organization.name,
       status: a.status,
       score,
       updatedAt: a.updatedAt.toISOString(),

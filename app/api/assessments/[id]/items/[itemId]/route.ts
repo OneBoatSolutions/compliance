@@ -12,6 +12,45 @@ interface RouteContext {
   };
 }
 
+export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+  void req;
+
+  const session = await requireAuth();
+  const { id: assessmentId, itemId } = params;
+
+  const assessmentItem = await prisma.assessmentItem.findFirst({
+    where: {
+      id: itemId,
+      assessmentId,
+      assessment: {
+        userId: session.user.id,
+      },
+    },
+    select: {
+      id: true,
+      evidence: {
+        orderBy: {
+          uploadedAt: "desc",
+        },
+        select: {
+          id: true,
+          originalName: true,
+          fileSize: true,
+          mimeType: true,
+          description: true,
+          uploadedAt: true,
+        },
+      },
+    },
+  });
+
+  if (!assessmentItem) {
+    return notFoundResponse("Assessment item not found");
+  }
+
+  return successResponse({ evidence: assessmentItem.evidence }, 200);
+});
+
 export const PATCH = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   const session = await requireAuth();
   const { id: assessmentId, itemId } = params;
@@ -41,7 +80,7 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
     return validationErrorResponse(parsed.error.format());
   }
 
-  const data = await prisma.$transaction(async (tx) => {
+  const data = await prisma.$transaction(async (tx: typeof prisma) => {
     await tx.assessmentItem.update({
       where: {
         id: itemId,

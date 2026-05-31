@@ -81,6 +81,7 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
     status: parseListParam(url.searchParams, "status"),
     framework: parseListParam(url.searchParams, "framework"),
     severity: parseListParam(url.searchParams, "severity"),
+    category: parseListParam(url.searchParams, "category"),
     search: url.searchParams.get("search") ?? undefined,
     sortBy: url.searchParams.get("sortBy") ?? undefined,
     sortOrder: url.searchParams.get("sortOrder") ?? undefined,
@@ -91,7 +92,8 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
     return validationErrorResponse(parsed.error.format());
   }
 
-  const { page, limit, status, framework, severity, search, sortBy, sortOrder } = parsed.data;
+  const { page, limit, status, framework, severity, category, search, sortBy, sortOrder } =
+    parsed.data;
 
   const where: Prisma.AssessmentItemWhereInput = {
     assessmentId,
@@ -151,6 +153,15 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
     };
   }
 
+  // Category filter
+  if (category && category.length === 1) {
+    controlWhere.category = category[0];
+  } else if (category && category.length > 1) {
+    controlWhere.category = {
+      in: category,
+    };
+  }
+
   if (Object.keys(controlWhere).length > 0) {
     where.control = controlWhere;
   }
@@ -181,6 +192,7 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
             code: true,
             title: true,
             description: true,
+            category: true,
             severity: true,
             weight: true,
             framework: {

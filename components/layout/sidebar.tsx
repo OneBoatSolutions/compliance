@@ -1,11 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronLeft, ChevronRight, LifeBuoy, ShieldCheck } from "lucide-react";
+import { isNavItemActive } from "@/lib/nav-utils";
 
-export default function Sidebar({ items = [], collapsed, setCollapsed, isMobile = false }: any) {
+export interface SidebarItem {
+  label: string;
+  href: string;
+  icon?: React.ElementType;
+}
+
+export interface SidebarProps {
+  items?: SidebarItem[];
+  collapsed?: boolean;
+  setCollapsed?: (collapsed: boolean) => void;
+  isMobile?: boolean;
+}
+
+export default function Sidebar({
+  items = [],
+  collapsed,
+  setCollapsed,
+  isMobile = false,
+}: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -29,7 +47,7 @@ export default function Sidebar({ items = [], collapsed, setCollapsed, isMobile 
         {/* Collapse button only desktop */}
         {!isMobile && (
           <button
-            onClick={() => setCollapsed(!collapsed)}
+            onClick={() => setCollapsed?.(!collapsed)}
             className="text-gray-600 hover:text-primary transition"
           >
             {collapsed ? <ChevronRight /> : <ChevronLeft />}
@@ -39,8 +57,9 @@ export default function Sidebar({ items = [], collapsed, setCollapsed, isMobile 
 
       {/*  NAV */}
       <nav className="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
-        {items.map((item: any) => {
-          const isActive = pathname.startsWith(item.href);
+        {items.map((item: SidebarItem) => {
+          // Use the shared nav matcher from dev (fixes Reports/Assessments active-tab collision)
+          const isActive = isNavItemActive(item, pathname);
           const Icon = item.icon;
 
           return (
@@ -74,7 +93,7 @@ export default function Sidebar({ items = [], collapsed, setCollapsed, isMobile 
               Reach out to support or check documentation.
             </p>
 
-            <button className="w-full text-sm bg-primary text-white rounded-md py-1.5 hover:bg-primary-dark transition">
+            <button className="w-full text-sm bg-primary text-white rounded-md py-1.5 hover:opacity-90 transition">
               Contact Support
             </button>
           </div>

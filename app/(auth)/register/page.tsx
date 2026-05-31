@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Eye, EyeOff, Lock, Mail, Building2, User } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, User, Building2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { z } from "zod";
@@ -31,7 +31,6 @@ import { useAuthStore } from "@/stores/auth-store";
 
 const registerFormSchema = registerSchema
   .extend({
-    companyName: z.string().min(2, "Company name is required"),
     confirmPassword: z.string().min(1, "Confirm your password"),
     terms: z.boolean().refine((val) => val, {
       message: "You must accept Terms & Privacy Policy",
@@ -75,6 +74,7 @@ export default function RegisterPage() {
     try {
       await registerAuth({
         name: data.name,
+        companyName: data.companyName,
         email: data.email,
         password: data.password,
       });
@@ -141,8 +141,8 @@ export default function RegisterPage() {
                   <div className="relative mt-1">
                     <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
                     <Input
+                      placeholder="Your company or organization"
                       className="pl-10 pr-3 py-3 text-slate-900 border-slate-200 focus-visible:ring-2 focus-visible:ring-[#6d18ff]/40 focus-visible:border-[#6d18ff]"
-                      placeholder="Enter company name"
                       {...field}
                     />
                   </div>

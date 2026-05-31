@@ -157,6 +157,7 @@ async function main() {
     org = await prisma.organization.create({
       data: {
         userId: testUser.id,
+        name: "HealthTrack",
         productName: "HealthTrack App",
         description:
           "A digital health platform offering telehealth, EHR access, and subscription billing for US and EU patients.",
@@ -232,7 +233,7 @@ async function main() {
     throw new Error("GDPR framework was not seeded.");
   }
 
-  const v2GdprCodeSet = new Set(gdprControls.map((control) => control.code));
+  const v2GdprCodeSet = new Set(gdprControls.map((control: { code: string }) => control.code));
   const staleControls = await prisma.control.findMany({
     where: {
       frameworkId: gdprFrameworkId,
@@ -244,11 +245,11 @@ async function main() {
   if (staleControls.length > 0) {
     console.log(
       `🧹  Removing ${staleControls.length} stale GDPR control(s): ${staleControls
-        .map((control) => control.code)
+        .map((control: { code: string }) => control.code)
         .join(", ")}`,
     );
 
-    const staleControlIds = staleControls.map((control) => control.id);
+    const staleControlIds = staleControls.map((control: { id: string }) => control.id);
     await prisma.assessmentItem.deleteMany({
       where: { controlId: { in: staleControlIds } },
     });
@@ -267,7 +268,7 @@ async function main() {
     select: { id: true, code: true },
   });
   const gdprCodeToId = Object.fromEntries(
-    gdprControlRows.map((control) => [control.code, control.id]),
+    gdprControlRows.map((control: { code: string; id: string }) => [control.code, control.id]),
   ) as Record<string, string>;
 
   for (const dependency of gatewayDependencies) {
@@ -352,8 +353,8 @@ async function main() {
     "GDPR-P4.0": "NOT_COMPLIANT",
     "GDPR-R1.0": "NOT_COMPLIANT",
     "GDPR-M9.1": "NOT_COMPLIANT",
-    "HIPAA-308-A7": "NOT_COMPLIANT",
-    "HIPAA-312-C": "NOT_COMPLIANT",
+    "HIPAA-S3-Q10": "NOT_COMPLIANT",
+    "HIPAA-S4-Q9": "NOT_COMPLIANT",
     "PCI-3.5.1": "NOT_COMPLIANT",
     "PCI-8.4.2": "NOT_COMPLIANT",
     "PCI-6.4.1": "NOT_COMPLIANT",
@@ -377,10 +378,10 @@ async function main() {
     "GDPR-R4.1": "PARTIALLY_COMPLIANT",
     "GDPR-R4.3": "PARTIALLY_COMPLIANT",
     "GDPR-P5.0": "PARTIALLY_COMPLIANT",
-    "HIPAA-308-A1": "PARTIALLY_COMPLIANT",
-    "HIPAA-308-A9": "PARTIALLY_COMPLIANT",
-    "HIPAA-310-D1": "PARTIALLY_COMPLIANT",
-    "HIPAA-312-B": "PARTIALLY_COMPLIANT",
+    "HIPAA-S1-Q1": "PARTIALLY_COMPLIANT",
+    "HIPAA-S7-Q1": "PARTIALLY_COMPLIANT",
+    "HIPAA-S5-Q19": "PARTIALLY_COMPLIANT",
+    "HIPAA-S4-Q17": "PARTIALLY_COMPLIANT",
     "PCI-1.3.1": "PARTIALLY_COMPLIANT",
     "PCI-2.2.2": "PARTIALLY_COMPLIANT",
     "PCI-7.2.1": "PARTIALLY_COMPLIANT",
@@ -416,7 +417,7 @@ async function main() {
     "GDPR-R4.4": "NOT_STARTED",
     "GDPR-R4.5": "NOT_STARTED",
     "GDPR-R4.6": "NOT_STARTED",
-    "HIPAA-308-A6": "NOT_STARTED",
+    "HIPAA-S3-Q8": "NOT_STARTED",
     "PCI-10.5.1": "NOT_STARTED",
     "PCI-8.3.6": "NOT_STARTED",
     // NOT_APPLICABLE — 1 item
@@ -433,8 +434,8 @@ async function main() {
       "RoPA template exists, but production systems and processing purposes are not populated",
     "GDPR-M9.1":
       "No application-level processing freeze flag exists for subject restriction requests",
-    "HIPAA-308-A7": "Security awareness training program not yet established",
-    "HIPAA-312-C":
+    "HIPAA-S3-Q10": "Security awareness training program not yet established",
+    "HIPAA-S4-Q9":
       "ePHI encryption in transit not enforced on all internal service-to-service calls",
     "PCI-3.5.1":
       "PAN stored in plaintext in legacy reporting database; remediation scheduled Q2 2026",
@@ -476,12 +477,12 @@ async function main() {
       "Risk treatment actions are tracked in spreadsheets, but they are not yet linked to a controlled remediation workflow",
     "GDPR-P5.0":
       "A one-time penetration test was completed, but there is no recurring security testing cadence",
-    "HIPAA-308-A1": "Risk analysis conducted in 2024 — not updated after infrastructure migration",
-    "HIPAA-308-A9":
-      "Backup plan documented; primary DB backup tested; DR failover not yet tested end-to-end",
-    "HIPAA-310-D1":
+    "HIPAA-S1-Q1": "Risk analysis conducted in 2024 — not updated after infrastructure migration",
+    "HIPAA-S7-Q1":
+      "Contingency plan documented; primary DB backup tested; DR failover not yet tested end-to-end",
+    "HIPAA-S5-Q19":
       "Device inventory and remote-wipe policy in place; media disposal SOP incomplete",
-    "HIPAA-312-B":
+    "HIPAA-S4-Q17":
       "Audit logging enabled on primary systems; logging gaps remain on legacy components",
     "PCI-1.3.1":
       "CDE inbound rules partially configured; a few legacy firewall rules remain overly permissive",
@@ -497,10 +498,10 @@ async function main() {
     "GDPR-M2.0": "Privacy notices published at all data collection points across web and mobile",
     "GDPR-M4.1": "Consent logs timestamped and retained for 3 years per retention policy",
     "GDPR-M7.0": "Erasure SOP documented; all requests processed within 30-day statutory window",
-    "HIPAA-308-A2": "Risk management plan reviewed annually by CISO and updated as needed",
-    "HIPAA-308-A3": "Sanction policy documented in employee handbook; HR applies consistently",
-    "HIPAA-308-A10": "BAAs executed with all 12 business associates; reviewed and renewed annually",
-    "HIPAA-312-A1":
+    "HIPAA-S1-Q7": "Risk management plan reviewed annually by CISO and updated as needed",
+    "HIPAA-S3-Q18": "Sanction policy documented in employee handbook; HR applies consistently",
+    "HIPAA-S6-Q6": "BAAs executed with all 12 business associates; reviewed and renewed annually",
+    "HIPAA-S4-Q21":
       "Unique user IDs enforced across all system components; shared accounts prohibited",
     "PCI-4.2.1":
       "TLS 1.2+ enforced on all payment data transmission channels; TLS 1.0/1.1 deprecated",
@@ -517,7 +518,7 @@ async function main() {
     "GDPR-R2.4": null,
     "GDPR-R4.4": null,
     "GDPR-R4.5": null,
-    "HIPAA-308-A6": null,
+    "HIPAA-S3-Q8": null,
     "PCI-10.5.1": null,
     "PCI-8.3.6": null,
     // NOT_APPLICABLE
@@ -593,7 +594,7 @@ async function main() {
   const hipaaRiskItem = await prisma.assessmentItem.findFirst({
     where: {
       assessmentId: assessment.id,
-      control: { code: "HIPAA-308-A1" },
+      control: { code: "HIPAA-S1-Q1" },
     },
   });
 
@@ -614,7 +615,7 @@ async function main() {
           description: "Annual risk analysis report covering ePHI systems.",
         },
       });
-      console.log("✅  Evidence row seeded (HIPAA-308-A1)");
+      console.log("✅  Evidence row seeded (HIPAA-S1-Q1)");
     } else {
       console.log("✅  Evidence exists (skipped)");
     }

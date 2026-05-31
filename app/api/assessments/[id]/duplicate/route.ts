@@ -38,7 +38,13 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
     return notFoundResponse("Assessment not found");
   }
 
-  const frameworkIds = [...new Set(sourceAssessment.items.map((item) => item.control.frameworkId))];
+  const frameworkIds = [
+    ...new Set(
+      sourceAssessment.items.map(
+        (item: { control: { frameworkId: string } }) => item.control.frameworkId,
+      ),
+    ),
+  ];
 
   if (frameworkIds.length === 0) {
     return errorResponse("No frameworks found for this assessment", 400);
@@ -59,7 +65,7 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
     return errorResponse("No controls found for selected frameworks", 400);
   }
 
-  const duplicated = await prisma.$transaction(async (tx) => {
+  const duplicated = await prisma.$transaction(async (tx: typeof prisma) => {
     const assessment = await tx.assessment.create({
       data: {
         userId: session.user.id,
@@ -71,7 +77,7 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
     });
 
     const itemResult = await tx.assessmentItem.createMany({
-      data: controls.map((control) => ({
+      data: controls.map((control: { id: string }) => ({
         assessmentId: assessment.id,
         controlId: control.id,
       })),

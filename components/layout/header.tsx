@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import MobileSidebar from "./mobile-sidebar";
 import { HelpCircle, Bell, ShieldCheck } from "lucide-react";
@@ -13,6 +14,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/stores/auth-store";
+import { isNavItemActive } from "@/lib/nav-utils";
 
 interface HeaderItem {
   label: string;
@@ -26,7 +28,8 @@ interface HeaderProps {
 export default function Header({ items = [] }: HeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const logout = useAuthStore((state) => state.logout);
+  const { logout, user } = useAuthStore();
+  const initial = user?.name?.charAt(0)?.toUpperCase() ?? "U";
 
   const handleLogout = async () => {
     try {
@@ -59,10 +62,10 @@ export default function Header({ items = [] }: HeaderProps) {
       {/*  CENTER NAV */}
       <nav className="hidden md:flex items-center gap-8">
         {headerItems.map((item) => {
-          const isActive = pathname.startsWith(item.href);
+          const isActive = isNavItemActive(item, pathname);
 
           return (
-            <a
+            <Link
               key={item.label}
               href={item.href}
               className={`text-sm transition-all duration-200 ${
@@ -72,7 +75,7 @@ export default function Header({ items = [] }: HeaderProps) {
               }`}
             >
               {item.label}
-            </a>
+            </Link>
           );
         })}
       </nav>
@@ -102,7 +105,7 @@ export default function Header({ items = [] }: HeaderProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="w-8 h-8 rounded-full bg-primary cursor-pointer flex items-center justify-center hover:scale-110 transition-all duration-200">
-              <span className="text-xs font-medium">U</span>
+              <span className="text-xs font-medium">{initial}</span>
             </div>
           </DropdownMenuTrigger>
 

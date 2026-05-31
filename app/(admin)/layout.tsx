@@ -8,7 +8,7 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 
 //  Icons
-import { Layers, Users } from "lucide-react";
+import { Layers, Users, LayoutDashboard } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -17,8 +17,13 @@ interface LayoutProps {
 //  ADMIN NAV ITEMS
 const adminNavItems = [
   {
+    label: "Dashboard",
+    href: "/admin/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
     label: "Frameworks",
-    href: "/admin/frameworks",
+    href: "/frameworks",
     icon: Layers,
   },
   {
@@ -44,7 +49,7 @@ export default function AdminLayout({ children }: LayoutProps) {
       >
         <Header items={adminNavItems} />
 
-        <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8 xl:p-10 pt-20">{children}</main>
+        <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8 xl:p-10 pt-16">{children}</main>
 
         <Footer />
       </div>

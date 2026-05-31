@@ -298,6 +298,7 @@ export default function ChecklistPage() {
       id: item.control.code,
       title: item.control.title,
       description: item.control.description,
+      category: item.control.category ?? null,
       frameworkId: item.control.framework.id,
       frameworkName: item.control.framework.name,
       framework: item.control.framework.code,
@@ -324,20 +325,33 @@ export default function ChecklistPage() {
     return items.map(mapApiItemToControl);
   }, [checklistQuery.data?.items]);
 
-  const groupedControls = useMemo(
-    () =>
-      Object.entries(
-        visibleControls.reduce<Record<string, Control[]>>((accumulator, control) => {
-          if (!accumulator[control.framework]) {
-            accumulator[control.framework] = [];
-          }
+  const groupedControls = useMemo(() => {
+    // Group by framework, then sub-group by category
+    const byFramework = visibleControls.reduce<Record<string, Record<string, Control[]>>>(
+      (acc, control) => {
+        const fw = control.framework;
+        const cat = control.category || "General";
+        if (!acc[fw]) {
+          acc[fw] = {};
+        }
+        if (!acc[fw][cat]) {
+          acc[fw][cat] = [];
+        }
+        acc[fw][cat].push(control);
+        return acc;
+      },
+      {},
+    );
 
-          accumulator[control.framework].push(control);
-          return accumulator;
-        }, {}),
-      ),
-    [visibleControls],
-  );
+    // Flatten into groups with composite keys
+    const result: Array<{ framework: string; category: string; controls: Control[] }> = [];
+    for (const [fw, categories] of Object.entries(byFramework)) {
+      for (const [cat, controls] of Object.entries(categories)) {
+        result.push({ framework: fw, category: cat, controls });
+      }
+    }
+    return result;
+  }, [visibleControls]);
 
   const frameworkOptions = useMemo(() => {
     if (scoreQuery.data?.frameworkScores.length) {
@@ -498,10 +512,6 @@ export default function ChecklistPage() {
     toast.success("Checklist CSV exported.");
   };
 
-  const handleGenerateReport = () => {
-    exportChecklistCsv();
-  };
-
   const handleDuplicateAssessment = async () => {
     if (!assessmentId) {
       return;
@@ -573,11 +583,11 @@ export default function ChecklistPage() {
             </button>
 
             <button
-              onClick={handleGenerateReport}
+              onClick={() => router.push("/reports")}
               disabled={isHeaderActionPending}
               className="flex items-center gap-2 px-4 py-2 text-sm border border-primary text-primary rounded-lg hover:bg-purple-50 disabled:opacity-60"
             >
-              <FileText className="w-4 h-4" /> Generate Report
+              <FileText className="w-4 h-4" /> View Report
             </button>
             <MoreActionsDropdown
               onExportCsv={exportChecklistCsv}
@@ -616,11 +626,13 @@ export default function ChecklistPage() {
       />
 
       {/* GROUPS */}
-      {groupedControls.map(([framework, items]) => (
+      {groupedControls.map((group) => (
         <ChecklistGroup
-          key={framework}
-          framework={framework}
-          controls={items}
+          key={`${group.framework}-${group.category}`}
+          framework={group.framework}
+          category={group.category}
+          controls={group.controls}
+          assessmentId={assessmentId}
           updatingItemId={updatingItemId}
           onStatusChange={(itemId, nextStatus) => {
             updateStatusMutation.mutate(

@@ -91,6 +91,7 @@ describe("Assessments API routes", () => {
           id: {
             in: ["cm8abcde0000000000000002", "cm8abcde0000000000000003"],
           },
+          status: "PUBLISHED",
         },
       }),
     );

@@ -57,7 +57,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   getRoleHomePath(role) {
     if (role === "ADMIN") {
-      return "/admin/frameworks";
+      return "/frameworks";
     }
 
     return "/dashboard";
@@ -74,12 +74,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
       });
 
       if (!result || result.error) {
-        const isCredentialsError = result?.error === "CredentialsSignin";
+        const isCredentialsError = result?.error === "CredentialsSignin" || result?.status === 401;
 
         throw new ApiClientError({
           message: isCredentialsError
             ? "Invalid email or password"
-            : "Authentication service error",
+            : "Unable to sign in. Please try again.",
           status: isCredentialsError ? 401 : 500,
           code: isCredentialsError ? "UNAUTHORIZED" : "SERVER_ERROR",
           details: result?.error,

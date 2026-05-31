@@ -3,7 +3,12 @@
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function AIAssistantCard({ status }: any) {
+interface AIAssistantCardProps {
+  status: string;
+  onOpenDrawer?: () => void;
+}
+
+export default function AIAssistantCard({ status, onOpenDrawer }: AIAssistantCardProps) {
   // 🧠 Dynamic content
   let message = "";
   let buttonText = "";
@@ -21,15 +26,15 @@ export default function AIAssistantCard({ status }: any) {
       "Significant gaps detected. I can generate a remediation plan to help you achieve compliance efficiently.";
     buttonText = "Get Remediation Plan";
   } else {
-    message =
-      "Let me assist you with insights and recommendations for this control.";
+    message = "Let me assist you with insights and recommendations for this control.";
     buttonText = "Get Guidance";
   }
 
   return (
-    <div className="rounded-xl p-5 text-white shadow-lg 
-    bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500 space-y-4">
-
+    <div
+      className="rounded-xl p-5 text-white shadow-lg 
+    bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500 space-y-4"
+    >
       {/* Header */}
       <div className="flex items-center gap-2">
         <div className="bg-white/20 p-2 rounded-md">
@@ -42,12 +47,10 @@ export default function AIAssistantCard({ status }: any) {
       </div>
 
       {/* Dynamic Message */}
-      <p className="text-sm text-white/90 leading-relaxed">
-        {message}
-      </p>
+      <p className="text-sm text-white/90 leading-relaxed">{message}</p>
 
       {/* CTA */}
-      <Button className="w-full bg-white text-purple-700 hover:bg-white/90">
+      <Button onClick={onOpenDrawer} className="w-full bg-white text-purple-700 hover:bg-white/90">
         {buttonText}
       </Button>
     </div>

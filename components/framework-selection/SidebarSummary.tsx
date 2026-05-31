@@ -43,11 +43,15 @@ export default function SidebarSummary({ selected, onContinue, loading }: Props)
               selected.map((f, i) => (
                 <div
                   key={i}
-                  className="flex justify-between items-center text-sm px-2 py-1 rounded-md hover:bg-purple-100 transition"
+                  className="flex justify-between items-center gap-3 text-sm px-2 py-1 rounded-md hover:bg-purple-100 transition"
                 >
-                  <span className={cn("font-medium", categoryColors[f.category])}>{f.name}</span>
+                  <span className={cn("font-medium truncate min-w-0", categoryColors[f.category])}>
+                    {f.name}
+                  </span>
 
-                  <span className="text-purple-800 font-semibold">{f.controls} controls</span>
+                  <span className="text-purple-800 font-semibold shrink-0 whitespace-nowrap">
+                    {f.controls} controls
+                  </span>
                 </div>
               ))
             )}

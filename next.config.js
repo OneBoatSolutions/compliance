@@ -12,6 +12,7 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ["lucide-react", "@tanstack/react-query"],
+    serverComponentsExternalPackages: ["pdfkit", "svg-to-pdfkit"],
   },
   images: {
     formats: ["image/avif", "image/webp"],
