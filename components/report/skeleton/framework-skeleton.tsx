@@ -1,6 +1,6 @@
 import SkeletonBlock from "@/components/ui/skeletons/skeleton-block";
 
-export function FrameworkTableSkeleton() {
+export default function FrameworkTableSkeleton() {
   return (
     <section className="bg-white rounded-xl shadow p-6 space-y-6">
       {/* Title */}
@@ -32,28 +32,5 @@ export function FrameworkTableSkeleton() {
         ))}
       </div>
     </section>
-  );
-}
-
-export default function FrameworkTable({
-  frameworks,
-}: {
-  frameworks: { name: string; score: number }[];
-}) {
-  return (
-    <div className="bg-white p-6 rounded-xl shadow">
-      <h2 className="font-semibold mb-4">Framework Scores</h2>
-
-      <table className="w-full">
-        <tbody>
-          {frameworks.map((f, i) => (
-            <tr key={i}>
-              <td>{f.name}</td>
-              <td>{f.score}%</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
   );
 }

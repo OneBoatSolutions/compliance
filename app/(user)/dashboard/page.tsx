@@ -7,6 +7,7 @@ import { useAssessmentStore } from "@/stores/assessment-store";
 import ActiveDashboard from "./components/active-dashboard";
 import EmptyDashboard from "./components/empty-dashboard";
 import type { DashboardApiData } from "@/types/dashboard";
+import DashboardSkeleton from "../../../components/ui/skeletons/dashboard-skeleton";
 
 export default function DashboardPage() {
   const reset = useAssessmentStore((s) => s.reset);
@@ -27,14 +28,7 @@ export default function DashboardPage() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-4">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#6d18ff] border-t-transparent" />
-          <p className="text-sm text-slate-500">Loading dashboard...</p>
-        </div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (error) {

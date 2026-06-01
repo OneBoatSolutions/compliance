@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-
+import ReportsRedirectSkeleton from "@/components/report/skeleton/report-redirect-skeleton";
 import { apiClient } from "@/lib/api-client";
 
 interface AssessmentListItem {
@@ -61,13 +61,5 @@ export default function ReportsIndexPage() {
     );
   }
 
-  return (
-    <div className="mx-auto max-w-2xl p-6">
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
-        <h2 className="text-sm font-semibold text-slate-700">Loading reports...</h2>
-
-        <p className="mt-1 text-sm text-slate-500">Redirecting to your latest report.</p>
-      </div>
-    </div>
-  );
+  return <ReportsRedirectSkeleton />;
 }
