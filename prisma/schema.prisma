@@ -98,12 +98,15 @@ model PasswordResetToken {
   token     String   @unique
   userId    String
   expiresAt DateTime
+  usedAt    DateTime?
+  invalidatedAt DateTime?
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([expiresAt])
+  @@index([userId, usedAt, invalidatedAt, expiresAt])
   @@map("password_reset_tokens")
 }
 
