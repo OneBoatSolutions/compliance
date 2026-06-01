@@ -74,14 +74,21 @@ export const useAuthStore = create<AuthStore>((set) => ({
       });
 
       if (!result || result.error) {
+        const isLockout = result?.error?.includes("Too many failed login attempts");
         const isCredentialsError = result?.error === "CredentialsSignin" || result?.status === 401;
 
         throw new ApiClientError({
-          message: isCredentialsError
-            ? "Invalid email or password"
-            : "Unable to sign in. Please try again.",
-          status: isCredentialsError ? 401 : 500,
-          code: isCredentialsError ? "UNAUTHORIZED" : "SERVER_ERROR",
+          message: isLockout
+            ? "Too many failed login attempts. Please try again later."
+            : isCredentialsError
+              ? "Invalid email or password"
+              : "Unable to sign in. Please try again.",
+          status: isLockout ? 429 : isCredentialsError ? 401 : 500,
+          code: isLockout
+            ? "TOO_MANY_REQUESTS"
+            : isCredentialsError
+              ? "UNAUTHORIZED"
+              : "SERVER_ERROR",
           details: result?.error,
         });
       }

@@ -43,3 +43,8 @@ next-env.d.ts
 
 assets/
 .local-storage/
+
+# playwright
+/playwright-report/
+/test-results/
+/playwright/.cache/
