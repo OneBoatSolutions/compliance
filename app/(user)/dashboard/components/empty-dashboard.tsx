@@ -19,27 +19,79 @@ function EmptyState() {
 
   return (
     <section className="mb-12">
-      <div className="bg-white rounded-xl border border-gray-200 shadow-xl shadow-gray-200/50 p-12 text-center flex flex-col items-center">
+      <div
+        className="
+group
+bg-white
+rounded-2xl
+border
+border-gray-200
+shadow-lg
+hover:shadow-2xl
+hover:-translate-y-1
+transition-all
+duration-300
+p-12
+text-center
+flex
+flex-col
+items-center
+"
+      >
         {/* Icon */}
-        <div className="w-20 h-20 bg-[#6d18ff]/10 rounded-full flex items-center justify-center mb-6 text-[#6d18ff]">
-          <ListChecks className="w-10 h-10 text-purple-600" />
+        <div
+          className="
+relative
+w-24
+h-24
+rounded-full
+bg-gradient-to-br
+from-[#6d18ff]/20
+to-[#a67fff]/20
+flex
+items-center
+justify-center
+mb-6
+"
+        >
+          <div className="absolute inset-0 rounded-full blur-xl bg-[#6d18ff]/20" />
+
+          <ListChecks className="relative w-10 h-10 text-[#6d18ff]" />
         </div>
 
         {/* Text */}
         <h2 className="text-2xl font-bold text-gray-900 mb-3">No assessments yet</h2>
 
         <p className="text-slate-500 max-w-md mb-8">
-          Start your compliance journey by creating your first assessment. We&apos;ll guide you
-          through selecting a framework and connecting your infrastructure.
+          Create your first compliance assessment to discover which regulatory frameworks apply to
+          your business and start tracking your compliance readiness.
         </p>
 
         {/* CTA */}
         <button
           onClick={() => router.push("/onboarding")}
-          className="h-[52px] px-8 bg-[#6d18ff] hover:bg-[#5412cc] text-white rounded-lg font-bold flex items-center gap-2 shadow-lg shadow-[#6d18ff]/20 transition-transform active:scale-95"
+          className="
+group
+h-[52px]
+px-8
+bg-[#6d18ff]
+hover:bg-[#5412cc]
+text-white
+rounded-lg
+font-semibold
+flex
+items-center
+gap-2
+shadow-lg
+shadow-[#6d18ff]/25
+hover:shadow-xl
+hover:shadow-[#6d18ff]/30
+transition-all
+duration-300
+"
         >
           Create Your First Assessment
-          <MoveRight className="w-5 h-5" />
+          <MoveRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
         </button>
 
         {/* Info */}
@@ -59,6 +111,8 @@ function HeroSection() {
 
   return (
     <section className="mb-8 relative overflow-hidden bg-gradient-to-br from-[#f1eaff] to-white p-8 md:p-12 rounded-xl border border-[#6d18ff]/10 shadow-sm">
+      {/* Background Glow */}
+      <div className="absolute top-0 right-0 w-80 h-80 bg-[#6d18ff]/10 rounded-full blur-3xl" />
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
         {/* Text */}
         <div className="max-w-xl text-center md:text-left">
@@ -66,8 +120,7 @@ function HeroSection() {
             Welcome to Cipherion, {displayName}! 👋
           </h1>
           <p className="text-slate-600 text-lg leading-relaxed">
-            Automate your compliance journey and stay audit-ready with ease. We help you simplify
-            framework management so you can focus on building your business.
+            Let&apos;s start your compliance journey by creating your first assessment.
           </p>
         </div>
 
@@ -84,18 +137,18 @@ function HeroSection() {
 function HowItWorks() {
   const steps = [
     {
-      title: "Describe",
+      title: "Describe Your Business",
       desc: "Tell us about your business profile, target regions, and specific data handling requirements.",
       icon: <File className="w-5 h-5 text-[#6d18ff]/40" />,
     },
     {
-      title: "AI Analyzes",
-      desc: "Our AI engine automatically maps your profile to security frameworks and identifies critical gaps.",
+      title: "AI Analyzes Requirements",
+      desc: "Our AI suggests applicable compliance frameworks for you.",
       icon: <Sparkles className="w-5 h-5 text-[#6d18ff]/40" />,
     },
     {
-      title: "Complete",
-      desc: "Follow the guided remediation steps and seamlessly track your journey to full compliance.",
+      title: "Complete Assessment",
+      desc: "Work through controls and track your compliance progress.",
       icon: <SquareCheckBig className="w-5 h-5 text-[#6d18ff]/40" />,
     },
   ];
@@ -110,10 +163,38 @@ function HowItWorks() {
         {steps.map((step, i) => (
           <div
             key={i}
-            className="bg-white p-6 rounded-lg border border-slate-100 hover:border-[#6d18ff]/30 transition-all"
+            className="
+group
+bg-white
+p-6
+rounded-xl
+border
+border-slate-100
+shadow-sm
+hover:shadow-lg
+hover:-translate-y-1
+hover:border-[#6d18ff]/20
+transition-all
+duration-300
+"
           >
             <div className="flex justify-between mb-4">
-              <div className="w-8 h-8 bg-[#6d18ff] text-white flex items-center justify-center rounded-full text-sm font-bold">
+              <div
+                className="
+  w-8
+  h-8
+  bg-[#6d18ff]
+  text-white
+  rounded-full
+  flex
+  items-center
+  justify-center
+  text-sm
+  font-bold
+  group-hover:scale-110
+  transition-transform
+  "
+              >
                 {i + 1}
               </div>
               {step.icon}
@@ -159,16 +240,13 @@ function HelpResources() {
     <section className="border-t border-slate-200 pt-12">
       <div className="flex flex-col md:flex-row items-center justify-between mb-8">
         <h3 className="text-xl font-bold text-gray-900">Need guidance?</h3>
-        <span className="text-[#6d18ff] text-sm font-semibold cursor-pointer mt-2 md:mt-0">
-          View all resources
-        </span>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {items.map((item, i) => (
           <div
             key={i}
-            className="group p-4 bg-slate-100 rounded-lg border border-transparent hover:bg-[#6d18ff]/5 hover:border-[#6d18ff]/20 transition-all cursor-pointer"
+            className="group p-4 bg-slate-100 rounded-lg border border-transparent hover:bg-[#6d18ff]/5 hover:border-[#6d18ff]/20 hover:-translate-y-1 transition-all cursor-pointer"
           >
             {item.icon}
 

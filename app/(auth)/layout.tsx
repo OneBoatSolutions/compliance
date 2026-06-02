@@ -88,17 +88,22 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             <ul className="space-y-6 text-lg text-white/90">
               <li className="flex items-start gap-3">
                 <CheckIcon />
-                <span>Automated risk assessments with machine learning</span>
+                <span>AI Framework Mapping</span>
               </li>
 
               <li className="flex items-start gap-3">
                 <CheckIcon />
-                <span>Real-time monitoring across all cloud infrastructures</span>
+                <span>Real-time Compliance Scoring</span>
               </li>
 
               <li className="flex items-start gap-3">
                 <CheckIcon />
-                <span>Instant audit-ready reporting for SOC2 and GDPR</span>
+                <span>Automated Remediation Plans</span>
+              </li>
+
+              <li className="flex items-start gap-3">
+                <CheckIcon />
+                <span>Audit-Ready Reports</span>
               </li>
             </ul>
           </div>

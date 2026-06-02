@@ -6,6 +6,7 @@ import { useEffect, useState, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useAssessmentStore } from "@/stores/assessment-store";
 import { useRef } from "react";
+import { toast } from "sonner";
 import {
   User,
   Heart,
@@ -161,29 +162,32 @@ function Stepper({
   currentStep,
   saving,
   saved,
+  onSaveExit,
 }: {
   currentStep: number;
   saving: boolean;
   saved: boolean;
+  onSaveExit: () => void;
 }) {
   const steps = [
     { id: 1, label: "Business Profile" },
     { id: 2, label: "AI Recommendations & Review" },
   ];
 
-  // 33% per step
   const progressPercent = (currentStep / steps.length) * 100;
 
   return (
-    <div className="bg-white border-b px-8 py-8 mt-10 flex justify-between items-center">
-      <div className="relative w-full max-w-3xl">
-        {/* Steps */}
-        <div className="flex justify-between relative z-10">
-          {steps.map((step) => (
-            <div key={step.id} className="flex flex-col items-center text-center w-1/2">
-              {/* Circle */}
-              <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold transition-all
+    <div className="bg-white border-b px-4 md:px-8 py-6 md:py-8 mt-4 md:mt-10">
+      <div className="relative max-w-7xl mx-auto">
+        {/* CENTERED STEPPER */}
+        <div className="relative w-full max-w-3xl mx-auto">
+          {/* Steps */}
+          <div className="flex justify-between relative z-10">
+            {steps.map((step) => (
+              <div key={step.id} className="flex flex-col items-center text-center w-1/2">
+                {/* Circle */}
+                <div
+                  className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold transition-all
                 ${
                   currentStep === step.id
                     ? "bg-purple-600 text-white shadow-md"
@@ -191,39 +195,57 @@ function Stepper({
                       ? "bg-purple-600 text-white"
                       : "bg-gray-200 text-gray-500"
                 }`}
-              >
-                {currentStep > step.id ? "✓" : step.id}
-              </div>
+                >
+                  {currentStep > step.id ? "✓" : step.id}
+                </div>
 
-              {/* Label */}
-              <span
-                className={`mt-3 text-sm font-medium
+                {/* Label */}
+                <span
+                  className={`mt-3 text-xs sm:text-sm font-medium px-2 text-center
                 ${currentStep === step.id ? "text-purple-600" : "text-gray-400"}`}
-              >
-                {step.label}
-              </span>
-            </div>
-          ))}
+                >
+                  {step.label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Base Line */}
+          <div className="absolute top-5 left-0 w-full h-1 bg-gray-200 rounded" />
+
+          {/* Progress Line */}
+          <div
+            className="absolute top-5 left-0 h-1 bg-purple-600 rounded transition-all duration-500"
+            style={{ width: `${progressPercent}%` }}
+          />
         </div>
 
-        {/* Base Line */}
-        <div className="absolute top-5 left-0 w-full h-1 bg-gray-200 rounded" />
-
-        {/* Progress Line */}
+        {/* SAVE SECTION */}
         <div
-          className="absolute top-5 left-0 h-1 bg-purple-600 rounded transition-all duration-500"
-          style={{ width: `${progressPercent}%` }}
-        />
-      </div>
+          className="
+          mt-6
+          flex flex-col items-center
 
-      {/* Save */}
-      <div className="flex flex-col items-end">
-        <span className="text-xs text-gray-500 font-medium min-h-[16px] mb-1">
-          {saving ? "Saving..." : saved ? "✔ All changes saved" : ""}
-        </span>
-        <button className="text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap">
-          Save & Exit
-        </button>
+          md:mt-0
+          md:absolute
+          md:right-0
+          md:top-1/2
+          md:-translate-y-1/2
+          md:items-end
+        "
+        >
+          <span className="text-xs text-gray-500 font-medium min-h-[16px] mb-1">
+            {saving ? "Saving..." : saved ? "✔ All changes saved" : ""}
+          </span>
+
+          <button
+            type="button"
+            onClick={onSaveExit}
+            className="text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"
+          >
+            Save & Exit
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -276,7 +298,8 @@ export default function OnboardingPage() {
   const isReadyForSave = isStep1Valid && values.dataTypes.length > 0 && values.regions.length > 0;
 
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState(false); // AutoSave
+  const [manualSaving, setManualSaving] = useState(false); // Save Draft button
   const [orgId, setOrgId] = useState<string | null>(null);
   const [hasFetched, setHasFetched] = useState(false);
   const [lastSavedValues, setLastSavedValues] = useState<string>("");
@@ -359,6 +382,7 @@ export default function OnboardingPage() {
           return;
         }
         console.error("Auto-save failed", error);
+        toast.error("Auto-save failed");
       }
     }, 2000);
 
@@ -436,7 +460,7 @@ export default function OnboardingPage() {
       setValue(field, updated, {
         shouldValidate: true,
         shouldDirty: true,
-        shouldTouch: true, // ✅ ADD THIS
+        shouldTouch: true,
       });
 
       // CLEAR "Other" input when unchecked
@@ -453,7 +477,7 @@ export default function OnboardingPage() {
       setValue(field, [...current, value], {
         shouldValidate: true,
         shouldDirty: true,
-        shouldTouch: true, // ✅ ADD THIS
+        shouldTouch: true,
       });
     }
   };
@@ -482,6 +506,38 @@ export default function OnboardingPage() {
       router.push("/onboarding/suggested-frameworks");
     }
   };
+  const handleSaveExit = async () => {
+    if (isReadyForSave && orgId) {
+      try {
+        await updateOrganization(values);
+        toast.success("Changes saved");
+      } catch (error) {
+        console.error("Failed to save draft", error);
+        toast.error("Failed to save");
+      }
+    }
+
+    router.push("/dashboard");
+  };
+
+  const handleSaveDraft = async () => {
+    if (!orgId) {
+      return;
+    }
+
+    setManualSaving(true);
+
+    try {
+      await updateOrganization(values);
+      toast.success("Draft saved successfully");
+
+      setLastSavedValues(JSON.stringify(mapToBackend(values)));
+    } catch {
+      toast.error("Failed to save draft");
+    } finally {
+      setManualSaving(false);
+    }
+  };
 
   const onError = (errors: FieldErrors<OnboardingFormValues>) => {
     // eslint-disable-next-line no-console
@@ -497,7 +553,12 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Stepper currentStep={currentStep} saving={saving} saved={saved} />
+      <Stepper
+        currentStep={currentStep}
+        saving={saving}
+        saved={saved}
+        onSaveExit={handleSaveExit}
+      />
       <div className="max-w-3xl mx-auto mt-8 px-4">
         <div className="mb-6">
           <span className="text-sm bg-purple-100 text-purple-600 px-3 py-1 rounded-full">
@@ -526,7 +587,15 @@ export default function OnboardingPage() {
 
         <form
           onSubmit={handleSubmit(onSubmit, onError)}
-          className="bg-white p-6 rounded-lg shadow space-y-8"
+          className="
+bg-white
+rounded-xl
+border
+border-gray-200
+shadow-sm
+p-8
+space-y-10
+"
         >
           <Section title="Product Information" number={1}>
             <Input
@@ -682,9 +751,11 @@ export default function OnboardingPage() {
               {/* LEFT: Save Draft (ghost) */}
               <button
                 type="button"
-                className="text-gray-500 font-medium hover:text-gray-700 transition-colors"
+                onClick={handleSaveDraft}
+                disabled={manualSaving}
+                className="text-gray-500 font-medium hover:text-gray-700 transition-colors disabled:opacity-50"
               >
-                Save Draft
+                {manualSaving ? "Saving..." : "Save Draft"}
               </button>
 
               {/* RIGHT: Actions */}
@@ -818,7 +889,7 @@ function Input({ label, register, error, max, value, helper, placeholder }: Inpu
       {/* Error + Counter */}
       <div className="flex justify-between text-sm mt-1">
         <span className="text-red-500 flex items-center gap-1">
-          {error && <CircleCheck size={14} />}
+          {error && <CircleAlert size={14} />}
           {error}
         </span>
 
@@ -1000,7 +1071,7 @@ function DataCheckboxGrid({ selected, onChange, register }: DataCheckboxGridProp
                   {/* Tooltip */}
                   <div
                     className="
-      absolute left-0 top-6 z-20 hidden group-hover:block
+      absolute left-0 top-6 z-20 hidden group-hover:block group-focus-within:block
       bg-gray-900 text-white text-xs rounded-md px-3 py-2 w-56
       shadow-lg
     "

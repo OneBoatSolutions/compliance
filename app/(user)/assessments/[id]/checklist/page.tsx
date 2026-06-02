@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { FileText } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-
+import { Search } from "lucide-react";
 import {
   deleteAssessment,
   duplicateAssessment,
@@ -21,7 +21,6 @@ import ChecklistGroup from "@/components/assessment-checklist/ChecklistGroup";
 import RemediationDrawer from "@/components/ai/remediation-drawer";
 import Pagination from "@/components/assessment-checklist/Pagination";
 import Skeleton from "@/components/assessment-checklist/Skeleton";
-import EmptyState from "@/components/assessment-checklist/EmptyState";
 import MoreActionsDropdown from "@/components/assessment-checklist/MoreActionsDropdown";
 import {
   type AssessmentDetailResponse,
@@ -217,6 +216,7 @@ export default function ChecklistPage() {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
   const [isHeaderActionPending, setIsHeaderActionPending] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const [remediationOpen, setRemediationOpen] = useState(false);
   const [remediationContext, setRemediationContext] = useState<{
@@ -252,10 +252,6 @@ export default function ChecklistPage() {
       clearChecklistState();
     };
   }, [clearChecklistState]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [frameworks, perPage, search, severity, sort, status]);
 
   const checklistQueryPrefix = useMemo(
     () => ["assessment-checklist", assessmentId] as const,
@@ -497,17 +493,6 @@ export default function ChecklistPage() {
     );
   }
 
-  if (!visibleControls.length) {
-    return (
-      <EmptyState
-        onClear={() => {
-          resetChecklistViewState();
-          setPage(1);
-        }}
-      />
-    );
-  }
-
   const assessmentStatus = assessmentQuery.data?.status ?? "IN_PROGRESS";
   const lastUpdated = assessmentQuery.data?.updatedAt
     ? formatRelativeTime(assessmentQuery.data.updatedAt)
@@ -517,6 +502,9 @@ export default function ChecklistPage() {
   const updatingItemId = updateStatusMutation.isPending
     ? (updateStatusMutation.variables?.itemId ?? null)
     : null;
+  const hasNoResults =
+    visibleControls.length === 0 &&
+    (search || frameworks.length > 0 || status.length > 0 || severity.length > 0);
 
   const exportChecklistCsv = () => {
     if (allControls.length === 0) {
@@ -555,22 +543,19 @@ export default function ChecklistPage() {
       return;
     }
 
-    const shouldDelete = window.confirm("Delete this assessment? This action cannot be undone.");
-
-    if (!shouldDelete) {
-      return;
-    }
-
     setIsHeaderActionPending(true);
 
     try {
       await deleteAssessment(assessmentId);
+
       toast.success("Assessment deleted.");
+
       router.push("/assessments");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Unable to delete assessment.");
     } finally {
       setIsHeaderActionPending(false);
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -612,7 +597,7 @@ export default function ChecklistPage() {
             <MoreActionsDropdown
               onExportCsv={exportChecklistCsv}
               onDuplicateAssessment={handleDuplicateAssessment}
-              onDeleteAssessment={handleDeleteAssessment}
+              onDeleteAssessment={() => setShowDeleteConfirm(true)}
               disabled={isHeaderActionPending}
             />
           </div>
@@ -646,7 +631,7 @@ export default function ChecklistPage() {
       />
 
       {/* GROUPS */}
-      {groupedControls.map((group) => (
+      {/* {groupedControls.map((group) => (
         <ChecklistGroup
           key={`${group.framework}-${group.category}`}
           framework={group.framework}
@@ -684,6 +669,131 @@ export default function ChecklistPage() {
         setPerPage={setPerPage}
       />
 
+      {remediationContext && (
+        <RemediationDrawer
+          open={remediationOpen}
+          onClose={closeRemediationDrawer}
+          controlId={remediationContext.controlId}
+          assessmentItemId={remediationContext.assessmentItemId}
+          controlTitle={remediationContext.controlTitle}
+          controlDescription={remediationContext.controlDescription}
+          framework={remediationContext.framework}
+          status={remediationContext.status}
+          severity={remediationContext.severity}
+        />
+      )}
+        */}
+
+      {/* GROUPS */}
+
+      {hasNoResults ? (
+        <div className="rounded-2xl border border-slate-200 bg-white py-16 px-6 shadow-sm">
+          <div className="mx-auto max-w-md text-center">
+            {/* Icon */}
+            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100">
+              <Search className="h-8 w-8 text-purple-600" />
+            </div>
+
+            {/* Heading */}
+            <h3 className="text-xl font-semibold text-gray-900">No controls found</h3>
+
+            {/* Description */}
+            <p className="mt-2 text-sm text-gray-500">
+              We couldn&apos;t find any controls matching your current search or filter criteria.
+            </p>
+
+            {/* Search term */}
+            {search && (
+              <div className="mt-4 inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">
+                Search: &quot;{search}&quot;
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="mt-6 flex justify-center gap-3">
+              <button
+                onClick={() => resetChecklistViewState()}
+                className="rounded-lg bg-purple-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-purple-700"
+              >
+                Clear Filters
+              </button>
+            </div>
+
+            <p className="mt-4 text-xs text-gray-400">
+              Try removing some filters or using a broader search term.
+            </p>
+          </div>
+        </div>
+      ) : (
+        groupedControls.map((group) => (
+          <ChecklistGroup
+            key={`${group.framework}-${group.category}`}
+            framework={group.framework}
+            category={group.category}
+            controls={group.controls}
+            assessmentId={assessmentId}
+            updatingItemId={updatingItemId}
+            onOpenRemediation={openRemediationDrawer}
+            onStatusChange={(itemId, nextStatus) => {
+              updateStatusMutation.mutate(
+                {
+                  itemId,
+                  payload: { status: nextStatus },
+                },
+                {
+                  onSuccess: () => {
+                    toast.success("Control status updated.");
+                  },
+                  onError: (error) => {
+                    toast.error(
+                      error instanceof Error ? error.message : "Unable to update control status.",
+                    );
+                  },
+                },
+              );
+            }}
+          />
+        ))
+      )}
+
+      {!hasNoResults && (
+        <Pagination
+          total={totalItems}
+          page={page}
+          setPage={setPage}
+          perPage={perPage}
+          setPerPage={setPerPage}
+        />
+      )}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+            <h3 className="text-lg font-semibold text-gray-900">Delete Assessment?</h3>
+
+            <p className="mt-2 text-sm text-gray-600">
+              This assessment and all associated compliance data will be permanently deleted.
+            </p>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={isHeaderActionPending}
+                className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleDeleteAssessment}
+                disabled={isHeaderActionPending}
+                className="rounded-lg bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700 disabled:opacity-50"
+              >
+                {isHeaderActionPending ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {remediationContext && (
         <RemediationDrawer
           open={remediationOpen}

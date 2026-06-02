@@ -42,7 +42,7 @@ export default function LoginForm() {
         email: data.email,
         password: data.password,
       });
-
+      toast.success("Signed in successfully");
       router.push(getRoleHomePath(user.role));
     } catch (error) {
       if (error instanceof ApiClientError) {
@@ -93,7 +93,7 @@ export default function LoginForm() {
           <Input
             {...register("password")}
             type={showPassword ? "text" : "password"}
-            placeholder="••••••••"
+            placeholder="Enter your password"
             className="pl-10 pr-10 h-11 text-slate-900"
           />
 
@@ -112,14 +112,11 @@ export default function LoginForm() {
       {/* REMEMBER + FORGOT */}
       <div className="flex items-center justify-between text-sm">
         <label className="flex items-center gap-2 text-slate-600">
-          <input type="checkbox" {...register("remember")} />
+          <input className="h-4 w-4 accent-[#6d18ff]" type="checkbox" {...register("remember")} />
           Remember me
         </label>
 
-        <Link
-          href="/forgot-password"
-          className="text-[#6d18ff] hover:text-[#5412cc] transition-colors"
-        >
+        <Link href="#" className="text-[#6d18ff] hover:text-[#5412cc] transition-colors">
           Forgot password?
         </Link>
       </div>
