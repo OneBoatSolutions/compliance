@@ -9,6 +9,15 @@ interface Props {
   assessmentId?: string;
   onStatusChange?: (itemId: string, status: Status) => void;
   updatingItemId?: string | null;
+  onOpenRemediation?: (context: {
+    controlId: string;
+    assessmentItemId: string;
+    controlTitle: string;
+    controlDescription: string;
+    framework: string;
+    status: string;
+    severity: string;
+  }) => void;
 }
 
 export default function ChecklistGroup({
@@ -18,6 +27,7 @@ export default function ChecklistGroup({
   assessmentId,
   onStatusChange,
   updatingItemId,
+  onOpenRemediation,
 }: Props) {
   const [open, setOpen] = useState(false);
   const completed = controls.filter((c) => c.status === "COMPLIANT").length;
@@ -77,6 +87,7 @@ export default function ChecklistGroup({
               assessmentId={assessmentId}
               onStatusChange={onStatusChange}
               isStatusUpdating={updatingItemId === c.itemId}
+              onOpenRemediation={onOpenRemediation}
             />
           ))}
         </div>
