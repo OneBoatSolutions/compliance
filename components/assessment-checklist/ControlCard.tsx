@@ -22,6 +22,15 @@ interface Props {
   assessmentId?: string;
   onStatusChange?: (itemId: string, status: Status) => void;
   isStatusUpdating?: boolean;
+  onOpenRemediation?: (context: {
+    controlId: string;
+    assessmentItemId: string;
+    controlTitle: string;
+    controlDescription: string;
+    framework: string;
+    status: string;
+    severity: string;
+  }) => void;
 }
 
 export default function ControlCard({
@@ -29,6 +38,7 @@ export default function ControlCard({
   assessmentId,
   onStatusChange,
   isStatusUpdating = false,
+  onOpenRemediation,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(true);
@@ -130,7 +140,7 @@ export default function ControlCard({
                 {statusConfig[control.status]?.icon}
                 Status: {control.status}
               </p>
-              <p>Updated: {control.updatedAt} by Sarah Chen</p>
+              <p>Updated: {control.updatedAt}</p>
               <button className="text-purple-600 text-xs hover:underline">View history →</button>
             </div>
 
@@ -144,13 +154,41 @@ export default function ControlCard({
                 </p>
 
                 <p className="text-sm mt-2 opacity-90">
-                  We’ve identified that you are missing a formal Risk Register. AI can generate a
-                  compliant template for you.
+                  {control.description.length > 240
+                    ? `${control.description.slice(0, 237).trim()}...`
+                    : control.description}
                 </p>
 
-                <button className="mt-4 bg-white text-purple-700 px-4 py-2 rounded-md text-sm font-medium">
-                  Get AI Remediation Plan →
-                </button>
+                {assessmentId && onOpenRemediation ? (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onOpenRemediation({
+                        controlId: control.id,
+                        assessmentItemId: control.itemId,
+                        controlTitle: control.title,
+                        controlDescription: control.description,
+                        framework: control.framework,
+                        status: control.status,
+                        severity: control.severity,
+                      });
+                    }}
+                    className="mt-4 inline-block bg-white text-purple-700 px-4 py-2 rounded-md text-sm font-medium"
+                  >
+                    Get AI Remediation Plan →
+                  </button>
+                ) : assessmentId ? (
+                  <Link
+                    href={`/assessments/${assessmentId}/control-workspace/${control.id}`}
+                    className="mt-4 inline-block bg-white text-purple-700 px-4 py-2 rounded-md text-sm font-medium"
+                  >
+                    Get AI Remediation Plan →
+                  </Link>
+                ) : (
+                  <button className="mt-4 bg-white text-purple-700 px-4 py-2 rounded-md text-sm font-medium">
+                    Get AI Remediation Plan →
+                  </button>
+                )}
               </div>
             )}
 
@@ -173,14 +211,17 @@ export default function ControlCard({
               </div>
 
               <div className="flex gap-3">
-                <div className="flex items-center gap-2 border border-slate-300 rounded-lg px-3 py-2 text-sm">
-                  <FileText className="text-red-500" size={16} />
-                  Risk_Assessment.pdf
-                </div>
-
-                <div className="border-dashed border border-slate-300 rounded-lg px-4 py-2 text-sm text-gray-500 flex items-center gap-2">
-                  <Plus size={14} /> Attach file
-                </div>
+                {assessmentId ? (
+                  <Link
+                    href={`/assessments/${assessmentId}/control-workspace/${control.id}`}
+                    className="inline-flex items-center gap-2 border border-slate-300 rounded-lg px-3 py-2 text-sm text-purple-600"
+                  >
+                    <FileText size={16} />
+                    View workspace
+                  </Link>
+                ) : (
+                  <div className="text-sm text-gray-500">No evidence available</div>
+                )}
               </div>
             </div>
 

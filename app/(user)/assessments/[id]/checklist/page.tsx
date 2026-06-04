@@ -18,6 +18,7 @@ import { type AssessmentSortField, useAssessmentStore } from "@/stores/assessmen
 import MetricsBar from "@/components/assessment-checklist/MetricsBar";
 import FilterBar from "@/components/assessment-checklist/FilterBar";
 import ChecklistGroup from "@/components/assessment-checklist/ChecklistGroup";
+import RemediationDrawer from "@/components/ai/remediation-drawer";
 import Pagination from "@/components/assessment-checklist/Pagination";
 import Skeleton from "@/components/assessment-checklist/Skeleton";
 import EmptyState from "@/components/assessment-checklist/EmptyState";
@@ -216,6 +217,35 @@ export default function ChecklistPage() {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
   const [isHeaderActionPending, setIsHeaderActionPending] = useState(false);
+
+  const [remediationOpen, setRemediationOpen] = useState(false);
+  const [remediationContext, setRemediationContext] = useState<{
+    controlId: string;
+    assessmentItemId: string;
+    controlTitle: string;
+    controlDescription: string;
+    framework: string;
+    status: string;
+    severity: string;
+  } | null>(null);
+
+  const openRemediationDrawer = (context: {
+    controlId: string;
+    assessmentItemId: string;
+    controlTitle: string;
+    controlDescription: string;
+    framework: string;
+    status: string;
+    severity: string;
+  }) => {
+    setRemediationContext(context);
+    setRemediationOpen(true);
+  };
+
+  const closeRemediationDrawer = () => {
+    setRemediationOpen(false);
+    setRemediationContext(null);
+  };
 
   useEffect(() => {
     return () => {
@@ -624,6 +654,7 @@ export default function ChecklistPage() {
           controls={group.controls}
           assessmentId={assessmentId}
           updatingItemId={updatingItemId}
+          onOpenRemediation={openRemediationDrawer}
           onStatusChange={(itemId, nextStatus) => {
             updateStatusMutation.mutate(
               {
@@ -652,6 +683,20 @@ export default function ChecklistPage() {
         perPage={perPage}
         setPerPage={setPerPage}
       />
+
+      {remediationContext && (
+        <RemediationDrawer
+          open={remediationOpen}
+          onClose={closeRemediationDrawer}
+          controlId={remediationContext.controlId}
+          assessmentItemId={remediationContext.assessmentItemId}
+          controlTitle={remediationContext.controlTitle}
+          controlDescription={remediationContext.controlDescription}
+          framework={remediationContext.framework}
+          status={remediationContext.status}
+          severity={remediationContext.severity}
+        />
+      )}
     </div>
   );
 }
