@@ -1,4 +1,4 @@
-export const mockControls: Record<string, any> = {
+export const mockControls: Record<string, unknown> = {
   test: {
     id: "HIPAA-164.308(a)(3)(i)",
     framework: "HIPAA",

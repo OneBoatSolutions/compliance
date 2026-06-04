@@ -13,15 +13,15 @@ export default function AIAssistantCard({ status, onOpenDrawer }: AIAssistantCar
   let message = "";
   let buttonText = "";
 
-  if (status === "Compliant") {
+  if (status === "Compliant" || status === "COMPLIANT") {
     message =
       "Great job! This control is fully compliant. If you have any further questions or want to optimize further, I’m here to help.";
     buttonText = "Ask AI";
-  } else if (status === "Partially Compliant") {
+  } else if (status === "Partially Compliant" || status === "PARTIALLY_COMPLIANT") {
     message =
       "Some gaps have been identified. I can help you strengthen your implementation and move towards full compliance.";
     buttonText = "Improve Plan";
-  } else if (status === "Not Compliant") {
+  } else if (status === "Not Compliant" || status === "NOT_COMPLIANT") {
     message =
       "Significant gaps detected. I can generate a remediation plan to help you achieve compliance efficiently.";
     buttonText = "Get Remediation Plan";

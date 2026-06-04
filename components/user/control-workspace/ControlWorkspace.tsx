@@ -100,30 +100,39 @@ export default function ControlWorkspace({ control }: Props) {
 
     setIsSaving(true);
 
-    const payload: Record<string, unknown> = {};
-
-    // Only include changed fields
-    if (status !== control.status) {
-      payload.status = status;
-    }
-    if (comments !== (control.comments || "")) {
-      payload.comments = comments || null;
-    }
-    if (assignee !== (control.owner || "")) {
-      payload.owner = assignee || null;
-    }
-    if (dueDate !== (control.targetDate || "")) {
-      payload.targetDate = dueDate ? new Date(dueDate).toISOString() : null;
-    }
-
-    // Ensure at least one field is being updated
-    if (Object.keys(payload).length === 0) {
-      toast.info("No changes to save");
-      setIsSaving(false);
-      return;
-    }
-
     try {
+      const payload: Record<string, unknown> = {};
+
+      // Only include changed fields
+      if (status !== control.status) {
+        payload.status = status;
+      }
+      if (comments !== (control.comments || "")) {
+        payload.comments = comments || null;
+      }
+      if (assignee !== (control.owner || "")) {
+        payload.owner = assignee || null;
+      }
+      if (dueDate !== (control.targetDate || "")) {
+        if (dueDate) {
+          const parsedDate = new Date(dueDate);
+          if (isNaN(parsedDate.getTime())) {
+            payload.targetDate = null;
+          } else {
+            payload.targetDate = parsedDate.toISOString();
+          }
+        } else {
+          payload.targetDate = null;
+        }
+      }
+
+      // Ensure at least one field is being updated
+      if (Object.keys(payload).length === 0) {
+        toast.info("No changes to save");
+        setIsSaving(false);
+        return;
+      }
+
       await apiClient.patch<{ score: number }>(
         `/api/assessments/${control.assessmentId}/items/${control.itemId}`,
         { body: payload },
