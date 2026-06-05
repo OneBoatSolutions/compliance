@@ -3,9 +3,9 @@ import type { SeedControl } from "./types";
 export const pciControls: SeedControl[] = [
   {
     code: "PCI-1.1.1",
-    title: "Network Security Policies Procedures Documented Updated",
+    title: "Are network security policies and procedures documented, updated, and communicated?",
     description:
-      "Are network security policies and procedures documented, updated, and communicated?",
+      "Requires documenting, communicating, and regularly updating network security policies and procedures. Compliance is demonstrated by presenting approved policy records and staff acknowledgement logs.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -18,9 +18,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.1.2",
-    title: "Roles Responsibilities Network Security Activities Documented",
-    description:
+    title:
       "Are roles and responsibilities for network security activities documented and assigned?",
+    description:
+      "Requires documenting and assigning specific roles and responsibilities for all network security activities. Compliance is demonstrated by presenting role assignment matrices and job descriptions.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -33,8 +34,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.2",
-    title: "Network Security Controls Configured Maintained Properly",
-    description: "Are network security controls configured and maintained properly?",
+    title: "Are network security controls configured and maintained properly?",
+    description:
+      "Requires implementing and configuration-managing active network security controls across all network segments. Compliance is demonstrated by active firewall configurations and rule reviews.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -46,9 +48,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.2.1",
-    title: "Configuration Standards Defined Implemented Network Security",
+    title: "Are configuration standards defined and implemented for network security rulesets?",
     description:
-      "Are configuration standards defined and implemented for network security rulesets?",
+      "Requires defining and implementing hardening and configuration standards for network security control rulesets. Compliance is demonstrated by presenting standard operating procedures and active rule configurations.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -61,9 +63,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.2.2",
-    title: "Changes Network Connections Network Security Control",
-    description:
+    title:
       "Are changes to network connections and network security control (NSC) configurations approved and managed through a defined change control process?",
+    description:
+      "Requires managing and approving connection changes and network security configurations through a formal change control process. Compliance is demonstrated by change request tickets and approval logs.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -77,9 +80,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.2.3",
-    title: "Accurate Network Diagrams Maintained Showing Connections",
-    description:
+    title:
       "Are accurate network diagrams maintained showing all connections between the cardholder data environment (CDE) and other networks, including wireless networks?",
+    description:
+      "Requires maintaining accurate, up-to-date network diagrams showing all connections between the cardholder data environment (CDE) and other networks. Compliance is demonstrated by presenting verified network topology diagrams.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -93,9 +97,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.2.4",
-    title: "Accurate Data-flow Diagrams Maintained Showing Account",
-    description:
+    title:
       "Are accurate data-flow diagrams maintained showing all account data flows across systems and networks?",
+    description:
+      "Requires maintaining accurate data-flow diagrams that document all cardholder and account data transmissions across networks and systems. Compliance is demonstrated by presenting current data-flow diagrams.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -109,9 +114,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.2.5",
-    title: "Allowed Services Protocols Ports Identified Approved",
-    description:
+    title:
       "Are all allowed services, protocols, and ports identified, approved, and justified with a defined business need?",
+    description:
+      "Requires identifying, approving, and documenting business justifications for all allowed services, protocols, and ports. Compliance is demonstrated by presenting the approved services list and system configuration audits.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -124,9 +130,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.2.6",
-    title: "Security Controls Implemented Mitigate Risks Insecure",
-    description:
+    title:
       "Are security controls implemented to mitigate risks for insecure services, protocols, and ports?",
+    description:
+      "Requires implementing compensating security controls for any insecure services, protocols, or ports in use. Compliance is demonstrated by configuration settings and risk assessment documentation.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -139,9 +146,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.2.7",
-    title: "Network Security Control Configurations Reviewed Least",
-    description:
+    title:
       "Are network security control configurations reviewed at least every six months for relevance and effectiveness?",
+    description:
+      "Requires reviewing network security control configurations at least every six months to confirm their relevance and effectiveness. Compliance is demonstrated by presenting dated review logs and approvals.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -155,9 +163,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.2.8",
-    title: "Configuration Files Network Security Controls Protected",
-    description:
+    title:
       "Are configuration files for network security controls protected from unauthorized access and kept consistent with active network configurations?",
+    description:
+      "Requires protecting network security control configuration files from unauthorized access and maintaining parity with active configurations. Compliance is demonstrated by access control lists and integrity logs.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -170,9 +179,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.3.1",
-    title: "Inbound Traffic Cardholder Data Environment Restricted",
-    description:
+    title:
       "Is inbound traffic to the Cardholder Data Environment (CDE) restricted to only necessary traffic, with all other traffic denied by default?",
+    description:
+      "Requires restricting inbound traffic to the Cardholder Data Environment (CDE) to only authorized streams while denying all other traffic by default. Compliance is demonstrated by firewall rule tables.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -186,9 +196,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.3.2",
-    title: "Outbound Traffic From Cardholder Data Environment",
-    description:
+    title:
       "Is outbound traffic from the Cardholder Data Environment (CDE) restricted to only necessary traffic, with all other traffic denied by default?",
+    description:
+      "Requires restricting outbound traffic from the Cardholder Data Environment (CDE) to only necessary pathways while denying all other egress by default. Compliance is demonstrated by firewall rule configurations.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -202,9 +213,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.3.3",
-    title: "Network Security Controls Implemented Between Wireless",
-    description:
+    title:
       "Are network security controls implemented between wireless networks and the CDE to restrict unauthorized wireless traffic?",
+    description:
+      "Requires deploying network security controls between wireless networks and the Cardholder Data Environment (CDE) to block unauthorized wireless traffic. Compliance is demonstrated by active rule configurations and boundary scans.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -217,9 +229,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.4.1",
-    title: "Network Security Controls Implemented Between Trusted",
+    title: "Are network security controls implemented between trusted and untrusted networks?",
     description:
-      "Are network security controls implemented between trusted and untrusted networks?",
+      "Requires establishing network security controls at all boundaries between trusted and untrusted networks. Compliance is demonstrated by firewall routing configurations and network topology reviews.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -233,9 +245,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.4.2",
-    title: "Inbound Traffic From Untrusted Networks Restricted",
-    description:
+    title:
       "Is inbound traffic from untrusted networks restricted to only authorized services and stateful responses, with all other traffic denied?",
+    description:
+      "Requires restricting inbound traffic from untrusted networks to authorized services and stateful connection responses. Compliance is demonstrated by firewall access rules and traffic logs.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -248,9 +261,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.4.3",
-    title: "Anti-spoofing Controls Implemented Detect Block Forged",
-    description:
+    title:
       "Are anti-spoofing controls implemented to detect and block forged source IP addresses entering the trusted network?",
+    description:
+      "Requires implementing anti-spoofing filters to detect and block forged source IP addresses from entering trusted networks. Compliance is demonstrated by router configurations and packet inspection logs.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -263,9 +277,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.4.4",
-    title: "Systems Storing Cardholder Data Protected From",
-    description:
+    title:
       "Are systems storing cardholder data protected from direct access from untrusted networks?",
+    description:
+      "Requires protecting systems storing cardholder data from direct access or routing from untrusted networks. Compliance is demonstrated by firewall rulesets and system architecture maps.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -279,9 +294,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.4.5",
-    title: "Disclosure Internal IP Addresses Routing Information",
-    description:
+    title:
       "Is the disclosure of internal IP addresses and routing information restricted to authorized parties only?",
+    description:
+      "Requires restricting the disclosure of internal IP addresses and routing tables to authorized personnel only. Compliance is demonstrated by network configurations and system information policies.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -295,9 +311,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-1.5.1",
-    title: "Security Controls Implemented Devices That Connect",
-    description:
+    title:
       "Are security controls implemented on devices that connect to both untrusted networks (e.g., Internet) and the Cardholder Data Environment (CDE)?",
+    description:
+      "Requires implementing personal firewalls or comparable security controls on devices that bridge untrusted networks and the CDE. Compliance is demonstrated by endpoint policy audits and device settings.",
     category: "Install and Maintain Network Security Controls",
     severity: "HIGH",
     weight: 3,
@@ -311,9 +328,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-2.1.1",
-    title: "Security Policies Operational Procedures Requirement 2",
-    description:
+    title:
       "Are security policies and operational procedures for Requirement 2 documented, maintained, and communicated to relevant personnel?",
+    description:
+      "Requires documenting, maintaining, and communicating secure configuration policies and procedures to all relevant personnel. Compliance is demonstrated by policy review dates and signature records.",
     category: "Apply Secure Configurations to All System Components",
     severity: "HIGH",
     weight: 3,
@@ -326,9 +344,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-2.1.2",
-    title: "Roles Responsibilities Activities Requirement 2 Documented",
-    description:
+    title:
       "Are roles and responsibilities for activities in Requirement 2 documented, assigned, and understood?",
+    description:
+      "Requires assigning and documenting roles and responsibilities for managing system hardening and configuration activities. Compliance is demonstrated by organizational charts and job descriptions.",
     category: "Apply Secure Configurations to All System Components",
     severity: "HIGH",
     weight: 3,
@@ -341,9 +360,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-2.2.1",
-    title: "Configuration Standards Defined Implemented System Components",
-    description:
+    title:
       "Are configuration standards defined and implemented for all system components based on industry or vendor hardening guidelines?",
+    description:
+      "Requires establishing hardening standards for all system components aligned with industry or vendor guidelines. Compliance is demonstrated by presenting documented standards and configuration audit results.",
     category: "Apply Secure Configurations to All System Components",
     severity: "HIGH",
     weight: 3,
@@ -357,9 +377,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-2.2.2",
-    title: "Vendor Default Accounts Passwords Changed Disabled",
-    description:
+    title:
       "Are vendor default accounts and passwords changed, disabled, or removed before systems are deployed?",
+    description:
+      "Requires changing, disabling, or removing all vendor default accounts and passwords prior to system deployment. Compliance is demonstrated by configuration baselines and active user directory audits.",
     category: "Apply Secure Configurations to All System Components",
     severity: "HIGH",
     weight: 3,
@@ -373,9 +394,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-2.2.3",
-    title: "System Components Configured Ensure Functions Different",
-    description:
+    title:
       "Are system components configured to ensure functions with different security levels are properly separated or secured?",
+    description:
+      "Requires separating system components or services that operate at different security levels. Compliance is demonstrated by server configuration profiles and virtualization boundaries.",
     category: "Apply Secure Configurations to All System Components",
     severity: "HIGH",
     weight: 3,
@@ -388,9 +410,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-2.2.4",
-    title: "Only Necessary Services Protocols Functions Enabled",
+    title: "Are only necessary services, protocols, and functions enabled on system components?",
     description:
-      "Are only necessary services, protocols, and functions enabled on system components?",
+      "Requires enabling only necessary services, protocols, and functions on all active system components. Compliance is demonstrated by hardening templates and active service port scans.",
     category: "Apply Secure Configurations to All System Components",
     severity: "HIGH",
     weight: 3,
@@ -403,9 +425,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-2.2.5",
-    title: "If Insecure Services Protocols Used Business",
-    description:
+    title:
       "If insecure services or protocols are used, is business justification documented and additional security controls implemented?",
+    description:
+      "Requires documenting a business justification and implementing additional controls for any insecure services or protocols. Compliance is demonstrated by risk approvals and security settings.",
     category: "Apply Secure Configurations to All System Components",
     severity: "HIGH",
     weight: 3,
@@ -419,9 +442,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-2.2.6",
-    title: "System Security Parameters Configured Prevent Misuse",
+    title: "Are system security parameters configured to prevent misuse of system components?",
     description:
-      "Are system security parameters configured to prevent misuse of system components?",
+      "Requires configuring system security parameters to prevent unauthorized command execution and system misuse. Compliance is demonstrated by baseline audits and active operating system configuration files.",
     category: "Apply Secure Configurations to All System Components",
     severity: "HIGH",
     weight: 3,
@@ -435,8 +458,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-2.2.7",
-    title: "Non-console Administrative Access Encrypted Using Strong",
-    description: "Is all non-console administrative access encrypted using strong cryptography?",
+    title: "Is all non-console administrative access encrypted using strong cryptography?",
+    description:
+      "Requires encrypting all non-console administrative access sessions using strong cryptography. Compliance is demonstrated by server configuration reviews and active remote administration logs.",
     category: "Apply Secure Configurations to All System Components",
     severity: "HIGH",
     weight: 3,
@@ -450,9 +474,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-2.3.1",
-    title: "Default Wireless Settings Changed Secured Wireless",
-    description:
+    title:
       "Are default wireless settings (passwords, encryption keys, SNMP defaults, etc.) changed or secured for wireless networks connected to the CDE?",
+    description:
+      "Requires changing default passwords, encryption keys, and SNMP settings on all wireless devices connected to the CDE. Compliance is demonstrated by wireless access point configuration settings.",
     category: "Apply Secure Configurations to All System Components",
     severity: "HIGH",
     weight: 3,
@@ -466,9 +491,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-2.3.2",
-    title: "Wireless Encryption Keys Changed When Personnel",
-    description:
+    title:
       "Are wireless encryption keys changed when personnel leave or when a key is suspected or known to be compromised?",
+    description:
+      "Requires updating wireless encryption keys immediately when staff members leave or when key compromise is suspected. Compliance is demonstrated by key rotation schedules and incident logs.",
     category: "Apply Secure Configurations to All System Components",
     severity: "HIGH",
     weight: 3,
@@ -481,9 +507,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.1.1",
-    title: "Security Policies Operational Procedures Requirement 3",
-    description:
+    title:
       "Are security policies and operational procedures for Requirement 3 documented, maintained, and communicated to relevant personnel?",
+    description:
+      "Requires documenting, maintaining, and communicating data protection policies and procedures to relevant personnel. Compliance is demonstrated by policy review stamps and acknowledgment signatures.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -496,9 +523,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.1.2",
-    title: "Roles Responsibilities Activities Requirement 3 Documented",
-    description:
+    title:
       "Are roles and responsibilities for activities in Requirement 3 documented, assigned, and understood?",
+    description:
+      "Requires documenting and assigning specific roles and responsibilities for protecting stored account data. Compliance is demonstrated by organizational matrices and personnel assignment files.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -511,9 +539,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.2.1",
-    title: "Account Data Storage Minimized Through Defined",
-    description:
+    title:
       "Is account data storage minimized through defined data retention and secure disposal policies and processes?",
+    description:
+      "Requires minimizing account data storage using formal retention limits and secure disposal procedures. Compliance is demonstrated by data inventory reviews and destruction logs.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -527,9 +556,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.3.1",
-    title: "Sensitive Authentication Data Removed Rendered Unrecoverable",
-    description:
+    title:
       "Is sensitive authentication data (SAD) removed or rendered unrecoverable after the authorization process?",
+    description:
+      "Requires removing or rendering unrecoverable all sensitive authentication data (SAD) following the authorization process. Compliance is demonstrated by database schemas and secure deletion script logs.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -543,8 +573,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.3.1.1",
-    title: "Full Track Data Not Stored After",
-    description: "Is full track data not stored after the authorization process?",
+    title: "Is full track data not stored after the authorization process?",
+    description:
+      "Requires ensuring that full magnetic stripe or chip track data is not stored after authorization. Compliance is demonstrated by transaction database audits and API payloads.",
     category: "Protect Stored Account Data",
     severity: "MEDIUM",
     weight: 2,
@@ -557,9 +588,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.3.1.2",
-    title: "Card Verification Code Not Stored After",
+    title: "Is the card verification code (CVV/CVC) not stored after the authorization process?",
     description:
-      "Is the card verification code (CVV/CVC) not stored after the authorization process?",
+      "Requires ensuring that card verification codes (CVV/CVC) are completely discarded after authorization. Compliance is demonstrated by database schema reviews and application logs.",
     category: "Protect Stored Account Data",
     severity: "MEDIUM",
     weight: 2,
@@ -572,8 +603,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.3.1.3",
-    title: "Pins PIN Blocks Not Stored After",
-    description: "Are PINs and PIN blocks not stored after the authorization process?",
+    title: "Are PINs and PIN blocks not stored after the authorization process?",
+    description:
+      "Requires ensuring that PINs and PIN blocks are not retained in any storage after authorization. Compliance is demonstrated by cryptographic processor configuration checks and log audits.",
     category: "Protect Stored Account Data",
     severity: "MEDIUM",
     weight: 2,
@@ -586,9 +618,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.3.2",
-    title: "If Sensitive Authentication Data Stored Before",
-    description:
+    title:
       "If sensitive authentication data is stored before authorization, is it encrypted using strong cryptography?",
+    description:
+      "Requires encrypting any pre-authorization sensitive authentication data using strong cryptography. Compliance is demonstrated by cryptographic key records and configuration settings.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -602,9 +635,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.4.1",
-    title: "Primary Account Number Masked When Displayed",
-    description:
+    title:
       "Is the Primary Account Number (PAN) masked when displayed so that only authorized personnel can view the full PAN?",
+    description:
+      "Requires masking the Primary Account Number (PAN) when displayed, restricting full view to authorized roles only. Compliance is demonstrated by interface screenshots and access control configurations.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -618,9 +652,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.4.2",
-    title: "Remote-access Technologies Prevent Unauthorized Copying Relocation",
+    title: "Do remote-access technologies prevent unauthorized copying or relocation of PAN data?",
     description:
-      "Do remote-access technologies prevent unauthorized copying or relocation of PAN data?",
+      "Requires configuring remote-access technologies to block copying or unauthorized relocation of PAN data. Compliance is demonstrated by remote access security profiles and session audit logs.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -634,9 +668,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.5.1",
-    title: "PAN Rendered Unreadable Wherever It Stored",
-    description:
+    title:
       "Is PAN rendered unreadable wherever it is stored using approved methods such as hashing, truncation, tokenization, or strong encryption?",
+    description:
+      "Requires rendering stored PAN unreadable using approved methods like hashing, truncation, tokenization, or strong encryption. Compliance is demonstrated by database audits and cryptographic scans.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -650,9 +685,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.5.1.1",
-    title: "Cryptographic Hashes Used Protect PAN Implemented",
-    description:
+    title:
       "Are cryptographic hashes used to protect PAN implemented with proper key management processes?",
+    description:
+      "Requires implementing proper key management and salting processes for cryptographic hashes used to protect PAN. Compliance is demonstrated by key management files and system configurations.",
     category: "Protect Stored Account Data",
     severity: "MEDIUM",
     weight: 2,
@@ -666,9 +702,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.5.1.2",
-    title: "If Disk Partition-level Encryption Used It",
-    description:
+    title:
       "If disk or partition-level encryption is used, is it applied only on removable media or combined with another PAN protection method?",
+    description:
+      "Requires restricting disk or partition-level encryption to removable media or using it in conjunction with other PAN controls. Compliance is demonstrated by partition settings and encryption audits.",
     category: "Protect Stored Account Data",
     severity: "MEDIUM",
     weight: 2,
@@ -682,9 +719,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.5.1.3",
-    title: "If Disk Partition Encryption Used Access",
-    description:
+    title:
       "If disk or partition encryption is used, are access controls and key management implemented securely?",
+    description:
+      "Requires implementing secure access controls and key management processes on systems using disk or partition encryption. Compliance is demonstrated by access control list configurations and KMS keys.",
     category: "Protect Stored Account Data",
     severity: "MEDIUM",
     weight: 2,
@@ -698,9 +736,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.6.1",
-    title: "Procedures Implemented Protect Cryptographic Keys Used",
-    description:
+    title:
       "Are procedures implemented to protect cryptographic keys used for protecting stored account data from disclosure and misuse?",
+    description:
+      "Requires establishing and implementing procedures to protect key-management and cryptographic keys from disclosure. Compliance is demonstrated by key custodian signature sheets and secure key logs.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -713,9 +752,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.6.1.2",
-    title: "Secret Private Keys Used Encrypt Stored",
-    description:
+    title:
       "Are secret or private keys used to encrypt stored account data securely stored (e.g., encrypted with a key-encrypting key, stored in a secure cryptographic device, or split into key shares)?",
+    description:
+      "Requires storing cryptographic private and secret keys securely using hardware security modules or key-encrypting keys. Compliance is demonstrated by KMS settings and HSM hardware audits.",
     category: "Protect Stored Account Data",
     severity: "MEDIUM",
     weight: 2,
@@ -729,9 +769,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.6.1.3",
-    title: "Access Cleartext Cryptographic Key Components Restricted",
-    description:
+    title:
       "Is access to cleartext cryptographic key components restricted to the minimum number of authorized custodians?",
+    description:
+      "Requires restricting access to cleartext key components to the minimum authorized custodians. Compliance is demonstrated by user access matrices and custodian rosters.",
     category: "Protect Stored Account Data",
     severity: "MEDIUM",
     weight: 2,
@@ -744,8 +785,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.6.1.4",
-    title: "Cryptographic Keys Stored Minimum Number Secure",
-    description: "Are cryptographic keys stored in the minimum number of secure locations?",
+    title: "Are cryptographic keys stored in the minimum number of secure locations?",
+    description:
+      "Requires storing cryptographic keys in the minimum number of secure and authorized locations. Compliance is demonstrated by key storage audits and configuration registry listings.",
     category: "Protect Stored Account Data",
     severity: "MEDIUM",
     weight: 2,
@@ -758,9 +800,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.7.1",
-    title: "Strong Cryptographic Keys Generated According Defined",
+    title: "Are strong cryptographic keys generated according to defined key-management policies?",
     description:
-      "Are strong cryptographic keys generated according to defined key-management policies?",
+      "Requires generating strong cryptographic keys in accordance with defined key-management procedures. Compliance is demonstrated by key generator software settings and entropy configuration audits.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -774,9 +816,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.7.2",
-    title: "Cryptographic Keys Securely Distributed According Key-management",
+    title: "Are cryptographic keys securely distributed according to key-management policies?",
     description:
-      "Are cryptographic keys securely distributed according to key-management policies?",
+      "Requires distributing cryptographic keys securely in accordance with key-management policies. Compliance is demonstrated by transfer logs and secure distribution channel settings.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -790,8 +832,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.7.3",
-    title: "Cryptographic Keys Securely Stored According Key-management",
-    description: "Are cryptographic keys securely stored according to key-management policies?",
+    title: "Are cryptographic keys securely stored according to key-management policies?",
+    description:
+      "Requires storing cryptographic keys in secure storage structures according to key-management policies. Compliance is demonstrated by storage authorization reviews and database configurations.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -805,9 +848,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.7.4",
-    title: "Cryptographic Keys Changed End Their Defined",
-    description:
+    title:
       "Are cryptographic keys changed at the end of their defined cryptoperiod according to key-management policies?",
+    description:
+      "Requires rotating cryptographic keys at the end of their defined cryptoperiod according to key-management policies. Compliance is demonstrated by key rotation records and system scheduling logs.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -821,9 +865,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.7.5",
-    title: "Cryptographic Keys Retired Replaced Destroyed When",
+    title: "Are cryptographic keys retired, replaced, or destroyed when expired or compromised?",
     description:
-      "Are cryptographic keys retired, replaced, or destroyed when expired or compromised?",
+      "Requires retiring, replacing, or destroying cryptographic keys upon expiration or suspected compromise. Compliance is demonstrated by key destruction logs and replacement registers.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -836,9 +880,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.7.6",
-    title: "Manual Cryptographic Key-management Operations Performed Using",
-    description:
+    title:
       "Are manual cryptographic key-management operations performed using split knowledge and dual control?",
+    description:
+      "Requires performing manual key-management tasks using split knowledge and dual control procedures. Compliance is demonstrated by dual signature logs and key custodian rosters.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -852,9 +897,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.7.7",
-    title: "Controls Implemented Prevent Unauthorized Substitution Cryptographic",
+    title: "Are controls implemented to prevent unauthorized substitution of cryptographic keys?",
     description:
-      "Are controls implemented to prevent unauthorized substitution of cryptographic keys?",
+      "Requires implementing security controls to prevent unauthorized modification or substitution of cryptographic keys. Compliance is demonstrated by integrity monitoring settings and access audits.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -868,9 +913,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-3.7.8",
-    title: "Cryptographic Key Custodians Formally Acknowledge Their",
-    description:
+    title:
       "Do cryptographic key custodians formally acknowledge their key-management responsibilities?",
+    description:
+      "Requires cryptographic key custodians to formally acknowledge their specific key-management responsibilities. Compliance is demonstrated by signed custodian agreement forms.",
     category: "Protect Stored Account Data",
     severity: "HIGH",
     weight: 3,
@@ -884,9 +930,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-4.1.1",
-    title: "Security Policies Operational Procedures Requirement 4",
-    description:
+    title:
       "Are security policies and operational procedures for Requirement 4 documented, maintained, and communicated to relevant personnel?",
+    description:
+      "Requires documenting, maintaining, and communicating cardholder data transmission policies to all relevant personnel. Compliance is demonstrated by policy review dates and training logs.",
     category:
       "Protect Cardholder Data with Strong Cryptography During Transmission Over Open, Public",
     severity: "HIGH",
@@ -900,9 +947,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-4.1.2",
-    title: "Roles Responsibilities Activities Requirement 4 Documented",
-    description:
+    title:
       "Are roles and responsibilities for activities in Requirement 4 documented, assigned, and understood?",
+    description:
+      "Requires documenting and assigning roles and responsibilities for secure cardholder transmission activities. Compliance is demonstrated by role description templates and assignments.",
     category:
       "Protect Cardholder Data with Strong Cryptography During Transmission Over Open, Public",
     severity: "HIGH",
@@ -916,9 +964,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-4.2.1",
-    title: "Strong Cryptography Used Protect PAN During",
-    description:
+    title:
       "Is strong cryptography used to protect PAN during transmission over open, public networks?",
+    description:
+      "Requires using strong cryptography to protect PAN during transmission over public networks. Compliance is demonstrated by SSL/TLS configuration reviews and network packet traces.",
     category:
       "Protect Cardholder Data with Strong Cryptography During Transmission Over Open, Public",
     severity: "HIGH",
@@ -933,9 +982,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-4.2.1.1",
-    title: "Inventory Maintained Trusted Keys Certificates Used",
-    description:
+    title:
       "Is an inventory maintained for trusted keys and certificates used to protect PAN during transmission?",
+    description:
+      "Requires maintaining an active inventory of all trusted keys and certificates used to protect PAN during transmission. Compliance is demonstrated by presenting the certificate inventory and lifecycle logs.",
     category:
       "Protect Cardholder Data with Strong Cryptography During Transmission Over Open, Public",
     severity: "MEDIUM",
@@ -950,9 +1000,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-4.2.1.2",
-    title: "Wireless Networks Transmitting PAN Connected CDE",
-    description:
+    title:
       "Do wireless networks transmitting PAN or connected to the CDE use strong cryptography based on industry best practices?",
+    description:
+      "Requires using strong cryptography for all wireless networks connected to the CDE or transmitting PAN. Compliance is demonstrated by wireless router configuration parameters and signal encryption scans.",
     category:
       "Protect Cardholder Data with Strong Cryptography During Transmission Over Open, Public",
     severity: "MEDIUM",
@@ -966,9 +1017,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-4.2.2",
-    title: "PAN Encrypted Using Strong Cryptography When",
-    description:
+    title:
       "Is PAN encrypted using strong cryptography when transmitted through end-user messaging technologies (e.g., email, chat)?",
+    description:
+      "Requires encrypting PAN with strong cryptography when transmitted through end-user messaging channels. Compliance is demonstrated by email and chat system transport settings and outbound message logs.",
     category:
       "Protect Cardholder Data with Strong Cryptography During Transmission Over Open, Public",
     severity: "HIGH",
@@ -983,9 +1035,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-5.1.1",
-    title: "Security Policies Operational Procedures Requirement 5",
-    description:
+    title:
       "Are security policies and operational procedures for Requirement 5 documented, updated, and communicated to relevant personnel?",
+    description:
+      "Requires documenting, updating, and communicating malware protection policies and procedures to relevant personnel. Compliance is demonstrated by review dates and staff acknowledgement signatures.",
     category: "Protect All Systems and Networks from Malicious Software",
     severity: "HIGH",
     weight: 3,
@@ -998,9 +1051,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-5.1.2",
-    title: "Roles Responsibilities Malware Protection Activities Documented",
-    description:
+    title:
       "Are roles and responsibilities for malware protection activities documented and assigned?",
+    description:
+      "Requires documenting and assigning roles and responsibilities for malware protection tasks. Compliance is demonstrated by organizational matrices and personnel assignment files.",
     category: "Protect All Systems and Networks from Malicious Software",
     severity: "HIGH",
     weight: 3,
@@ -1013,9 +1067,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-5.2.1",
-    title: "Anti-malware Solution Deployed System Components Risk",
+    title: "Is an anti-malware solution deployed on all system components at risk of malware?",
     description:
-      "Is an anti-malware solution deployed on all system components at risk of malware?",
+      "Requires deploying an anti-malware solution on all system components determined to be at risk. Compliance is demonstrated by endpoint protection status dashboards and system lists.",
     category: "Protect All Systems and Networks from Malicious Software",
     severity: "HIGH",
     weight: 3,
@@ -1028,8 +1082,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-5.2.2",
-    title: "Anti-malware Solution Detect Block Remove Known",
-    description: "Does the anti-malware solution detect, block, or remove known types of malware?",
+    title: "Does the anti-malware solution detect, block, or remove known types of malware?",
+    description:
+      "Requires configuring anti-malware software to detect, block, or remove known malware types. Compliance is demonstrated by active policy profiles and detection logs.",
     category: "Protect All Systems and Networks from Malicious Software",
     severity: "HIGH",
     weight: 3,
@@ -1042,9 +1097,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-5.2.3",
-    title: "System Components Without Anti-malware Periodically Evaluated",
-    description:
+    title:
       "Are system components without anti-malware periodically evaluated to confirm they are not at risk for malware?",
+    description:
+      "Requires conducting periodic evaluations of system components lacking anti-malware to confirm they remain at low risk. Compliance is demonstrated by documented risk evaluation reports.",
     category: "Protect All Systems and Networks from Malicious Software",
     severity: "HIGH",
     weight: 3,
@@ -1058,9 +1114,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-5.2.3.1",
-    title: "Evaluation Frequency Systems Not Risk Malware",
-    description:
+    title:
       "Is the evaluation frequency for systems not at risk for malware defined through a targeted risk analysis?",
+    description:
+      "Requires defining the evaluation frequency for systems not at risk for malware using a targeted risk analysis. Compliance is demonstrated by providing the risk assessment report.",
     category: "Protect All Systems and Networks from Malicious Software",
     severity: "MEDIUM",
     weight: 2,
@@ -1074,8 +1131,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-5.3.1",
-    title: "Anti-malware Solution Kept Up Date Through",
-    description: "Is the anti-malware solution kept up to date through automatic updates?",
+    title: "Is the anti-malware solution kept up to date through automatic updates?",
+    description:
+      "Requires keeping the anti-malware solution up to date through automated update mechanisms. Compliance is demonstrated by updater configurations and agent version reports.",
     category: "Protect All Systems and Networks from Malicious Software",
     severity: "HIGH",
     weight: 3,
@@ -1088,8 +1146,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-5.3.2",
-    title: "Anti-malware Solution Perform Periodic Real-time Scans",
-    description: "Does the anti-malware solution perform periodic or real-time scans of systems?",
+    title: "Does the anti-malware solution perform periodic or real-time scans of systems?",
+    description:
+      "Requires configuring anti-malware software to perform continuous real-time or scheduled periodic scans. Compliance is demonstrated by scanning policy profiles and daemon configuration logs.",
     category: "Protect All Systems and Networks from Malicious Software",
     severity: "HIGH",
     weight: 3,
@@ -1103,9 +1162,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-5.3.2.1",
-    title: "If Periodic Scans Used Scan Frequency",
-    description:
+    title:
       "If periodic scans are used, is the scan frequency defined through targeted risk analysis?",
+    description:
+      "Requires establishing periodic anti-malware scan frequencies based on a targeted risk analysis. Compliance is demonstrated by presenting the risk analysis report and scheduler configurations.",
     category: "Protect All Systems and Networks from Malicious Software",
     severity: "MEDIUM",
     weight: 2,
@@ -1119,9 +1179,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-5.3.3",
-    title: "Removable Media Automatically Scanned Monitored Malware",
-    description:
+    title:
       "Are removable media automatically scanned or monitored for malware when connected to systems?",
+    description:
+      "Requires automatically scanning or monitoring removable media upon connection to systems. Compliance is demonstrated by endpoint agent rulesets and scan logs.",
     category: "Protect All Systems and Networks from Malicious Software",
     severity: "HIGH",
     weight: 3,
@@ -1135,9 +1196,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-5.3.4",
-    title: "Anti-malware Audit Logs Enabled Retained According",
+    title: "Are anti-malware audit logs enabled and retained according to logging requirements?",
     description:
-      "Are anti-malware audit logs enabled and retained according to logging requirements?",
+      "Requires enabling and retaining anti-malware audit logs in accordance with retention policies. Compliance is demonstrated by log server settings and audit trail indices.",
     category: "Protect All Systems and Networks from Malicious Software",
     severity: "HIGH",
     weight: 3,
@@ -1150,9 +1211,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-5.3.5",
-    title: "Anti-malware Mechanisms Protected From Being Disabled",
-    description:
+    title:
       "Are anti-malware mechanisms protected from being disabled or altered by unauthorized users?",
+    description:
+      "Requires protecting anti-malware mechanisms from unauthorized deactivation or modification. Compliance is demonstrated by administrative access settings and tamper protection logs.",
     category: "Protect All Systems and Networks from Malicious Software",
     severity: "HIGH",
     weight: 3,
@@ -1166,9 +1228,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-5.4.1",
-    title: "Processes Automated Mechanisms Implemented Detect Protect",
-    description:
+    title:
       "Are processes and automated mechanisms implemented to detect and protect against phishing attacks?",
+    description:
+      "Requires implementing automated tools and processes to detect and block phishing attempts. Compliance is demonstrated by email gateway filters and security awareness training logs.",
     category: "Protect All Systems and Networks from Malicious Software",
     severity: "HIGH",
     weight: 3,
@@ -1181,9 +1244,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.1.1",
-    title: "Security Policies Operational Procedures Requirement 6",
-    description:
+    title:
       "Are security policies and operational procedures for Requirement 6 documented, maintained, and communicated to relevant personnel?",
+    description:
+      "Requires documenting, maintaining, and communicating secure software development policies to relevant staff. Compliance is demonstrated by review logs and policy acknowledgement forms.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1196,9 +1260,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.1.2",
-    title: "Roles Responsibilities Requirement 6 Activities Documented",
-    description:
+    title:
       "Are roles and responsibilities for Requirement 6 activities documented, assigned, and understood?",
+    description:
+      "Requires documenting and assigning roles and responsibilities for secure development and vulnerability management activities. Compliance is demonstrated by role matrices and personnel files.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1211,9 +1276,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.2.1",
-    title: "Bespoke Custom Software Developed According Secure",
-    description:
+    title:
       "Is bespoke and custom software developed according to secure development standards and practices?",
+    description:
+      "Requires developing bespoke and custom software in accordance with secure coding standards. Compliance is demonstrated by secure SDLC guidelines and code review checklists.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1226,9 +1292,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.2.2",
-    title: "Software Developers Trained Annually Secure Coding",
-    description:
+    title:
       "Are software developers trained annually on secure coding and software security practices?",
+    description:
+      "Requires delivering annual secure coding training to all software development personnel. Compliance is demonstrated by training syllabus records and developer attendance logs.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1242,9 +1309,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.2.3",
-    title: "Bespoke Custom Software Reviewed Before Release",
-    description:
+    title:
       "Is bespoke and custom software reviewed before release to identify and fix security vulnerabilities?",
+    description:
+      "Requires reviewing bespoke and custom software before production release to identify and remediate security vulnerabilities. Compliance is demonstrated by pre-release review sign-offs.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1258,9 +1326,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.2.3.1",
-    title: "If Manual Code Reviews Used Code",
-    description:
+    title:
       "If manual code reviews are used, are code changes reviewed by independent personnel and approved before release?",
+    description:
+      "Requires independent review and approval of code changes before release when manual reviews are utilized. Compliance is demonstrated by pull request approvals and reviewer lists.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "MEDIUM",
     weight: 2,
@@ -1274,9 +1343,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.2.4",
-    title: "Secure Coding Practices Implemented Protect Software",
-    description:
+    title:
       "Are secure coding practices implemented to protect software from common attacks and vulnerabilities?",
+    description:
+      "Requires implementing secure coding practices to protect software from common vulnerabilities, such as injection attacks. Compliance is demonstrated by code scans and developer guidelines.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1290,9 +1360,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.3.1",
-    title: "Security Vulnerabilities Identified Using Industry Sources",
-    description:
+    title:
       "Are security vulnerabilities identified using industry sources and assigned risk rankings?",
+    description:
+      "Requires identifying security vulnerabilities using industry sources and assigning objective risk rankings. Compliance is demonstrated by vulnerability feeds and risk ranking criteria.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1306,9 +1377,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.3.2",
-    title: "Inventory Maintained Bespoke Custom Third-party Software",
-    description:
+    title:
       "Is an inventory maintained for bespoke, custom, and third-party software to support vulnerability and patch management?",
+    description:
+      "Requires maintaining an accurate inventory of bespoke, custom, and third-party software to support patch management. Compliance is demonstrated by presenting the software inventory spreadsheet.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1321,9 +1393,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.3.3",
-    title: "Security Patches Applied System Components Defined",
-    description:
+    title:
       "Are security patches applied to system components within defined timeframes based on risk level?",
+    description:
+      "Requires applying security patches to all system components within risk-based timeframes. Compliance is demonstrated by patch management logs and system version audits.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1337,9 +1410,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.4.1",
-    title: "Public-facing Web Applications Protected Through Regular",
-    description:
+    title:
       "Are public-facing web applications protected through regular security assessments or automated protection mechanisms?",
+    description:
+      "Requires protecting public-facing web applications with regular security assessments or automated protection tools. Compliance is demonstrated by application scanning logs and WAF configurations.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1353,9 +1427,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.4.2",
-    title: "Automated Solution Implemented Detect Prevent Web-based",
-    description:
+    title:
       "Is an automated solution implemented to detect and prevent web-based attacks on public-facing web applications?",
+    description:
+      "Requires implementing an automated solution, such as a WAF, to block attacks on public-facing web applications. Compliance is demonstrated by active WAF rule profiles.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1369,9 +1444,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.4.3",
-    title: "Payment Page Scripts Authorized Integrity-checked Maintained",
-    description:
+    title:
       "Are payment page scripts authorized, integrity-checked, and maintained in an inventory with justification?",
+    description:
+      "Requires authorizing, integrity-checking, and inventorying all active payment page scripts. Compliance is demonstrated by script integrity logs and the authorized script registry.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1385,9 +1461,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.5.1",
-    title: "Changes System Components Managed Through Formal",
+    title: "Are changes to system components managed through a formal change control process?",
     description:
-      "Are changes to system components managed through a formal change control process?",
+      "Requires managing all system component changes through a formal change control process. Compliance is demonstrated by change request ticket approvals and post-implementation reviews.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1401,9 +1477,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.5.2",
-    title: "After Significant Changes PCI DSS Controls",
+    title: "After significant changes, are PCI DSS controls verified and documentation updated?",
     description:
-      "After significant changes, are PCI DSS controls verified and documentation updated?",
+      "Requires verifying PCI DSS controls and updating documentation following any significant changes. Compliance is demonstrated by post-change audit sign-offs and policy updates.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1417,9 +1493,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.5.3",
-    title: "Pre-production Environments Separated From Production Environments",
-    description:
+    title:
       "Are pre-production environments separated from production environments with access controls?",
+    description:
+      "Requires separating pre-production environments from production environments using logical network access controls. Compliance is demonstrated by firewall rules and IAM separation profiles.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1433,9 +1510,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.5.4",
-    title: "Roles Responsibilities Separated Between Production Pre-production",
-    description:
+    title:
       "Are roles and responsibilities separated between production and pre-production environments?",
+    description:
+      "Requires segregating personnel roles and duties between production and pre-production systems. Compliance is demonstrated by IAM assignment audits and user privilege reports.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1448,9 +1526,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.5.5",
-    title: "Live PAN Data Prohibited Pre-production Environments",
-    description:
+    title:
       "Is live PAN data prohibited in pre-production environments unless the environment is part of the CDE and properly secured?",
+    description:
+      "Requires prohibiting live PAN data in pre-production environments unless the system is fully secured within the CDE boundary. Compliance is demonstrated by database scans and sanitization logs.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1464,8 +1543,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-6.5.6",
-    title: "Test Data Test Accounts Removed Before",
-    description: "Are test data and test accounts removed before systems move to production?",
+    title: "Are test data and test accounts removed before systems move to production?",
+    description:
+      "Requires removing all test data and test accounts prior to moving systems into production. Compliance is demonstrated by production system checks and deployment logs.",
     category: "Develop and Maintain Secure Systems and Software",
     severity: "HIGH",
     weight: 3,
@@ -1479,9 +1559,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-7.1.1",
-    title: "Security Policies Procedures Access Control Documented",
-    description:
+    title:
       "Are security policies and procedures for access control documented, updated, and communicated to relevant personnel?",
+    description:
+      "Requires documenting, updating, and communicating access control policies and procedures to relevant personnel. Compliance is demonstrated by policy revision histories and training logs.",
     category: "Restrict Access to System Components and Cardholder Data by Business Need to Know",
     severity: "HIGH",
     weight: 3,
@@ -1494,9 +1575,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-7.1.2",
-    title: "Roles Responsibilities Access Control Activities Documented",
+    title: "Are roles and responsibilities for access control activities documented and assigned?",
     description:
-      "Are roles and responsibilities for access control activities documented and assigned?",
+      "Requires documenting and assigning roles and responsibilities for access control tasks. Compliance is demonstrated by access approval workflows and job descriptions.",
     category: "Restrict Access to System Components and Cardholder Data by Business Need to Know",
     severity: "HIGH",
     weight: 3,
@@ -1509,9 +1590,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-7.2.1",
-    title: "Access Control Model Defined Based Job",
-    description:
+    title:
       "Is an access control model defined based on job roles and the principle of least privilege?",
+    description:
+      "Requires defining an access control model based on job roles and the principle of least privilege. Compliance is demonstrated by presenting the access control matrix.",
     category: "Restrict Access to System Components and Cardholder Data by Business Need to Know",
     severity: "HIGH",
     weight: 3,
@@ -1525,9 +1607,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-7.2.2",
-    title: "User Access Including Privileged Access Assigned",
-    description:
+    title:
       "Is user access, including privileged access, assigned based on job role and least privilege requirements?",
+    description:
+      "Requires assigning user access, including privileged access, based strictly on job role and least privilege. Compliance is demonstrated by IAM directory privilege listings.",
     category: "Restrict Access to System Components and Cardholder Data by Business Need to Know",
     severity: "HIGH",
     weight: 3,
@@ -1541,9 +1624,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-7.2.3",
-    title: "User Access Privileges Approved Authorized Personnel",
+    title: "Are user access privileges approved by authorized personnel before being granted?",
     description:
-      "Are user access privileges approved by authorized personnel before being granted?",
+      "Requires obtaining approvals from authorized personnel before granting user access privileges. Compliance is demonstrated by completed access request forms and approvals.",
     category: "Restrict Access to System Components and Cardholder Data by Business Need to Know",
     severity: "HIGH",
     weight: 3,
@@ -1557,9 +1640,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-7.2.4",
-    title: "User Accounts Access Privileges Reviewed Least",
-    description:
+    title:
       "Are user accounts and access privileges reviewed at least every six months to ensure appropriateness?",
+    description:
+      "Requires reviewing user accounts and access privileges at least every six months. Compliance is demonstrated by presenting dated user access review logs and manager sign-offs.",
     category: "Restrict Access to System Components and Cardholder Data by Business Need to Know",
     severity: "HIGH",
     weight: 3,
@@ -1573,9 +1657,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-7.2.5",
-    title: "System Application Accounts Assigned Managed Based",
-    description:
+    title:
       "Are system and application accounts assigned and managed based on the least privileges necessary?",
+    description:
+      "Requires assigning and managing system and application accounts based on the least privileges necessary. Compliance is demonstrated by active account listings and configuration reviews.",
     category: "Restrict Access to System Components and Cardholder Data by Business Need to Know",
     severity: "HIGH",
     weight: 3,
@@ -1589,9 +1674,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-7.2.5.1",
-    title: "System Application Account Privileges Periodically Reviewed",
-    description:
+    title:
       "Are system and application account privileges periodically reviewed and validated by management?",
+    description:
+      "Requires periodic reviews and validation of system and application account privileges by management. Compliance is demonstrated by signed privilege validation reports.",
     category: "Restrict Access to System Components and Cardholder Data by Business Need to Know",
     severity: "MEDIUM",
     weight: 2,
@@ -1605,9 +1691,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-7.2.6",
-    title: "Access Repositories Storing Cardholder Data Restricted",
-    description:
+    title:
       "Is access to repositories storing cardholder data restricted to authorized users and administrators only?",
+    description:
+      "Requires restricting access to repositories storing cardholder data to authorized users and administrators. Compliance is demonstrated by database access control configurations.",
     category: "Restrict Access to System Components and Cardholder Data by Business Need to Know",
     severity: "HIGH",
     weight: 3,
@@ -1621,9 +1708,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-7.3.1",
-    title: "Access Control System Implemented Restrict Access",
-    description:
+    title:
       "Is an access control system implemented to restrict access to system components based on business need to know?",
+    description:
+      "Requires implementing an access control system that restricts system access based on business need to know. Compliance is demonstrated by active IAM permissions policies.",
     category: "Restrict Access to System Components and Cardholder Data by Business Need to Know",
     severity: "HIGH",
     weight: 3,
@@ -1636,9 +1724,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-7.3.2",
-    title: "Access Control System Configured Enforce Permissions",
-    description:
+    title:
       "Is the access control system configured to enforce permissions based on job roles and functions?",
+    description:
+      "Requires configuring the access control system to enforce permissions mapped directly to job roles. Compliance is demonstrated by configuration settings of directory services.",
     category: "Restrict Access to System Components and Cardholder Data by Business Need to Know",
     severity: "HIGH",
     weight: 3,
@@ -1651,8 +1740,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-7.3.3",
-    title: "Access Control System Configured Default Deny-all",
-    description: "Is the access control system configured with a default deny-all policy?",
+    title: "Is the access control system configured with a default deny-all policy?",
+    description:
+      "Requires configuring the access control system to default to a deny-all policy for all resources. Compliance is demonstrated by system authorization configuration files.",
     category: "Restrict Access to System Components and Cardholder Data by Business Need to Know",
     severity: "HIGH",
     weight: 3,
@@ -1665,9 +1755,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.1.1",
-    title: "Security Policies Procedures Requirement 8 Documented",
-    description:
+    title:
       "Are security policies and procedures for Requirement 8 documented, updated, and communicated to relevant personnel?",
+    description:
+      "Requires documenting, updating, and communicating user identification and authentication policies to relevant personnel. Compliance is demonstrated by policy review stamps.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1680,9 +1771,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.1.2",
-    title: "Roles Responsibilities Activities Requirement 8 Documented",
-    description:
+    title:
       "Are roles and responsibilities for activities in Requirement 8 documented and assigned?",
+    description:
+      "Requires documenting and assigning roles and responsibilities for user identity and credential management tasks. Compliance is demonstrated by organization charts.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1695,9 +1787,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.2.1",
-    title: "Users Assigned Unique ID Before Accessing",
-    description:
+    title:
       "Are all users assigned a unique ID before accessing system components or cardholder data?",
+    description:
+      "Requires assigning a unique identifier to all users before they access system components or cardholder data. Compliance is demonstrated by active user directory lists.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1710,9 +1803,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.2.2",
-    title: "Shared Generic Accounts Restricted Approved Monitored",
+    title: "Are shared or generic accounts restricted, approved, and monitored for accountability?",
     description:
-      "Are shared or generic accounts restricted, approved, and monitored for accountability?",
+      "Requires restricting, approving, and monitoring the use of shared or generic accounts to maintain accountability. Compliance is demonstrated by shared account registries.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1726,9 +1819,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.2.4",
-    title: "User Account Additions Changes Deletions Authorized",
+    title: "Are user account additions, changes, and deletions authorized and properly managed?",
     description:
-      "Are user account additions, changes, and deletions authorized and properly managed?",
+      "Requires authorizing and managing user account additions, modifications, and terminations. Compliance is demonstrated by provisioning ticket history logs.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1741,8 +1834,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.2.5",
-    title: "Access Terminated Users Immediately Revoked",
-    description: "Is access for terminated users immediately revoked?",
+    title: "Is access for terminated users immediately revoked?",
+    description:
+      "Requires immediately revoking access privileges for all terminated users. Compliance is demonstrated by comparing termination dates with deactivation logs.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1756,8 +1850,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.2.6",
-    title: "Inactive User Accounts Disabled Removed After",
-    description: "Are inactive user accounts disabled or removed after 90 days of inactivity?",
+    title: "Are inactive user accounts disabled or removed after 90 days of inactivity?",
+    description:
+      "Requires disabling or removing user accounts after 90 days of inactivity. Compliance is demonstrated by inactive account scan reports and system configurations.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1770,9 +1865,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.2.7",
-    title: "Third-party Remote Access Accounts Enabled Only",
-    description:
+    title:
       "Are third-party remote access accounts enabled only when required and monitored for activity?",
+    description:
+      "Requires enabling third-party remote access accounts only when required and monitoring their active sessions. Compliance is demonstrated by connection requests and audit logs.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1786,9 +1882,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.2.8",
-    title: "User Sessions Automatically Locked Re-authenticated After",
-    description:
+    title:
       "Are user sessions automatically locked or re-authenticated after 15 minutes of inactivity?",
+    description:
+      "Requires automatically locking or requesting re-authentication for user sessions inactive for 15 minutes. Compliance is demonstrated by screensaver and session group policy settings.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1801,9 +1898,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.3.1",
-    title: "Users Administrators Authenticated Using Approved Authentication",
-    description:
+    title:
       "Are users and administrators authenticated using approved authentication factors (e.g., password, token, biometric)?",
+    description:
+      "Requires authenticating all users and administrators using approved authentication factors. Compliance is demonstrated by authentication protocol configurations and IAM parameters.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1817,9 +1915,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.3.2",
-    title: "Authentication Factors Protected Using Strong Cryptography",
-    description:
+    title:
       "Are authentication factors protected using strong cryptography during storage and transmission?",
+    description:
+      "Requires protecting authentication factors during storage and transmission using strong cryptography. Compliance is demonstrated by password hashing algorithms and secure transport settings.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1833,8 +1932,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.3.3",
-    title: "User Identity Verified Before Changing Authentication",
-    description: "Is user identity verified before changing authentication factors?",
+    title: "Is user identity verified before changing authentication factors?",
+    description:
+      "Requires verifying a user's identity before updating or resetting their authentication factors. Compliance is demonstrated by helpdesk verification tickets and authentication reset logs.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1847,9 +1947,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.3.4",
-    title: "Invalid Login Attempts Limited Accounts Locked",
+    title: "Are invalid login attempts limited and accounts locked after multiple failed attempts?",
     description:
-      "Are invalid login attempts limited and accounts locked after multiple failed attempts?",
+      "Requires limiting invalid login attempts and locking accounts after a configured maximum of failed tries. Compliance is demonstrated by active lockout policy files.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1862,8 +1962,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.3.5",
-    title: "Passwords Set Uniquely Changed After First",
-    description: "Are passwords set uniquely and changed after first login or reset?",
+    title: "Are passwords set uniquely and changed after first login or reset?",
+    description:
+      "Requires setting unique initial passwords and enforcing a change upon first login or reset. Compliance is demonstrated by user account lifecycle logs and directory system policy settings.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1876,8 +1977,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.3.6",
-    title: "Passwords Meet Minimum Complexity Requirements",
-    description: "Do passwords meet minimum complexity requirements (length and character types)?",
+    title: "Do passwords meet minimum complexity requirements (length and character types)?",
+    description:
+      "Requires enforcing minimum complexity standards for passwords, covering length and character variety. Compliance is demonstrated by password policy settings and directory configuration files.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1890,8 +1992,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.3.7",
-    title: "Users Prevented From Reusing Their Last",
-    description: "Are users prevented from reusing their last passwords?",
+    title: "Are users prevented from reusing their last passwords?",
+    description:
+      "Requires restricting users from reusing their previously used passwords. Compliance is demonstrated by password history policy parameters and user account logs.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1904,8 +2007,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.3.8",
-    title: "Authentication Policies Documented Communicated Users",
-    description: "Are authentication policies documented and communicated to users?",
+    title: "Are authentication policies documented and communicated to users?",
+    description:
+      "Requires documenting and communicating user authentication policies to the workforce. Compliance is demonstrated by signed employee acknowledgement logs and published policy documents.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1918,9 +2022,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.3.9",
-    title: "Passwords Changed Periodically Monitored Dynamically Security",
+    title: "Are passwords changed periodically or monitored dynamically for security posture?",
     description:
-      "Are passwords changed periodically or monitored dynamically for security posture?",
+      "Requires changing passwords periodically or dynamically monitoring credential security posture. Compliance is demonstrated by system credential settings and security dashboard metrics.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1933,9 +2037,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.3.10",
-    title: "Authentication Factors Assigned Individual Users Protected",
+    title: "Are authentication factors assigned to individual users and protected from sharing?",
     description:
-      "Are authentication factors assigned to individual users and protected from sharing?",
+      "Requires assigning authentication credentials to single users and prohibiting credential sharing. Compliance is demonstrated by unique user profile listings and security policy acknowledgements.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1949,9 +2053,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.4.1",
-    title: "Multi-factor Authentication Implemented Non-console Administrative Access",
-    description:
+    title:
       "Is multi-factor authentication implemented for non-console administrative access to the CDE?",
+    description:
+      "Requires implementing multi-factor authentication for all non-console administrative access to the CDE. Compliance is demonstrated by system administration configs and MFA session logs.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1964,8 +2069,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.4.2",
-    title: "Multi-factor Authentication Implemented Access CDE",
-    description: "Is multi-factor authentication implemented for all access to the CDE?",
+    title: "Is multi-factor authentication implemented for all access to the CDE?",
+    description:
+      "Requires implementing multi-factor authentication for all user access to the CDE. Compliance is demonstrated by IAM portal settings and MFA audit logs.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1979,9 +2085,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.4.3",
-    title: "Multi-factor Authentication Implemented Remote Access Networks",
-    description:
+    title:
       "Is multi-factor authentication implemented for all remote access to networks that could access the CDE?",
+    description:
+      "Requires implementing multi-factor authentication for all remote connection points capable of accessing the CDE. Compliance is demonstrated by VPN and firewall profile configurations.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -1994,8 +2101,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.5.1",
-    title: "MFA Systems Configured Prevent Bypass Misuse",
-    description: "Are MFA systems configured to prevent bypass and misuse?",
+    title: "Are MFA systems configured to prevent bypass and misuse?",
+    description:
+      "Requires configuring multi-factor authentication systems to block bypass rules and credential misuse. Compliance is demonstrated by MFA global configurations and administrative bypass logs.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -2009,9 +2117,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.6.1",
-    title: "Application System Accounts Managed Prevent Unauthorized",
+    title: "Are application and system accounts managed to prevent unauthorized interactive login?",
     description:
-      "Are application and system accounts managed to prevent unauthorized interactive login?",
+      "Requires managing application and system accounts to restrict interactive login capability. Compliance is demonstrated by service account profiles and active login logs.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -2025,9 +2133,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.6.2",
-    title: "Passwords Application System Accounts Not Hard-coded",
-    description:
+    title:
       "Are passwords for application or system accounts not hard-coded in scripts or source code?",
+    description:
+      "Requires ensuring that application and service passwords are not hard-coded within source files or scripts. Compliance is demonstrated by automated code scans and secret manager configurations.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -2041,9 +2150,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-8.6.3",
-    title: "Passwords Application System Accounts Protected Periodically",
-    description:
+    title:
       "Are passwords for application and system accounts protected, periodically changed, and securely managed?",
+    description:
+      "Requires protecting and periodically rotating application and system account passwords. Compliance is demonstrated by vault management configuration logs and rotation schedules.",
     category: "Identify Users and Authenticate Access to System Components",
     severity: "HIGH",
     weight: 3,
@@ -2057,9 +2167,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.1.1",
-    title: "Security Policies Procedures Physical Access Controls",
-    description:
+    title:
       "Are security policies and procedures for physical access controls documented, maintained, and communicated?",
+    description:
+      "Requires documenting, maintaining, and communicating physical access control policies to relevant staff. Compliance is demonstrated by facility security manuals and acknowledgment records.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2072,9 +2183,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.1.2",
-    title: "Roles Responsibilities Physical Security Activities Documented",
-    description:
+    title:
       "Are roles and responsibilities for physical security activities documented and assigned?",
+    description:
+      "Requires documenting and assigning roles and responsibilities for facility physical security tasks. Compliance is demonstrated by security team rosters and duty logs.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2087,9 +2199,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.2.1",
-    title: "Physical Entry Controls Implemented Restrict Access",
-    description:
+    title:
       "Are physical entry controls implemented to restrict access to systems in the Cardholder Data Environment (CDE)?",
+    description:
+      "Requires implementing physical entry barriers to restrict access to systems housed in the CDE. Compliance is demonstrated by facility badge entry records and physical barrier layouts.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2102,9 +2215,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.2.1.1",
-    title: "Physical Access Sensitive Areas CDE Monitored",
-    description:
+    title:
       "Is physical access to sensitive areas in the CDE monitored using video cameras or access control mechanisms?",
+    description:
+      "Requires monitoring physical access to sensitive CDE areas using cameras or access control tools. Compliance is demonstrated by video recording logs and badge scanner reports.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2118,8 +2232,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.2.2",
-    title: "Controls Implemented Restrict Use Publicly Accessible",
-    description: "Are controls implemented to restrict use of publicly accessible network jacks?",
+    title: "Are controls implemented to restrict use of publicly accessible network jacks?",
+    description:
+      "Requires implementing controls to restrict network connectivity on publicly accessible ports. Compliance is demonstrated by switch port configuration settings and physical jack disablement logs.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2132,9 +2247,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.2.3",
-    title: "Physical Access Wireless Access Points Networking",
-    description:
+    title:
       "Is physical access to wireless access points, networking equipment, and telecom lines restricted?",
+    description:
+      "Requires physically locking wireless access points, networking hardware, and telecom lines in secure areas. Compliance is demonstrated by facility audits and locked rack cabinet logs.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2147,8 +2263,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.2.4",
-    title: "Console Systems Sensitive Areas Locked When",
-    description: "Are console systems in sensitive areas locked when not in use?",
+    title: "Are console systems in sensitive areas locked when not in use?",
+    description:
+      "Requires locking console systems located in sensitive physical areas when they are unattended. Compliance is demonstrated by system idle-lock rules and physical security walk audit records.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2161,9 +2278,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.3.1",
-    title: "Procedures Implemented Authorize Manage Personnel Physical",
-    description:
+    title:
       "Are procedures implemented to authorize and manage personnel physical access to the CDE?",
+    description:
+      "Requires implementing procedures to authorize and manage personnel physical access to the CDE. Compliance is demonstrated by badge database records and access authorization forms.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2177,9 +2295,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.3.1.1",
-    title: "Physical Access Sensitive CDE Areas Granted",
-    description:
+    title:
       "Is physical access to sensitive CDE areas granted based on job role and revoked upon termination?",
+    description:
+      "Requires granting physical access based on job role and revoking it immediately upon termination. Compliance is demonstrated by badge database audits and HR offboarding tickets.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2193,8 +2312,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.3.2",
-    title: "Procedures Implemented Authorize Manage Visitor Access",
-    description: "Are procedures implemented to authorize and manage visitor access to the CDE?",
+    title: "Are procedures implemented to authorize and manage visitor access to the CDE?",
+    description:
+      "Requires implementing procedures to authorize, escort, and manage visitor access to CDE facilities. Compliance is demonstrated by guest sign-in sheets and visitor escort protocols.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2208,8 +2328,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.3.3",
-    title: "Visitor Badges Collected Deactivated When Visitors",
-    description: "Are visitor badges collected or deactivated when visitors leave the facility?",
+    title: "Are visitor badges collected or deactivated when visitors leave the facility?",
+    description:
+      "Requires collecting or deactivating visitor badges when guests leave the facility. Compliance is demonstrated by visitor badge inventory logs and deactivation timestamp records.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2222,8 +2343,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.3.4",
-    title: "Visitor Log Maintained Visitor Details Access",
-    description: "Is a visitor log maintained with visitor details and access records?",
+    title: "Is a visitor log maintained with visitor details and access records?",
+    description:
+      "Requires maintaining a visitor log that records visitor names, organizations, and entry/exit times. Compliance is demonstrated by presenting guest logbooks or digital logs.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2237,8 +2359,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.4.1",
-    title: "Media Containing Cardholder Data Physically Secured",
-    description: "Is all media containing cardholder data physically secured?",
+    title: "Is all media containing cardholder data physically secured?",
+    description:
+      "Requires physically securing all storage media containing cardholder data to prevent unauthorized retrieval. Compliance is demonstrated by media safe logs and locked cabinet inspections.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2251,8 +2374,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.4.1.1",
-    title: "Offline Backups Containing Cardholder Data Stored",
-    description: "Are offline backups containing cardholder data stored securely?",
+    title: "Are offline backups containing cardholder data stored securely?",
+    description:
+      "Requires storing offline backups containing cardholder data in secure, off-site locations. Compliance is demonstrated by backup facility security reviews and transport chain-of-custody logs.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2265,8 +2389,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.4.1.2",
-    title: "Security Backup Storage Locations Reviewed Least",
-    description: "Is the security of backup storage locations reviewed at least annually?",
+    title: "Is the security of backup storage locations reviewed at least annually?",
+    description:
+      "Requires reviewing the security controls of all backup storage locations at least annually. Compliance is demonstrated by presenting signed annual security review forms.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2279,8 +2404,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.4.2",
-    title: "Media Containing Cardholder Data Classified According",
-    description: "Is media containing cardholder data classified according to data sensitivity?",
+    title: "Is media containing cardholder data classified according to data sensitivity?",
+    description:
+      "Requires classifying all media containing cardholder data according to its sensitivity level. Compliance is demonstrated by media labeling standards and active data classification logs.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2293,9 +2419,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.4.3",
-    title: "Media Containing Cardholder Data Securely Logged",
-    description:
+    title:
       "Is media containing cardholder data securely logged and tracked when sent outside the facility?",
+    description:
+      "Requires logging and tracking all media containing cardholder data when sent outside the facility. Compliance is demonstrated by presenting transit manifest logs and sign-off sheets.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2309,9 +2436,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.4.4",
-    title: "Management Approval Required Before Media Containing",
-    description:
+    title:
       "Is management approval required before media containing cardholder data is moved outside the facility?",
+    description:
+      "Requires obtaining management approval before cardholder media is moved outside the facility. Compliance is demonstrated by completed transfer approval tickets.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2325,9 +2453,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.4.5",
-    title: "Inventory Logs Maintained Electronic Media Containing",
+    title: "Are inventory logs maintained for all electronic media containing cardholder data?",
     description:
-      "Are inventory logs maintained for all electronic media containing cardholder data?",
+      "Requires maintaining detailed inventory logs of all electronic media that contains cardholder data. Compliance is demonstrated by presenting the active media inventory register.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2340,8 +2468,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.4.5.1",
-    title: "Electronic Media Inventories Reviewed Least Annually",
-    description: "Are electronic media inventories reviewed at least annually?",
+    title: "Are electronic media inventories reviewed at least annually?",
+    description:
+      "Requires reviewing and validating electronic media inventories at least annually. Compliance is demonstrated by presenting signed annual inventory audit logs.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2354,9 +2483,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.4.6",
-    title: "Hard-copy Materials Containing Cardholder Data Securely",
-    description:
+    title:
       "Are hard-copy materials containing cardholder data securely destroyed when no longer needed?",
+    description:
+      "Requires securely destroying hard-copy materials containing cardholder data when no longer needed. Compliance is demonstrated by shredding contractor certificates and destruction logs.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2370,9 +2500,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.4.7",
-    title: "Electronic Media Containing Cardholder Data Destroyed",
-    description:
+    title:
       "Is electronic media containing cardholder data destroyed or rendered unrecoverable when no longer needed?",
+    description:
+      "Requires destroying or rendering unrecoverable electronic media containing cardholder data when no longer needed. Compliance is demonstrated by media degaussing or sanitization logs.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2386,9 +2517,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.5.1",
-    title: "Point-of-interaction Devices Protected From Tampering Unauthorized",
-    description:
+    title:
       "Are point-of-interaction (POI) devices protected from tampering and unauthorized substitution?",
+    description:
+      "Requires protecting point-of-interaction (POI) devices from tampering and unauthorized substitution. Compliance is demonstrated by POI physical security seals and serial verification logs.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2401,8 +2533,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.5.1.1",
-    title: "Up-to-date Inventory POI Devices Maintained",
-    description: "Is an up-to-date inventory of POI devices maintained?",
+    title: "Is an up-to-date inventory of POI devices maintained?",
+    description:
+      "Requires maintaining an accurate, up-to-date inventory of all deployed POI devices. Compliance is demonstrated by presenting the POI hardware inventory registry.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2415,8 +2548,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.5.1.2",
-    title: "POI Devices Periodically Inspected Detect Tampering",
-    description: "Are POI devices periodically inspected to detect tampering or substitution?",
+    title: "Are POI devices periodically inspected to detect tampering or substitution?",
+    description:
+      "Requires inspecting POI devices periodically to detect physical tampering or hardware substitution. Compliance is demonstrated by dated inspection checklist logs.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2430,8 +2564,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.5.1.2.1",
-    title: "Frequency Method POI Inspections Defined Through",
-    description: "Is the frequency and method of POI inspections defined through risk analysis?",
+    title: "Is the frequency and method of POI inspections defined through risk analysis?",
+    description:
+      "Requires defining POI device inspection frequencies and methodologies using a documented risk analysis. Compliance is demonstrated by presenting the risk analysis report.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2445,9 +2580,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-9.5.1.3",
-    title: "Personnel Trained Detect Report Tampering Suspicious",
-    description:
+    title:
       "Are personnel trained to detect and report tampering or suspicious behavior involving POI devices?",
+    description:
+      "Requires training personnel to detect and report suspicious behavior or tampering on POI devices. Compliance is demonstrated by training logs and incident report sheets.",
     category: "Restrict Physical Access to Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2460,9 +2596,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.1.1",
-    title: "Security Policies Procedures Logging Monitoring Documented",
-    description:
+    title:
       "Are security policies and procedures for logging and monitoring documented, updated, and communicated to relevant personnel?",
+    description:
+      "Requires documenting, updating, and communicating logging and monitoring policies to relevant personnel. Compliance is demonstrated by policy review history entries.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2475,9 +2612,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.1.2",
-    title: "Roles Responsibilities Logging Monitoring Activities Documented",
-    description:
+    title:
       "Are roles and responsibilities for logging and monitoring activities documented and assigned?",
+    description:
+      "Requires documenting and assigning roles and responsibilities for system logging and monitoring activities. Compliance is demonstrated by administrative team assignment files.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2490,8 +2628,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.2.1",
-    title: "Audit Logs Enabled System Components Cardholder",
-    description: "Are audit logs enabled for all system components and cardholder data systems?",
+    title: "Are audit logs enabled for all system components and cardholder data systems?",
+    description:
+      "Requires enabling comprehensive audit logging across all system components and CDE servers. Compliance is demonstrated by log service daemon configuration profiles.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2504,8 +2643,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.2.1.1",
-    title: "Audit Logs Capture Individual User Access",
-    description: "Do audit logs capture all individual user access to cardholder data?",
+    title: "Do audit logs capture all individual user access to cardholder data?",
+    description:
+      "Requires audit logs to capture all individual user access events for cardholder data stores. Compliance is demonstrated by database audit trail settings and access logs.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2518,9 +2658,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.2.1.2",
-    title: "Audit Logs Capture Actions Performed Users",
+    title: "Do audit logs capture all actions performed by users with administrative privileges?",
     description:
-      "Do audit logs capture all actions performed by users with administrative privileges?",
+      "Requires audit logs to record all administrative and privileged actions executed by users. Compliance is demonstrated by operating system syslog configurations and audit reports.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2533,8 +2673,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.2.1.3",
-    title: "Audit Logs Record Access Audit Log",
-    description: "Do audit logs record all access to audit log files?",
+    title: "Do audit logs record all access to audit log files?",
+    description:
+      "Requires logging all access and read events for active audit log files to ensure security. Compliance is demonstrated by file access monitoring settings.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2547,8 +2688,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.2.1.4",
-    title: "Audit Logs Record Invalid Logical Access",
-    description: "Do audit logs record all invalid logical access attempts?",
+    title: "Do audit logs record all invalid logical access attempts?",
+    description:
+      "Requires audit logs to capture and record all failed logical access attempts. Compliance is demonstrated by active firewall security logs and authentication failure reports.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2561,8 +2703,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.2.1.5",
-    title: "Audit Logs Capture Changes User Accounts",
-    description: "Do audit logs capture changes to user accounts and authentication credentials?",
+    title: "Do audit logs capture changes to user accounts and authentication credentials?",
+    description:
+      "Requires audit logs to capture all user account creations, modifications, and deletions. Compliance is demonstrated by directory services event logs and audit registry scans.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2575,9 +2718,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.2.1.6",
-    title: "Audit Logs Record Initialization Starting Stopping",
+    title: "Do audit logs record the initialization, starting, stopping, or pausing of audit logs?",
     description:
-      "Do audit logs record the initialization, starting, stopping, or pausing of audit logs?",
+      "Requires logging any start, stop, pause, or initialization operations affecting audit log services. Compliance is demonstrated by log management service audit trail entries.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2590,8 +2733,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.2.1.7",
-    title: "Audit Logs Capture Creation Deletion System-level",
-    description: "Do audit logs capture creation and deletion of system-level objects?",
+    title: "Do audit logs capture creation and deletion of system-level objects?",
+    description:
+      "Requires audit logs to capture all system-level object creations and deletions. Compliance is demonstrated by operating system security audits and file system event logs.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2604,9 +2748,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.2.2",
-    title: "Audit Logs Record Required Event Details",
-    description:
+    title:
       "Do audit logs record required event details such as user ID, event type, date/time, success/failure, and source of event?",
+    description:
+      "Requires logging detailed event parameters including user ID, event type, timestamp, success/failure, and origin. Compliance is demonstrated by sample syslog payloads.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2619,8 +2764,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.3.1",
-    title: "Read Access Audit Logs Restricted Authorized",
-    description: "Is read access to audit logs restricted to authorized personnel only?",
+    title: "Is read access to audit logs restricted to authorized personnel only?",
+    description:
+      "Requires restricting read access to audit log files to authorized users only. Compliance is demonstrated by file system ACLs and log server group permission settings.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2634,8 +2780,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.3.2",
-    title: "Audit Log Files Protected From Unauthorized",
-    description: "Are audit log files protected from unauthorized modification?",
+    title: "Are audit log files protected from unauthorized modification?",
+    description:
+      "Requires protecting audit log files from unauthorized modification using write-once media or server rules. Compliance is demonstrated by log server settings and read-only attributes.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2649,9 +2796,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.3.3",
-    title: "Audit Logs Regularly Backed Up Secure",
-    description:
+    title:
       "Are audit logs regularly backed up to a secure centralized log server or secure storage?",
+    description:
+      "Requires backing up audit logs regularly to a secure centralized log server. Compliance is demonstrated by cron backup logs and centralized SIEM input profiles.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2664,8 +2812,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.3.4",
-    title: "File Integrity Monitoring Used Detect Unauthorized",
-    description: "Is file integrity monitoring used to detect unauthorized changes to audit logs?",
+    title: "Is file integrity monitoring used to detect unauthorized changes to audit logs?",
+    description:
+      "Requires implementing file integrity monitoring (FIM) to detect unauthorized changes to audit logs. Compliance is demonstrated by FIM software configurations and warning alert logs.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2678,9 +2827,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.4.1",
-    title: "Critical System Security Logs Reviewed Daily",
+    title: "Are critical system and security logs reviewed daily to detect suspicious activity?",
     description:
-      "Are critical system and security logs reviewed daily to detect suspicious activity?",
+      "Requires reviewing critical system and security logs daily to identify suspicious activities. Compliance is demonstrated by daily review checklist signatures or ticket logs.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2694,8 +2843,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.4.1.1",
-    title: "Automated Tools Used Review Audit Logs",
-    description: "Are automated tools used to review audit logs?",
+    title: "Are automated tools used to review audit logs?",
+    description:
+      "Requires deploying automated log analysis or SIEM tools to continuously review audit logs. Compliance is demonstrated by active SIEM alarm rule screens.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2708,8 +2858,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.4.2",
-    title: "Logs Other System Components Reviewed Periodically",
-    description: "Are logs of other system components reviewed periodically?",
+    title: "Are logs of other system components reviewed periodically?",
+    description:
+      "Requires reviewing logs of non-critical system components periodically. Compliance is demonstrated by schedule configurations and completed review checklist records.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2723,8 +2874,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.4.2.1",
-    title: "Frequency Periodic Log Reviews Defined Based",
-    description: "Is the frequency of periodic log reviews defined based on risk analysis?",
+    title: "Is the frequency of periodic log reviews defined based on risk analysis?",
+    description:
+      "Requires defining periodic log review frequencies using a formal risk analysis. Compliance is demonstrated by presenting the risk analysis report.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "MEDIUM",
     weight: 2,
@@ -2737,9 +2889,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.4.3",
-    title: "Anomalies Suspicious Activities Identified Log Reviews",
-    description:
+    title:
       "Are anomalies or suspicious activities identified in log reviews investigated and addressed?",
+    description:
+      "Requires investigating and addressing all anomalies or suspicious activities flagged in log reviews. Compliance is demonstrated by incident tickets and remediation logs.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2752,9 +2905,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.5.1",
-    title: "Audit Logs Retained Least 12 Months",
-    description:
+    title:
       "Are audit logs retained for at least 12 months with at least three months immediately available for analysis?",
+    description:
+      "Requires retaining audit logs for at least 12 months, with three months immediately queryable. Compliance is demonstrated by log retention configs and active directory search response times.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2768,8 +2922,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.6.1",
-    title: "System Clocks Synchronized Using Time Synchronization",
-    description: "Are system clocks synchronized using time synchronization technology?",
+    title: "Are system clocks synchronized using time synchronization technology?",
+    description:
+      "Requires synchronizing all system clocks using automated time synchronization technology. Compliance is demonstrated by NTP configuration files and system time audits.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2782,9 +2937,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.6.2",
-    title: "Systems Configured Use Designated Secure Time",
-    description:
+    title:
       "Are systems configured to use designated and secure time servers for consistent time synchronization?",
+    description:
+      "Requires configuring systems to retrieve time from designated, secure NTP servers. Compliance is demonstrated by NTP server lists and active connection state audits.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2797,9 +2953,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.6.3",
-    title: "Time Synchronization Settings Protected Changes Time",
-    description:
+    title:
       "Are time synchronization settings protected and changes to time settings logged and monitored?",
+    description:
+      "Requires protecting time configurations from unauthorized changes and auditing modifications. Compliance is demonstrated by clock security parameters and change logs.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2813,8 +2970,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.7.2",
-    title: "Failures Critical Security Control Systems Detected",
-    description: "Are failures of critical security control systems detected and alerted promptly?",
+    title: "Are failures of critical security control systems detected and alerted promptly?",
+    description:
+      "Requires implementing automated alerts to detect failures of critical security controls promptly. Compliance is demonstrated by monitoring rulesets and simulated failover logs.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2828,9 +2986,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-10.7.3",
-    title: "Failures Critical Security Control Systems Investigated",
-    description:
+    title:
       "Are failures of critical security control systems investigated, documented, and remediated promptly?",
+    description:
+      "Requires investigating, documenting, and resolving all critical security control failures promptly. Compliance is demonstrated by support tickets and incident root-cause reports.",
     category: "Log and Monitor All Access to System Components and Cardholder Data",
     severity: "HIGH",
     weight: 3,
@@ -2844,9 +3003,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.1.1",
-    title: "Security Policies Operational Procedures Requirement 11",
-    description:
+    title:
       "Are security policies and operational procedures for Requirement 11 documented, updated, and communicated to relevant personnel?",
+    description:
+      "Requires documenting, updating, and communicating security testing policies to relevant personnel. Compliance is demonstrated by policy revision histories and training logs.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -2859,9 +3019,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.1.2",
-    title: "Roles Responsibilities Security Testing Activities Documented",
-    description:
+    title:
       "Are roles and responsibilities for security testing activities documented, assigned, and understood?",
+    description:
+      "Requires assigning and documenting roles for all vulnerability scanning and security testing activities. Compliance is demonstrated by team matrices and job descriptions.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -2874,9 +3035,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.2.1",
-    title: "Wireless Access Points Regularly Identified Monitored",
-    description:
+    title:
       "Are wireless access points regularly identified, monitored, and unauthorized access points detected?",
+    description:
+      "Requires scanning for and detecting unauthorized wireless access points at regular intervals. Compliance is demonstrated by wireless scan logs and signal inspection files.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -2890,9 +3052,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.2.2",
-    title: "Inventory Authorized Wireless Access Points Maintained",
-    description:
+    title:
       "Is an inventory of authorized wireless access points maintained with documented business justification?",
+    description:
+      "Requires maintaining an inventory of authorized wireless access points with business justifications. Compliance is demonstrated by presenting the wireless hardware inventory register.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -2905,9 +3068,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.3.1",
-    title: "Internal Vulnerability Scans Performed Least Every",
-    description:
+    title:
       "Are internal vulnerability scans performed at least every three months and vulnerabilities resolved?",
+    description:
+      "Requires performing internal vulnerability scans at least every three months and remediating findings. Compliance is demonstrated by scanner schedules and remediation ticket logs.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -2921,9 +3085,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.3.1.1",
-    title: "Lower-risk Vulnerabilities Managed Based Organizations Risk",
-    description:
+    title:
       "Are lower-risk vulnerabilities managed based on the organization�s risk analysis process?",
+    description:
+      "Requires managing and remediating lower-risk vulnerabilities based on the organization's risk analysis. Compliance is demonstrated by vulnerability management procedures and exception logs.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "MEDIUM",
     weight: 2,
@@ -2937,8 +3102,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.3.1.2",
-    title: "Authenticated Internal Vulnerability Scans Performed Where",
-    description: "Are authenticated internal vulnerability scans performed where applicable?",
+    title: "Are authenticated internal vulnerability scans performed where applicable?",
+    description:
+      "Requires conducting authenticated internal vulnerability scans where technically feasible. Compliance is demonstrated by scanner credentials configuration screens and scan reports.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "MEDIUM",
     weight: 2,
@@ -2952,9 +3118,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.3.1.3",
-    title: "Internal Vulnerability Scans Performed After Significant",
-    description:
+    title:
       "Are internal vulnerability scans performed after significant system or infrastructure changes?",
+    description:
+      "Requires executing internal vulnerability scans immediately following any significant infrastructure changes. Compliance is demonstrated by post-change validation logs.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "MEDIUM",
     weight: 2,
@@ -2968,9 +3135,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.3.2",
-    title: "External Vulnerability Scans Performed Least Every",
-    description:
+    title:
       "Are external vulnerability scans performed at least every three months by an approved scanning vendor (ASV)?",
+    description:
+      "Requires performing external vulnerability scans at least quarterly using an Approved Scanning Vendor (ASV). Compliance is demonstrated by presenting ASV scan reports.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -2983,9 +3151,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.3.2.1",
-    title: "External Vulnerability Scans Performed After Significant",
-    description:
+    title:
       "Are external vulnerability scans performed after significant changes and vulnerabilities remediated?",
+    description:
+      "Requires running external vulnerability scans and resolving findings after any significant network changes. Compliance is demonstrated by post-change ASV scans.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "MEDIUM",
     weight: 2,
@@ -2999,9 +3168,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.4.1",
-    title: "Documented Penetration Testing Methodology Defined Implemented",
-    description:
+    title:
       "Is a documented penetration testing methodology defined and implemented for systems and networks?",
+    description:
+      "Requires defining and implementing a formal penetration testing methodology covering CDE boundaries. Compliance is demonstrated by presenting the penetration testing policy.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -3014,9 +3184,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.4.2",
-    title: "Internal Penetration Testing Performed Least Annually",
-    description:
+    title:
       "Is internal penetration testing performed at least annually and after significant changes?",
+    description:
+      "Requires performing internal penetration testing at least annually and after major structural changes. Compliance is demonstrated by signed penetration test reports.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -3030,9 +3201,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.4.3",
-    title: "External Penetration Testing Performed Least Annually",
-    description:
+    title:
       "Is external penetration testing performed at least annually and after significant changes?",
+    description:
+      "Requires executing external penetration testing at least annually and after significant boundary changes. Compliance is demonstrated by third-party testing report sign-offs.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -3046,9 +3218,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.4.4",
-    title: "Vulnerabilities Identified During Penetration Testing Remediated",
-    description:
+    title:
       "Are vulnerabilities identified during penetration testing remediated and verified through retesting?",
+    description:
+      "Requires remediating penetration testing vulnerabilities and verifying resolutions via targeted retesting. Compliance is demonstrated by remediation records and retest reports.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -3061,9 +3234,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.4.5",
-    title: "If Network Segmentation Used Segmentation Controls",
-    description:
+    title:
       "If network segmentation is used, are segmentation controls tested through penetration testing at least annually?",
+    description:
+      "Requires testing network segmentation controls at least annually using active penetration testing. Compliance is demonstrated by presenting boundary testing reports.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -3077,9 +3251,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.5.1",
-    title: "Intrusion Detection Prevention Systems Implemented Monitor",
-    description:
+    title:
       "Are intrusion detection or prevention systems implemented to monitor network traffic and alert personnel of potential intrusions?",
+    description:
+      "Requires implementing intrusion detection or prevention systems to monitor network boundaries and alert on threats. Compliance is demonstrated by active IDS/IPS configurations.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -3093,9 +3268,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.5.2",
-    title: "Change-detection Mechanism Implemented Detect Unauthorized Changes",
-    description:
+    title:
       "Is a change-detection mechanism implemented to detect unauthorized changes to critical system files?",
+    description:
+      "Requires deploying file integrity monitoring (FIM) or change-detection systems to protect critical files. Compliance is demonstrated by FIM configuration parameters.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -3109,9 +3285,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-11.6.1",
-    title: "Mechanism Implemented Detect Unauthorized Changes Tampering",
-    description:
+    title:
       "Is a mechanism implemented to detect unauthorized changes or tampering on payment pages?",
+    description:
+      "Requires implementing automated mechanisms to detect unauthorized script modifications on payment pages. Compliance is demonstrated by script integrity audit logs.",
     category: "Test Security of Systems and Networks Regularly",
     severity: "HIGH",
     weight: 3,
@@ -3125,9 +3302,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.1.1",
-    title: "Information Security Policy Established Maintained Communicated",
-    description:
+    title:
       "Is an information security policy established, maintained, and communicated to all relevant personnel and partners?",
+    description:
+      "Requires establishing, maintaining, and communicating an information security policy to all staff and partners. Compliance is demonstrated by the security policy handbook.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3140,9 +3318,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.1.2",
-    title: "Information Security Policy Reviewed Least Annually",
-    description:
+    title:
       "Is the information security policy reviewed at least annually and updated when necessary?",
+    description:
+      "Requires reviewing the global information security policy at least annually. Compliance is demonstrated by signed review stamps and policy change control history.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3155,9 +3334,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.1.3",
-    title: "Security Policy Define Roles Responsibilities Information",
-    description:
+    title:
       "Does the security policy define roles and responsibilities for information security and are personnel aware of them?",
+    description:
+      "Requires outlining roles and responsibilities for information security within policy files. Compliance is demonstrated by role definition pages and training signs.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3170,9 +3350,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.1.4",
-    title: "Responsibility Information Security Formally Assigned CISO",
-    description:
+    title:
       "Is responsibility for information security formally assigned to a CISO or senior security officer?",
+    description:
+      "Requires formally assigning responsibility for corporate information security to a senior security officer. Compliance is demonstrated by organizational board resolutions.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3185,9 +3366,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.2.1",
-    title: "Acceptable Use Policies End-user Technologies Documented",
+    title: "Are acceptable use policies for end-user technologies documented and implemented?",
     description:
-      "Are acceptable use policies for end-user technologies documented and implemented?",
+      "Requires documenting and enforcing acceptable use policies for all corporate end-user technologies. Compliance is demonstrated by employee acceptable use signs.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3200,9 +3381,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.3.1",
-    title: "Documented Risk Analysis Performed Determine Frequency",
-    description:
+    title:
       "Is a documented risk analysis performed to determine the frequency of PCI DSS control activities?",
+    description:
+      "Requires performing a documented risk analysis to define frequencies for PCI DSS control tasks. Compliance is demonstrated by providing the completed risk analysis report.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3215,9 +3397,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.3.3",
-    title: "Cryptographic Protocols Cipher Suites Documented Reviewed",
-    description:
+    title:
       "Are cryptographic protocols and cipher suites documented and reviewed at least annually?",
+    description:
+      "Requires documenting and reviewing all cryptographic protocols and cipher suites at least annually. Compliance is demonstrated by security standard reviews and ciphers lists.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3230,9 +3413,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.3.4",
-    title: "Hardware Software Technologies Reviewed Annually Ensure",
-    description:
+    title:
       "Are hardware and software technologies reviewed annually to ensure they remain secure and supported?",
+    description:
+      "Requires conducting annual reviews of software and hardware technologies to verify active vendor support. Compliance is demonstrated by technology lifecycle lists.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3245,9 +3429,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.4.1",
-    title: "Inventory System Components Scope PCI DSS",
-    description:
+    title:
       "Is an inventory of all system components in scope for PCI DSS maintained and kept current?",
+    description:
+      "Requires maintaining a current inventory of all system components within the PCI DSS scope. Compliance is demonstrated by presenting the system component inventory.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3260,9 +3445,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.4.2",
-    title: "PCI DSS Scope Reviewed Validated Least",
-    description:
+    title:
       "Is PCI DSS scope reviewed and validated at least annually and after significant changes?",
+    description:
+      "Requires reviewing and validating the PCI DSS scope boundary at least annually. Compliance is demonstrated by scope verification logs and network layout reviews.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3275,8 +3461,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.5.1",
-    title: "Formal Security Awareness Program Implemented Personnel",
-    description: "Is a formal security awareness program implemented for all personnel?",
+    title: "Is a formal security awareness program implemented for all personnel?",
+    description:
+      "Requires implementing a formal security awareness program for all workforce members. Compliance is demonstrated by the security training program curriculum.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3289,8 +3476,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.5.2",
-    title: "Security Awareness Program Reviewed Updated Least",
-    description: "Is the security awareness program reviewed and updated at least annually?",
+    title: "Is the security awareness program reviewed and updated at least annually?",
+    description:
+      "Requires reviewing and updating the security awareness program curriculum at least annually. Compliance is demonstrated by program update logs and review signatures.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3303,8 +3491,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.5.3",
-    title: "Personnel Receive Security Awareness Training Hire",
-    description: "Do personnel receive security awareness training at hire and at least annually?",
+    title: "Do personnel receive security awareness training at hire and at least annually?",
+    description:
+      "Requires delivering security awareness training to all personnel upon hire and at least annually. Compliance is demonstrated by training logs and attendance sheets.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3318,9 +3507,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.5.3.1",
-    title: "Security Awareness Training Include Phishing Social",
+    title: "Does security awareness training include phishing and social engineering threats?",
     description:
-      "Does security awareness training include phishing and social engineering threats?",
+      "Requires including phishing and social engineering threat awareness in security training. Compliance is demonstrated by training course content reviews.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "MEDIUM",
     weight: 2,
@@ -3333,9 +3522,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.5.3.2",
-    title: "Security Awareness Training Include Acceptable Use",
+    title: "Does security awareness training include acceptable use of end-user technologies?",
     description:
-      "Does security awareness training include acceptable use of end-user technologies?",
+      "Requires incorporating acceptable use rules of technology into security training modules. Compliance is demonstrated by training content slides and test questions.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "MEDIUM",
     weight: 2,
@@ -3348,9 +3537,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.6.1",
-    title: "Personnel Screened Prior Hiring If They",
-    description:
+    title:
       "Are personnel screened prior to hiring if they will have access to the cardholder data environment (CDE)?",
+    description:
+      "Requires screening personnel candidates prior to hire if they will have CDE access privileges. Compliance is demonstrated by completed background check files.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3363,9 +3553,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.7.1",
-    title: "List Maintained Third-party Service Providers That",
-    description:
+    title:
       "Is a list maintained of all third-party service providers that access or impact cardholder data?",
+    description:
+      "Requires maintaining an accurate directory of all third-party service providers with cardholder data access. Compliance is demonstrated by vendor inventory logs.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3378,9 +3569,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.7.2",
-    title: "Written Agreements Maintained Third-party Service Providers",
-    description:
+    title:
       "Are written agreements maintained with third-party service providers regarding protection of cardholder data?",
+    description:
+      "Requires maintaining written agreements with third-party providers regarding the safety of cardholder data. Compliance is demonstrated by active vendor service level contracts.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3393,9 +3585,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.7.3",
-    title: "Due Diligence Process Implemented Before Engaging",
+    title: "Is a due diligence process implemented before engaging third-party service providers?",
     description:
-      "Is a due diligence process implemented before engaging third-party service providers?",
+      "Requires implementing a formal due diligence process before engaging new third-party service providers. Compliance is demonstrated by completed vendor assessments.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3408,9 +3600,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.7.4",
-    title: "PCI DSS Compliance Status Third-party Service",
-    description:
+    title:
       "Is the PCI DSS compliance status of third-party service providers monitored at least annually?",
+    description:
+      "Requires monitoring the PCI DSS compliance status of all active third-party providers at least annually. Compliance is demonstrated by vendor AOC certificates.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3423,9 +3616,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.7.5",
-    title: "Documentation Maintained Showing Which PCI DSS",
-    description:
+    title:
       "Is documentation maintained showing which PCI DSS controls are handled by the entity and which by third-party providers?",
+    description:
+      "Requires documenting specific PCI DSS control responsibilities between the entity and third-party providers. Compliance is demonstrated by the control responsibility matrix.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3438,9 +3632,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.8.1",
-    title: "Incident Response Plan Established Address Security",
-    description:
+    title:
       "Is an incident response plan established to address security incidents affecting the CDE?",
+    description:
+      "Requires establishing an incident response plan to handle potential security events in the CDE. Compliance is demonstrated by the approved Incident Response Plan.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3454,8 +3649,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.8.2",
-    title: "Incident Response Plan Reviewed Tested Least",
-    description: "Is the incident response plan reviewed and tested at least annually?",
+    title: "Is the incident response plan reviewed and tested at least annually?",
+    description:
+      "Requires testing and reviewing the incident response plan at least annually. Compliance is demonstrated by tabletop test reports and post-test signatures.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3468,8 +3664,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.8.3",
-    title: "Personnel Available 24/7 Respond Security Incidents",
-    description: "Are personnel available 24/7 to respond to security incidents?",
+    title: "Are personnel available 24/7 to respond to security incidents?",
+    description:
+      "Requires having incident response personnel available 24/7 to address security incidents. Compliance is demonstrated by paging system alerts and on-call rosters.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3482,8 +3679,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.8.4",
-    title: "Incident Response Personnel Trained Their Responsibilities",
-    description: "Are incident response personnel trained on their responsibilities?",
+    title: "Are incident response personnel trained on their responsibilities?",
+    description:
+      "Requires providing specific training to all designated incident response personnel. Compliance is demonstrated by response training logs and certifications.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3496,8 +3694,9 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.8.4.1",
-    title: "Frequency Incident Response Training Defined Through",
-    description: "Is the frequency of incident response training defined through risk analysis?",
+    title: "Is the frequency of incident response training defined through risk analysis?",
+    description:
+      "Requires defining training frequencies for incident response personnel through risk analysis. Compliance is demonstrated by risk analysis records.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "MEDIUM",
     weight: 2,
@@ -3510,9 +3709,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.8.5",
-    title: "Incident Response Plan Include Responding Alerts",
-    description:
+    title:
       "Does the incident response plan include responding to alerts from security monitoring systems?",
+    description:
+      "Requires the incident response plan to include protocols for alerts generated by monitoring systems. Compliance is demonstrated by response playbook profiles.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3525,9 +3725,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.8.6",
-    title: "Incident Response Plan Updated Based Lessons",
-    description:
+    title:
       "Is the incident response plan updated based on lessons learned and industry developments?",
+    description:
+      "Requires updating the incident response plan using lessons learned from prior tabletop tests or events. Compliance is demonstrated by post-mortem report stamps.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
@@ -3540,9 +3741,10 @@ export const pciControls: SeedControl[] = [
   },
   {
     code: "PCI-12.8.7",
-    title: "Procedures Defined Respond If Stored PAN",
-    description:
+    title:
       "Are procedures defined to respond if stored PAN is discovered outside the expected environment?",
+    description:
+      "Requires defining procedures to respond if stored PAN is located outside authorized environments. Compliance is demonstrated by data leakage incident playbooks.",
     category: "Support Information Security with Organizational Policies and Programs",
     severity: "HIGH",
     weight: 3,
