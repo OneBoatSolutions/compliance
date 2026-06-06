@@ -181,7 +181,11 @@ export function FrameworkDetails({ frameworkId }: Props) {
   if (initialLoading) {
     return (
       <div className="rounded-3xl border border-[#e5e5e5] bg-white p-20 text-center shadow-sm">
-        <div className="mx-auto h-14 w-14 animate-spin rounded-full border-4 border-[#e9ddff] border-t-[#6d18ff]" />
+        <div
+          role="status"
+          aria-label="Loading framework workspace"
+          className="mx-auto h-14 w-14 animate-spin rounded-full border-4 border-[#e9ddff] border-t-[#6d18ff]"
+        />
 
         <p className="mt-6 text-lg font-medium text-[#525252]">Loading framework workspace...</p>
       </div>
@@ -202,8 +206,14 @@ export function FrameworkDetails({ frameworkId }: Props) {
     <div className="space-y-8">
       {/* HERO */}
 
-      <div className="relative overflow-hidden rounded-[32px] border border-[#7c3aed]/20 bg-gradient-to-br from-[#6d18ff] via-[#7c3aed] to-[#5412cc] p-10 text-white shadow-2xl">
-        <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+      <section
+        aria-labelledby="framework-title"
+        className="relative overflow-hidden rounded-[32px] border border-[#7c3aed]/20 bg-gradient-to-br from-[#6d18ff] via-[#7c3aed] to-[#5412cc] p-10 text-white shadow-2xl"
+      >
+        <div
+          aria-hidden="true"
+          className="absolute right-0 top-0 h-72 w-72 rounded-full bg-white/10 blur-3xl"
+        />
 
         <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-3xl">
@@ -211,7 +221,9 @@ export function FrameworkDetails({ frameworkId }: Props) {
               Compliance Framework
             </p>
 
-            <h1 className="mt-4 text-5xl font-bold tracking-tight">{framework.name}</h1>
+            <h1 id="framework-title" className="mt-4 text-5xl font-bold tracking-tight">
+              {framework.name}
+            </h1>
 
             <p className="mt-4 max-w-2xl text-lg leading-8 text-[#ede9fe]">
               Securely manage controls, publishing workflows, governance states, and audit-ready
@@ -234,8 +246,10 @@ export function FrameworkDetails({ frameworkId }: Props) {
           <div className="flex flex-wrap items-center gap-4">
             {framework.status === "DRAFT" ? (
               <button
+                type="button"
+                aria-label="Publish framework"
                 onClick={() => void publishFramework()}
-                className="rounded-2xl bg-[#10b981] px-6 py-4 text-sm font-semibold text-white shadow-lg transition hover:scale-[1.02] hover:bg-[#059669]"
+                className="rounded-2xl bg-[#10b981] px-6 py-4 text-sm font-semibold text-white shadow-lg transition hover:scale-[1.02] hover:bg-[#059669] "
               >
                 Publish Framework
               </button>
@@ -243,6 +257,8 @@ export function FrameworkDetails({ frameworkId }: Props) {
 
             {framework.status === "PUBLISHED" ? (
               <button
+                type="button"
+                aria-label="Archive framework"
                 onClick={() => void archiveFramework()}
                 className="rounded-2xl border border-white/20 bg-white/10 px-6 py-4 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/20"
               >
@@ -251,12 +267,16 @@ export function FrameworkDetails({ frameworkId }: Props) {
             ) : null}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ERROR */}
 
       {errors.general ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50 px-6 py-5 text-red-600 shadow-sm">
+        <div
+          role="alert"
+          aria-live="assertive"
+          className="rounded-2xl border border-red-200 bg-red-50 px-6 py-5 text-red-600 shadow-sm"
+        >
           {errors.general}
         </div>
       ) : null}
@@ -272,7 +292,11 @@ export function FrameworkDetails({ frameworkId }: Props) {
           </div>
 
           {isLocked ? (
-            <div className="rounded-full bg-[#f5f5f5] px-4 py-2 text-sm font-medium text-[#525252]">
+            <div
+              role="status"
+              aria-live="polite"
+              className="rounded-full bg-[#f5f5f5] px-4 py-2 text-sm font-medium text-[#525252]"
+            >
               Read Only
             </div>
           ) : null}
@@ -294,13 +318,19 @@ export function FrameworkDetails({ frameworkId }: Props) {
           <p className="mt-2 text-[#525252]">Create controls and compliance checkpoints.</p>
         </div>
         {errors.general ? (
-          <div className="rounded-2xl border border-red-200 bg-red-50 px-6 py-5 text-red-600 shadow-sm mb-4">
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="rounded-2xl border border-red-200 bg-red-50 px-6 py-5 text-red-600 shadow-sm mb-4"
+          >
             {errors.general}
           </div>
         ) : null}
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <input
+            id="control-code"
+            aria-label="Control Code"
             disabled={isLocked}
             placeholder="Control Code"
             value={controlForm.code}
@@ -314,6 +344,8 @@ export function FrameworkDetails({ frameworkId }: Props) {
           />
 
           <input
+            id="control-title"
+            aria-label="Control Title"
             disabled={isLocked}
             placeholder="Title"
             value={controlForm.title}
@@ -328,6 +360,8 @@ export function FrameworkDetails({ frameworkId }: Props) {
         </div>
 
         <textarea
+          id="control-description"
+          aria-label="Control Description"
           disabled={isLocked}
           placeholder="Description"
           rows={4}
@@ -343,6 +377,8 @@ export function FrameworkDetails({ frameworkId }: Props) {
 
         <div className="mt-8 flex justify-end">
           <button
+            type="button"
+            aria-label="Add control"
             disabled={isLocked}
             onClick={() => void addControl()}
             className="rounded-2xl bg-[#6d18ff] px-6 py-4 font-semibold text-white shadow-lg transition hover:scale-[1.02] hover:bg-[#5412cc]"
@@ -364,4 +400,4 @@ export function FrameworkDetails({ frameworkId }: Props) {
 }
 
 const inputClass =
-  "w-full rounded-2xl border border-[#e5e5e5] bg-[#fafafa] px-5 py-4 text-[#171717] outline-none transition focus:border-[#6d18ff] focus:bg-white focus:ring-4 focus:ring-[#e9ddff] disabled:cursor-not-allowed disabled:bg-[#f5f5f5] disabled:text-[#a3a3a3]";
+  "w-full rounded-2xl border border-[#e5e5e5] bg-[#fafafa] px-5 py-4 text-[#171717] outline-none transition focus:border-[#6d18ff] focus:bg-white focus:ring-4 focus:ring-[#e9ddff] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6d18ff]/30 disabled:cursor-not-allowed disabled:bg-[#f5f5f5] disabled:text-[#a3a3a3]";

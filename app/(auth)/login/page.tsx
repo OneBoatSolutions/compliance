@@ -8,7 +8,7 @@ export default function LoginPage() {
       <div className="mb-10 ">
         <h2 className="text-3xl font-bold text-slate-900">Welcome back</h2>
 
-        <p className="mt-2 text-slate-500">Enter your credentials to access your account</p>
+        <p className="mt-2 text-slate-500">Sign in to your Cipherion account</p>
       </div>
 
       <LoginForm />

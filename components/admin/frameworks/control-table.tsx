@@ -107,7 +107,7 @@ export function ControlTable({ frameworkId, controls, disabled }: Props) {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[900px]">
+        <table aria-label="Framework controls table" className="w-full min-w-[900px]">
           <thead className="bg-[#fafafa]">
             <tr className="border-b border-[#f0f0f0]">
               <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.16em] text-[#737373]">
@@ -194,6 +194,7 @@ function ControlRow({
     <tr className="border-b border-[#f5f5f5] transition hover:bg-[#fcfbff]">
       <td className="px-6 py-5">
         <input
+          aria-label={`Control code for ${control.title}`}
           value={draft.code}
           disabled={!isEditing || disabled}
           onChange={(event) =>
@@ -208,6 +209,7 @@ function ControlRow({
 
       <td className="px-6 py-5">
         <input
+          aria-label={`Control title for ${control.code}`}
           value={draft.title}
           disabled={!isEditing || disabled}
           onChange={(event) =>
@@ -222,6 +224,7 @@ function ControlRow({
 
       <td className="px-6 py-5">
         <select
+          aria-label={`Severity for ${control.code}`}
           value={draft.severity}
           disabled={!isEditing || disabled}
           onChange={(event) =>
@@ -244,6 +247,7 @@ function ControlRow({
 
       <td className="px-6 py-5">
         <input
+          aria-label={`Weight for ${control.code}`}
           type="number"
           value={draft.weight}
           disabled={!isEditing || disabled}
@@ -261,6 +265,9 @@ function ControlRow({
         <div className="flex justify-end gap-3">
           {isEditing ? (
             <button
+              type="button"
+              aria-label={`Save control ${control.code}`}
+              aria-busy={loading}
               disabled={loading || disabled}
               onClick={() => void onSave(draft)}
               className="rounded-xl bg-[#10b981] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:scale-[1.02] hover:bg-[#0d9f6e] disabled:cursor-not-allowed disabled:opacity-50"
@@ -269,6 +276,8 @@ function ControlRow({
             </button>
           ) : (
             <button
+              type="button"
+              aria-label={`Edit control ${control.code}`}
               disabled={disabled}
               onClick={() =>
                 setEditing((previous) => ({
@@ -285,6 +294,8 @@ function ControlRow({
           {confirmDelete ? (
             <div className="flex items-center gap-2">
               <button
+                type="button"
+                aria-label={`Confirm delete control ${control.code}`}
                 disabled={loading}
                 onClick={() => void onDelete(control.id)}
                 className="rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white"
@@ -293,6 +304,8 @@ function ControlRow({
               </button>
 
               <button
+                type="button"
+                aria-label={`Cancel delete control ${control.code}`}
                 onClick={() => setConfirmDelete(false)}
                 className="rounded-xl border border-[#e5e5e5] px-4 py-3 text-sm font-medium text-[#525252]"
               >
@@ -301,6 +314,8 @@ function ControlRow({
             </div>
           ) : (
             <button
+              type="button"
+              aria-label={`Delete control ${control.code}`}
               disabled={loading || disabled}
               onClick={() => setConfirmDelete(true)}
               className="rounded-xl border border-red-200 bg-red-50 px-5 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-100"

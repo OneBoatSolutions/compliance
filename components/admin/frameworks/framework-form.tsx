@@ -12,7 +12,7 @@ const REGIONS = ["US", "EU", "UK", "Global", "India"] as const;
 const CATEGORIES = ["Privacy", "Security", "Healthcare", "Financial"] as const;
 
 const inputClass =
-  "w-full rounded-2xl border border-[#e5e5e5] bg-white px-5 py-4 text-sm text-[#171717] shadow-sm outline-none transition duration-200 placeholder:text-[#a3a3a3] focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff]";
+  "w-full rounded-2xl border border-[#e5e5e5] bg-white px-5 py-4 text-sm text-[#171717] shadow-sm outline-none transition duration-200 placeholder:text-[#a3a3a3] focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff] ";
 
 export function FrameworkForm() {
   const router = useRouter();
@@ -69,7 +69,11 @@ export function FrameworkForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      aria-label="Create compliance framework form"
+      noValidate
+    >
       <div className="overflow-hidden rounded-[32px] border border-[#e5e5e5] bg-white shadow-[0_20px_60px_rgba(109,24,255,0.08)]">
         <div className="border-b border-[#f5f5f5] bg-gradient-to-r from-[#faf7ff] to-white px-8 py-8 lg:px-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
@@ -105,19 +109,31 @@ export function FrameworkForm() {
         <div className="p-8 lg:p-10">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             <FormField
+              id="code"
               label="Framework Code"
               helper="Unique identifier"
               error={errors.code?.message}
             >
               <input
+                id="code"
+                aria-invalid={!!errors.code}
+                aria-describedby={errors.code ? "code-error" : undefined}
                 {...register("code", { setValueAs: (value) => String(value).toUpperCase() })}
                 placeholder="CCPA"
                 className={inputClass}
               />
             </FormField>
 
-            <FormField label="Framework Name" helper="Official name" error={errors.name?.message}>
+            <FormField
+              id="name"
+              label="Framework Name"
+              helper="Official name"
+              error={errors.name?.message}
+            >
               <input
+                id="name"
+                aria-invalid={!!errors.name}
+                aria-describedby={errors.name ? "name-error" : undefined}
                 {...register("name")}
                 placeholder="California Consumer Privacy Act"
                 className={inputClass}
@@ -126,11 +142,15 @@ export function FrameworkForm() {
 
             <div className="md:col-span-2">
               <FormField
+                id="description"
                 label="Description"
                 helper="Purpose and scope"
                 error={errors.description?.message}
               >
                 <textarea
+                  id="description"
+                  aria-invalid={!!errors.description}
+                  aria-describedby={errors.description ? "description-error" : undefined}
                   {...register("description")}
                   rows={6}
                   placeholder="Framework description..."
@@ -139,8 +159,15 @@ export function FrameworkForm() {
               </FormField>
             </div>
 
-            <FormField label="Region" error={errors.region?.message}>
-              <select {...register("region")} className={inputClass} defaultValue="">
+            <FormField id="region" label="Region" error={errors.region?.message}>
+              <select
+                id="region"
+                aria-invalid={!!errors.region}
+                aria-describedby={errors.region ? "region-error" : undefined}
+                {...register("region")}
+                className={inputClass}
+                defaultValue=""
+              >
                 <option value="">Select Region</option>
                 {REGIONS.map((region) => (
                   <option key={region} value={region}>
@@ -150,8 +177,15 @@ export function FrameworkForm() {
               </select>
             </FormField>
 
-            <FormField label="Category" error={errors.category?.message}>
-              <select {...register("category")} className={inputClass} defaultValue="">
+            <FormField id="category" label="Category" error={errors.category?.message}>
+              <select
+                id="category"
+                aria-invalid={!!errors.category}
+                aria-describedby={errors.category ? "category-error" : undefined}
+                {...register("category")}
+                className={inputClass}
+                defaultValue=""
+              >
                 <option value="">Select Category</option>
                 {CATEGORIES.map((category) => (
                   <option key={category} value={category}>
@@ -161,17 +195,43 @@ export function FrameworkForm() {
               </select>
             </FormField>
 
-            <FormField label="Version" error={errors.version?.message}>
-              <input {...register("version")} placeholder="1.0.0" className={inputClass} />
+            <FormField id="version" label="Version" error={errors.version?.message}>
+              <input
+                id="version"
+                aria-invalid={!!errors.version}
+                aria-describedby={errors.version ? "version-error" : undefined}
+                {...register("version")}
+                placeholder="1.0.0"
+                className={inputClass}
+              />
             </FormField>
 
-            <FormField label="Effective Date" error={errors.effectiveDate?.message}>
-              <input type="date" {...register("effectiveDate")} className={inputClass} />
+            <FormField
+              id="effectiveDate"
+              label="Effective Date"
+              error={errors.effectiveDate?.message}
+            >
+              <input
+                id="effectiveDate"
+                aria-invalid={!!errors.effectiveDate}
+                aria-describedby={errors.effectiveDate ? "effectiveDate-error" : undefined}
+                type="date"
+                {...register("effectiveDate")}
+                className={inputClass}
+              />
             </FormField>
 
             <div className="md:col-span-2">
-              <FormField label="Source Link" helper="Optional" error={errors.sourceLink?.message}>
+              <FormField
+                id="sourceLink"
+                label="Source Link"
+                helper="Optional"
+                error={errors.sourceLink?.message}
+              >
                 <input
+                  id="sourceLink"
+                  aria-invalid={!!errors.sourceLink}
+                  aria-describedby={errors.sourceLink ? "sourceLink-error" : undefined}
                   {...register("sourceLink")}
                   placeholder="https://..."
                   className={inputClass}
@@ -183,15 +243,21 @@ export function FrameworkForm() {
           <div className="mt-12 flex flex-col gap-4 border-t border-[#f5f5f5] pt-8 sm:flex-row sm:items-center sm:justify-end">
             <button
               type="button"
+              aria-label="Cancel framework creation"
               onClick={() => router.push("/frameworks")}
-              className="rounded-2xl border border-[#d4d4d4] bg-white px-6 py-4 text-sm font-semibold text-[#525252] transition hover:bg-[#fafafa]"
+              className="rounded-2xl border border-[#d4d4d4] bg-white px-6 py-4 text-sm font-semibold text-[#525252] transition hover:bg-[#fafafa] focus-visible:outline-none
+focus-visible:ring-4
+focus-visible:ring-[#6d18ff]/30"
             >
               Cancel
             </button>
             <button
               type="submit"
+              aria-label="Create compliance framework"
               disabled={isSubmitting}
-              className="rounded-2xl bg-[#6d18ff] px-7 py-4 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(109,24,255,0.28)] transition hover:scale-[1.01] hover:bg-[#5412cc] disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-2xl bg-[#6d18ff] px-7 py-4 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(109,24,255,0.28)] transition hover:scale-[1.01] hover:bg-[#5412cc] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none
+focus-visible:ring-4
+focus-visible:ring-[#6d18ff]/40 "
             >
               {isSubmitting ? "Creating Framework..." : "Create Framework"}
             </button>
@@ -203,21 +269,28 @@ export function FrameworkForm() {
 }
 
 interface FormFieldProps {
+  id: string;
   label: string;
   helper?: string;
   error?: string;
   children: React.ReactNode;
 }
 
-function FormField({ label, helper, error, children }: FormFieldProps) {
+function FormField({ id, label, helper, error, children }: FormFieldProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-semibold tracking-wide text-[#171717]">{label}</label>
+        <label htmlFor={id} className="text-sm font-semibold tracking-wide text-[#171717]">
+          {label}
+        </label>
         {helper ? <span className="text-xs font-medium text-[#8a8a8a]">{helper}</span> : null}
       </div>
       {children}
-      {error ? <p className="text-sm font-medium text-[#ef4444]">{error}</p> : null}
+      {error ? (
+        <p id={`${id}-error`} role="alert" className="text-sm font-medium text-[#ef4444]">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }
