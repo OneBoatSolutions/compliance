@@ -95,84 +95,96 @@ export function FrameworkListToolbar({ total, published, draft }: FrameworkListT
       </div>
 
       <div className="rounded-[28px] border border-[#e5e5e5] bg-white p-7 shadow-sm">
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-[#171717]">Framework Directory</h2>
-              <p className="mt-1 text-sm text-[#737373]">
-                Search and filter frameworks by status, region, and category
-              </p>
-            </div>
-            <div className="rounded-2xl border border-[#e5e5e5] bg-[#fafafa] px-4 py-2 text-sm font-medium text-[#525252]">
-              {isPending ? "Updating..." : `Showing ${total} frameworks`}
-            </div>
-          </div>
-
-          <div className="relative">
-            <input
-              value={searchInput}
-              onChange={(event) => setSearchInput(event.target.value)}
-              placeholder="Search frameworks by name, code, or category..."
-              className="w-full rounded-2xl border border-[#e5e5e5] bg-[#fafafa] px-5 py-4 text-sm outline-none transition focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff]"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <select
-              value={statusFilter}
-              onChange={(event) => updateFilters({ status: event.target.value })}
-              className="rounded-2xl border border-[#e5e5e5] bg-white px-4 py-4 text-sm font-medium outline-none transition focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff]"
-            >
-              <option value="">All Status</option>
-              {statusOptions.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={regionFilter}
-              onChange={(event) => updateFilters({ region: event.target.value })}
-              className="rounded-2xl border border-[#e5e5e5] bg-white px-4 py-4 text-sm font-medium outline-none transition focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff]"
-            >
-              <option value="">All Regions</option>
-              {regionOptions.map((region) => (
-                <option key={region} value={region}>
-                  {region}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={categoryFilter}
-              onChange={(event) => updateFilters({ category: event.target.value })}
-              className="rounded-2xl border border-[#e5e5e5] bg-white px-4 py-4 text-sm font-medium outline-none transition focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff]"
-            >
-              <option value="">All Categories</option>
-              {categoryOptions.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {hasActiveFilters ? (
-            <div className="flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setSearchInput("");
-                  updateFilters({ status: "", region: "", category: "", search: "" });
-                }}
-                className="rounded-full border border-[#e5e5e5] px-4 py-2 text-sm font-medium text-[#525252] transition hover:border-[#6d18ff] hover:text-[#6d18ff]"
+        <section aria-label="Framework filters">
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-[#171717]">Framework Directory</h2>
+                <p className="mt-1 text-sm text-[#737373]">
+                  Search and filter frameworks by status, region, and category
+                </p>
+              </div>
+              <div
+                aria-live="polite"
+                className="rounded-2xl border border-[#e5e5e5] bg-[#fafafa] px-4 py-2 text-sm font-medium text-[#525252]"
               >
-                Clear Filters
-              </button>
+                {isPending ? "Updating..." : `Showing ${total} frameworks`}
+              </div>
             </div>
-          ) : null}
-        </div>
+
+            <div className="relative">
+              <label htmlFor="framework-search" className="sr-only">
+                Search frameworks
+              </label>
+              <input
+                id="framework-search"
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
+                placeholder="Search frameworks by name, code, or category..."
+                className="w-full rounded-2xl border border-[#e5e5e5] bg-[#fafafa] px-5 py-4 text-sm outline-none transition focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff]"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <select
+                aria-label="Filter by status"
+                value={statusFilter}
+                onChange={(event) => updateFilters({ status: event.target.value })}
+                className="rounded-2xl border border-[#e5e5e5] bg-white px-4 py-4 text-sm font-medium outline-none transition focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff]"
+              >
+                <option value="">All Status</option>
+                {statusOptions.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                aria-label="Filter by region"
+                value={regionFilter}
+                onChange={(event) => updateFilters({ region: event.target.value })}
+                className="rounded-2xl border border-[#e5e5e5] bg-white px-4 py-4 text-sm font-medium outline-none transition focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff]"
+              >
+                <option value="">All Regions</option>
+                {regionOptions.map((region) => (
+                  <option key={region} value={region}>
+                    {region}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                aria-label="Filter by category"
+                value={categoryFilter}
+                onChange={(event) => updateFilters({ category: event.target.value })}
+                className="rounded-2xl border border-[#e5e5e5] bg-white px-4 py-4 text-sm font-medium outline-none transition focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff]"
+              >
+                <option value="">All Categories</option>
+                {categoryOptions.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {hasActiveFilters ? (
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchInput("");
+                    updateFilters({ status: "", region: "", category: "", search: "" });
+                  }}
+                  className="rounded-full border border-[#e5e5e5] px-4 py-2 text-sm font-medium text-[#525252] transition hover:border-[#6d18ff] hover:text-[#6d18ff] outline-none focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff]"
+                >
+                  Clear Filters
+                </button>
+              </div>
+            ) : null}
+          </div>
+        </section>
       </div>
     </>
   );

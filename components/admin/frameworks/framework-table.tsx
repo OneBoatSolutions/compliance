@@ -13,20 +13,32 @@ interface Props {
 export function FrameworkTable({ frameworks }: Props) {
   return (
     <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-card">
-      <table className="w-full">
+      <table className="w-full" aria-label="Compliance frameworks table">
         <thead className="bg-primary-pale">
           <tr>
-            <th className="p-4 text-left text-sm font-semibold text-primary-dark">Code</th>
+            <th scope="col" className="p-4 text-left text-sm font-semibold text-primary-dark">
+              Code
+            </th>
 
-            <th className="p-4 text-left text-sm font-semibold text-primary-dark">Name</th>
+            <th scope="col" className="p-4 text-left text-sm font-semibold text-primary-dark">
+              Name
+            </th>
 
-            <th className="p-4 text-left text-sm font-semibold text-primary-dark">Region</th>
+            <th scope="col" className="p-4 text-left text-sm font-semibold text-primary-dark">
+              Region
+            </th>
 
-            <th className="p-4 text-left text-sm font-semibold text-primary-dark">Version</th>
+            <th scope="col" className="p-4 text-left text-sm font-semibold text-primary-dark">
+              Version
+            </th>
 
-            <th className="p-4 text-left text-sm font-semibold text-primary-dark">Controls</th>
+            <th scope="col" className="p-4 text-left text-sm font-semibold text-primary-dark">
+              Controls
+            </th>
 
-            <th className="p-4 text-left text-sm font-semibold text-primary-dark">Status</th>
+            <th scope="col" className="p-4 text-left text-sm font-semibold text-primary-dark">
+              Status
+            </th>
           </tr>
         </thead>
 

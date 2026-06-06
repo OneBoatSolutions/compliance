@@ -91,9 +91,11 @@ export function CsvImport({ frameworkId, refresh, disabled }: Props) {
       <div className="p-8">
         <div className="rounded-2xl border border-dashed border-[#c4b5fd] bg-[#faf7ff] p-8">
           <input
+            id="csv-upload"
             key={fileInputKey}
             disabled={disabled}
             type="file"
+            aria-label="Upload CSV file"
             accept=".csv,text/csv"
             onChange={(event) => {
               const file = event.target.files?.[0];
@@ -143,6 +145,7 @@ export function CsvImport({ frameworkId, refresh, disabled }: Props) {
               </div>
               <button
                 type="button"
+                aria-label={`Remove selected file ${fileName}`}
                 onClick={resetImport}
                 className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-100"
               >
@@ -176,23 +179,41 @@ export function CsvImport({ frameworkId, refresh, disabled }: Props) {
               </div>
             </div>
 
-            <div className="mt-6 overflow-hidden rounded-2xl border border-[#ededed]">
-              <table className="w-full">
+            <div
+              className="mt-6 overflow-hidden rounded-2xl border border-[#ededed]"
+              aria-busy={importing}
+            >
+              <table aria-label="CSV import preview table" className="w-full">
                 <thead className="bg-[#fafafa]">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-[#737373]">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-semibold uppercase text-[#737373]"
+                    >
                       Row
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-[#737373]">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-semibold uppercase text-[#737373]"
+                    >
                       Code
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-[#737373]">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-semibold uppercase text-[#737373]"
+                    >
                       Title
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-[#737373]">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-semibold uppercase text-[#737373]"
+                    >
                       Severity
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-[#737373]">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-semibold uppercase text-[#737373]"
+                    >
                       Issues
                     </th>
                   </tr>

@@ -65,32 +65,52 @@ export default function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form aria-label="Login form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* EMAIL */}
       <div>
-        <label className="text-sm font-medium text-slate-700">Email address</label>
+        <label htmlFor="email" className="text-sm font-medium text-slate-700">
+          Email address
+        </label>
 
         <div className="relative mt-1">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+          <Mail
+            aria-hidden="true"
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400"
+          />
 
           <Input
+            id="email"
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? "email-error" : undefined}
             {...register("email")}
             placeholder="name@company.com"
             className="pl-10 h-11 text-slate-900"
           />
         </div>
 
-        {errors.email && <p className="text-xs text-red-500 mt-1">Invalid email</p>}
+        {errors.email && (
+          <p id="email-error" role="alert" className="text-xs text-red-500 mt-1">
+            Invalid email
+          </p>
+        )}
       </div>
 
       {/* PASSWORD */}
       <div>
-        <label className="text-sm font-medium text-slate-700">Password</label>
+        <label htmlFor="password" className="text-sm font-medium text-slate-700">
+          Password
+        </label>
 
         <div className="relative mt-1">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+          <Lock
+            aria-hidden="true"
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400"
+          />
 
           <Input
+            id="password"
+            aria-invalid={!!errors.password}
+            aria-describedby={errors.password ? "password-error" : undefined}
             {...register("password")}
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
@@ -99,20 +119,35 @@ export default function LoginForm() {
 
           <button
             type="button"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-pressed={showPassword}
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-3 text-slate-400 hover:text-[#6d18ff] transition-colors"
+            className="absolute right-3 top-3 text-slate-400 hover:text-[#6d18ff] transition-colors "
           >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            {showPassword ? (
+              <EyeOff aria-hidden="true" size={18} />
+            ) : (
+              <Eye aria-hidden="true" size={18} />
+            )}
           </button>
         </div>
 
-        {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>}
+        {errors.password && (
+          <p id="password-error" role="alert" className="text-xs text-red-500 mt-1">
+            {errors.password.message}
+          </p>
+        )}
       </div>
 
       {/* REMEMBER + FORGOT */}
       <div className="flex items-center justify-between text-sm">
-        <label className="flex items-center gap-2 text-slate-600">
-          <input className="h-4 w-4 accent-[#6d18ff]" type="checkbox" {...register("remember")} />
+        <label htmlFor="remember" className="flex items-center gap-2 text-slate-600">
+          <input
+            id="remember"
+            className="h-4 w-4 accent-[#6d18ff]"
+            type="checkbox"
+            {...register("remember")}
+          />
           Remember me
         </label>
 
@@ -132,7 +167,21 @@ export default function LoginForm() {
         className="w-full h-11 bg-[#6d18ff] hover:bg-[#5412cc] text-white font-semibold rounded-md flex items-center justify-center transition-all duration-200 hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-[#6d18ff] focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed"
       >
         {isLoading ? (
-          <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+          <>
+            <span
+              aria-hidden="true"
+              className="
+        animate-spin
+        h-5
+        w-5
+        border-2
+        border-white
+        border-t-transparent
+        rounded-full
+      "
+            />
+            <span className="sr-only">Signing in...</span>
+          </>
         ) : (
           "Sign in"
         )}

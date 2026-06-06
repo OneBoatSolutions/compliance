@@ -14,7 +14,11 @@ const styles: Record<FrameworkStatus, string> = {
 
 export function StatusBadge({ status }: Props) {
   return (
-    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${styles[status]}`}>
+    <span
+      role="status"
+      aria-label={`Status: ${status}`}
+      className={`rounded-full px-3 py-1 text-xs font-semibold ${styles[status]}`}
+    >
       {status}
     </span>
   );

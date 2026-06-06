@@ -24,29 +24,37 @@ export function FrameworkListPagination({ page, totalPages }: FrameworkListPagin
   }
 
   return (
-    <div className="flex flex-col gap-5 rounded-[28px] border border-[#e5e5e5] bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-sm text-[#737373]">Navigate through framework pages</p>
-      <div className="flex items-center gap-4">
-        <button
-          type="button"
-          onClick={() => goToPage(Math.max(page - 1, 1))}
-          disabled={page <= 1 || isPending}
-          className="rounded-2xl border border-[#e5e5e5] bg-white px-5 py-3 text-sm font-semibold text-[#525252] transition hover:border-[#6d18ff] hover:text-[#6d18ff] disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          Previous
-        </button>
-        <div className="rounded-2xl bg-[#6d18ff] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#6d18ff]/20">
-          Page {page} of {totalPages}
+    <nav aria-label="Framework list pagination" aria-busy={isPending}>
+      <div className="flex flex-col gap-5 rounded-[28px] border border-[#e5e5e5] bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-[#737373]">Navigate through framework pages</p>
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => goToPage(Math.max(page - 1, 1))}
+            disabled={page <= 1 || isPending}
+            aria-disabled={page <= 1 || isPending}
+            className="rounded-2xl border border-[#e5e5e5] bg-white px-5 py-3 text-sm font-semibold text-[#525252] transition hover:border-[#6d18ff] hover:text-[#6d18ff] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#6d18ff]"
+          >
+            Previous
+          </button>
+          <div
+            aria-live="polite"
+            aria-label={`Current page ${page} of ${totalPages}`}
+            className="rounded-2xl bg-[#6d18ff] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#6d18ff]/20"
+          >
+            Page {page} of {totalPages}
+          </div>
+          <button
+            type="button"
+            onClick={() => goToPage(page + 1)}
+            disabled={page >= totalPages || isPending}
+            aria-disabled={page >= totalPages || isPending}
+            className="rounded-2xl border border-[#e5e5e5] bg-white px-5 py-3 text-sm font-semibold text-[#525252] transition hover:border-[#6d18ff] hover:text-[#6d18ff] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#6d18ff]"
+          >
+            Next
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={() => goToPage(page + 1)}
-          disabled={page >= totalPages || isPending}
-          className="rounded-2xl border border-[#e5e5e5] bg-white px-5 py-3 text-sm font-semibold text-[#525252] transition hover:border-[#6d18ff] hover:text-[#6d18ff] disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          Next
-        </button>
       </div>
-    </div>
+    </nav>
   );
 }

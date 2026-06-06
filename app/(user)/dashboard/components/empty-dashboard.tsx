@@ -56,7 +56,7 @@ mb-6
         >
           <div className="absolute inset-0 rounded-full blur-xl bg-[#6d18ff]/20" />
 
-          <ListChecks className="relative w-10 h-10 text-[#6d18ff]" />
+          <ListChecks aria-hidden="true" className="relative w-10 h-10 text-[#6d18ff]" />
         </div>
 
         {/* Text */}
@@ -69,6 +69,8 @@ mb-6
 
         {/* CTA */}
         <button
+          type="button"
+          aria-label="Create your first compliance assessment"
           onClick={() => router.push("/onboarding")}
           className="
 group
@@ -88,15 +90,22 @@ hover:shadow-xl
 hover:shadow-[#6d18ff]/30
 transition-all
 duration-300
+focus:outline-none
+    focus:ring-2
+    focus:ring-[#6d18ff]
+    focus:ring-offset-2
 "
         >
           Create Your First Assessment
-          <MoveRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+          <MoveRight
+            aria-hidden="true"
+            className="w-5 h-5 transition-transform group-hover:translate-x-1"
+          />
         </button>
 
         {/* Info */}
         <div className="mt-4 flex items-center justify-center gap-2 text-slate-400">
-          <Clock4 className="w-4 h-4" />
+          <Clock4 aria-hidden="true" className="w-4 h-4" />
           <span className="text-xs uppercase tracking-wider font-semibold">
             Takes only 5 minutes
           </span>
@@ -128,7 +137,7 @@ function HeroSection() {
         <div className="relative w-full max-w-[320px] aspect-square bg-[#6d18ff]/5 rounded-full border border-[#6d18ff]/10 flex items-center justify-center">
           {/* Glow effect */}
           <div className="absolute inset-0 rounded-full bg-[#6d18ff]/10 animate-pulse"></div>
-          <ShieldCheck className="w-28 h-28 text-[#6d18ff]/40" />
+          <ShieldCheck aria-hidden="true" className="w-28 h-28 text-[#6d18ff]/40" />
         </div>
       </div>
     </section>
@@ -139,17 +148,17 @@ function HowItWorks() {
     {
       title: "Describe Your Business",
       desc: "Tell us about your business profile, target regions, and specific data handling requirements.",
-      icon: <File className="w-5 h-5 text-[#6d18ff]/40" />,
+      icon: <File aria-hidden="true" className="w-5 h-5 text-[#6d18ff]/40" />,
     },
     {
       title: "AI Analyzes Requirements",
       desc: "Our AI suggests applicable compliance frameworks for you.",
-      icon: <Sparkles className="w-5 h-5 text-[#6d18ff]/40" />,
+      icon: <Sparkles aria-hidden="true" className="w-5 h-5 text-[#6d18ff]/40" />,
     },
     {
       title: "Complete Assessment",
       desc: "Work through controls and track your compliance progress.",
-      icon: <SquareCheckBig className="w-5 h-5 text-[#6d18ff]/40" />,
+      icon: <SquareCheckBig aria-hidden="true" className="w-5 h-5 text-[#6d18ff]/40" />,
     },
   ];
 
@@ -213,25 +222,37 @@ function HelpResources() {
     {
       title: "Documentation",
       icon: (
-        <FileText className="w-5 h-5 text-slate-400 group-hover:text-[#6d18ff] transition-colors" />
+        <FileText
+          aria-hidden="true"
+          className="w-5 h-5 text-slate-400 group-hover:text-[#6d18ff] transition-colors"
+        />
       ),
     },
     {
       title: "Tutorials",
       icon: (
-        <MonitorPlay className="w-5 h-5 text-slate-400 group-hover:text-[#6d18ff] transition-colors" />
+        <MonitorPlay
+          aria-hidden="true"
+          className="w-5 h-5 text-slate-400 group-hover:text-[#6d18ff] transition-colors"
+        />
       ),
     },
     {
       title: "Support",
       icon: (
-        <Headset className="w-5 h-5 text-slate-400 group-hover:text-[#6d18ff] transition-colors" />
+        <Headset
+          aria-hidden="true"
+          className="w-5 h-5 text-slate-400 group-hover:text-[#6d18ff] transition-colors"
+        />
       ),
     },
     {
       title: "Book a Demo",
       icon: (
-        <Play className="w-5 h-5 text-slate-400 group-hover:text-[#6d18ff] transition-colors" />
+        <Play
+          aria-hidden="true"
+          className="w-5 h-5 text-slate-400 group-hover:text-[#6d18ff] transition-colors"
+        />
       ),
     },
   ];
@@ -246,7 +267,7 @@ function HelpResources() {
         {items.map((item, i) => (
           <div
             key={i}
-            className="group p-4 bg-slate-100 rounded-lg border border-transparent hover:bg-[#6d18ff]/5 hover:border-[#6d18ff]/20 hover:-translate-y-1 transition-all cursor-pointer"
+            className="group p-4 bg-slate-100 rounded-lg border border-transparent hover:bg-[#6d18ff]/5 hover:border-[#6d18ff]/20 hover:-translate-y-1 transition-all "
           >
             {item.icon}
 
@@ -260,7 +281,10 @@ function HelpResources() {
 export default function EmptyDashboard() {
   return (
     <div className="flex flex-col bg-background min-h-screen">
-      <main className="flex-1 pt-24 pb-16 px-6 w-full max-w-6xl mx-auto">
+      <main
+        aria-label="Dashboard empty state"
+        className="flex-1 pt-24 pb-16 px-6 w-full max-w-6xl mx-auto"
+      >
         <HeroSection />
         <EmptyState />
         <HowItWorks />

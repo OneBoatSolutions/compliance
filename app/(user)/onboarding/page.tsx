@@ -180,7 +180,14 @@ function Stepper({
     <div className="bg-white border-b px-4 md:px-8 py-6 md:py-8 mt-4 md:mt-10">
       <div className="relative max-w-7xl mx-auto">
         {/* CENTERED STEPPER */}
-        <div className="relative w-full max-w-3xl mx-auto">
+        <div
+          role="progressbar"
+          aria-valuemin={1}
+          aria-valuemax={steps.length}
+          aria-valuenow={currentStep}
+          aria-label="Onboarding progress"
+          className="relative w-full max-w-3xl mx-auto"
+        >
           {/* Steps */}
           <div className="flex justify-between relative z-10">
             {steps.map((step) => (
@@ -234,12 +241,17 @@ function Stepper({
           md:items-end
         "
         >
-          <span className="text-xs text-gray-500 font-medium min-h-[16px] mb-1">
+          <span
+            aria-live="polite"
+            role="status"
+            className="text-xs text-gray-500 font-medium min-h-[16px] mb-1"
+          >
             {saving ? "Saving..." : saved ? "✔ All changes saved" : ""}
           </span>
 
           <button
             type="button"
+            aria-label="Save progress and exit onboarding"
             onClick={onSaveExit}
             className="text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"
           >
@@ -552,14 +564,14 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-gray-50">
       <Stepper
         currentStep={currentStep}
         saving={saving}
         saved={saved}
         onSaveExit={handleSaveExit}
       />
-      <div className="max-w-3xl mx-auto mt-8 px-4">
+      <div className="max-w-5xl mx-auto mt-8 px-4">
         <div className="mb-6">
           <span className="text-sm bg-purple-100 text-purple-600 px-3 py-1 rounded-full">
             ⏱ About 5 minutes
@@ -571,7 +583,11 @@ export default function OnboardingPage() {
         </div>
 
         {flowError && (
-          <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-md mb-4">
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-md mb-4"
+          >
             <p>{flowError.message}</p>
             {flowError.retryable && (
               <button
@@ -586,6 +602,8 @@ export default function OnboardingPage() {
         )}
 
         <form
+          aria-label="Business onboarding form"
+          aria-busy={isSubmitting}
           onSubmit={handleSubmit(onSubmit, onError)}
           className="
 bg-white
@@ -726,31 +744,46 @@ space-y-10
             number={2}
             description="Select all types of data your business collects or processes"
           >
-            <DataCheckboxGrid
-              selected={values.dataTypes || []}
-              onChange={(val) => handleCheckbox("dataTypes", val)}
-              register={register}
-            />
-            {errors.dataTypes && <p className="text-red-500 text-sm">{errors.dataTypes.message}</p>}
+            <fieldset>
+              <legend className="sr-only">Types of data your business collects</legend>
+              <DataCheckboxGrid
+                selected={values.dataTypes || []}
+                onChange={(val) => handleCheckbox("dataTypes", val)}
+                register={register}
+              />
+            </fieldset>
+            {errors.dataTypes && (
+              <p role="alert" className="text-red-500 text-sm">
+                {errors.dataTypes.message}
+              </p>
+            )}
           </Section>
           <Section
             title="Regions of Operation"
             number={3}
             description="Select all regions where your business operates"
           >
-            <RegionCheckboxGrid
-              selected={values.regions || []}
-              onChange={(val: string) => handleCheckbox("regions", val)}
-              register={register}
-            />
-            {errors.regions && <p className="text-red-500 text-sm">{errors.regions.message}</p>}
+            <fieldset>
+              <legend className="sr-only">Regions where your business operates</legend>
+              <RegionCheckboxGrid
+                selected={values.regions || []}
+                onChange={(val: string) => handleCheckbox("regions", val)}
+                register={register}
+              />
+            </fieldset>
+            {errors.regions && (
+              <p role="alert" className="text-red-500 text-sm">
+                {errors.regions.message}
+              </p>
+            )}
           </Section>
 
-          <div className=" left-0 w-full bg-white border-t border-gray-200 px-6 py-6 mt-8">
+          <div className=" left-0 bg-white border-t border-gray-200 px-6 py-6 mt-8">
             <div className="max-w-3xl mx-auto flex items-center justify-between">
               {/* LEFT: Save Draft (ghost) */}
               <button
                 type="button"
+                aria-label="Save onboarding draft"
                 onClick={handleSaveDraft}
                 disabled={manualSaving}
                 className="text-gray-500 font-medium hover:text-gray-700 transition-colors disabled:opacity-50"
@@ -763,6 +796,7 @@ space-y-10
                 {/* Back */}
                 <button
                   type="button"
+                  aria-label="Go to previous step"
                   disabled={currentStep === 1}
                   className={`
           px-5 py-2.5 rounded-md border text-sm font-medium transition-all
@@ -784,6 +818,7 @@ space-y-10
                 >
                   <button
                     type="submit"
+                    aria-label="Continue to AI recommendations"
                     disabled={
                       isSubmitting ||
                       (currentStep === 1 && !isStep1Valid) ||
@@ -859,12 +894,21 @@ function Input({ label, register, error, max, value, helper, placeholder }: Inpu
 
   return (
     <div>
-      <label className="font-medium text-gray-900">{label}</label>
+      <label htmlFor={register.name} className="font-medium text-gray-900">
+        {label}
+      </label>
 
-      {helper && <p className="text-gray-500 text-sm mt-1">{helper}</p>}
+      {helper && (
+        <p id={`${register.name}-helper`} className="text-gray-500 text-sm mt-1">
+          {helper}
+        </p>
+      )}
 
       <div className="relative mt-1">
         <input
+          id={register.name}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${register.name}-error` : `${register.name}-helper`}
           {...register}
           placeholder={placeholder}
           className={`
@@ -881,15 +925,17 @@ function Input({ label, register, error, max, value, helper, placeholder }: Inpu
 
         {/* RIGHT ICON */}
         <div className="absolute right-2 top-2.5">
-          {error && <CircleAlert size={18} className="text-red-500" />}
-          {!error && isValid && <CircleCheck size={18} className="text-green-500" />}
+          {error && <CircleAlert aria-hidden="true" size={18} className="text-red-500" />}
+          {!error && isValid && (
+            <CircleCheck aria-hidden="true" size={18} className="text-green-500" />
+          )}
         </div>
       </div>
 
       {/* Error + Counter */}
       <div className="flex justify-between text-sm mt-1">
-        <span className="text-red-500 flex items-center gap-1">
-          {error && <CircleAlert size={14} />}
+        <span id={`${register.name}-error`} className="text-red-500 flex items-center gap-1">
+          {error && <CircleAlert aria-hidden="true" size={14} />}
           {error}
         </span>
 
@@ -915,12 +961,21 @@ function Textarea({ label, register, error, max, value, helper, placeholder }: T
 
   return (
     <div>
-      <label className="font-medium text-gray-900">{label}</label>
+      <label htmlFor={register.name} className="font-medium text-gray-900">
+        {label}
+      </label>
 
-      {helper && <p className="text-gray-500 text-sm mt-1">{helper}</p>}
+      {helper && (
+        <p id={`${register.name}-helper`} className="text-gray-500 text-sm mt-1">
+          {helper}
+        </p>
+      )}
 
       <div className="relative mt-1">
         <textarea
+          id={register.name}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${register.name}-error` : `${register.name}-helper`}
           {...register}
           placeholder={placeholder}
           rows={3}
@@ -937,14 +992,16 @@ function Textarea({ label, register, error, max, value, helper, placeholder }: T
         />
 
         <div className="absolute right-2 top-2.5">
-          {error && <CircleAlert size={18} className="text-red-500" />}
-          {!error && isValid && <CircleCheck size={18} className="text-green-500" />}
+          {error && <CircleAlert aria-hidden="true" size={18} className="text-red-500" />}
+          {!error && isValid && (
+            <CircleCheck aria-hidden="true" size={18} className="text-green-500" />
+          )}
         </div>
       </div>
 
       <div className="flex justify-between text-sm mt-1">
-        <span className="text-red-500 flex items-center gap-1">
-          {error && <CircleAlert size={14} />}
+        <span id={`${register.name}-error`} className="text-red-500 flex items-center gap-1">
+          {error && <CircleAlert aria-hidden="true" size={14} />}
           {error}
         </span>
 
@@ -969,56 +1026,56 @@ const dataTypeOptions: DataTypeOption[] = [
     label: "PII",
     description: "Personally Identifiable Information",
     helper: "Names, emails, addresses, phone numbers",
-    icon: <User size={18} />,
+    icon: <User aria-hidden="true" size={18} />,
   },
   {
     id: "PHI",
     label: "PHI",
     description: "Protected Health Information",
     helper: "Health records, medical data",
-    icon: <Heart size={18} />,
+    icon: <Heart aria-hidden="true" size={18} />,
   },
   {
     id: "Financial",
     label: "Financial",
     description: "Bank accounts or transaction data",
     helper: "Bank accounts, financial statements",
-    icon: <DollarSign size={18} />,
+    icon: <DollarSign aria-hidden="true" size={18} />,
   },
   {
     id: "Payment",
     label: "Payment Card",
     description: "PCI DSS relevant credit card data",
     helper: "Card numbers, CVV, billing info",
-    icon: <CreditCard size={18} />,
+    icon: <CreditCard aria-hidden="true" size={18} />,
   },
   {
     id: "Biometric",
     label: "Biometric",
     description: "Facial scans, iris, or fingerprints",
     helper: "Fingerprints, facial recognition",
-    icon: <Fingerprint size={18} />,
+    icon: <Fingerprint aria-hidden="true" size={18} />,
   },
   {
     id: "Children",
     label: "Children's Data",
     description: "COPPA relevant data of minors",
     helper: "Data from users under 13/16",
-    icon: <Baby size={18} />,
+    icon: <Baby aria-hidden="true" size={18} />,
   },
   {
     id: "Employee",
     label: "Employee Data",
     description: "Internal HR and payroll records",
     helper: "Employee records, HR data",
-    icon: <Briefcase size={18} />,
+    icon: <Briefcase aria-hidden="true" size={18} />,
   },
   {
     id: "Other",
     label: "Other",
     description: "Any other sensitive data categories",
     helper: "Specify other data types",
-    icon: <Plus size={18} />,
+    icon: <Plus aria-hidden="true" size={18} />,
   },
 ];
 interface DataCheckboxGridProps {
@@ -1034,11 +1091,24 @@ function DataCheckboxGrid({ selected, onChange, register }: DataCheckboxGridProp
 
         return (
           <div
+            role="checkbox"
+            tabIndex={0}
+            aria-checked={isSelected}
+            aria-label={opt.label}
             key={opt.id}
             onClick={() => onChange(opt.id)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onChange(opt.id);
+              }
+            }}
             className={`
               flex items-center justify-between
-              p-5 rounded-xl border cursor-pointer transition-all
+              p-5 rounded-xl border cursor-pointer transition-all focus:outline-none
+focus:ring-2
+focus:ring-purple-500
+focus:ring-offset-2
               ${
                 isSelected
                   ? "border-purple-600 bg-purple-50"
@@ -1114,14 +1184,14 @@ function DataCheckboxGrid({ selected, onChange, register }: DataCheckboxGridProp
 }
 
 const regionOptions = [
-  { id: "US", short: "US", label: "UNITED STATES", icon: <Flag /> },
-  { id: "EU", short: "EU", label: "EUROPEAN UNION", icon: <Flag /> },
-  { id: "UK", short: "UK", label: "UNITED KINGDOM", icon: <Flag /> },
-  { id: "Canada", short: "Canada", label: "CANADA", icon: <Flag /> },
-  { id: "Australia", short: "Australia", label: "AUSTRALIA", icon: <Flag /> },
-  { id: "APAC", short: "APAC", label: "ASIA-PACIFIC", icon: <Globe /> },
-  { id: "LATAM", short: "LATAM", label: "LATIN AMERICA", icon: <Globe /> },
-  { id: "Other", short: "Other", label: "GLOBAL / OTHER", icon: <Globe /> },
+  { id: "US", short: "US", label: "UNITED STATES", icon: <Flag aria-hidden="true" /> },
+  { id: "EU", short: "EU", label: "EUROPEAN UNION", icon: <Flag aria-hidden="true" /> },
+  { id: "UK", short: "UK", label: "UNITED KINGDOM", icon: <Flag aria-hidden="true" /> },
+  { id: "Canada", short: "Canada", label: "CANADA", icon: <Flag aria-hidden="true" /> },
+  { id: "Australia", short: "Australia", label: "AUSTRALIA", icon: <Flag aria-hidden="true" /> },
+  { id: "APAC", short: "APAC", label: "ASIA-PACIFIC", icon: <Globe aria-hidden="true" /> },
+  { id: "LATAM", short: "LATAM", label: "LATIN AMERICA", icon: <Globe aria-hidden="true" /> },
+  { id: "Other", short: "Other", label: "GLOBAL / OTHER", icon: <Globe aria-hidden="true" /> },
 ];
 
 interface RegionCheckboxGridProps {
@@ -1137,12 +1207,25 @@ function RegionCheckboxGrid({ selected, onChange, register }: RegionCheckboxGrid
 
         return (
           <div
+            role="checkbox"
+            tabIndex={0}
+            aria-checked={isSelected}
+            aria-label={opt.short}
             key={opt.id}
             onClick={() => onChange(opt.id)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onChange(opt.id);
+              }
+            }}
             className={`
               p-5 rounded-xl border cursor-pointer transition-all
               flex flex-col items-center justify-center text-center
-              min-h-[110px]
+              min-h-[110px] focus:outline-none
+focus:ring-2
+focus:ring-purple-500
+focus:ring-offset-2
               ${
                 isSelected
                   ? "border-purple-600 bg-purple-50"

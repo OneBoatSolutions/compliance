@@ -631,60 +631,6 @@ export default function ChecklistPage() {
       />
 
       {/* GROUPS */}
-      {/* {groupedControls.map((group) => (
-        <ChecklistGroup
-          key={`${group.framework}-${group.category}`}
-          framework={group.framework}
-          category={group.category}
-          controls={group.controls}
-          assessmentId={assessmentId}
-          updatingItemId={updatingItemId}
-          onOpenRemediation={openRemediationDrawer}
-          onStatusChange={(itemId, nextStatus) => {
-            updateStatusMutation.mutate(
-              {
-                itemId,
-                payload: { status: nextStatus },
-              },
-              {
-                onSuccess: () => {
-                  toast.success("Control status updated.");
-                },
-                onError: (error) => {
-                  toast.error(
-                    error instanceof Error ? error.message : "Unable to update control status.",
-                  );
-                },
-              },
-            );
-          }}
-        />
-      ))}
-
-      <Pagination
-        total={totalItems}
-        page={page}
-        setPage={setPage}
-        perPage={perPage}
-        setPerPage={setPerPage}
-      />
-
-      {remediationContext && (
-        <RemediationDrawer
-          open={remediationOpen}
-          onClose={closeRemediationDrawer}
-          controlId={remediationContext.controlId}
-          assessmentItemId={remediationContext.assessmentItemId}
-          controlTitle={remediationContext.controlTitle}
-          controlDescription={remediationContext.controlDescription}
-          framework={remediationContext.framework}
-          status={remediationContext.status}
-          severity={remediationContext.severity}
-        />
-      )}
-        */}
-
-      {/* GROUPS */}
 
       {hasNoResults ? (
         <div className="rounded-2xl border border-slate-200 bg-white py-16 px-6 shadow-sm">

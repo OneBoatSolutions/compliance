@@ -65,10 +65,15 @@ export default async function FrameworksPage({ searchParams }: FrameworksPagePro
   return (
     <div className="min-h-screen bg-[#fafafa]">
       <div className="mx-auto max-w-7xl px-8 py-10">
+        <h1 className="sr-only">Compliance Frameworks</h1>
         <div className="space-y-8">
           <Suspense
             fallback={
-              <div className="rounded-[28px] border border-[#e5e5e5] bg-white p-7 text-sm text-[#737373]">
+              <div
+                role="status"
+                aria-live="polite"
+                className="rounded-[28px] border border-[#e5e5e5] bg-white p-7 text-sm text-[#737373]"
+              >
                 Loading filters...
               </div>
             }

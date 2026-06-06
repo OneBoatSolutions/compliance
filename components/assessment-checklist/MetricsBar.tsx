@@ -83,7 +83,7 @@ export default function MetricsBar({
 
   return (
     <div
-      className={`sticky top-5 z-40 bg-white border rounded-xl shadow-sm grid grid-cols-4 divide-x divide-slate-100 items-stretch transition-all duration-300 ${
+      className={`sticky top-15 z-40 bg-white border rounded-xl shadow-sm grid grid-cols-4 divide-x divide-slate-100 items-stretch transition-all duration-300 ${
         isUpdating ? "ring-1 ring-purple-200" : ""
       }`}
     >
