@@ -2,66 +2,66 @@ name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 10
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 18
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-    - name: Install dependencies
-      run: pnpm install
+      - name: Install dependencies
+        run: pnpm install
 
-    - name: Start services (Docker Compose)
-      run: docker compose up -d
+      - name: Start services (Docker Compose)
+        run: docker compose up -d
 
-    - name: Install Playwright Browsers
-      run: pnpm exec playwright install --with-deps
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
 
-    - name: Wait for services to be healthy
-      run: |
-        docker compose ps
-        until docker compose exec -T db pg_isready -U postgres -d compliance_db; do
-          echo "Waiting for database..."
-          sleep 2
-        done
-        echo "Database is ready!"
+      - name: Wait for services to be healthy
+        run: |
+          docker compose ps
+          until docker compose exec -T db pg_isready -U postgres -d compliance_db; do
+            echo "Waiting for database..."
+            sleep 2
+          done
+          echo "Database is ready!"
 
-    - name: Run Prisma Migrations and Seed
-      env:
-        DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/compliance_db?schema=public"
-        DATABASE_URL_UNPOOLED: "postgresql://postgres:postgres@localhost:5432/compliance_db?schema=public"
-      run: |
-        pnpm exec prisma db push
-        pnpm exec prisma db seed
+      - name: Run Prisma Migrations and Seed
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/compliance_db?schema=public"
+          DATABASE_URL_UNPOOLED: "postgresql://postgres:postgres@localhost:5432/compliance_db?schema=public"
+        run: |
+          pnpm exec prisma db push
+          pnpm exec prisma db seed
 
-    - name: Run Playwright tests
-      env:
-        DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/compliance_db?schema=public"
-        DATABASE_URL_UNPOOLED: "postgresql://postgres:postgres@localhost:5432/compliance_db?schema=public"
-        NEXTAUTH_SECRET: "change_me_in_production"
-        NEXTAUTH_URL: "http://localhost:3000"
-        ENABLE_AI_FEATURES: "true"
-        ENABLE_EVIDENCE_UPLOAD: "true"
-      run: pnpm exec playwright test
+      - name: Run Playwright tests
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/compliance_db?schema=public"
+          DATABASE_URL_UNPOOLED: "postgresql://postgres:postgres@localhost:5432/compliance_db?schema=public"
+          NEXTAUTH_SECRET: "change_me_in_production"
+          NEXTAUTH_URL: "http://localhost:3000"
+          ENABLE_AI_FEATURES: "true"
+          ENABLE_EVIDENCE_UPLOAD: "true"
+        run: pnpm exec playwright test
 
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

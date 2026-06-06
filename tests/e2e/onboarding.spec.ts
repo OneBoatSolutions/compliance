@@ -450,7 +450,7 @@ test.describe("Onboarding Flow", () => {
     // Verify all changes saved message in stepper
     await expect(userPage.getByText("✔ All changes saved")).toBeVisible();
     expect(patchCount).toBeGreaterThan(0);
-    expect(patchPayload.productName).toBe("Draft Tracker Updated");
+    expect(patchPayload!.productName).toBe("Draft Tracker Updated");
   });
 
   test("should handle AI mapping API failure and support retry", async ({ page, loggedInPage }) => {

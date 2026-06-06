@@ -5,7 +5,7 @@ export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 export interface ApiClientErrorShape {
   message: string;
   status: number;
-  code: "NETWORK_ERROR" | "UNAUTHORIZED" | "SERVER_ERROR" | "REQUEST_ERROR";
+  code: "NETWORK_ERROR" | "UNAUTHORIZED" | "SERVER_ERROR" | "REQUEST_ERROR" | "TOO_MANY_REQUESTS";
   details?: unknown;
 }
 

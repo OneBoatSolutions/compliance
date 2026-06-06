@@ -4,3 +4,6 @@ out
 build
 coverage
 pnpm-lock.yaml
+get-control.mjs
+get-id.mjs
+get-control.cjs
