@@ -42,26 +42,17 @@ export const authOptions: NextAuthOptions = {
             where: { email: credentials.email },
           });
 
-          console.error("NextAuth DEBUG - Retrieved User:", JSON.stringify(user));
-
           if (!user) {
-            console.error("NextAuth DEBUG - User not found in DB for email:", credentials.email);
             recordFailedAttempt(identifier);
             throw new Error("Invalid email or password");
           }
 
           if (!user.isActive) {
-            console.error("NextAuth DEBUG - User inactive in DB for email:", credentials.email);
             recordFailedAttempt(identifier);
             throw new Error("Invalid email or password");
           }
 
-          console.error("NextAuth DEBUG - Email:", credentials.email);
-          console.error("NextAuth DEBUG - Credentials Password:", credentials.password);
-          console.error("NextAuth DEBUG - User DB Hash:", user.password);
-
           const valid = await bcrypt.compare(credentials.password, user.password);
-          console.error("NextAuth DEBUG - Comparison Result:", valid);
 
           if (!valid) {
             recordFailedAttempt(identifier);

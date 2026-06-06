@@ -85,10 +85,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
               : "Unable to sign in. Please try again.",
           status: isLockout ? 429 : isCredentialsError ? 401 : 500,
           code: isLockout
-            ? "TOO_MANY_REQUESTS"
+            ? ("REQUEST_ERROR" as const)
             : isCredentialsError
-              ? "UNAUTHORIZED"
-              : "SERVER_ERROR",
+              ? ("UNAUTHORIZED" as const)
+              : ("SERVER_ERROR" as const),
           details: result?.error,
         });
       }

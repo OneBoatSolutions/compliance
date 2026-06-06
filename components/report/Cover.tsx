@@ -1,7 +1,8 @@
 "use client";
 
-import { Printer, FileDown, Download } from "lucide-react";
+import { Printer, Share2 } from "lucide-react";
 import { ShieldCheck } from "lucide-react";
+import { toast } from "sonner";
 
 interface CoverProps {
   appName: string;
@@ -9,12 +10,6 @@ interface CoverProps {
   generatedAt: string;
   preparedFor: string;
   version: string;
-
-  isGenerating?: boolean;
-  isDownloading?: boolean;
-  hasReport?: boolean;
-  onGenerate: () => void;
-  onDownload: () => void;
 }
 
 export default function Cover({
@@ -23,11 +18,6 @@ export default function Cover({
   generatedAt,
   preparedFor,
   version,
-  isGenerating,
-  isDownloading,
-  hasReport,
-  onGenerate,
-  onDownload,
 }: CoverProps) {
   const formattedDate = new Date(generatedAt).toLocaleDateString(undefined, {
     year: "numeric",
@@ -36,51 +26,33 @@ export default function Cover({
   });
 
   return (
-    <section className="relative w-full min-h-[90vh] flex flex-col bg-white overflow-hidden py-8">
+    <section className="relative w-full min-h-[90vh] flex flex-col bg-white py-8">
       {/*  Top Bar */}
       <div className="flex justify-between items-center px-8 py-4 text-sm border-b bg-white z-10">
         <span className="text-gray-500 font-medium">Compliance Readiness Report</span>
 
         <div className="flex gap-2">
-          {/*  Print */}
+          {/*  Share */}
           <button
-            onClick={() => window.print()}
+            onClick={() => {
+              navigator.clipboard.writeText(window.location.href);
+              toast.success("Link copied!");
+            }}
             className="flex items-center gap-1 px-3 py-1 border rounded 
             hover:bg-gray-100 hover:shadow-sm transition"
           >
+            <Share2 size={14} />
+            Share
+          </button>
+
+          {/*  Print */}
+          <button
+            onClick={() => window.print()}
+            className="flex items-center gap-1 px-3 py-1 bg-purple-600 text-white rounded 
+            hover:bg-purple-700 shadow-sm transition"
+          >
             <Printer size={14} />
             Print
-          </button>
-
-          {/*  Export (Generate) */}
-          <button
-            onClick={onGenerate}
-            disabled={isGenerating}
-            className={`flex items-center gap-1 px-3 py-1 border rounded transition
-            ${isGenerating ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100 hover:shadow-sm"}`}
-          >
-            {isGenerating ? (
-              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-900" />
-            ) : (
-              <FileDown size={14} />
-            )}
-            {isGenerating ? "Generating..." : "Generate Report"}
-          </button>
-
-          {/* ⬇ Download */}
-          <button
-            onClick={onDownload}
-            disabled={isDownloading || !hasReport}
-            title={!hasReport ? "Generate a report first" : "Download PDF report"}
-            className={`flex items-center gap-1 px-3 py-1 bg-purple-600 text-white rounded transition
-            ${isDownloading || !hasReport ? "opacity-50 cursor-not-allowed" : "hover:bg-purple-700 hover:shadow-md"}`}
-          >
-            {isDownloading ? (
-              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white" />
-            ) : (
-              <Download size={14} />
-            )}
-            {isDownloading ? "Downloading..." : "Download"}
           </button>
         </div>
       </div>

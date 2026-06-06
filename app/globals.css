@@ -266,29 +266,24 @@ body {
     margin: 14mm;
   }
 
+  * {
+    overflow: visible !important;
+  }
+
   body {
     background-color: white !important;
     color: black !important;
   }
+
   .print\:hidden {
     display: none !important;
   }
+
   nav,
   header,
   footer,
   aside {
     display: none !important;
-  }
-  main,
-  .content {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  /* Avoid page breaks inside sections */
-  section,
-  .card {
-    page-break-inside: avoid;
   }
 
   .report-print-root {
@@ -296,12 +291,19 @@ body {
     color: black !important;
     max-width: none !important;
     width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    position: static !important;
   }
 
   .report-print-root section {
-    break-inside: avoid;
     box-shadow: none !important;
     border-color: #d1d5db !important;
+  }
+
+  .report-print-root .print-hide-bg {
+    display: none !important;
   }
 
   .report-print-root table {

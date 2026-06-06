@@ -173,7 +173,7 @@ describe("Admin Users API", () => {
       const res = (await listUsersGet(
         new Request("http://localhost/api/admin/users?role=ADMIN"),
       )) as Response;
-      const json = await res.json();
+      void (await res.json());
 
       expect(res.status).toBe(200);
       expect(prisma.user.findMany).toHaveBeenCalledWith(
@@ -192,7 +192,7 @@ describe("Admin Users API", () => {
       const res = (await listUsersGet(
         new Request("http://localhost/api/admin/users?isActive=false"),
       )) as Response;
-      const json = await res.json();
+      void (await res.json());
 
       expect(res.status).toBe(200);
       expect(prisma.user.findMany).toHaveBeenCalledWith(
@@ -211,7 +211,7 @@ describe("Admin Users API", () => {
       const res = (await listUsersGet(
         new Request("http://localhost/api/admin/users?search=bob&role=USER&isActive=true"),
       )) as Response;
-      const json = await res.json();
+      void (await res.json());
 
       expect(res.status).toBe(200);
       expect(prisma.user.findMany).toHaveBeenCalledWith(
@@ -491,7 +491,7 @@ describe("Admin Users API", () => {
       expect(sendPasswordResetEmail).toHaveBeenCalledWith(
         expect.objectContaining({
           to: "user@example.com",
-          resetLink: expect.stringContaining(`token=${plaintextToken}`),
+          resetLink: expect.stringContaining(`/reset-password?token=${plaintextToken}`),
         }),
       );
     });
