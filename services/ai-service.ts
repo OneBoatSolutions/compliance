@@ -382,16 +382,22 @@ async function withTimeout<T>(
 }
 
 export function parseRemediationResponse(text: string): RemediationResponse {
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
-    throw new RemediationParseError("No JSON found in AI remediation response");
-  }
-
+  // Try to parse the whole string as JSON first (handles pure JSON responses).
   let parsed: unknown;
   try {
-    parsed = JSON.parse(jsonMatch[0]);
+    parsed = JSON.parse(text);
   } catch {
-    throw new RemediationParseError("Invalid JSON in AI remediation response");
+    // Fallback: extract first JSON object from text
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new RemediationParseError("No JSON found in AI remediation response");
+    }
+
+    try {
+      parsed = JSON.parse(jsonMatch[0]);
+    } catch {
+      throw new RemediationParseError("Invalid JSON in AI remediation response");
+    }
   }
 
   if (
@@ -462,6 +468,7 @@ export async function generateRemediation(
 
   const prompt = buildRemediationPrompt(input);
   let lastError: Error | null = null;
+  let sawTimeout = false;
 
   for (let attempt = 1; attempt <= remediationMaxRetries; attempt++) {
     try {
@@ -493,12 +500,23 @@ export async function generateRemediation(
 
       console.error(`Remediation attempt ${attempt} failed`, resolvedError);
 
+      if (resolvedError.message.toLowerCase().includes("timed out")) {
+        sawTimeout = true;
+        // Propagate the timeout error so the API route can return 504
+        throw resolvedError;
+      }
+
       const shouldRetry = resolvedError instanceof RemediationParseError;
 
       if (!shouldRetry || attempt === remediationMaxRetries) {
         break;
       }
     }
+  }
+
+  // If we observed a timeout, surface it instead of returning a silent fallback
+  if (sawTimeout && lastError) {
+    throw lastError;
   }
 
   const fallback = getFallbackRemediation(input);
@@ -520,20 +538,38 @@ export function clearAIServiceCachesForTests() {
 
 async function parseAIResponse(text: string): Promise<AIFrameworkSuggestion[]> {
   try {
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error("No JSON found");
+    // Prefer parsing the entire response as JSON (handles arrays or objects)
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error("No JSON found");
+      }
+      parsed = JSON.parse(jsonMatch[0]);
     }
 
-    const parsed = JSON.parse(jsonMatch[0]) as {
-      frameworks?: Array<Partial<AIFrameworkSuggestion>>;
-    };
+    // Accept either an array of suggestions or an object with `frameworks` key
+    let candidateFrameworks: Array<Partial<AIFrameworkSuggestion>> | undefined;
 
-    if (!parsed.frameworks || !Array.isArray(parsed.frameworks)) {
+    if (Array.isArray(parsed)) {
+      candidateFrameworks = parsed as Array<Partial<AIFrameworkSuggestion>>;
+    } else if (parsed && typeof parsed === "object") {
+      const asObj = parsed as { frameworks?: Array<Partial<AIFrameworkSuggestion>> } & Record<
+        string,
+        unknown
+      >;
+      if (Array.isArray(asObj.frameworks)) {
+        candidateFrameworks = asObj.frameworks;
+      }
+    }
+
+    if (!candidateFrameworks || !Array.isArray(candidateFrameworks)) {
       throw new Error("Invalid format");
     }
 
-    const validated: AIFrameworkSuggestion[] = parsed.frameworks.map(
+    const validated: AIFrameworkSuggestion[] = candidateFrameworks.map(
       (f: Partial<AIFrameworkSuggestion>) => ({
         code: typeof f.code === "string" ? f.code.trim() : "UNKNOWN",
         name: typeof f.name === "string" ? f.name.trim() : "Unknown",
@@ -602,9 +638,19 @@ export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestio
       return mappedSuggestions;
     } catch (err) {
       console.error(`AI attempt ${attempt} failed`, err);
-      if (attempt === maxRetries) {
-        break;
+
+      const errMessage = err instanceof Error ? err.message : "";
+      const isTimeout = errMessage.toLowerCase().includes("timed out") || errMessage === "Timeout";
+
+      if (isTimeout) {
+        if (attempt === maxRetries) {
+          break;
+        }
+        continue;
       }
+
+      // For non-timeout errors, throw to caller (API route will return 500)
+      throw err;
     }
   }
 

@@ -1,10 +1,24 @@
-import { FrameworkStatus, Prisma } from "@prisma/client";
+import { FrameworkStatus } from "@prisma/client";
 import { withErrorHandler } from "@/lib/api-handler";
 import { errorResponse, successResponse, validationErrorResponse } from "@/lib/api-helpers";
 import { requireAdmin } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { createFrameworkAdminSchema, frameworkListQuerySchema } from "@/lib/validations/framework";
 import { listFrameworks } from "@/services/framework-admin-service";
+
+function isPrismaUniqueConstraintError(e: unknown): boolean {
+  if (!e || typeof e !== "object") {
+    return false;
+  }
+  const err = e as { code?: unknown; name?: unknown };
+  if (err.code === "P2002") {
+    return true;
+  }
+  if (err.name === "PrismaClientKnownRequestError" && err.code === "P2002") {
+    return true;
+  }
+  return false;
+}
 
 export const GET = withErrorHandler(async (req: Request) => {
   await requireAdmin();
@@ -70,7 +84,7 @@ export const POST = withErrorHandler(async (req: Request) => {
 
     return successResponse(created, 201);
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
+    if (isPrismaUniqueConstraintError(e)) {
       return errorResponse("A framework with this code already exists", 409);
     }
     throw e;

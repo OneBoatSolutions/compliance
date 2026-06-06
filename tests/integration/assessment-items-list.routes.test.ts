@@ -83,7 +83,7 @@ describe("Assessment items list API route", () => {
   it("applies filters and search on code/title/comments", async () => {
     vi.spyOn(prisma.assessment, "findFirst").mockResolvedValue({ id: "asm_1" } as never);
     vi.spyOn(prisma.assessmentItem, "findMany").mockResolvedValue([] as never);
-    vi.spyOn(prisma.assessmentItem, "count").mockResolvedValue(0);
+    vi.spyOn(prisma.assessmentItem, "count").mockResolvedValue(0 as never);
 
     const req = new Request(
       "http://localhost/api/assessments/asm_1/items?status=NOT_COMPLIANT&status=NOT_STARTED&framework=cm8abcde0000000000000002&framework=cm8abcde0000000000000003&severity=CRITICAL&severity=HIGH&search=policy&page=2&limit=10&sortBy=updatedAt&sortOrder=asc",
