@@ -16,8 +16,31 @@ export default function RemediationHeader({ data, onClose }: Props) {
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold">AI Remediation Plan</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-semibold"> AI Remediation Plan</h2>
+
+            {data?.status && (
+              <span
+                className={`rounded-full px-2.5 py-1 text-xs font-medium border ${
+                  data.status === "COMPLETED"
+                    ? "bg-green-50 text-green-700 border-green-200"
+                    : data.status === "ARCHIVED"
+                      ? "bg-slate-50 text-slate-700 border-slate-200"
+                      : "bg-purple-50 text-purple-700 border-purple-200"
+                }
+                        `}
+              >
+                {data.status}
+              </span>
+            )}
+          </div>
           <p className="text-sm text-muted-foreground">Actionable steps to achieve compliance</p>
+          {data?.updatedAt && (
+            <p className="text-xs text-slate-500 mt-1">
+              {" "}
+              Updated {new Date(data.updatedAt).toLocaleString()}
+            </p>
+          )}
         </div>
       </div>
 

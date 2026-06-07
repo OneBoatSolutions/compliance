@@ -331,7 +331,7 @@ export default function RemediationDrawer({
   const isBusy = loading || regenerating || saving;
 
   return (
-    <div className="fixed inset-0 z-50 flex">
+    <div className="remediation-print-container fixed inset-0 z-50 flex">
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm print:hidden"
         onClick={onClose}
@@ -344,15 +344,15 @@ export default function RemediationDrawer({
       >
         <RemediationHeader data={data ?? undefined} onClose={onClose} />
 
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto px-8 py-8 space-y-8">
           {loading || !data ? (
             <LoadingState />
           ) : (
             <>
               <RemediationTop data={data} />
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 xl:gap-10">
+                <div className="lg:col-span-2 space-y-8">
                   <PriorityActions
                     steps={data.steps}
                     onStepStatusChange={handleStepStatusChange}
@@ -362,7 +362,7 @@ export default function RemediationDrawer({
                   <RemediationFeedback />
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-8">
                   <RemediationSidebar data={data} />
                 </div>
               </div>

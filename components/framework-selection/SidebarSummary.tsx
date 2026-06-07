@@ -104,28 +104,36 @@ export default function SidebarSummary({ selected, onContinue, loading }: Props)
           </p>
 
           <div className="space-y-2 text-xs">
-            <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-              <span className="font-medium">90%+</span>
-              <span className="text-gray-500">Very High Dependability</span>
+            <div className="flex items-center gap-3">
+              <span className="w-3 h-3 rounded-full bg-green-500" />
+
+              <span className="w-14 text-xs font-medium text-slate-700"> 90%+</span>
+
+              <span className="text-xs text-slate-500"> Very High </span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-              <span className="font-medium">75–89%</span>
-              <span className="text-gray-500">High Dependability</span>
+            <div className="flex items-center gap-3">
+              <span className="w-3 h-3 rounded-full bg-blue-500" />
+
+              <span className="w-14 text-xs font-medium text-slate-700"> 75–89% </span>
+
+              <span className="text-xs text-slate-500"> High </span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
-              <span className="font-medium">60–74%</span>
-              <span className="text-gray-500">Moderate Fit</span>
+            <div className="flex items-center gap-3">
+              <span className="w-3 h-3 rounded-full bg-yellow-500" />
+
+              <span className="w-14 text-xs font-medium text-slate-700"> 60–74% </span>
+
+              <span className="text-xs text-slate-500"> Moderate </span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-              <span className="font-medium">&lt;60%</span>
-              <span className="text-gray-500">Low Relevance</span>
+            <div className="flex items-center gap-3">
+              <span className="w-3 h-3 rounded-full bg-red-500" />
+
+              <span className="w-14 text-xs font-medium text-slate-700"> &lt;60% </span>
+
+              <span className="text-xs text-slate-500"> Low</span>
             </div>
           </div>
         </div>

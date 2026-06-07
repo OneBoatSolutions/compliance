@@ -342,6 +342,24 @@ body {
     color: black !important;
     background: white !important;
   }
+   
+  .remediation-print-container {
+    position: static !important;
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  html,
+  body {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .remediation-print-root > div {
+    overflow: visible !important;
+    height: auto !important;
+  }
 
   .remediation-print-root * {
     box-shadow: none !important;

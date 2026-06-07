@@ -19,41 +19,55 @@ export default function ProgressSection({
   notStarted = 0,
 }: ProgressProps) {
   const completed = compliant + partiallyCompliant;
+
   const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
 
   return (
-    <div className="bg-white shadow-md border border-slate-200 rounded-2xl p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-      {/* LEFT */}
-      <div className="w-full">
-        <div className="flex items-center justify-between mb-3">
-          <p className="text-sm font-semibold text-slate-700">Section Progress</p>
-          <span className="font-medium text-sm text-slate-500">
+    <div className="space-y-4">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        {/* LEFT */}
+        <div>
+          <p className="text-sm text-slate-500 pt-4">Assessment Progress</p>
+
+          <p className="text-sm font-semibold text-slate-900">
             {completed}/{total} controls completed
-          </span>
+          </p>
         </div>
 
-        <div className="flex items-center gap-4">
-          <Progress value={percent} className="h-2.5 bg-slate-100 [&>div]:bg-purple-600" />
+        {/* RIGHT */}
+        <div className="flex flex-wrap items-center gap-2">
+          <Legend color="bg-green-500" label={compliant.toString()} title="Compliant" />
 
-          <Badge
-            variant="secondary"
-            className="bg-purple-50 text-purple-700 hover:bg-purple-100 font-semibold px-2 py-0.5"
-          >
-            {percent}%
-          </Badge>
+          <Legend
+            color="bg-yellow-500"
+            label={partiallyCompliant.toString()}
+            title="Partially Compliant"
+          />
+
+          <Legend color="bg-red-500" label={nonCompliant.toString()} title="Non-Compliant" />
+
+          <Legend color="bg-gray-400" label={notStarted.toString()} title="Not Started" />
         </div>
       </div>
 
-      {/* RIGHT LEGEND */}
-      <div className="flex flex-row items-center gap-4 text-xs text-muted-foreground">
-        <Legend color="bg-green-500" label={compliant.toString()} title="Compliant" />
-        <Legend
-          color="bg-yellow-500"
-          label={partiallyCompliant.toString()}
-          title="Partially Compliant"
+      <div className="flex items-center gap-4">
+        <Progress
+          aria-label="Control section progress"
+          value={percent}
+          className="h-3 rounded-full bg-slate-200 [&>div]:bg-purple-600"
         />
-        <Legend color="bg-red-500" label={nonCompliant.toString()} title="Non-Compliant" />
-        <Legend color="bg-gray-400" label={notStarted.toString()} title="Not Started" />
+
+        <Badge
+          className="
+            bg-purple-100
+            text-purple-700
+            font-semibold
+            rounded-full
+            px-3
+          "
+        >
+          {percent}%
+        </Badge>
       </div>
     </div>
   );
@@ -61,9 +75,21 @@ export default function ProgressSection({
 
 function Legend({ color, label, title }: { color: string; label: string; title: string }) {
   return (
-    <div className="flex items-center gap-1" title={title}>
-      <span className={`w-2 h-2 rounded-full ${color}`} />
-      {label}
+    <div
+      className="
+        flex items-center gap-1.5
+        rounded-full
+        border
+        border-white
+        bg-white/80
+        px-2.5
+        py-1
+      "
+      title={title}
+    >
+      <span className={`h-2 w-2 rounded-full ${color}`} />
+
+      <span className="text-xs font-medium text-slate-700">{label}</span>
     </div>
   );
 }

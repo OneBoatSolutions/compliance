@@ -1,30 +1,89 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card } from "@/components/ui/card";
+import { Clock3, User, ClipboardList } from "lucide-react";
+
+import type { RemediationPlanStep } from "@/types/remediation";
+
 import PriorityBadge from "./priority-badge";
 
-export default function RemediationStep({ step, index }: any) {
+interface RemediationStepProps {
+  step: RemediationPlanStep;
+  index: number;
+}
+
+export default function RemediationStep({ step, index }: RemediationStepProps) {
   return (
-    <Card className="p-5 bg-white shadow-sm border-l-4 border-purple-500">
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex items-center gap-3">
-          <div className="w-6 h-6 rounded-full bg-purple-500 text-white text-xs flex items-center justify-center">
+    <Card
+      className="
+    relative
+    overflow-hidden
+    p-6
+    border
+    border-purple-100
+    bg-gradient-to-br
+    from-purple-50/60
+    via-white
+    to-white
+    shadow-sm
+    hover:shadow-md
+    hover:border-purple-200
+    transition-all
+    duration-200
+  "
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start gap-4">
+          <div
+            className="
+              flex
+              h-8
+              w-8
+              shrink-0
+              items-center
+              justify-center
+              rounded-full
+              bg-gradient-to-br
+              from-purple-600
+              to-violet-500
+              text-sm
+              font-semibold
+              text-white
+              shadow-sm
+            "
+          >
             {index + 1}
           </div>
-          <h3 className="font-semibold">{step.title}</h3>
+
+          <div>
+            <h3 className="text-lg font-semibold text-slate-900">{step.title}</h3>
+            <div className="mt-5 border-t border-purple-100 pt-4">
+              <div className="mt-3 flex flex-wrap gap-5 text-sm text-slate-500">
+                <span className="flex items-center gap-1.5">
+                  <User className="h-4 w-4 text-purple-500" />
+                  {step.owner}
+                </span>
+
+                <span className="flex items-center gap-1.5">
+                  <Clock3 className="h-4 w-4 text-purple-500" />
+                  {step.estimatedHours} hrs
+                </span>
+
+                {step.status && (
+                  <span className="flex items-center gap-1.5">
+                    <ClipboardList className="h-4 w-4 text-purple-500" />
+                    {step.status.replace("_", " ")}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
         <PriorityBadge level={step.priority} />
       </div>
 
-      <p className="text-sm text-gray-500 mb-2">
-        Owner: {step.owner} • Effort: {step.hours} hrs
-      </p>
-
-      <ul className="list-disc ml-6 text-sm text-gray-600 space-y-1">
-        {step.description.map((item: string, i: number) => (
-          <li key={i}>{item}</li>
-        ))}
-      </ul>
+      <div className="mt-5 rounded-xl border border-purple-100 bg-white/80 p-4">
+        <p className="text-sm leading-relaxed text-slate-600">{step.description}</p>
+      </div>
     </Card>
   );
 }

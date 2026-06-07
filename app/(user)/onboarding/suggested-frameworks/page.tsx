@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState, useCallback } from "react";
 
-import TopSection from "@/components/framework-selection/TopSection";
 import FrameworkCard from "@/components/framework-selection/framework-card";
 import SidebarSummary from "@/components/framework-selection/SidebarSummary";
 import LoadingScreen from "@/components/framework-selection/LoadingScreen";
@@ -13,6 +12,8 @@ import { useAssessmentStore } from "@/stores/assessment-store";
 import BottomNavigation from "@/components/framework-selection/bottomNavigation";
 import { useRouter } from "next/navigation";
 import { Search, Plus, X } from "lucide-react";
+import { Shield } from "lucide-react";
+import { toast } from "sonner";
 
 /* ---------------- PAGE ---------------- */
 
@@ -76,7 +77,9 @@ export default function Page() {
   const [showLoader, setShowLoader] = useState(true);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("All");
-
+  const handleSaveDraft = async () => {
+    toast.success("Draft saved successfully");
+  };
   // Manual add state
   const [showManualAdd, setShowManualAdd] = useState(false);
   const [manualSearch, setManualSearch] = useState("");
@@ -262,24 +265,80 @@ export default function Page() {
       )}
       <>
         {/* Stepper */}
-        <Stepper currentStep={2} />
-        <div className="max-w-7xl mx-auto p-6 space-y-6">
-          <TopSection />
+        <div>
+          <div className="max-w-7xl mx-auto">
+            <Stepper currentStep={2} />
+          </div>
 
-          {/* Search + Filters + Manual Add Button */}
-          <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between py-4">
-            <div className="w-full md:w-1/2">
-              <SearchInput value={search} onChange={setSearch} />
-            </div>
-            <div className="flex items-center gap-3">
-              <FilterTabs active={activeTab} setActive={setActiveTab} />
-              <button
-                onClick={() => setShowManualAdd(true)}
-                className="inline-flex items-center gap-2 rounded-lg border border-[#6d18ff] bg-white px-4 py-2 text-sm font-medium text-[#6d18ff] shadow-sm transition hover:bg-[#6d18ff]/5"
-              >
-                <Plus size={16} />
-                Add Framework
-              </button>
+          <div className="max-w-7xl mx-auto">
+            <div className="border-b border-slate-200 my-6" />
+
+            <div
+              className="
+      rounded-3xl
+      border border-purple-100
+      bg-gradient-to-br
+      from-purple-50/80
+      via-purple-50/30
+      to-white
+      p-6 md:p-8
+      shadow-sm
+      space-y-6
+    "
+            >
+              {/* Stepper */}
+
+              {/* Heading */}
+              <div className="flex items-start gap-4">
+                <div className=" flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-100 border border-purple-200">
+                  <Shield className="h-6 w-6 text-purple-600" />
+                </div>
+
+                <div>
+                  <h1 className="text-xl font-bold text-slate-900">
+                    Select your compliance frameworks
+                  </h1>
+
+                  <p className="mt-2 text-slate-600 max-w-2xl">
+                    Review AI recommendations and choose the frameworks that best match your
+                    organization’s compliance needs.
+                  </p>
+                </div>
+              </div>
+
+              {/* Toolbar */}
+              <div className="rounded-2xl border border-purple-100 bg-white/80 backdrop-blur-sm p-4">
+                <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+                  {/* Search */}
+                  <div className="flex-1 max-w-2xl">
+                    <SearchInput value={search} onChange={setSearch} />
+                  </div>
+
+                  {/* Add Framework */}
+                  <button
+                    onClick={() => setShowManualAdd(true)}
+                    className="
+            inline-flex items-center justify-center gap-2
+            rounded-xl
+            bg-purple-600
+            px-5 py-3
+            text-sm font-medium text-white
+            shadow-sm
+            transition-all
+            hover:bg-purple-700
+            hover:shadow-md
+          "
+                  >
+                    <Plus size={16} />
+                    Add Framework
+                  </button>
+                </div>
+
+                {/* Filter Chips */}
+                <div className="mt-4">
+                  <FilterTabs active={activeTab} setActive={setActiveTab} />
+                </div>
+              </div>
             </div>
           </div>
 

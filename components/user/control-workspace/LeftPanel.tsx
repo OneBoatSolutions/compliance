@@ -87,6 +87,8 @@ export default function LeftPanel({
               <div
                 key={i}
                 onClick={() => setStatus(item.value)}
+                role="button"
+                tabIndex={0}
                 className={`cursor-pointer border rounded-xl p-4 transition-all duration-200
               ${
                 isActive

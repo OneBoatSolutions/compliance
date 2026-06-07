@@ -32,25 +32,75 @@ export default function AIAssistantCard({ status, onOpenDrawer }: AIAssistantCar
 
   return (
     <div
-      className="rounded-xl p-5 text-white shadow-lg 
-    bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500 space-y-4"
+      className="
+      relative overflow-hidden
+      rounded-2xl p-5 text-white shadow-lg
+      bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500
+    "
     >
+      {/* Decorative Glow */}
+      <div className="absolute right-0 top-0 h-20 w-20 rounded-full bg-white/10 blur-2xl" />
+
       {/* Header */}
-      <div className="flex items-center gap-2">
-        <div className="bg-white/20 p-2 rounded-md">
+      <div className="flex items-center gap-3 mb-4 relative z-10">
+        <div className="bg-white/20 p-2 rounded-lg">
           <Sparkles size={18} />
         </div>
+
         <div>
           <p className="font-semibold">AI Assistant</p>
-          <p className="text-xs text-white/80">Get AI-powered guidance</p>
+          <p className="text-xs text-white/80">AI-powered compliance guidance</p>
         </div>
       </div>
 
-      {/* Dynamic Message */}
-      <p className="text-sm text-white/90 leading-relaxed">{message}</p>
+      {/* Status */}
+      <div className="mb-4 relative z-10">
+        <span
+          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
+            status === "COMPLIANT"
+              ? "bg-green-500/20 text-green-100"
+              : status === "PARTIALLY_COMPLIANT"
+                ? "bg-yellow-500/20 text-yellow-100"
+                : status === "NOT_COMPLIANT"
+                  ? "bg-red-500/20 text-red-100"
+                  : "bg-white/20 text-white"
+          }`}
+        >
+          {status.replaceAll("_", " ")}
+        </span>
+      </div>
+
+      {/* Insight */}
+      <div className="mb-4 relative z-10">
+        <p className="text-sm font-medium text-white">
+          {status === "COMPLIANT"
+            ? "Control implementation appears complete."
+            : status === "PARTIALLY_COMPLIANT"
+              ? "Implementation gaps detected."
+              : status === "NOT_COMPLIANT"
+                ? "Immediate remediation recommended."
+                : "Assessment required."}
+        </p>
+      </div>
+
+      {/* Message */}
+      <p className="text-sm text-white/90 leading-relaxed mb-5 relative z-10">{message}</p>
 
       {/* CTA */}
-      <Button onClick={onOpenDrawer} className="w-full bg-white text-purple-700 hover:bg-white/90">
+      <Button
+        aria-label="Open AI remediation assistant"
+        onClick={onOpenDrawer}
+        className="
+        relative z-10
+        w-full
+        bg-white
+        text-purple-700
+        font-medium
+        hover:bg-white
+        hover:shadow-md
+        transition-all
+      "
+      >
         {buttonText}
       </Button>
     </div>

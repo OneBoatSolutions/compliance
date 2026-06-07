@@ -118,6 +118,7 @@ window.open(url, "_blank", "noopener,noreferrer");
       </div>
     );
   }
+
   // ── Data mapping: transform ReportViewResponse into component prop shapes ──
 
   // OrganizationProfile shape — maps risk strings including CRITICAL → HIGH
@@ -219,7 +220,7 @@ window.open(url, "_blank", "noopener,noreferrer");
             <div className="flex flex-wrap gap-2">
               {/* Share */}
               <button
-                aria-label="Share compliance report"
+                aria-label="Copy shareable report link"
                 onClick={() => {
                   navigator.clipboard.writeText(window.location.href);
                   toast.success("Link copied!");

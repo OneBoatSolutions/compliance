@@ -5,8 +5,8 @@ interface Props {
 }
 
 export default function ConfidenceDonut({ value }: Props) {
-  const radius = 44;
-  const stroke = 8;
+  const radius = 32;
+  const stroke = 6;
   const normalizedRadius = radius - stroke * 2;
   const circumference = normalizedRadius * 2 * Math.PI;
 
@@ -26,8 +26,8 @@ export default function ConfidenceDonut({ value }: Props) {
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <svg height={radius * 2} width={radius * 2}>
+    <div className="flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20">
+      <svg viewBox={`0 0 ${radius * 2} ${radius * 2}`} className="w-full h-full">
         {/* Background circle */}
         <circle
           stroke="#f3f4f6"
@@ -60,7 +60,7 @@ export default function ConfidenceDonut({ value }: Props) {
           y="50%"
           textAnchor="middle"
           dy=".3em"
-          className="text-xs fill-gray-700 font-semibold"
+          className="text-[11px] fill-slate-700 font-semibold"
         >
           {value}%
         </text>

@@ -18,6 +18,8 @@ const EvidenceUploader = dynamic(() => import("@/components/user/evidence-upload
   ssr: false,
   loading: () => <Skeleton className="h-[200px] w-full rounded-xl" />,
 });
+import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 
 interface ControlData {
   id: string; // The database control ID for API calls
@@ -50,6 +52,7 @@ export default function ControlWorkspace({ control }: Props) {
   const [status, setStatus] = useState<AssessmentItemStatus>(
     (control?.status as AssessmentItemStatus) || "NOT_STARTED",
   );
+  const router = useRouter();
   const [comments, setComments] = useState(control?.comments || "");
   const [assignee, setAssignee] = useState(control?.owner || "");
   const [dueDate, setDueDate] = useState(control?.targetDate || "");
@@ -157,10 +160,58 @@ export default function ControlWorkspace({ control }: Props) {
     }
   };
 
+  const { data: assessmentItems } = useQuery({
+    queryKey: ["assessment-controls", control.assessmentId],
+    queryFn: () =>
+      apiClient.get<{
+        items: {
+          id: string;
+          control: {
+            code: string;
+          };
+        }[];
+      }>(`/api/assessments/${control.assessmentId}/items?limit=100`),
+    enabled: !!control.assessmentId,
+  });
+
+  const controls = assessmentItems?.items ?? [];
+
+  const currentIndex = controls.findIndex((item) => item.control.code === control.code);
+
+  const previousControl = currentIndex > 0 ? controls[currentIndex - 1] : null;
+
+  const nextControl =
+    currentIndex >= 0 && currentIndex < controls.length - 1 ? controls[currentIndex + 1] : null;
+
+  const handlePreviousControl = () => {
+    if (!previousControl) {
+      return;
+    }
+
+    router.push(
+      `/assessments/${control.assessmentId}/control-workspace/${previousControl.control.code}`,
+    );
+  };
+  const handleNextControl = async () => {
+    await handleSave("final");
+
+    if (!nextControl) {
+      router.push(`/assessments/${control.assessmentId}/checklist`);
+      return;
+    }
+
+    router.push(
+      `/assessments/${control.assessmentId}/control-workspace/${nextControl.control.code}`,
+    );
+  };
+
   return (
     <div className="p-6 md:p-8 space-y-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="space-y-6">
+      <div
+        className="rounded-3xl border border-purple-100 bg-gradient-to-br from-purple-50/80 via-purple-50/30 to-white
+                      p-6 md:p-8"
+      >
         <WorkspaceHeader control={control} />
         <ProgressSection {...sectionProgress} />
       </div>
@@ -197,7 +248,14 @@ export default function ControlWorkspace({ control }: Props) {
         <RightSidebar control={control} status={status} />
       </div>
 
-      <FooterNav onSave={handleSave} isSaving={isSaving} />
+      <FooterNav
+        onSave={handleSave}
+        isSaving={isSaving}
+        onPrevious={handlePreviousControl}
+        onNext={handleNextControl}
+        hasPrevious={!!previousControl}
+        hasNext={!!nextControl}
+      />
     </div>
   );
 }

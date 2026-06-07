@@ -30,3 +30,13 @@ export const categoryStyles: Record<string, string> = {
   Privacy: "bg-green-50 text-green-600 border-green-200",
   Industry: "bg-orange-50 text-orange-600 border-orange-200",
 };
+
+export const categoryBadgeStyles: Record<string, string> = {
+  Industry: "bg-orange-100 text-orange-700 border-orange-200",
+
+  Privacy: "bg-green-100 text-green-700 border-green-200",
+
+  Security: "bg-blue-100 text-blue-700 border-blue-200",
+
+  Other: "bg-slate-100 text-slate-700 border-slate-200",
+};

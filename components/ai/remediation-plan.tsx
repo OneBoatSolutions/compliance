@@ -87,6 +87,7 @@ export default function RemediationPlan({ status }: Props) {
       {/* 🧠 AI Header */}
       <div>
         <h2 className="text-lg font-semibold">AI Remediation Plan</h2>
+        <h3 className="bg-red-500 text-xl text-white font-bold">TEST TEST TEST</h3>
         <p className="text-sm text-muted-foreground">
           Actionable steps to achieve compliance for this control
         </p>

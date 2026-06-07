@@ -1,4 +1,4 @@
-import { CheckCircle2, Circle, Clock3, ListChecks } from "lucide-react";
+import { CheckCircle2, Circle, Clock3, ListChecks, User, ClipboardList } from "lucide-react";
 
 import type { RemediationStepData, RemediationStepStatus } from "@/services/types";
 
@@ -20,8 +20,8 @@ export default function PriorityActions({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <ListChecks size={16} className="text-purple-600" />
-        <h3 className="font-semibold">Priority Actions</h3>
+        <ListChecks size={20} className="text-purple-600 font-bold" />
+        <h3 className="font-semibold text-lg">Priority Actions</h3>
       </div>
 
       {steps.map((step, index) => {
@@ -31,8 +31,10 @@ export default function PriorityActions({
         return (
           <div
             key={step.id ?? `${step.title}-${index}`}
-            className="border rounded-xl p-4 space-y-3"
+            className="relative overflow-hidden rounded-xl border border-purple-100 bg-gradient-to-br from-purple-50/50 via-white to-white
+                       p-5 space-y-3 shadow-sm hover:shadow-md hover:border-purple-200 transition-all duration-200"
           >
+            <div className="absolute left-2 top-3 bottom-3 w-1 bg-gradient-to-b from-purple-600 to-violet-400 rounded-full" />{" "}
             <div className="flex items-start gap-3">
               <button
                 type="button"
@@ -52,20 +54,46 @@ export default function PriorityActions({
                     {step.title}
                   </p>
 
-                  <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded">
+                  <span
+                    className={`text-xs px-3 py-1 rounded-full font-medium border ${
+                      step.priority === "HIGH"
+                        ? "bg-red-50 text-red-700 border-red-200"
+                        : step.priority === "MEDIUM"
+                          ? "bg-yellow-50 text-yellow-700 border-yellow-200"
+                          : "bg-blue-50 text-blue-700 border-blue-20"
+                    } `}
+                  >
                     {step.priority}
                   </span>
+
+                  {step.status === "DONE" && step.completedAt && (
+                    <span className="inline-flex items-center gap-1 text-green-600">
+                      ✓ Completed {new Date(step.completedAt).toLocaleDateString()}
+                    </span>
+                  )}
                 </div>
 
-                <p className="mt-2 text-sm text-muted-foreground">{step.description}</p>
+                <p className="mt-3 text-sm leading-relaxed text-slate-600">{step.description}</p>
 
-                <div className="mt-3 text-xs text-muted-foreground flex flex-wrap gap-4">
-                  <span>Owner: {step.owner}</span>
+                <div className="mt-4 border-t border-purple-100 pt-3 text-xs text-muted-foreground flex flex-wrap gap-4">
                   <span className="inline-flex items-center gap-1">
-                    <Clock3 size={13} />
+                    <User size={15} className="text-purple-500 text-bold" />
+                    {step.owner}
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <Clock3 size={13} className="text-purple-500" />
                     {step.estimatedHours}h
                   </span>
-                  <span>Status: {(step.status ?? "TODO").replaceAll("_", " ")}</span>
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs ${
+                      step.status === "DONE"
+                        ? "bg-green-50 text-green-700"
+                        : step.status === "IN_PROGRESS"
+                          ? "bg-yellow-50 text-yellow-700"
+                          : "bg-slate-50 text-slate-600"
+                    }
+                         `}
+                  ></span>
                 </div>
               </div>
             </div>
