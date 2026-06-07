@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAuth } from "@/lib/auth-helpers";
 import { generateRemediation } from "@/services/ai-service";
+import { rateLimitByUser } from "@/lib/rate-limiter";
 
-const rateLimitMap = new Map<string, { count: number; reset: number }>();
-
-const LIMIT = 10;
-const WINDOW = 60 * 60 * 1000; // 1 hour
+const aiRateLimit = {
+  name: "rl:ai:custom",
+  limit: 10,
+  windowSeconds: 60 * 60, // 1 hour
+};
 
 const remediationRequestSchema = z.object({
   frameworkName: z.string().trim().min(1),
@@ -17,28 +19,6 @@ const remediationRequestSchema = z.object({
   severity: z.string().trim().min(1),
   regenerate: z.boolean().optional(),
 });
-
-function checkRateLimit(userId: string) {
-  const now = Date.now();
-  const entry = rateLimitMap.get(userId);
-
-  if (!entry || entry.reset < now) {
-    rateLimitMap.set(userId, {
-      count: 1,
-      reset: now + WINDOW,
-    });
-
-    return true;
-  }
-
-  if (entry.count >= LIMIT) {
-    return false;
-  }
-
-  entry.count += 1;
-
-  return true;
-}
 
 function getRegenerateFlag(req: NextRequest, bodyRegenerate?: boolean): boolean {
   const queryValue = req.nextUrl.searchParams.get("regenerate");
@@ -70,14 +50,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!checkRateLimit(session.user.id)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Rate limit exceeded (10/hour)",
-        },
-        { status: 429 },
-      );
+    // Rate limiting (Redis-backed sliding window)
+    const rateLimited = await rateLimitByUser(req, session.user.id, aiRateLimit);
+    if (rateLimited) {
+      return rateLimited;
     }
 
     const data = await generateRemediation({

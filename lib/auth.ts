@@ -2,7 +2,7 @@ import { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
-import { isLocked, recordFailedAttempt, resetAttempts } from "@/lib/rate-limits";
+import { rateLimitByKey, RATE_LIMIT_CONFIGS } from "@/lib/rate-limiter";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -31,10 +31,11 @@ export const authOptions: NextAuthOptions = {
             typeof forwardedFor === "string"
               ? forwardedFor.split(",")[0].trim() || "unknown-ip"
               : "unknown-ip";
-          const identifier = `${credentials.email}:${ip}`;
+          const identifier = `rl:auth:login:${credentials.email}:${ip}`;
 
-          // Check lockout
-          if (isLocked(identifier)) {
+          // Check lockout (this will increment the request count in Redis)
+          const isLocked = await rateLimitByKey(identifier, RATE_LIMIT_CONFIGS.auth);
+          if (isLocked) {
             throw new Error("Too many failed login attempts. Please try again later.");
           }
 
@@ -43,24 +44,18 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (!user) {
-            recordFailedAttempt(identifier);
             throw new Error("Invalid email or password");
           }
 
           if (!user.isActive) {
-            recordFailedAttempt(identifier);
             throw new Error("Invalid email or password");
           }
 
           const valid = await bcrypt.compare(credentials.password, user.password);
 
           if (!valid) {
-            recordFailedAttempt(identifier);
             throw new Error("Invalid email or password");
           }
-
-          // Successful login — reset attempts and update lastLoginAt
-          resetAttempts(identifier);
 
           await prisma.user.update({
             where: { id: user.id },

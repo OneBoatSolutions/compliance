@@ -2,9 +2,15 @@ import { prisma } from "@/lib/prisma";
 import { registerSchema } from "@/lib/validations/auth";
 import { hashPassword } from "@/lib/auth-helpers";
 import { errorResponse, successResponse, validationErrorResponse } from "@/lib/api-helpers";
+import { rateLimit, RATE_LIMIT_CONFIGS } from "@/lib/rate-limiter";
 
 export async function POST(req: Request) {
   try {
+    const rateLimited = await rateLimit(req, RATE_LIMIT_CONFIGS.auth);
+    if (rateLimited) {
+      return rateLimited;
+    }
+
     const body = await req.json();
 
     const parsed = registerSchema.safeParse(body);

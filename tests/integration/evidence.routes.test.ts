@@ -56,7 +56,7 @@ describe("Evidence API routes", () => {
           originalname: "policy.pdf",
           mimetype: "application/pdf",
           size: 1024,
-          buffer: Buffer.from("sample"),
+          buffer: Buffer.from("%PDF-1.5\n%sample"),
         },
       ],
       fields: {
@@ -98,7 +98,7 @@ describe("Evidence API routes", () => {
           originalname: "policy.pdf",
           mimetype: "application/pdf",
           size: 1024,
-          buffer: Buffer.from("sample"),
+          buffer: Buffer.from("%PDF-1.5\n%sample"),
         },
       ],
       fields: { assessmentItemId: "cm9x2s8n30001abcde1234567" },

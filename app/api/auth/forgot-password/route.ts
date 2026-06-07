@@ -2,7 +2,7 @@ import { randomBytes, createHash } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { forgotPasswordSchema } from "@/lib/validations/auth";
 import { errorResponse, successResponse, validationErrorResponse } from "@/lib/api-helpers";
-import { isLocked, recordFailedAttempt } from "@/lib/rate-limits";
+import { rateLimitByKey, RATE_LIMIT_CONFIGS } from "@/lib/rate-limiter";
 import { sendPasswordResetEmail } from "@/services/email-service";
 
 const resetTokenTtlMs = 60 * 60 * 1000;
@@ -12,7 +12,7 @@ const genericForgotPasswordMessage =
 function getClientIdentifier(req: Request, email: string) {
   const forwardedFor = req.headers.get("x-forwarded-for");
   const ip = forwardedFor?.split(",")[0].trim() || req.headers.get("x-real-ip") || "unknown-ip";
-  return `forgot-password:${email}:${ip}`;
+  return `${email}:${ip}`;
 }
 
 function hashResetToken(token: string) {
@@ -35,9 +35,10 @@ export async function POST(req: Request) {
     }
 
     const { email } = parsed.data;
-    const identifier = getClientIdentifier(req, email);
+    const identifier = `rl:auth:forgot-password:${getClientIdentifier(req, email)}`;
 
-    if (isLocked(identifier)) {
+    const isLocked = await rateLimitByKey(identifier, RATE_LIMIT_CONFIGS.auth);
+    if (isLocked) {
       return errorResponse("Too many reset requests. Please try again later.", 429);
     }
 
@@ -90,8 +91,6 @@ export async function POST(req: Request) {
         console.error("[forgot-password] email send failed", err);
       }
     }
-
-    recordFailedAttempt(identifier);
 
     return successResponse({
       message: genericForgotPasswordMessage,

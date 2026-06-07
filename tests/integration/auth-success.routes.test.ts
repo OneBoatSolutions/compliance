@@ -16,15 +16,18 @@ vi.mock("@/lib/auth-helpers", () => ({
   getSession: vi.fn(),
 }));
 
-vi.mock("@/lib/rate-limits", () => ({
-  isLocked: vi.fn().mockReturnValue(false),
-  recordFailedAttempt: vi.fn(),
-  resetAttempts: vi.fn(),
+vi.mock("@/lib/rate-limiter", () => ({
+  rateLimit: vi.fn().mockResolvedValue(null),
+  rateLimitByKey: vi.fn().mockResolvedValue(false),
+  RATE_LIMIT_CONFIGS: {
+    auth: { name: "rl:auth", limit: 10, windowSeconds: 900 },
+    sensitive: { name: "rl:sensitive", limit: 5, windowSeconds: 3600 },
+  },
 }));
 
 import * as authHelpers from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
-import { isLocked } from "@/lib/rate-limits";
+import { rateLimitByKey } from "@/lib/rate-limiter";
 import { POST as loginPost } from "@/app/api/auth/login/route";
 import { POST as registerPost } from "@/app/api/auth/register/route";
 import { GET as meGet } from "@/app/api/auth/me/route";
@@ -32,7 +35,7 @@ import { GET as meGet } from "@/app/api/auth/me/route";
 describe("Auth routes: success paths", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(isLocked).mockReturnValue(false);
+    vi.mocked(rateLimitByKey).mockResolvedValue(false);
   });
 
   describe("POST /api/auth/login", () => {
@@ -102,7 +105,7 @@ describe("Auth routes: success paths", () => {
     });
 
     it("returns 429 when account is locked", async () => {
-      vi.mocked(isLocked).mockReturnValue(true);
+      vi.mocked(rateLimitByKey).mockResolvedValue(true);
 
       const req = new Request("http://localhost/api/auth/login", {
         method: "POST",

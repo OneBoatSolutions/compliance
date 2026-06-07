@@ -5,7 +5,7 @@ import { registerSchema } from "@/lib/validations/auth";
 export const adminUserListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
-  search: z.string().trim().optional(),
+  search: z.string().trim().max(200).optional(),
   role: z.nativeEnum(Role).optional(),
   isActive: z.preprocess((val) => {
     if (typeof val === "string") {
@@ -23,7 +23,7 @@ export const adminUserListQuerySchema = z.object({
 export type AdminUserListQuery = z.infer<typeof adminUserListQuerySchema>;
 
 export const createAdminUserSchema = z.object({
-  email: z.email(),
+  email: z.string().max(254).email(), // ReDoS guard: max before email regex
   name: z.string().trim().min(2).max(100),
   role: z.nativeEnum(Role),
   password: registerSchema.shape.password,

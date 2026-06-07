@@ -139,6 +139,10 @@ export async function uploadFileToStorage(
         Key: key,
         Body: input.buffer,
         ContentType: input.mimeType,
+        // Force browser to download the file rather than render it in-browser.
+        // This neutralises stored XSS for SVG/HTML/JS files that are valid
+        // UTF-8 and pass magic-byte validation.
+        ContentDisposition: `attachment; filename="${input.originalName}"`,
       }),
       { abortSignal: abortController.signal },
     );
@@ -165,11 +169,20 @@ export async function generateSignedDownloadUrl(key: string) {
     throw new Error("No storage backend available");
   }
 
+  // Extract the original filename from the key (last segment after the UUID).
+  const keyFilename = key.split("/").pop() ?? "file";
+  // Strip the timestamp-uuid prefix (format: <ts>-<uuid>-<name>.<ext>)
+  const originalFilename = keyFilename.replace(/^\d+-[\w-]+-/, "") || keyFilename;
+
   return await getSignedUrl(
     s3Client,
     new GetObjectCommand({
       Bucket: bucketName,
       Key: key,
+      // Override the stored Content-Disposition on the presigned URL so the
+      // browser always receives attachment even if the object metadata was set
+      // differently.  Prevents in-browser rendering of SVG/HTML payloads.
+      ResponseContentDisposition: `attachment; filename="${originalFilename}"`,
     }),
     { expiresIn: signedDownloadUrlExpiresInSeconds },
   );

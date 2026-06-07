@@ -21,6 +21,10 @@ vi.mock("ai", () => ({
   generateText: vi.fn(),
 }));
 
+vi.mock("@/lib/rate-limiter", () => ({
+  rateLimitByUser: vi.fn().mockResolvedValue(null),
+}));
+
 import * as authHelpers from "@/lib/auth-helpers";
 import { generateText } from "ai";
 import { POST } from "@/app/api/ai/remediation/route";
