@@ -161,10 +161,22 @@ const nextConfig = {
   productionBrowserSourceMaps: false,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { withSentryConfig } = require("@sentry/nextjs");
+
 const withBundleAnalyzer =
   process.env.ANALYZE === "true"
     ? // eslint-disable-next-line @typescript-eslint/no-require-imports
       require("@next/bundle-analyzer")({ enabled: true })
     : (config) => config;
 
-module.exports = withBundleAnalyzer(nextConfig);
+const analyzedConfig = withBundleAnalyzer(nextConfig);
+
+module.exports = withSentryConfig(analyzedConfig, {
+  org: "one-boat-solutions",
+  project: "compliance-dashboard",
+  silent: !process.env.CI,
+  tunnelRoute: "/monitoring-tunnel",
+  hideSourceMaps: true,
+  disableLogger: true,
+});

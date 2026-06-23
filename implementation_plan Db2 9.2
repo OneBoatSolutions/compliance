@@ -1,0 +1,60 @@
+# Implementation Plan - Task 9.2: Monitoring & Error Tracking Setup
+
+This implementation plan details the setup and configuration of Sentry, Vercel Analytics, error boundaries, performance tracking, alert definitions, and database monitoring queries for the AI-Assured Compliance Dashboard.
+
+## Status Quo
+* **Error Tracking**: Application-wide errors and API failures are logged locally to standard output/console, but there is no centralized telemetry tool to capture, aggregate, and alert on production failures.
+* **UI Resilience**: No centralized error boundary components exist; client-side rendering crashes fall back to browser defaults.
+* **Performance Telemetry**: No response latency tracing, p95 monitoring, or user analytics are configured.
+* **Database Checks**: No reference scripts exist for querying PostgreSQL metrics (e.g. connection pool saturation, slow queries, index stats).
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> Sentry and Vercel Analytics integrations require project DSN keys. For this setup:
+> * Sentry will utilize the `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN` environment variables.
+> * Vercel Analytics will resolve automatically when deployed to Vercel, or via standard environment variables.
+> * Alert thresholds (Error Rate > 1%, p95 > 1s) must be manually configured in Sentry's dashboard based on the documentation provided in `docs/monitoring.md`.
+
+---
+
+## Proposed Changes
+
+### 1. Dependencies Setup
+* **New Packages**:
+  * Install `@sentry/nextjs` (Error logging & performance tracing).
+  * Install `@vercel/analytics` (Real-user metrics & web vitals).
+
+### 2. Sentry Configurations & Next Wrapper
+* **[NEW] [sentry.client.config.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20%284%29/compliance-dev/sentry.client.config.ts)**: Configures browser tracing and session replay integrations.
+* **[NEW] [sentry.server.config.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20%284%29/compliance-dev/sentry.server.config.ts)**: Configures Node.js backend environment tracing.
+* **[NEW] [sentry.edge.config.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20%284%29/compliance-dev/sentry.edge.config.ts)**: Configures edge runtime exception capture.
+* **[NEW] [instrumentation.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20%284%29/compliance-dev/instrumentation.ts)**: Next.js standard entrypoint to register Sentry backend runtime handlers on startup.
+* **[MODIFY] [next.config.js](file:///c:/Users/zaidi/Downloads/compliance-dev%20%284%29/compliance-dev/next.config.js)**: Wrap the configuration using `withSentryConfig` to inject build-time source map uploads.
+
+### 3. Application Resiliency & Telemetry
+* **[NEW] [global-error.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20%284%29/compliance-dev/app/global-error.tsx)**: Captures root layout crashes and dispatches exceptions to Sentry.
+* **[NEW] [error.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20%284%29/compliance-dev/app/error.tsx)**: Handles standard page rendering boundary crashes.
+* **[MODIFY] [api-handler.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20%284%29/compliance-dev/lib/api-handler.ts)**: Update `withErrorHandler` to catch and send API handler failures directly to Sentry.
+* **[MODIFY] [layout.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20%284%29/compliance-dev/app/layout.tsx)**: Mount `<Analytics />` from `@vercel/analytics` inside the default root body.
+
+### 4. Operations & Documentation
+* **[NEW] [monitoring.md](file:///c:/Users/zaidi/Downloads/compliance-dev%20%284%29/compliance-dev/docs/monitoring.md)**: Create detailed documentation outlining:
+  * Sentry installation & environment configuration.
+  * Alert rules definition (Alert on Error Rate > 1%, p95 response > 1s).
+  * Vercel Analytics validation check.
+  * Essential database query templates for database connection pool saturation, slow query detection, table sizes, and cache hit metrics.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+* Run `pnpm type-check` to verify Sentry types.
+* Run `pnpm test run` to ensure no regressions in route or unit tests.
+* Execute a simulated error test endpoint (`/api/test-sentry` or locally) to verify error boundaries throw and get captured cleanly.
+
+### Manual Verification
+* Build the application (`pnpm build`) to verify that Sentry source maps upload hook registers and next.js compiler wraps correctly.
