@@ -11,13 +11,20 @@ export interface ApiErrorResponse {
   details?: unknown;
 }
 
-export function successResponse<T>(data: T, status: number = 200) {
+export function successResponse<T>(
+  data: T,
+  status: number = 200,
+  headers: Record<string, string> = {},
+) {
   const response: ApiSuccessResponse<T> = {
     success: true,
     data,
   };
 
-  return NextResponse.json(response, { status });
+  return NextResponse.json(response, {
+    status,
+    headers,
+  });
 }
 
 export function errorResponse(message: string, status: number = 400, details?: unknown) {

@@ -126,7 +126,9 @@ describe("Frameworks admin API: POST + PATCH/GET [id]", () => {
       } as never);
 
       const req = new Request("http://localhost/api/frameworks/fw_1");
-      const res = (await getFramework(req, { params: { id: "fw_1" } })) as Response;
+      const res = (await getFramework(req, {
+        params: Promise.resolve({ id: "fw_1" }),
+      })) as Response;
       const json = await res.json();
 
       expect(res.status).toBe(200);
@@ -164,7 +166,9 @@ describe("Frameworks admin API: POST + PATCH/GET [id]", () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      const res = (await updateFramework(req, { params: { id: "fw_1" } })) as Response;
+      const res = (await updateFramework(req, {
+        params: Promise.resolve({ id: "fw_1" }),
+      })) as Response;
       const json = await res.json();
 
       expect(res.status).toBe(200);
@@ -180,7 +184,9 @@ describe("Frameworks admin API: POST + PATCH/GET [id]", () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      const res = (await updateFramework(req, { params: { id: "missing" } })) as Response;
+      const res = (await updateFramework(req, {
+        params: Promise.resolve({ id: "missing" }),
+      })) as Response;
       expect(res.status).toBe(404);
     });
 
@@ -196,7 +202,9 @@ describe("Frameworks admin API: POST + PATCH/GET [id]", () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      const res = (await updateFramework(req, { params: { id: "fw_1" } })) as Response;
+      const res = (await updateFramework(req, {
+        params: Promise.resolve({ id: "fw_1" }),
+      })) as Response;
       expect(res.status).toBe(403);
     });
 
@@ -228,7 +236,9 @@ describe("Frameworks admin API: POST + PATCH/GET [id]", () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      const res = (await updateFramework(req, { params: { id: "fw_1" } })) as Response;
+      const res = (await updateFramework(req, {
+        params: Promise.resolve({ id: "fw_1" }),
+      })) as Response;
       const json = await res.json();
 
       expect(res.status).toBe(200);
@@ -247,7 +257,9 @@ describe("Frameworks admin API: POST + PATCH/GET [id]", () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      const res = (await updateFramework(req, { params: { id: "fw_1" } })) as Response;
+      const res = (await updateFramework(req, {
+        params: Promise.resolve({ id: "fw_1" }),
+      })) as Response;
       expect(res.status).toBe(422);
     });
   });

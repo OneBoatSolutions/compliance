@@ -125,8 +125,12 @@ const securityHeaders = [
 const nextConfig = {
   // In Next.js 15, serverComponentsExternalPackages moved to the top level.
   serverExternalPackages: ["pdfkit", "svg-to-pdfkit"],
+  compress: true,
+  poweredByHeader: false,
 
   images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 31536000,
     // Prefer remotePatterns (hostname + pathname glob) over the deprecated `domains`.
     remotePatterns: [
       {
@@ -157,4 +161,10 @@ const nextConfig = {
   productionBrowserSourceMaps: false,
 };
 
-module.exports = nextConfig;
+const withBundleAnalyzer =
+  process.env.ANALYZE === "true"
+    ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require("@next/bundle-analyzer")({ enabled: true })
+    : (config) => config;
+
+module.exports = withBundleAnalyzer(nextConfig);

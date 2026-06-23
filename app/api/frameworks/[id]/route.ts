@@ -11,10 +11,11 @@ import { prisma } from "@/lib/prisma";
 import { updateFrameworkAdminSchema } from "@/lib/validations/framework";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const GET = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   void req;
   await requireAdmin();
 
@@ -34,7 +35,8 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
   return successResponse(framework);
 });
 
-export const PATCH = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const PATCH = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   await requireAdmin();
 
   const existing = await prisma.framework.findUnique({
@@ -132,7 +134,8 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
   }
 });
 
-export const DELETE = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const DELETE = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   void req;
   await requireAdmin();
 

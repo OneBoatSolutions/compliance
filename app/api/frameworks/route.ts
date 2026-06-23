@@ -33,10 +33,16 @@ export const GET = withErrorHandler(async (req: Request) => {
 
   const result = await listFrameworks(parsed.data);
 
-  return successResponse({
-    items: result.items,
-    meta: result.meta,
-  });
+  return successResponse(
+    {
+      items: result.items,
+      meta: result.meta,
+    },
+    200,
+    {
+      "Cache-Control": "public, max-age=300, s-maxage=600",
+    },
+  );
 });
 
 export const POST = withErrorHandler(async (req: Request) => {

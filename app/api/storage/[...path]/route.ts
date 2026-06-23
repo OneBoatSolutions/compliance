@@ -5,10 +5,11 @@ import path from "node:path";
 const localStorageDir = path.join(process.cwd(), ".local-storage");
 
 interface RouteContext {
-  params: { path: string[] };
+  params: Promise<{ path: string[] }>;
 }
 
-export async function GET(request: Request, { params }: RouteContext) {
+export async function GET(request: Request, context: RouteContext) {
+  const params = await context.params;
   const filePath = path.join(localStorageDir, ...params.path);
 
   // Security: ensure the resolved path is within localStorageDir

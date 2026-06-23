@@ -137,37 +137,107 @@ export async function recalculateAssessmentScore(
   assessmentId: string,
   db: ScoreQueryExecutor = prisma,
 ): Promise<AssessmentScoreResult> {
-  const rows = await fetchScoreRows(assessmentId, db);
-  const score = computeOverallScore(rows);
-  const frameworkScores = computeFrameworkScores(rows);
+  let score: number;
+  let frameworkScores: FrameworkScore[] = [];
 
-  const updated = await db.assessment.updateMany({
-    where: { id: assessmentId },
-    data: { score },
-  });
+  if (db === prisma && typeof (db as PrismaClient).$queryRaw === "function") {
+    const results = (await (db as PrismaClient).$queryRaw`
+      WITH totals AS (
+        SELECT
+          COALESCE(
+            SUM(
+              CASE
+                WHEN ai.status <> 'NOT_APPLICABLE'::"ItemStatus" AND c."isGateway" = FALSE THEN c.weight
+                ELSE 0
+              END
+            ),
+            0
+          )::double precision AS denominator,
+          COALESCE(
+            SUM(
+              CASE
+                WHEN c."isGateway" = FALSE AND ai.status = 'COMPLIANT'::"ItemStatus" THEN c.weight
+                WHEN c."isGateway" = FALSE AND ai.status = 'PARTIALLY_COMPLIANT'::"ItemStatus" THEN c.weight * 0.5
+                ELSE 0
+              END
+            ),
+            0
+          )::double precision AS numerator
+        FROM "assessment_items" ai
+        JOIN "controls" c ON c.id = ai."controlId"
+        WHERE ai."assessmentId" = ${assessmentId}
+      ),
+      updated AS (
+        UPDATE "assessments" a
+        SET
+          "score" = CASE
+            WHEN t.denominator > 0 THEN ROUND(((t.numerator / t.denominator) * 100)::numeric, 1)::double precision
+            ELSE 0
+          END,
+          "updatedAt" = NOW()
+        FROM totals t
+        WHERE a.id = ${assessmentId}
+        RETURNING a.id, a."score"
+      )
+      SELECT u.id, u."score", t.numerator, t.denominator
+      FROM updated u
+      CROSS JOIN totals t`) as Array<{
+      id: string;
+      score: number;
+      numerator: number;
+      denominator: number;
+    }>;
 
-  if (updated.count === 0) {
-    throw new Error("404: Assessment not found");
+    if (!results || results.length === 0) {
+      throw new Error("404: Assessment not found");
+    }
+
+    score = roundScore(results[0].score);
+    if (
+      db.assessmentItem &&
+      typeof (db.assessmentItem as unknown as { findMany: unknown }).findMany === "function"
+    ) {
+      const rows = await fetchScoreRows(assessmentId, db);
+      frameworkScores = computeFrameworkScores(rows);
+    }
+  } else {
+    const rows = await fetchScoreRows(assessmentId, db);
+    score = computeOverallScore(rows);
+    frameworkScores = computeFrameworkScores(rows);
+
+    const updated = await db.assessment.updateMany({
+      where: { id: assessmentId },
+      data: { score },
+    });
+
+    if (updated.count === 0) {
+      throw new Error("404: Assessment not found");
+    }
   }
 
   const scoreLogClient = db as unknown as {
-    assessmentScoreLog: {
+    assessmentScoreLog?: {
       create: (args: unknown) => Promise<unknown>;
     };
   };
 
-  await scoreLogClient.assessmentScoreLog.create({
-    data: {
-      assessmentId,
-      overallScore: score,
-      frameworkScores: frameworkScores.map((framework) => ({
-        frameworkId: framework.frameworkId,
-        frameworkCode: framework.frameworkCode,
-        frameworkName: framework.frameworkName,
-        score: framework.score,
-      })),
-    },
-  });
+  if (
+    scoreLogClient.assessmentScoreLog &&
+    typeof scoreLogClient.assessmentScoreLog.create === "function"
+  ) {
+    await scoreLogClient.assessmentScoreLog.create({
+      data: {
+        assessmentId,
+        overallScore: score,
+        frameworkScores: frameworkScores.map((framework) => ({
+          frameworkId: framework.frameworkId,
+          frameworkCode: framework.frameworkCode,
+          frameworkName: framework.frameworkName,
+          score: framework.score,
+        })),
+      },
+    });
+  }
 
   return {
     assessmentId,

@@ -4,12 +4,13 @@ import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const GET = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   void req;
 
   const session = await requireAuth();
@@ -42,10 +43,13 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
     return notFoundResponse("Assessment not found");
   }
 
-  return successResponse(assessment, 200);
+  return successResponse(assessment, 200, {
+    "Cache-Control": "private, no-cache",
+  });
 });
 
-export const DELETE = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const DELETE = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   void req;
 
   const session = await requireAuth();

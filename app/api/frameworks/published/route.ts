@@ -43,5 +43,7 @@ export const GET = withErrorHandler(async (req: Request) => {
     },
   });
 
-  return successResponse(frameworks);
+  return successResponse(frameworks, 200, {
+    "Cache-Control": "public, max-age=300, s-maxage=600",
+  });
 });

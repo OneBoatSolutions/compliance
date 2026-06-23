@@ -115,5 +115,7 @@ export const GET = withErrorHandler(async () => {
     },
   });
 
-  return successResponse(assessments, 200);
+  return successResponse(assessments, 200, {
+    "Cache-Control": "private, no-cache",
+  });
 });

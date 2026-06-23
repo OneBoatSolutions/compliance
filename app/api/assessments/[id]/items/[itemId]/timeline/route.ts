@@ -4,13 +4,14 @@ import { prisma } from "@/lib/prisma";
 import { successResponse } from "@/lib/api-helpers";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
     itemId: string;
-  };
+  }>;
 }
 
-export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const GET = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   await requireAuth();
 
   const item = await prisma.assessmentItem.findUnique({

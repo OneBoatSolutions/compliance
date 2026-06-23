@@ -95,7 +95,7 @@ describe("Controls details API route", () => {
     ] as never);
 
     const req = new Request("http://localhost/api/controls/ctrl_1/details");
-    const res = (await GET(req, { params: { id: "ctrl_1" } })) as Response;
+    const res = (await GET(req, { params: Promise.resolve({ id: "ctrl_1" }) })) as Response;
     const json = await res.json();
 
     expect(res.status).toBe(200);
@@ -109,7 +109,7 @@ describe("Controls details API route", () => {
     vi.mocked(prisma.control.findUnique).mockResolvedValue(null);
 
     const req = new Request("http://localhost/api/controls/missing/details");
-    const res = (await GET(req, { params: { id: "missing" } })) as Response;
+    const res = (await GET(req, { params: Promise.resolve({ id: "missing" }) })) as Response;
     expect(res.status).toBe(404);
   });
 
@@ -117,7 +117,7 @@ describe("Controls details API route", () => {
     vi.mocked(authHelpers.requireAuth).mockRejectedValue(new Error("401: Unauthorized"));
 
     const req = new Request("http://localhost/api/controls/ctrl_1/details");
-    const res = (await GET(req, { params: { id: "ctrl_1" } })) as Response;
+    const res = (await GET(req, { params: Promise.resolve({ id: "ctrl_1" }) })) as Response;
     expect(res.status).toBe(401);
   });
 });

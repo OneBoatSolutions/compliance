@@ -1,6 +1,7 @@
 import type { ItemStatus } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
+import { getCache, setCache } from "@/lib/cache";
 import type {
   DashboardActivityItem,
   DashboardApiData,
@@ -142,6 +143,7 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
     prisma.assessment.findMany({
       where: { userId },
       orderBy: { updatedAt: "desc" },
+      take: 50,
       select: {
         id: true,
         status: true,
@@ -259,4 +261,13 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
   };
 }
 
-export const getCachedDashboardData = async (userId: string) => buildDashboardData(userId);
+export const getCachedDashboardData = async (userId: string) => {
+  const cacheKey = `dashboard:${userId}`;
+  const cachedData = await getCache<DashboardApiData>(cacheKey);
+  if (cachedData) {
+    return cachedData;
+  }
+  const freshData = await buildDashboardData(userId);
+  await setCache<DashboardApiData>(cacheKey, freshData, 60);
+  return freshData;
+};

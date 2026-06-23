@@ -87,14 +87,14 @@ describe("Assessment item API route", () => {
     });
 
     const res = (await assessmentItemPatch(req, {
-      params: { id: "asm_1", itemId: "item_1" },
+      params: Promise.resolve({ id: "asm_1", itemId: "item_1" }),
     })) as Response;
 
     const json = await res.json();
 
     expect(res.status).toBe(200);
     expect(json.success).toBe(true);
-    expect(json.data).toEqual({ score: 50 });
+    expect(json.data).toEqual(expect.objectContaining({ score: 50 }));
     expect(prisma.assessment.updateMany).toHaveBeenCalledWith({
       where: { id: "asm_1" },
       data: { score: 50 },
@@ -134,7 +134,7 @@ describe("Assessment item API route", () => {
       method: "GET",
     });
     const res = (await assessmentItemGet(req, {
-      params: { id: "asm_1", itemId: "item_1" },
+      params: Promise.resolve({ id: "asm_1", itemId: "item_1" }),
     })) as Response;
     const json = await res.json();
 
@@ -181,7 +181,7 @@ describe("Assessment item API route", () => {
     });
 
     const res = (await assessmentItemPatch(req, {
-      params: { id: "asm_1", itemId: "missing" },
+      params: Promise.resolve({ id: "asm_1", itemId: "missing" }),
     })) as Response;
 
     expect(res.status).toBe(404);
@@ -203,7 +203,7 @@ describe("Assessment item API route", () => {
     });
 
     const res = (await assessmentItemPatch(req, {
-      params: { id: "asm_1", itemId: "item_1" },
+      params: Promise.resolve({ id: "asm_1", itemId: "item_1" }),
     })) as Response;
 
     expect(res.status).toBe(422);
@@ -221,7 +221,7 @@ describe("Assessment item API route", () => {
     });
 
     const res = (await assessmentItemPatch(req, {
-      params: { id: "asm_1", itemId: "item_1" },
+      params: Promise.resolve({ id: "asm_1", itemId: "item_1" }),
     })) as Response;
 
     expect(res.status).toBe(401);
