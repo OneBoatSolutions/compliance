@@ -4,12 +4,13 @@ import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export const POST = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const POST = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   void req;
 
   const session = await requireAuth();

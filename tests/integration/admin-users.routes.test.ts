@@ -102,7 +102,7 @@ describe("Admin Users API", () => {
           body: JSON.stringify({ role: "USER" }),
           headers: { "Content-Type": "application/json" },
         }),
-        { params: { id: "user_1" } },
+        { params: Promise.resolve({ id: "user_1" }) },
       )) as Response;
 
       expect(res.status).toBe(403);
@@ -115,7 +115,7 @@ describe("Admin Users API", () => {
         new Request("http://localhost/api/admin/users/user_1/reset-password", {
           method: "POST",
         }),
-        { params: { id: "user_1" } },
+        { params: Promise.resolve({ id: "user_1" }) },
       )) as Response;
 
       expect(res.status).toBe(401);
@@ -284,7 +284,7 @@ describe("Admin Users API", () => {
           body: JSON.stringify({ role: "USER" }),
           headers: { "Content-Type": "application/json" },
         }),
-        { params: { id: "admin_1" } },
+        { params: Promise.resolve({ id: "admin_1" }) },
       )) as Response;
       const json = await res.json();
 
@@ -299,7 +299,7 @@ describe("Admin Users API", () => {
           body: JSON.stringify({ isActive: false }),
           headers: { "Content-Type": "application/json" },
         }),
-        { params: { id: "admin_1" } },
+        { params: Promise.resolve({ id: "admin_1" }) },
       )) as Response;
 
       expect(res.status).toBe(400);
@@ -322,7 +322,7 @@ describe("Admin Users API", () => {
           body: JSON.stringify({ role: "USER" }),
           headers: { "Content-Type": "application/json" },
         }),
-        { params: { id: "admin_only" } },
+        { params: Promise.resolve({ id: "admin_only" }) },
       )) as Response;
       const json = await res.json();
 
@@ -346,7 +346,7 @@ describe("Admin Users API", () => {
           body: JSON.stringify({ isActive: false }),
           headers: { "Content-Type": "application/json" },
         }),
-        { params: { id: "admin_only" } },
+        { params: Promise.resolve({ id: "admin_only" }) },
       )) as Response;
       const json = await res.json();
 
@@ -373,7 +373,7 @@ describe("Admin Users API", () => {
           body: JSON.stringify({ role: "USER" }),
           headers: { "Content-Type": "application/json" },
         }),
-        { params: { id: "user_1" } },
+        { params: Promise.resolve({ id: "user_1" }) },
       )) as Response;
       const json = await res.json();
 
@@ -389,7 +389,7 @@ describe("Admin Users API", () => {
         new Request("http://localhost/api/admin/users/admin_1", {
           method: "DELETE",
         }),
-        { params: { id: "admin_1" } },
+        { params: Promise.resolve({ id: "admin_1" }) },
       )) as Response;
       const json = await res.json();
 
@@ -408,7 +408,7 @@ describe("Admin Users API", () => {
         new Request("http://localhost/api/admin/users/admin_only", {
           method: "DELETE",
         }),
-        { params: { id: "admin_only" } },
+        { params: Promise.resolve({ id: "admin_only" }) },
       )) as Response;
       const json = await res.json();
 
@@ -427,7 +427,7 @@ describe("Admin Users API", () => {
         new Request("http://localhost/api/admin/users/user_1", {
           method: "DELETE",
         }),
-        { params: { id: "user_1" } },
+        { params: Promise.resolve({ id: "user_1" }) },
       )) as Response;
       const json = await res.json();
 
@@ -445,7 +445,7 @@ describe("Admin Users API", () => {
         new Request("http://localhost/api/admin/users/missing/reset-password", {
           method: "POST",
         }),
-        { params: { id: "missing" } },
+        { params: Promise.resolve({ id: "missing" }) },
       )) as Response;
 
       expect(res.status).toBe(404);
@@ -470,7 +470,7 @@ describe("Admin Users API", () => {
         new Request("http://localhost/api/admin/users/user_1/reset-password", {
           method: "POST",
         }),
-        { params: { id: "user_1" } },
+        { params: Promise.resolve({ id: "user_1" }) },
       )) as Response;
       const json = await res.json();
 
@@ -515,7 +515,7 @@ describe("Admin Users API", () => {
         new Request("http://localhost/api/admin/users/user_1/reset-password", {
           method: "POST",
         }),
-        { params: { id: "user_1" } },
+        { params: Promise.resolve({ id: "user_1" }) },
       )) as Response;
       const json = await res.json();
 

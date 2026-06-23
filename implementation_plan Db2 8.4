@@ -1,0 +1,244 @@
+# Task 8.4: Performance Optimization
+
+Comprehensive performance audit and optimization across the full stack — database, frontend, and API layers — targeting Lighthouse scores > 90 and meeting all NFR-PERF targets from the [PRD](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/docs/PRD.md#L1859-L1938).
+
+## NFR Targets (from PRD §8.1)
+
+| NFR | Metric | Target |
+|-----|--------|--------|
+| PERF-001 | API p95 response | GET < 300ms, POST/PATCH < 500ms |
+| PERF-004 | FCP | < 1.5s |
+| PERF-004 | LCP | < 2.5s |
+| PERF-004 | TTI | < 3.5s |
+| PERF-005 | Simple DB queries | < 50ms |
+| PERF-005 | Complex DB queries | < 200ms |
+| PERF-005 | Score recalculation | < 100ms |
+
+---
+
+## Proposed Changes
+
+### 1. Database Connection Pooling Tuning
+
+#### Current State
+- [prisma.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/lib/prisma.ts) creates a `PrismaPg` adapter with a bare connection string — **no pool sizing, idle timeout, or statement timeout** configured.
+- [prisma.config.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/prisma.config.ts) references `DATABASE_URL_UNPOOLED` for migrations (Neon pooler), but the runtime adapter has no explicit pool tuning.
+- The PRD specifies connection pooling of 10–50 connections (NFR-PERF-005 Strategy).
+
+#### [MODIFY] [prisma.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/lib/prisma.ts)
+
+Add explicit pool configuration to the `PrismaPg` adapter:
+- `poolSize`: 20 (default pool, within PRD 10–50 range)
+- `idleTimeoutMillis`: 30,000ms (release idle connections to save memory)
+- `connectionTimeoutMillis`: 5,000ms (fail fast instead of hanging)
+- `statementTimeout`: 10,000ms (kill runaway queries that exceed 10s)
+
+This prevents connection exhaustion under load and ensures queries don't hang indefinitely.
+
+---
+
+### 2. Database Query Optimization (Review Slow Queries)
+
+#### Current State
+- [dashboard-data.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/lib/dashboard-data.ts) fires **8 parallel Prisma queries** in `buildDashboardData()` — this is already good (uses `Promise.all`). However, one of those queries (line 142–169) fetches **all assessments with all items and full control+framework relations** unbounded — no `take` limit. For users with many assessments, this is an N+1-at-scale risk.
+- `getCachedDashboardData` (line 262) is a direct pass-through with **no caching** despite its name — the Redis cache module exists but is unused here.
+- [assessment-score.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/lib/assessment-score.ts) already uses optimized CTE+update SQL in the perf script, but the runtime `recalculateAssessmentScore` still uses two separate Prisma calls (fetch + update) instead of a single SQL statement.
+
+#### [MODIFY] [dashboard-data.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/lib/dashboard-data.ts)
+
+1. **Add `take` limit** to the unbounded assessments query (line 142) — limit to most recent 50 assessments. Users with very large data sets don't need every historical assessment on the dashboard.
+2. **Wire up actual Redis caching** via the existing `getCache`/`setCache` from [cache.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/lib/cache.ts). Cache dashboard data for 60 seconds (short TTL since assessment updates should reflect quickly). This is the biggest win for repeated dashboard loads.
+3. **Add `select` field narrowing** on nested `items` relation to avoid over-fetching columns we don't use.
+
+#### [MODIFY] [assessment-score.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/lib/assessment-score.ts)
+
+Add a `Prisma.$queryRawUnsafe` path that uses the optimized CTE query (already proven in [check-nfr.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/scripts/perf/check-nfr.ts#L239-L283)) for the main `recalculateAssessmentScore` function when running outside a transaction. This keeps the framework-score breakdown computation from the existing Prisma path but makes the critical update atomic and faster.
+
+---
+
+### 3. React Lazy Loading for Heavy Components
+
+#### Current State
+- **Zero** `next/dynamic` or `React.lazy` usage found across the entire codebase.
+- The analytics page ([analytics/page.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/app/(user)/analytics/page.tsx)) imports the entire `recharts` library (51KB file, ~180KB+ bundled) — LineChart, PieChart, BarChart, etc. This is loaded eagerly even though users may never visit the analytics page.
+- The remediation drawer ([remediation-drawer.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/components/ai/remediation-drawer.tsx)) is 10KB+ and imported statically in the checklist page even though it only renders when a user clicks "AI Remediation".
+- The report components ([components/report/](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/components/report)) include 7 heavy sub-components imported statically.
+- The onboarding page ([onboarding/page.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/app/(user)/onboarding/page.tsx)) is a massive 1,266-line file — the framework-selection sub-flow could be lazy-loaded.
+
+#### [MODIFY] [checklist/page.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/app/(user)/assessments/[id]/checklist/page.tsx)
+
+Replace the static `import RemediationDrawer` with `next/dynamic`:
+```typescript
+const RemediationDrawer = dynamic(
+  () => import("@/components/ai/remediation-drawer"),
+  { ssr: false }
+);
+```
+The drawer is only rendered when the user opens it (behind a state flag), so this defers its entire bundle from the initial page load.
+
+#### [MODIFY] [analytics/page.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/app/(user)/analytics/page.tsx)
+
+Wrap the chart sections in lazy-loaded components. Since recharts is the heaviest dependency and this page is not on the critical user path:
+```typescript
+const AnalyticsCharts = dynamic(
+  () => import("./components/analytics-charts"),
+  { loading: () => <ChartSkeleton />, ssr: false }
+);
+```
+This requires extracting the chart rendering into a separate `analytics-charts.tsx` component file.
+
+#### [NEW] [analytics/components/analytics-charts.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/app/(user)/analytics/components/analytics-charts.tsx)
+
+Extract recharts-dependent chart rendering from the monolithic analytics page into a dedicated component. This enables tree-shaking at the chunk boundary — the recharts bundle is only downloaded when the user navigates to analytics.
+
+#### [NEW] [analytics/components/chart-skeleton.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/app/(user)/analytics/components/chart-skeleton.tsx)
+
+Loading skeleton placeholder shown while the charts component is being loaded.
+
+---
+
+### 4. Image Optimization with Next.js Image
+
+#### Current State
+- **No `<img>` tags or `next/image` `<Image>` components** found anywhere in the codebase. The app is primarily data/text-driven (compliance checklists, forms, tables).
+- The `next.config.js` already has `images.remotePatterns` configured for Unsplash and Google OAuth.
+- The `public/` directory contains only SVG files (file.svg, globe.svg, next.svg, vercel.svg, window.svg) — these are default Next.js boilerplate.
+- The `favicon.ico` is 25KB — oversized.
+
+#### [MODIFY] [next.config.js](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/next.config.js)
+
+Add image optimization configuration:
+```javascript
+images: {
+  formats: ['image/avif', 'image/webp'], // Prefer modern formats
+  minimumCacheTTL: 31536000, // 1 year cache for optimized images
+  // ... existing remotePatterns
+}
+```
+
+#### [MODIFY] [app/layout.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/app/layout.tsx)
+
+Change the Material Symbols font `<link>` from `display=optional` to using `next/font` or at minimum add `rel="preload"` hint. Currently this external stylesheet blocks rendering until downloaded. We'll add the `font-display: swap` parameter and preconnect hint.
+
+#### [MODIFY] [app/(auth)/login/page.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/app/(auth)/login/page.tsx) and other pages if they use image-like assets
+
+Audit and convert any future image usage to use `next/image` `<Image>` component. For the current state, document the pattern for the team.
+
+---
+
+### 5. API Response Compression
+
+#### Current State
+- No `compress` configuration in [next.config.js](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/next.config.js).
+- Next.js 14 enables gzip compression by default (`compress: true`), but we should explicitly confirm this and add the `poweredByHeader: false` setting (also a minor security/perf improvement by removing the `X-Powered-By: Next.js` header).
+- API responses (e.g., dashboard data, assessment checklists with 100+ controls) can be large JSON payloads that benefit significantly from compression.
+
+#### [MODIFY] [next.config.js](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/next.config.js)
+
+Add to `nextConfig`:
+```javascript
+compress: true,       // Explicit (default is true, but good to be intentional)
+poweredByHeader: false, // Remove X-Powered-By header (less bytes + security)
+```
+
+#### [MODIFY] [api-helpers.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/lib/api-helpers.ts)
+
+Add `Cache-Control` headers to appropriate API responses:
+- Dashboard data: `Cache-Control: private, max-age=30` (stale-while-revalidate pattern)
+- Framework list: `Cache-Control: public, max-age=300, s-maxage=600` (frameworks change infrequently)
+- Assessment data: `Cache-Control: private, no-cache` (always fresh)
+
+This allows browser/CDN caching to reduce redundant API calls.
+
+---
+
+### 6. Bundle Size Analysis and Tree-Shaking
+
+#### Current State
+- The `package.json` does not have an `analyze` script.
+- Lucide-react icons are imported individually (good — already tree-shakeable).
+- recharts is a large dependency (~180KB) but only used in the analytics page.
+- The onboarding page is 38KB+ of source in a single file.
+
+#### [MODIFY] [package.json](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/package.json)
+
+Add bundle analysis script:
+```json
+"analyze": "ANALYZE=true next build"
+```
+
+#### [MODIFY] [next.config.js](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/next.config.js)
+
+Add conditional bundle analyzer integration:
+```javascript
+const withBundleAnalyzer = process.env.ANALYZE === 'true'
+  ? require('@next/bundle-analyzer')({ enabled: true })
+  : (config) => config;
+
+module.exports = withBundleAnalyzer(nextConfig);
+```
+
+> [!NOTE]
+> This requires installing `@next/bundle-analyzer` as a dev dependency.
+
+#### [MODIFY] [query-provider.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/components/providers/query-provider.tsx)
+
+Tune the React Query default `staleTime` from `0` (always stale) to `30_000` (30 seconds). The current `staleTime: 0` causes every component mount to trigger a refetch — even for data that was just loaded. This doesn't affect bundle size but reduces redundant network requests and re-renders significantly.
+
+---
+
+### 7. Font and Critical CSS Optimization
+
+#### [MODIFY] [app/layout.tsx](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/app/layout.tsx)
+
+The Material Symbols font is loaded via a blocking `<link>` in the `<body>`. Optimize by:
+1. Adding a `<link rel="preconnect" href="https://fonts.googleapis.com" />` in the head.
+2. Moving the font stylesheet to use `display=swap` if not already set.
+3. Adding `rel="preload"` for the stylesheet, then loading it asynchronously.
+
+This prevents the external font from blocking FCP/LCP.
+
+---
+
+## Summary of All Changes
+
+| # | File | Change Type | Impact |
+|---|------|------------|--------|
+| 1 | `lib/prisma.ts` | MODIFY | Connection pool tuning (poolSize, timeouts) |
+| 2 | `lib/dashboard-data.ts` | MODIFY | Add Redis caching + query limits |
+| 3 | `lib/assessment-score.ts` | MODIFY | Atomic CTE-based score recalculation |
+| 4 | `app/(user)/assessments/[id]/checklist/page.tsx` | MODIFY | Lazy load RemediationDrawer |
+| 5 | `app/(user)/analytics/page.tsx` | MODIFY | Lazy load recharts via extracted component |
+| 6 | `app/(user)/analytics/components/analytics-charts.tsx` | NEW | Extracted charts component for code-splitting |
+| 7 | `app/(user)/analytics/components/chart-skeleton.tsx` | NEW | Loading skeleton for charts |
+| 8 | `next.config.js` | MODIFY | Image formats, compression, bundle analyzer, `poweredByHeader` |
+| 9 | `app/layout.tsx` | MODIFY | Font loading optimization (preconnect, async) |
+| 10 | `lib/api-helpers.ts` | MODIFY | Cache-Control headers on API responses |
+| 11 | `package.json` | MODIFY | Add `analyze` script |
+| 12 | `components/providers/query-provider.tsx` | MODIFY | Tune React Query staleTime |
+
+---
+
+## Open Questions
+
+> [!IMPORTANT]
+> **Redis availability**: The dashboard caching change (#2) relies on the existing Redis setup in [redis.ts](file:///c:/Users/zaidi/Downloads/compliance-dev%20(4)/compliance-dev/lib/redis.ts). Is Redis running in your current dev/staging environment, or should we implement a fallback in-memory LRU cache? The existing Redis client already has a graceful retry-then-give-up strategy, so the app won't crash without Redis — it just won't cache.
+
+> [!IMPORTANT]
+> **Bundle analyzer installation**: Adding `@next/bundle-analyzer` requires an npm install. Should I include this as part of the implementation, or will you install dev dependencies separately?
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- `pnpm test:perf:db` — existing NFR-PERF-005 database performance check
+- `pnpm build` — verify no TypeScript/build errors after all changes
+- `pnpm test` — ensure all existing tests still pass
+
+### Manual Verification
+1. **Lighthouse audit** after changes: run Chrome DevTools Lighthouse on `/login`, `/dashboard`, `/assessments/[id]/checklist` — target all scores > 90
+2. **Bundle size comparison**: Run `pnpm analyze` before and after to verify recharts is now in a separate async chunk
+3. **Network waterfall**: Verify in Chrome DevTools that the remediation drawer JS chunk is NOT loaded on initial checklist page load
+4. **Dashboard cache**: Verify Redis cache HIT/MISS logs on second dashboard load
+5. **Connection pooling**: Verify via Prisma debug logs that connection pool settings are applied

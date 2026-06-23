@@ -15,10 +15,11 @@ import { csvMaxBytes, parseControlCsvText } from "@/lib/csv/parse-control-csv";
 import { prisma } from "@/lib/prisma";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export const POST = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const POST = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   await requireAdmin();
 
   const framework = await prisma.framework.findUnique({

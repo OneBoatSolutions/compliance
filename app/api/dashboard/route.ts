@@ -8,5 +8,7 @@ export const GET = withErrorHandler(async (req: Request) => {
 
   const session = await requireAuth();
   const data = await getCachedDashboardData(session.user.id);
-  return successResponse(data);
+  return successResponse(data, 200, {
+    "Cache-Control": "private, max-age=30",
+  });
 });

@@ -7,9 +7,9 @@ import { prisma } from "@/lib/prisma";
 import { assessmentItemsListQuerySchema } from "@/lib/validations/assessment";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 function parseListParam(searchParams: URLSearchParams, key: string): string[] {
@@ -56,7 +56,8 @@ function buildOrderBy(sortBy: string, sortOrder: Prisma.SortOrder) {
   ];
 }
 
-export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const GET = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   const session = await requireAuth();
   const { id: assessmentId } = params;
 

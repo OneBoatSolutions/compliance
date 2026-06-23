@@ -5,15 +5,17 @@ import { serviceErrorResponse } from "@/lib/service-error";
 import { triggerPasswordReset } from "@/services/user-admin-service";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export const POST = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const POST = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   void req;
   await requireAdmin();
 
   try {
-    await triggerPasswordReset(params.id);
+    const { id } = await params;
+    await triggerPasswordReset(id);
     return successResponse({ message: "Password reset email sent" });
   } catch (error) {
     return serviceErrorResponse(error);

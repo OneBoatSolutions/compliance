@@ -6,13 +6,14 @@ import { prisma } from "@/lib/prisma";
 import { updateAssessmentItemSchema } from "@/lib/validations/assessment";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
     itemId: string;
-  };
+  }>;
 }
 
-export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const GET = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   void req;
 
   const session = await requireAuth();
@@ -51,7 +52,8 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
   return successResponse({ evidence: assessmentItem.evidence }, 200);
 });
 
-export const PATCH = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const PATCH = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   const session = await requireAuth();
   const { id: assessmentId, itemId } = params;
 
@@ -80,18 +82,31 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
     return validationErrorResponse(parsed.error.format());
   }
 
+  const startTime = Date.now();
   const data = await prisma.$transaction(async (tx: typeof prisma) => {
-    await tx.assessmentItem.update({
+    const updatedItem = await tx.assessmentItem.update({
       where: {
         id: itemId,
       },
       data: parsed.data,
     });
 
-    const score = await recalculateAssessmentScore(assessmentId, tx);
+    const scoreResult = await recalculateAssessmentScore(assessmentId, tx);
 
-    return score;
+    return {
+      item: updatedItem,
+      score: scoreResult.score,
+    };
   });
+  const calculationDurationMs = Date.now() - startTime;
 
-  return successResponse({ score: data.score }, 200);
+  return successResponse(
+    {
+      assessmentId,
+      score: data.score,
+      item: data.item,
+      calculationDurationMs,
+    },
+    200,
+  );
 });

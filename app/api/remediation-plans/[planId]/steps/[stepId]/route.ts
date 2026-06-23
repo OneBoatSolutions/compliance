@@ -6,10 +6,10 @@ import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     planId: string;
     stepId: string;
-  };
+  }>;
 }
 
 const updateStepSchema = z
@@ -22,7 +22,8 @@ const updateStepSchema = z
     message: "At least one field must be provided",
   });
 
-export const PATCH = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const PATCH = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   const session = await requireAuth();
   const body = await req.json();
   const parsed = updateStepSchema.safeParse(body);

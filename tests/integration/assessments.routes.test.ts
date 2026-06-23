@@ -220,7 +220,9 @@ describe("Assessments API routes", () => {
       method: "GET",
     });
 
-    const res = (await getAssessmentById(req, { params: { id: "asm_1" } })) as Response;
+    const res = (await getAssessmentById(req, {
+      params: Promise.resolve({ id: "asm_1" }),
+    })) as Response;
     const json = await res.json();
 
     expect(res.status).toBe(200);
@@ -236,7 +238,9 @@ describe("Assessments API routes", () => {
       method: "GET",
     });
 
-    const res = (await getAssessmentById(req, { params: { id: "missing" } })) as Response;
+    const res = (await getAssessmentById(req, {
+      params: Promise.resolve({ id: "missing" }),
+    })) as Response;
 
     expect(res.status).toBe(404);
   });

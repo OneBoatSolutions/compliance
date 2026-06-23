@@ -11,10 +11,11 @@ import { prisma } from "@/lib/prisma";
 import { updateControlSchema } from "@/lib/validations/framework";
 
 interface RouteContext {
-  params: { id: string; controlId: string };
+  params: Promise<{ id: string; controlId: string }>;
 }
 
-export const PATCH = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const PATCH = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   await requireAdmin();
 
   const existing = await prisma.control.findFirst({
@@ -85,7 +86,8 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
   }
 });
 
-export const DELETE = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const DELETE = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   void req;
   await requireAdmin();
 

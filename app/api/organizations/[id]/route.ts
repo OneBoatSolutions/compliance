@@ -10,11 +10,12 @@ import { prisma } from "@/lib/prisma";
 import { updateOrganizationSchema } from "@/lib/validations/organization";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
-export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const GET = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   const session = await requireAuth();
   const { id } = params;
 
@@ -47,7 +48,8 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
   return successResponse(organization);
 });
 
-export const PATCH = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const PATCH = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   const session = await requireAuth();
   const { id } = params;
 

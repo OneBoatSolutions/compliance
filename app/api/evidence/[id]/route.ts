@@ -5,10 +5,11 @@ import { prisma } from "@/lib/prisma";
 import { deleteFileFromStorage, generateSignedDownloadUrl } from "@/services/storage-service";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const GET = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   void req;
   const session = await requireAuth();
 
@@ -44,7 +45,8 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
   });
 });
 
-export const DELETE = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const DELETE = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   void req;
   const session = await requireAuth();
 

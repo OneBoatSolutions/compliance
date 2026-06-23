@@ -5,12 +5,13 @@ import { authOptions } from "@/lib/auth";
 import { FrameworkDetails } from "@/components/admin/frameworks/framework-details";
 
 interface FrameworkDetailsPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function FrameworkDetailsPage({ params }: FrameworkDetailsPageProps) {
+  const resolvedParams = await params;
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -42,7 +43,7 @@ export default async function FrameworkDetailsPage({ params }: FrameworkDetailsP
             in one secure workspace.
           </p>
         </div>
-        <FrameworkDetails frameworkId={params.id} />
+        <FrameworkDetails frameworkId={resolvedParams.id} />
       </div>
     </div>
   );

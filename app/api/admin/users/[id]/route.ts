@@ -7,10 +7,11 @@ import { updateUser } from "@/services/user-admin-service";
 import { deleteUser } from "@/services/user-admin-service";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export const PATCH = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const PATCH = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   const session = await requireAdmin();
 
   const body = await req.json();
@@ -21,18 +22,21 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
   }
 
   try {
-    const user = await updateUser(session.user.id, params.id, parsed.data);
+    const { id } = await params;
+    const user = await updateUser(session.user.id, id, parsed.data);
     return successResponse(user);
   } catch (error) {
     return serviceErrorResponse(error);
   }
 });
 
-export const DELETE = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const DELETE = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   const session = await requireAdmin();
 
   try {
-    await deleteUser(session.user.id, params.id);
+    const { id } = await params;
+    await deleteUser(session.user.id, id);
 
     return successResponse({
       message: "User deleted successfully",

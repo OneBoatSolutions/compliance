@@ -4,12 +4,13 @@ import { prisma } from "@/lib/prisma";
 import { successResponse } from "@/lib/api-helpers";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
+export const GET = withErrorHandler(async (req: Request, context: RouteContext) => {
+  const params = await context.params;
   await requireAuth();
   const url = new URL(req.url);
   const controlId = url.searchParams.get("controlId");

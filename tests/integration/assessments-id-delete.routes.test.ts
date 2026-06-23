@@ -62,7 +62,9 @@ describe("Assessment by id API route: GET + DELETE", () => {
       } as never);
 
       const req = new Request("http://localhost/api/assessments/asm_1");
-      const res = (await getAssessmentById(req, { params: { id: "asm_1" } })) as Response;
+      const res = (await getAssessmentById(req, {
+        params: Promise.resolve({ id: "asm_1" }),
+      })) as Response;
       const json = await res.json();
 
       expect(res.status).toBe(200);
@@ -74,7 +76,9 @@ describe("Assessment by id API route: GET + DELETE", () => {
       vi.mocked(prisma.assessment.findFirst).mockResolvedValue(null);
 
       const req = new Request("http://localhost/api/assessments/missing");
-      const res = (await getAssessmentById(req, { params: { id: "missing" } })) as Response;
+      const res = (await getAssessmentById(req, {
+        params: Promise.resolve({ id: "missing" }),
+      })) as Response;
       expect(res.status).toBe(404);
     });
   });
@@ -91,7 +95,9 @@ describe("Assessment by id API route: GET + DELETE", () => {
       const req = new Request("http://localhost/api/assessments/asm_1", {
         method: "DELETE",
       });
-      const res = (await deleteAssessment(req, { params: { id: "asm_1" } })) as Response;
+      const res = (await deleteAssessment(req, {
+        params: Promise.resolve({ id: "asm_1" }),
+      })) as Response;
       const json = await res.json();
 
       expect(res.status).toBe(200);
@@ -108,7 +114,9 @@ describe("Assessment by id API route: GET + DELETE", () => {
       const req = new Request("http://localhost/api/assessments/missing", {
         method: "DELETE",
       });
-      const res = (await deleteAssessment(req, { params: { id: "missing" } })) as Response;
+      const res = (await deleteAssessment(req, {
+        params: Promise.resolve({ id: "missing" }),
+      })) as Response;
       expect(res.status).toBe(404);
       expect(prisma.assessment.delete).not.toHaveBeenCalled();
     });
@@ -119,7 +127,9 @@ describe("Assessment by id API route: GET + DELETE", () => {
       const req = new Request("http://localhost/api/assessments/asm_1", {
         method: "DELETE",
       });
-      const res = (await deleteAssessment(req, { params: { id: "asm_1" } })) as Response;
+      const res = (await deleteAssessment(req, {
+        params: Promise.resolve({ id: "asm_1" }),
+      })) as Response;
       expect(res.status).toBe(401);
     });
   });

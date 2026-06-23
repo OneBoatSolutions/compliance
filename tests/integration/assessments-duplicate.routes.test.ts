@@ -51,7 +51,9 @@ describe("Assessment duplicate API route", () => {
       method: "POST",
     });
 
-    const res = (await duplicateAssessment(req, { params: { id: "asm_1" } })) as Response;
+    const res = (await duplicateAssessment(req, {
+      params: Promise.resolve({ id: "asm_1" }),
+    })) as Response;
     const json = await res.json();
 
     expect(res.status).toBe(201);
@@ -66,7 +68,9 @@ describe("Assessment duplicate API route", () => {
       method: "POST",
     });
 
-    const res = (await duplicateAssessment(req, { params: { id: "missing" } })) as Response;
+    const res = (await duplicateAssessment(req, {
+      params: Promise.resolve({ id: "missing" }),
+    })) as Response;
     expect(res.status).toBe(404);
   });
 
@@ -81,7 +85,9 @@ describe("Assessment duplicate API route", () => {
       method: "POST",
     });
 
-    const res = (await duplicateAssessment(req, { params: { id: "asm_empty" } })) as Response;
+    const res = (await duplicateAssessment(req, {
+      params: Promise.resolve({ id: "asm_empty" }),
+    })) as Response;
     expect(res.status).toBe(400);
   });
 
@@ -92,7 +98,9 @@ describe("Assessment duplicate API route", () => {
       method: "POST",
     });
 
-    const res = (await duplicateAssessment(req, { params: { id: "asm_1" } })) as Response;
+    const res = (await duplicateAssessment(req, {
+      params: Promise.resolve({ id: "asm_1" }),
+    })) as Response;
     expect(res.status).toBe(401);
   });
 });

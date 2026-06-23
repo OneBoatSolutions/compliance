@@ -142,7 +142,7 @@ describe("Remediation plan routes", () => {
     });
 
     const res = (await remediationStepPatch(req, {
-      params: { planId: "plan_1", stepId: "step_1" },
+      params: Promise.resolve({ planId: "plan_1", stepId: "step_1" }),
     })) as Response;
     const json = await res.json();
 
