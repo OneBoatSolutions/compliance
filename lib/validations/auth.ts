@@ -1,12 +1,31 @@
 import { z } from "zod";
 
+/**
+ * ReDoS guard: .max() is placed BEFORE .email() / .regex() so Zod
+ * short-circuits on oversized input before the regex engine ever runs.
+ * Without this, an attacker can POST a megabyte-long string and freeze
+ * the Node.js event loop.
+ *
+ * Limits chosen:
+ *   email    → 254 chars  (RFC 5321 maximum)
+ *   password → 72 chars   ← CRITICAL: bcrypt silently truncates input at 72 bytes.
+ *                            Allowing >72 chars means two passwords that share the
+ *                            same first 72 bytes will hash identically — an attacker
+ *                            only needs to brute-force 72 chars, not the full length.
+ *                            Cap MUST match the bcrypt truncation boundary.
+ *   name     → 100 chars  (business requirement)
+ *   token    → 512 chars  (reset tokens are ~64–128 hex chars; 512 is safe)
+ */
+
 export const registerSchema = z.object({
   name: z.string().trim().min(2).max(100),
   companyName: z.string().trim().min(2, "Company name is required").max(100),
-  email: z.email(),
+  email: z.string().max(254).email(),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
+    // bcrypt hard-truncates at 72 bytes; cap here closes the equivalence-class attack.
+    .max(72, "Password must be at most 72 characters")
     .regex(/[A-Z]/, "Must include at least one uppercase letter")
     .regex(/[a-z]/, "Must include at least one lowercase letter")
     .regex(/[0-9]/, "Must include at least one number")
@@ -14,10 +33,14 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z.email(),
+  email: z.string().max(254).email(),
   password: z
     .string()
     .min(1, "Password is required")
+    // Must match the registration cap — otherwise a 73-char password set at
+    // registration would be accepted at login (both bcrypt-truncated to 72 bytes),
+    // but this schema would reject the login attempt, locking the user out.
+    .max(72, "Password must be at most 72 characters")
     .min(8, "Password must be at least 8 characters"),
 });
 
@@ -25,11 +48,11 @@ export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 
 export const forgotPasswordSchema = z.object({
-  email: z.email(),
+  email: z.string().max(254).email(),
 });
 
 export const resetPasswordSchema = z.object({
-  token: z.string().min(10),
+  token: z.string().min(10).max(512),
   password: registerSchema.shape.password,
 });
 

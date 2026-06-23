@@ -14,15 +14,17 @@ export const createFrameworkSchema = z.object({
   category: z.string().trim().min(1).max(100),
   version: z
     .string()
+    .max(20) // ReDoS guard: cap before regex evaluation
     .regex(/^\d+\.\d+\.\d+$/, "Version must follow semantic versioning (e.g., 1.0.0)"),
   effectiveDate: z.coerce.date(),
-  sourceLink: z.url().optional(),
+  sourceLink: z.string().max(2048).url().optional(),
 });
 
 export type CreateFrameworkInput = z.infer<typeof createFrameworkSchema>;
 
 const versionSemver = z
   .string()
+  .max(20) // ReDoS guard: cap before regex evaluation
   .regex(/^\d+\.\d+\.\d+$/, "Version must follow semantic versioning (e.g., 1.0.0)");
 
 /** Admin API: list query (GET /api/frameworks) */
@@ -51,7 +53,7 @@ export const createFrameworkAdminSchema = z.object({
   category: z.string().trim().max(100).optional(),
   version: versionSemver.optional(),
   effectiveDate: z.coerce.date().optional(),
-  sourceLink: z.union([z.string().url(), z.literal("")]).optional(),
+  sourceLink: z.union([z.string().max(2048).url(), z.literal("")]).optional(),
 });
 
 export type CreateFrameworkAdminInput = z.infer<typeof createFrameworkAdminSchema>;
@@ -119,9 +121,10 @@ export const frameworkFormSchema = z.object({
   category: z.string().trim().min(1, "Category is required"),
   version: z
     .string()
+    .max(20) // ReDoS guard
     .regex(/^\d+\.\d+\.\d+$/, "Version must follow semantic versioning (e.g. 1.0.0)"),
   effectiveDate: z.string().min(1, "Effective date is required"),
-  sourceLink: z.union([z.string().url("Enter a valid URL"), z.literal("")]).optional(),
+  sourceLink: z.union([z.string().max(2048).url("Enter a valid URL"), z.literal("")]).optional(),
 });
 
 export type FrameworkFormValues = z.infer<typeof frameworkFormSchema>;

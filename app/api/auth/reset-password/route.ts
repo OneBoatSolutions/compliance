@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth-helpers";
 import { resetPasswordSchema } from "@/lib/validations/auth";
 import { errorResponse, successResponse, validationErrorResponse } from "@/lib/api-helpers";
+import { rateLimit, RATE_LIMIT_CONFIGS } from "@/lib/rate-limiter";
 
 function hashResetToken(token: string) {
   return createHash("sha256").update(token).digest("hex");
@@ -10,6 +11,11 @@ function hashResetToken(token: string) {
 
 export async function POST(req: Request) {
   try {
+    const rateLimited = await rateLimit(req, RATE_LIMIT_CONFIGS.sensitive);
+    if (rateLimited) {
+      return rateLimited;
+    }
+
     const body = await req.json();
 
     const parsed = resetPasswordSchema.safeParse(body);

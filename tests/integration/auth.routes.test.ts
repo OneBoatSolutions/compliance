@@ -10,6 +10,15 @@ import { GET as meGet } from "@/app/api/auth/me/route";
 import { POST as forgotPasswordPost } from "@/app/api/auth/forgot-password/route";
 import { POST as resetPasswordPost } from "@/app/api/auth/reset-password/route";
 
+vi.mock("@/lib/rate-limiter", () => ({
+  rateLimit: vi.fn().mockResolvedValue(null),
+  rateLimitByKey: vi.fn().mockResolvedValue(false),
+  RATE_LIMIT_CONFIGS: {
+    auth: { name: "rl:auth", limit: 10, windowSeconds: 900 },
+    sensitive: { name: "rl:sensitive", limit: 5, windowSeconds: 3600 },
+  },
+}));
+
 vi.mock("@/lib/prisma", () => {
   const prismaMock = {
     user: {

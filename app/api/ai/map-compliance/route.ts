@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getComplianceFallback, mapCompliance } from "@/services/ai-service";
 import { requireAuth } from "@/lib/auth-helpers";
+import { rateLimitByUser } from "@/lib/rate-limiter";
 
-// in-memory rate limiter
-const rateLimitMap = new Map<string, { count: number; reset: number }>();
-
-const LIMIT = 10;
-const WINDOW = 60 * 60 * 1000; // 1 hour
+const aiRateLimit = {
+  name: "rl:ai:custom",
+  limit: 10,
+  windowSeconds: 60 * 60, // 1 hour
+};
 
 const orgProfileSchema = z.object({
   name: z.string(),
@@ -18,27 +19,6 @@ const orgProfileSchema = z.object({
   dataHandled: z.array(z.string()),
   regions: z.array(z.string()),
 });
-
-function checkRateLimit(userId: string) {
-  const now = Date.now();
-
-  const entry = rateLimitMap.get(userId);
-
-  if (!entry || entry.reset < now) {
-    rateLimitMap.set(userId, {
-      count: 1,
-      reset: now + WINDOW,
-    });
-    return true;
-  }
-
-  if (entry.count >= LIMIT) {
-    return false;
-  }
-
-  entry.count += 1;
-  return true;
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -55,12 +35,10 @@ export async function POST(req: NextRequest) {
 
     const userId = session.user.id;
 
-    // Rate limiting
-    if (!checkRateLimit(userId)) {
-      return NextResponse.json(
-        { success: false, error: "Rate limit exceeded (10/hour)" },
-        { status: 429 },
-      );
+    // Rate limiting (Redis-backed sliding window)
+    const rateLimited = await rateLimitByUser(req, userId, aiRateLimit);
+    if (rateLimited) {
+      return rateLimited;
     }
 
     // Timeout handling (10s)

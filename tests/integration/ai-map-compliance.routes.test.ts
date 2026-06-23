@@ -25,6 +25,10 @@ vi.mock("ai", () => ({
   generateText: vi.fn(),
 }));
 
+vi.mock("@/lib/rate-limiter", () => ({
+  rateLimitByUser: vi.fn().mockResolvedValue(null),
+}));
+
 import * as authHelpers from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { generateText } from "ai";

@@ -27,15 +27,17 @@ vi.mock("bcrypt", () => ({
   },
 }));
 
-vi.mock("@/lib/rate-limits", () => ({
-  isLocked: vi.fn(),
-  recordFailedAttempt: vi.fn(),
-  resetAttempts: vi.fn(),
+vi.mock("@/lib/rate-limiter", () => ({
+  rateLimitByKey: vi.fn(),
+  RATE_LIMIT_CONFIGS: {
+    auth: { name: "rl:auth", limit: 10, windowSeconds: 900 },
+    sensitive: { name: "rl:sensitive", limit: 5, windowSeconds: 3600 },
+  },
 }));
 
 import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
-import { isLocked, recordFailedAttempt, resetAttempts } from "@/lib/rate-limits";
+import { rateLimitByKey } from "@/lib/rate-limiter";
 import { authOptions } from "@/lib/auth";
 
 describe("auth.ts: next-auth configuration", () => {
@@ -128,7 +130,7 @@ describe("auth.ts: next-auth configuration", () => {
     });
 
     it("throws when identifier is locked", async () => {
-      vi.mocked(isLocked).mockReturnValue(true);
+      vi.mocked(rateLimitByKey).mockResolvedValue(true);
       const fn = getAuthorize();
 
       await expect(
@@ -140,19 +142,17 @@ describe("auth.ts: next-auth configuration", () => {
     });
 
     it("throws when user is not found", async () => {
-      vi.mocked(isLocked).mockReturnValue(false);
+      vi.mocked(rateLimitByKey).mockResolvedValue(false);
       vi.mocked(prisma.user.findUnique).mockResolvedValue(null);
       const fn = getAuthorize();
 
       await expect(fn!({ email: "missing@b.com", password: "secret" }, {})).rejects.toThrow(
         "Invalid email or password",
       );
-
-      expect(recordFailedAttempt).toHaveBeenCalled();
     });
 
     it("throws when user is inactive", async () => {
-      vi.mocked(isLocked).mockReturnValue(false);
+      vi.mocked(rateLimitByKey).mockResolvedValue(false);
       vi.mocked(prisma.user.findUnique).mockResolvedValue({
         id: "u1",
         email: "a@b.com",
@@ -169,7 +169,7 @@ describe("auth.ts: next-auth configuration", () => {
     });
 
     it("throws when password does not match", async () => {
-      vi.mocked(isLocked).mockReturnValue(false);
+      vi.mocked(rateLimitByKey).mockResolvedValue(false);
       vi.mocked(prisma.user.findUnique).mockResolvedValue({
         id: "u1",
         email: "a@b.com",
@@ -187,7 +187,7 @@ describe("auth.ts: next-auth configuration", () => {
     });
 
     it("returns user object on valid credentials and updates lastLoginAt", async () => {
-      vi.mocked(isLocked).mockReturnValue(false);
+      vi.mocked(rateLimitByKey).mockResolvedValue(false);
       vi.mocked(prisma.user.findUnique).mockResolvedValue({
         id: "u1",
         email: "a@b.com",
@@ -211,7 +211,6 @@ describe("auth.ts: next-auth configuration", () => {
         name: "Alice",
         role: "ADMIN",
       });
-      expect(resetAttempts).toHaveBeenCalled();
       expect(prisma.user.update).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { id: "u1" },
@@ -221,7 +220,7 @@ describe("auth.ts: next-auth configuration", () => {
     });
 
     it("falls back to unknown-ip when no x-forwarded-for header is present", async () => {
-      vi.mocked(isLocked).mockReturnValue(false);
+      vi.mocked(rateLimitByKey).mockResolvedValue(false);
       vi.mocked(prisma.user.findUnique).mockResolvedValue(null);
       const fn = getAuthorize();
 
