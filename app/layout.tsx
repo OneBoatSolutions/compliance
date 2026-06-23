@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google"; // valid Google Fonts
 import { headers } from "next/headers";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { AppProviders } from "@/components/providers/app-providers";
 // Replace Geist with Inter
@@ -65,6 +66,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
         {/* Pass nonce to providers so child <Script> components can consume it */}
         <AppProviders nonce={nonce}>{children}</AppProviders>
+        <Analytics />
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { forbiddenResponse, unauthorizedResponse } from "@/lib/api-helpers";
 
 type HandlerWithoutContext = (req: Request) => Promise<Response>;
@@ -21,6 +22,7 @@ export function withErrorHandler<TContext>(
       return await (handler as HandlerWithContext<TContext>)(req, ctx);
     } catch (error: unknown) {
       console.error("API Error:", error);
+      Sentry.captureException(error);
 
       const message = error instanceof Error ? error.message : "Internal Server Error";
 
