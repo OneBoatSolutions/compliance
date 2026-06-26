@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
-import { randomBytes } from "crypto";
 
 // ---------------------------------------------------------------------------
 // Route definitions
@@ -24,7 +23,9 @@ const adminRoutes = ["/admin", "/frameworks"];
 // ---------------------------------------------------------------------------
 
 function generateNonce(): string {
-  return randomBytes(16).toString("base64");
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return btoa(String.fromCharCode(...bytes));
 }
 
 const trustedImgOrigins = ["https://images.unsplash.com", "https://lh3.googleusercontent.com"];

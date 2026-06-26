@@ -8,11 +8,12 @@ This document describes the application’s telemetry architecture, including Se
 
 Sentry handles client, server, and edge exception capture.
 
-- **Initialization**: The SDK is initialized dynamically via `instrumentation.ts` on server bootstrap, importing:
-  - `sentry.client.config.ts` (Browser env)
-  - `sentry.server.config.ts` (Node.js runtime env)
-  - `sentry.edge.config.ts` (Vercel Edge middleware env)
-- **Build Integration**: `next.config.js` wraps the configuration in `withSentryConfig` to enable static compilation analysis, source-map injection, and code tree-shaking.
+- **Initialization**:
+  - **Browser**: `instrumentation-client.ts` (Next.js 15 client instrumentation hook)
+  - **Node.js server**: `sentry.server.config.ts`, loaded via `instrumentation.ts` when `NEXT_RUNTIME === "nodejs"`
+  - **Edge middleware**: `sentry.edge.config.ts`, loaded via `instrumentation.ts` when `NEXT_RUNTIME === "edge"`
+- **Environment variables**: Set both `SENTRY_DSN` (server) and `NEXT_PUBLIC_SENTRY_DSN` (browser) in production. Local dev works without them.
+- **Build Integration**: `next.config.js` wraps the configuration in `withSentryConfig` to enable source-map injection and debug-log tree-shaking (`webpack.treeshake.removeDebugLogging`).
 
 ### Active Exception Capture
 
@@ -25,6 +26,13 @@ Sentry handles client, server, and edge exception capture.
 ---
 
 ## 2. Telemetry Alerting Profiles
+
+Configure these rules manually in the [Sentry dashboard](https://sentry.io) for project `compliance-dashboard` (org: `one-boat-solutions`):
+
+1. Sign in → **Alerts** → **Create Alert** → **Issues** or **Performance**
+2. Create **Alert Rule A** (error rate) and **Alert Rule B** (p95 latency) as defined below
+3. Connect Slack or email notification actions for each rule
+4. In Vercel → project **Analytics** tab, confirm Web Vitals collection is enabled
 
 Sentry dashboards must be configured with the following production notification alert rules:
 
@@ -39,6 +47,17 @@ Sentry dashboards must be configured with the following production notification 
 - **Condition**: Triggered when the 95th percentile latency (`p95`) of HTTP request durations exceeds `1,000ms` (1 second) over a `15-minute` window.
 - **Filter**: `transaction.op:http.server`
 - **Action**: Dispatch performance ticket alert to target resolution queues.
+
+### Post-deploy verification checklist
+
+After deploying to Vercel with `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN` set:
+
+1. Open the app and trigger a client error (e.g. visit a route that throws in `app/error.tsx` boundary during testing).
+2. Confirm the event appears in Sentry within a few minutes.
+3. Confirm Vercel **Analytics → Web Vitals** shows data after real traffic.
+4. Confirm both alert rules (A and B above) are **Active** and notifications reach your team channel.
+
+Production trace sampling is set to **10%** (`tracesSampleRate: 0.1`) in `instrumentation-client.ts`, `sentry.server.config.ts`, and `sentry.edge.config.ts`.
 
 ---
 

@@ -178,5 +178,9 @@ module.exports = withSentryConfig(analyzedConfig, {
   silent: !process.env.CI,
   tunnelRoute: "/monitoring-tunnel",
   hideSourceMaps: true,
-  disableLogger: true,
+  webpack: {
+    treeshake: {
+      removeDebugLogging: true,
+    },
+  },
 });

@@ -200,7 +200,7 @@ export default function FrameworkActivityTable({ selectedDate }: FrameworkActivi
           <div className="flex items-center gap-3">
             {/* VIEW ALL */}
             <Link
-              href="/admin/frameworks"
+              href="/frameworks"
               className="
                 group
                 relative
