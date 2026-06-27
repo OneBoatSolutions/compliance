@@ -1,7 +1,13 @@
 "use client";
 
-import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
+import dynamic from "next/dynamic";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const UserStatusPie = dynamic(() => import("@/components/charts/user-status-pie"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-full w-full rounded-2xl" />,
+});
 
 const data = [
   {
@@ -76,26 +82,7 @@ export default function UserStatusChart() {
       {/* CHART */}
       <div className="relative z-10 flex items-center justify-center">
         <div className="relative h-[240px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                innerRadius={68}
-                outerRadius={95}
-                paddingAngle={4}
-                stroke="rgba(255,255,255,0.6)"
-                strokeWidth={4}
-              >
-                {data.map((entry) => (
-                  <Cell key={entry.name} fill={entry.fill} />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
+          <UserStatusPie data={data} />
 
           {/* CENTER LABEL */}
           <div
