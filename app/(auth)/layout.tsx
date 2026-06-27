@@ -129,12 +129,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
       </section>
 
-      {/* RIGHT PANEL -- independently scrollable so content is always reachable */}
-      <section className="flex-1 lg:w-2/5 relative flex items-start justify-center overflow-y-auto bg-gradient-to-br from-[#fafafa] via-[#ffffff] to-[#e9ddff] p-6 sm:p-8 lg:p-10">
+      {/* RIGHT PANEL -- vertically centered, no scroll */}
+      <section className="flex-1 lg:w-2/5 relative flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#fafafa] via-[#ffffff] to-[#e9ddff] p-6 sm:p-8 lg:p-10">
         {/* gradient glow background */}
         <div className="pointer-events-none absolute -top-32 -right-32 w-[400px] h-[400px] bg-[#6d18ff] rounded-full blur-[120px] opacity-30" />
         <div className="pointer-events-none absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-[#8f4dff] rounded-full blur-[120px] opacity-30" />
-        <div className="relative w-full max-w-md my-auto">
+        {/* Card slot — centered */}
+        <div className="relative w-full max-w-[460px]">
           <AuthRouteTransition>{children}</AuthRouteTransition>
         </div>
       </section>
