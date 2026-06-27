@@ -1,4 +1,5 @@
 import { FrameworkStatus } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 import { withErrorHandler } from "@/lib/api-handler";
 import { notFoundResponse, successResponse, validationErrorResponse } from "@/lib/api-helpers";
 import { requireAdmin } from "@/lib/auth-helpers";
@@ -85,6 +86,10 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
       updatedAt: true,
     },
   });
+
+  revalidateTag("frameworks");
+  revalidateTag("controls");
+  revalidateTag("dashboard");
 
   return successResponse(updated);
 });

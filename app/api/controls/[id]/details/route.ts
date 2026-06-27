@@ -41,6 +41,20 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
       subDependencies: {
         include: { parentControl: true },
       },
+      framework: {
+        select: {
+          controls: {
+            select: {
+              id: true,
+              frameworkId: true,
+              code: true,
+              title: true,
+              description: true,
+              category: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -48,15 +62,10 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
     return notFoundResponse("Control not found");
   }
 
-  // Find related controls in the same category
-  const relatedControls = await prisma.control.findMany({
-    where: {
-      frameworkId: control.frameworkId,
-      category: control.category,
-      id: { not: control.id },
-    },
-    take: 5,
-  });
+  // Find related controls in the same category (in-memory filter)
+  const relatedControls = control.framework.controls
+    .filter((c: ControlRecord) => c.category === control.category && c.id !== control.id)
+    .slice(0, 5);
 
   // Combine dependencies and category-related controls
   const related = [

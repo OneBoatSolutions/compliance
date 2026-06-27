@@ -39,13 +39,16 @@ describe("Assessment duplicate API route", () => {
     vi.spyOn(prisma.assessment, "findFirst").mockResolvedValue({
       id: "asm_1",
       organizationId: "org_1",
-      items: [{ control: { frameworkId: "fw_1" } }, { control: { frameworkId: "fw_2" } }],
+      items: [
+        {
+          control: {
+            framework: {
+              controls: [{ id: "ctrl_1" }, { id: "ctrl_2" }, { id: "ctrl_3" }],
+            },
+          },
+        },
+      ],
     } as never);
-    vi.spyOn(prisma.control, "findMany").mockResolvedValue([
-      { id: "ctrl_1" },
-      { id: "ctrl_2" },
-      { id: "ctrl_3" },
-    ] as never);
 
     const req = new Request("http://localhost/api/assessments/asm_1/duplicate", {
       method: "POST",

@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 import { withErrorHandler } from "@/lib/api-handler";
 import {
   errorResponse,
@@ -62,6 +63,9 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
         updatedAt: true,
       },
     });
+
+    revalidateTag("controls");
+    revalidateTag("frameworks");
 
     return successResponse(control, 201);
   } catch (e) {

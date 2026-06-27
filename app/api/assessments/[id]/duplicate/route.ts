@@ -26,7 +26,15 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
         select: {
           control: {
             select: {
-              frameworkId: true,
+              framework: {
+                select: {
+                  controls: {
+                    select: {
+                      id: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -38,28 +46,15 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
     return notFoundResponse("Assessment not found");
   }
 
-  const frameworkIds = [
-    ...new Set(
-      sourceAssessment.items.map(
-        (item: { control: { frameworkId: string } }) => item.control.frameworkId,
-      ),
-    ),
-  ];
-
-  if (frameworkIds.length === 0) {
-    return errorResponse("No frameworks found for this assessment", 400);
+  const controlIdSet = new Set<string>();
+  for (const item of sourceAssessment.items) {
+    const controlsList = item.control.framework.controls;
+    for (const c of controlsList) {
+      controlIdSet.add(c.id);
+    }
   }
 
-  const controls = await prisma.control.findMany({
-    where: {
-      frameworkId: {
-        in: frameworkIds,
-      },
-    },
-    select: {
-      id: true,
-    },
-  });
+  const controls = Array.from(controlIdSet).map((id) => ({ id }));
 
   if (controls.length === 0) {
     return errorResponse("No controls found for selected frameworks", 400);

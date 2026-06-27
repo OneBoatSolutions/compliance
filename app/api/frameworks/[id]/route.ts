@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import { unstable_cache, revalidateTag } from "next/cache";
 import { withErrorHandler } from "@/lib/api-handler";
 import {
   errorResponse,
@@ -14,19 +15,30 @@ interface RouteContext {
   params: Promise<{ id: string }>;
 }
 
+const getCachedFramework = unstable_cache(
+  async (id: string) => {
+    return prisma.framework.findUnique({
+      where: { id },
+      include: {
+        controls: {
+          orderBy: { code: "asc" },
+        },
+      },
+    });
+  },
+  ["framework-controls"],
+  {
+    revalidate: 300,
+    tags: ["controls"],
+  },
+);
+
 export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
   await requireAdmin();
   const { id } = await params;
 
-  const framework = await prisma.framework.findUnique({
-    where: { id },
-    include: {
-      controls: {
-        orderBy: { code: "asc" },
-      },
-    },
-  });
+  const framework = await getCachedFramework(id);
 
   if (!framework) {
     return notFoundResponse("Framework not found");
@@ -47,14 +59,6 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
   if (!existing) {
     return notFoundResponse("Framework not found");
   }
-
-  // Block edits to published frameworks — they are immutable
-  // if (existing.status === "PUBLISHED") {
-  // return errorResponse(
-  // "Published frameworks cannot be edited. Create a new version instead.",
-  //  403,
-  // );
-  // }
 
   const body = await req.json();
   const parsed = updateFrameworkAdminSchema.safeParse(body);
@@ -125,6 +129,10 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
       },
     });
 
+    revalidateTag("frameworks");
+    revalidateTag("controls");
+    revalidateTag("dashboard");
+
     return successResponse(updated);
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
@@ -162,6 +170,10 @@ export const DELETE = withErrorHandler(async (req: Request, { params }: RouteCon
   await prisma.framework.delete({
     where: { id },
   });
+
+  revalidateTag("frameworks");
+  revalidateTag("controls");
+  revalidateTag("dashboard");
 
   return successResponse({ deleted: true });
 });
