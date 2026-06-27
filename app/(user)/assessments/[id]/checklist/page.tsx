@@ -18,9 +18,15 @@ import { type AssessmentSortField, useAssessmentStore } from "@/stores/assessmen
 import MetricsBar from "@/components/assessment-checklist/MetricsBar";
 import FilterBar from "@/components/assessment-checklist/FilterBar";
 import ChecklistGroup from "@/components/assessment-checklist/ChecklistGroup";
-import RemediationDrawer from "@/components/ai/remediation-drawer";
 import Pagination from "@/components/assessment-checklist/Pagination";
 import Skeleton from "@/components/assessment-checklist/Skeleton";
+import dynamic from "next/dynamic";
+import { Skeleton as UiSkeleton } from "@/components/ui/skeleton";
+
+const RemediationDrawer = dynamic(() => import("@/components/ai/remediation-drawer"), {
+  ssr: false,
+  loading: () => <UiSkeleton className="h-screen w-full md:w-[78%] ml-auto rounded-l-2xl" />,
+});
 import MoreActionsDropdown from "@/components/assessment-checklist/MoreActionsDropdown";
 import {
   type AssessmentDetailResponse,

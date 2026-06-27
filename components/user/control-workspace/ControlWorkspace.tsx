@@ -7,10 +7,17 @@ import RightSidebar from "./RightSidebar";
 import FooterNav from "./FooterNav";
 import ProgressSection from "./ProgressSection";
 import TagsInput from "./TagsInput";
-import EvidenceUploader, { ExistingFile } from "@/components/user/evidence-uploader";
 import { AssigneeDueDate } from "./AssigneeDueDate";
 import WorkspaceHeader from "./WorkspaceHeader";
 import { apiClient, ApiClientError } from "@/lib/api-client";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { ExistingFile } from "@/components/user/evidence-uploader";
+
+const EvidenceUploader = dynamic(() => import("@/components/user/evidence-uploader"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[200px] w-full rounded-xl" />,
+});
 
 interface ControlData {
   id: string; // The database control ID for API calls
