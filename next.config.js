@@ -78,6 +78,8 @@ const nextConfig = {
   // In Next.js 15, serverComponentsExternalPackages moved to the top level.
   serverExternalPackages: ["pdfkit", "svg-to-pdfkit"],
 
+  compress: true,
+
   images: {
     // Prefer remotePatterns (hostname + pathname glob) over the deprecated `domains`.
     remotePatterns: [
@@ -111,7 +113,7 @@ const nextConfig = {
   bundlePagesRouterDependencies: true,
 
   experimental: {
-    optimizePackageImports: ["recharts"],
+    optimizePackageImports: ["recharts", "lucide-react", "@radix-ui/react-icons"],
   },
 
   webpack(config) {

@@ -42,6 +42,12 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
     where: {
       assessmentItemId: itemId,
     },
+    select: {
+      id: true,
+      userName: true,
+      content: true,
+      createdAt: true,
+    },
     orderBy: {
       createdAt: "desc",
     },
