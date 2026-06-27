@@ -107,6 +107,20 @@ const nextConfig = {
 
   // Prevent server-side source maps from leaking into the client bundle.
   productionBrowserSourceMaps: false,
+
+  bundlePagesRouterDependencies: true,
+
+  experimental: {
+    optimizePackageImports: ["recharts"],
+  },
+
+  webpack(config) {
+    config.module.rules.push({
+      test: /[\\/]node_modules[\\/]recharts[\\/]/,
+      sideEffects: false,
+    });
+    return config;
+  },
 };
 
 module.exports =
