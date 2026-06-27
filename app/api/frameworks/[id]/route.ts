@@ -11,15 +11,16 @@ import { prisma } from "@/lib/prisma";
 import { updateFrameworkAdminSchema } from "@/lib/validations/framework";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
   await requireAdmin();
+  const { id } = await params;
 
   const framework = await prisma.framework.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       controls: {
         orderBy: { code: "asc" },
@@ -36,9 +37,10 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
 
 export const PATCH = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   await requireAdmin();
+  const { id } = await params;
 
   const existing = await prisma.framework.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: { id: true, status: true },
   });
 
@@ -104,7 +106,7 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
 
   try {
     const updated = await prisma.framework.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
       select: {
         id: true,
@@ -135,9 +137,10 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
 export const DELETE = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
   await requireAdmin();
+  const { id } = await params;
 
   const existing = await prisma.framework.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: { id: true },
   });
 
@@ -146,7 +149,7 @@ export const DELETE = withErrorHandler(async (req: Request, { params }: RouteCon
   }
 
   const inUse = await prisma.assessmentItem.count({
-    where: { control: { frameworkId: params.id } },
+    where: { control: { frameworkId: id } },
   });
 
   if (inUse > 0) {
@@ -157,7 +160,7 @@ export const DELETE = withErrorHandler(async (req: Request, { params }: RouteCon
   }
 
   await prisma.framework.delete({
-    where: { id: params.id },
+    where: { id },
   });
 
   return successResponse({ deleted: true });

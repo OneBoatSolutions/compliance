@@ -5,9 +5,9 @@ import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 function roundScore(score: number): number {
@@ -17,7 +17,7 @@ function roundScore(score: number): number {
 export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
   const session = await requireAuth();
-  const { id } = params;
+  const { id } = await params;
 
   const ownedAssessment = await prisma.assessment.findFirst({
     where: {

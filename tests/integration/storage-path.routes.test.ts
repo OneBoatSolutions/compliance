@@ -29,7 +29,9 @@ describe("Storage path API route", () => {
     fs.writeFileSync(testFile, "%PDF-1.4 sample");
 
     const req = new Request("http://localhost/api/storage/tests/sample.pdf");
-    const res = (await GET(req, { params: { path: ["tests", "sample.pdf"] } })) as Response;
+    const res = (await GET(req, {
+      params: Promise.resolve({ path: ["tests", "sample.pdf"] }),
+    })) as Response;
 
     expect(res.status).toBe(200);
     expect(res.headers.get("Content-Type")).toBe("application/pdf");
@@ -39,13 +41,17 @@ describe("Storage path API route", () => {
 
   it("returns 404 for a non-existent file", async () => {
     const req = new Request("http://localhost/api/storage/missing/file.pdf");
-    const res = (await GET(req, { params: { path: ["missing", "file.pdf"] } })) as Response;
+    const res = (await GET(req, {
+      params: Promise.resolve({ path: ["missing", "file.pdf"] }),
+    })) as Response;
     expect(res.status).toBe(404);
   });
 
   it("returns 403 when path traversal is attempted", async () => {
     const req = new Request("http://localhost/api/storage/../etc/passwd");
-    const res = (await GET(req, { params: { path: ["..", "etc", "passwd"] } })) as Response;
+    const res = (await GET(req, {
+      params: Promise.resolve({ path: ["..", "etc", "passwd"] }),
+    })) as Response;
     expect(res.status).toBe(403);
   });
 
@@ -55,7 +61,7 @@ describe("Storage path API route", () => {
 
     try {
       const req = new Request("http://localhost/api/storage/doc.pdf");
-      const res = (await GET(req, { params: { path: ["doc.pdf"] } })) as Response;
+      const res = (await GET(req, { params: Promise.resolve({ path: ["doc.pdf"] }) })) as Response;
       expect(res.status).toBe(200);
       expect(res.headers.get("Content-Type")).toBe("application/pdf");
     } finally {

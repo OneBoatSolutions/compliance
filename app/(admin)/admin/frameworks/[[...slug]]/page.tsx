@@ -1,12 +1,15 @@
 import { redirect } from "next/navigation";
 
 interface LegacyFrameworkRedirectProps {
-  params: {
+  params: Promise<{
     slug?: string[];
-  };
+  }>;
 }
 
-export default function LegacyFrameworkRedirectPage({ params }: LegacyFrameworkRedirectProps) {
-  const suffix = params.slug?.length ? `/${params.slug.join("/")}` : "";
+export default async function LegacyFrameworkRedirectPage({
+  params,
+}: LegacyFrameworkRedirectProps) {
+  const resolvedParams = await params;
+  const suffix = resolvedParams.slug?.length ? `/${resolvedParams.slug.join("/")}` : "";
   redirect(`/frameworks${suffix}`);
 }

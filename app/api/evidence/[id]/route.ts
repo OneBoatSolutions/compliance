@@ -5,16 +5,17 @@ import { prisma } from "@/lib/prisma";
 import { deleteFileFromStorage, generateSignedDownloadUrl } from "@/services/storage-service";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
   const session = await requireAuth();
+  const { id } = await params;
 
   const evidence = await prisma.evidence.findFirst({
     where: {
-      id: params.id,
+      id,
       assessmentItem: {
         assessment: {
           userId: session.user.id,
@@ -47,10 +48,11 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
 export const DELETE = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
   const session = await requireAuth();
+  const { id } = await params;
 
   const evidence = await prisma.evidence.findFirst({
     where: {
-      id: params.id,
+      id,
       assessmentItem: {
         assessment: {
           userId: session.user.id,

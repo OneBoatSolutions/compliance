@@ -4,17 +4,18 @@ import { prisma } from "@/lib/prisma";
 import { successResponse } from "@/lib/api-helpers";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
     itemId: string;
-  };
+  }>;
 }
 
 export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   await requireAuth();
+  const { itemId } = await params;
 
   const item = await prisma.assessmentItem.findUnique({
-    where: { id: params.itemId },
+    where: { id: itemId },
     select: {
       createdAt: true,
       updatedAt: true,
@@ -26,7 +27,7 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
   }
 
   const evidence = await prisma.evidence.findMany({
-    where: { assessmentItemId: params.itemId },
+    where: { assessmentItemId: itemId },
     select: {
       id: true,
       filename: true,
@@ -36,7 +37,7 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
   });
 
   const comments = await prisma.comment.findMany({
-    where: { assessmentItemId: params.itemId },
+    where: { assessmentItemId: itemId },
     select: {
       id: true,
       content: true,
@@ -47,7 +48,7 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
 
   const timeline = [
     {
-      id: `created-${params.itemId}`,
+      id: `created-${itemId}`,
       type: "CREATED",
       date: item.createdAt,
       user: "System",

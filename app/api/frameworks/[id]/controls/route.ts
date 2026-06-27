@@ -11,14 +11,15 @@ import { prisma } from "@/lib/prisma";
 import { createControlSchema } from "@/lib/validations/framework";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export const POST = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   await requireAdmin();
+  const { id } = await params;
 
   const framework = await prisma.framework.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: { id: true },
   });
 
@@ -38,7 +39,7 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
   try {
     const control = await prisma.control.create({
       data: {
-        frameworkId: params.id,
+        frameworkId: id,
         code: data.code,
         title: data.title,
         description: data.description,

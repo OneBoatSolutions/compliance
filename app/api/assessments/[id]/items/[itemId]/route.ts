@@ -6,17 +6,17 @@ import { prisma } from "@/lib/prisma";
 import { updateAssessmentItemSchema } from "@/lib/validations/assessment";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
     itemId: string;
-  };
+  }>;
 }
 
 export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
 
   const session = await requireAuth();
-  const { id: assessmentId, itemId } = params;
+  const { id: assessmentId, itemId } = await params;
 
   const assessmentItem = await prisma.assessmentItem.findFirst({
     where: {
@@ -53,7 +53,7 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
 
 export const PATCH = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   const session = await requireAuth();
-  const { id: assessmentId, itemId } = params;
+  const { id: assessmentId, itemId } = await params;
 
   const ownedAssessmentItem = await prisma.assessmentItem.findFirst({
     where: {

@@ -11,14 +11,15 @@ import { prisma } from "@/lib/prisma";
 import { updateControlSchema } from "@/lib/validations/framework";
 
 interface RouteContext {
-  params: { id: string; controlId: string };
+  params: Promise<{ id: string; controlId: string }>;
 }
 
 export const PATCH = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   await requireAdmin();
+  const { id, controlId } = await params;
 
   const existing = await prisma.control.findFirst({
-    where: { id: params.controlId, frameworkId: params.id },
+    where: { id: controlId, frameworkId: id },
     select: { id: true },
   });
 
@@ -58,7 +59,7 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
 
   try {
     const control = await prisma.control.update({
-      where: { id: params.controlId },
+      where: { id: controlId },
       data: updateData,
       select: {
         id: true,
@@ -88,9 +89,10 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
 export const DELETE = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
   await requireAdmin();
+  const { id, controlId } = await params;
 
   const existing = await prisma.control.findFirst({
-    where: { id: params.controlId, frameworkId: params.id },
+    where: { id: controlId, frameworkId: id },
     select: { id: true },
   });
 
@@ -99,7 +101,7 @@ export const DELETE = withErrorHandler(async (req: Request, { params }: RouteCon
   }
 
   await prisma.control.delete({
-    where: { id: params.controlId },
+    where: { id: controlId },
   });
 
   return successResponse({ deleted: true });

@@ -108,7 +108,9 @@ describe("Organizations API routes", () => {
       method: "GET",
     });
 
-    const res = (await organizationGet(req, { params: { id: "org_1" } })) as Response;
+    const res = (await organizationGet(req, {
+      params: Promise.resolve({ id: "org_1" }),
+    })) as Response;
     const json = await res.json();
 
     expect(res.status).toBe(200);
@@ -127,7 +129,9 @@ describe("Organizations API routes", () => {
       method: "GET",
     });
 
-    const res = (await organizationGet(req, { params: { id: "org_1" } })) as Response;
+    const res = (await organizationGet(req, {
+      params: Promise.resolve({ id: "org_1" }),
+    })) as Response;
     expect(res.status).toBe(403);
   });
 
@@ -138,7 +142,9 @@ describe("Organizations API routes", () => {
       method: "GET",
     });
 
-    const res = (await organizationGet(req, { params: { id: "missing" } })) as Response;
+    const res = (await organizationGet(req, {
+      params: Promise.resolve({ id: "missing" }),
+    })) as Response;
     expect(res.status).toBe(404);
   });
 
@@ -166,7 +172,9 @@ describe("Organizations API routes", () => {
       },
     });
 
-    const res = (await organizationPatch(req, { params: { id: "org_1" } })) as Response;
+    const res = (await organizationPatch(req, {
+      params: Promise.resolve({ id: "org_1" }),
+    })) as Response;
     const json = await res.json();
 
     expect(res.status).toBe(200);
@@ -187,7 +195,9 @@ describe("Organizations API routes", () => {
       },
     });
 
-    const res = (await organizationPatch(req, { params: { id: "missing" } })) as Response;
+    const res = (await organizationPatch(req, {
+      params: Promise.resolve({ id: "missing" }),
+    })) as Response;
     expect(res.status).toBe(404);
   });
 
@@ -208,7 +218,9 @@ describe("Organizations API routes", () => {
       },
     });
 
-    const res = (await organizationPatch(req, { params: { id: "org_1" } })) as Response;
+    const res = (await organizationPatch(req, {
+      params: Promise.resolve({ id: "org_1" }),
+    })) as Response;
     expect(res.status).toBe(422);
   });
 
@@ -227,7 +239,9 @@ describe("Organizations API routes", () => {
       },
     });
 
-    const res = (await organizationPatch(req, { params: { id: "org_1" } })) as Response;
+    const res = (await organizationPatch(req, {
+      params: Promise.resolve({ id: "org_1" }),
+    })) as Response;
     expect(res.status).toBe(422);
   });
 
@@ -238,7 +252,9 @@ describe("Organizations API routes", () => {
       method: "GET",
     });
 
-    const res = (await organizationGet(req, { params: { id: "org_1" } })) as Response;
+    const res = (await organizationGet(req, {
+      params: Promise.resolve({ id: "org_1" }),
+    })) as Response;
     expect(res.status).toBe(401);
   });
 });

@@ -49,12 +49,13 @@ describe("withErrorHandler", () => {
   });
 
   it("passes context to handler", async () => {
-    const handler = withErrorHandler<{ params: { id: string } }>(async (req, ctx) => {
-      return NextResponse.json({ id: ctx.params.id });
+    const handler = withErrorHandler<{ params: Promise<{ id: string }> }>(async (req, ctx) => {
+      const { id } = await ctx.params;
+      return NextResponse.json({ id });
     });
 
     const res = await handler(new Request("http://localhost/test"), {
-      params: { id: "123" },
+      params: Promise.resolve({ id: "123" }),
     });
     expect(res.status).toBe(200);
     const json = await res.json();

@@ -23,16 +23,17 @@ interface ControlDependencyRecord {
 }
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   await requireAuth();
+  const { id } = await params;
 
   const control = await prisma.control.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       gatewayDependencies: {
         include: { childControl: true },

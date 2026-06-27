@@ -6,10 +6,10 @@ import { z } from "zod";
 import { ApiClientError } from "@/lib/api-client";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
     itemId: string;
-  };
+  }>;
 }
 
 const commentSchema = z.object({
@@ -22,11 +22,12 @@ const commentSchema = z.object({
 export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
   const session = await requireAuth();
+  const { id, itemId } = await params;
 
   const item = await prisma.assessmentItem.findFirst({
     where: {
-      id: params.itemId,
-      assessmentId: params.id,
+      id: itemId,
+      assessmentId: id,
       assessment: {
         userId: session.user.id,
       },
@@ -39,7 +40,7 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
 
   const comments = await prisma.comment.findMany({
     where: {
-      assessmentItemId: params.itemId,
+      assessmentItemId: itemId,
     },
     orderBy: {
       createdAt: "desc",
@@ -51,6 +52,7 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
 
 export const POST = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   const session = await requireAuth();
+  const { id, itemId } = await params;
 
   const body = await req.json();
   const parsed = commentSchema.safeParse(body);
@@ -65,8 +67,8 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
 
   const item = await prisma.assessmentItem.findFirst({
     where: {
-      id: params.itemId,
-      assessmentId: params.id,
+      id: itemId,
+      assessmentId: id,
       assessment: {
         userId: session.user.id,
       },
@@ -79,7 +81,7 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
 
   const comment = await prisma.comment.create({
     data: {
-      assessmentItemId: params.itemId,
+      assessmentItemId: itemId,
       userId: session.user.id,
       userName: session.user.name || "User",
       content: parsed.data.content,

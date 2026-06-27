@@ -115,7 +115,7 @@ describe("Framework Admin API", () => {
     vi.mocked(prisma.framework.findUnique).mockResolvedValue(null);
 
     const res = (await getFramework(new Request("http://localhost/api/frameworks/x"), {
-      params: { id: "x" },
+      params: Promise.resolve({ id: "x" }),
     })) as Response;
 
     expect(res.status).toBe(404);
@@ -126,7 +126,7 @@ describe("Framework Admin API", () => {
     vi.mocked(prisma.assessmentItem.count).mockResolvedValue(3);
 
     const res = (await deleteFramework(new Request("http://localhost/api/frameworks/fw1"), {
-      params: { id: "fw1" },
+      params: Promise.resolve({ id: "fw1" }),
     })) as Response;
 
     expect(res.status).toBe(409);
@@ -138,7 +138,7 @@ describe("Framework Admin API", () => {
     vi.mocked(prisma.framework.delete).mockResolvedValue({} as never);
 
     const res = (await deleteFramework(new Request("http://localhost/api/frameworks/fw1"), {
-      params: { id: "fw1" },
+      params: Promise.resolve({ id: "fw1" }),
     })) as Response;
     const json = await res.json();
 
@@ -160,7 +160,7 @@ describe("Framework Admin API", () => {
 
     const res = (await publishFramework(
       new Request("http://localhost/api/frameworks/fw1/publish", { method: "POST" }),
-      { params: { id: "fw1" } },
+      { params: Promise.resolve({ id: "fw1" }) },
     )) as Response;
 
     expect(res.status).toBe(422);
@@ -194,7 +194,7 @@ describe("Framework Admin API", () => {
 
     const res = (await publishFramework(
       new Request("http://localhost/api/frameworks/fw1/publish", { method: "POST" }),
-      { params: { id: "fw1" } },
+      { params: Promise.resolve({ id: "fw1" }) },
     )) as Response;
     const json = await res.json();
 

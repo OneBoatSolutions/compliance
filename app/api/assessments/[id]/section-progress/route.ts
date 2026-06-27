@@ -4,13 +4,14 @@ import { prisma } from "@/lib/prisma";
 import { successResponse } from "@/lib/api-helpers";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   await requireAuth();
+  const { id } = await params;
   const url = new URL(req.url);
   const controlId = url.searchParams.get("controlId");
 
@@ -31,7 +32,7 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
   // Query assessment items in this assessment for the same framework and category
   const items = await prisma.assessmentItem.findMany({
     where: {
-      assessmentId: params.id,
+      assessmentId: id,
       control: {
         frameworkId: targetControl.frameworkId,
         category: targetControl.category,

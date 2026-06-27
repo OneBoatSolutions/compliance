@@ -87,7 +87,7 @@ describe("Assessment item API route", () => {
     });
 
     const res = (await assessmentItemPatch(req, {
-      params: { id: "asm_1", itemId: "item_1" },
+      params: Promise.resolve({ id: "asm_1", itemId: "item_1" }),
     })) as Response;
 
     const json = await res.json();
@@ -134,7 +134,7 @@ describe("Assessment item API route", () => {
       method: "GET",
     });
     const res = (await assessmentItemGet(req, {
-      params: { id: "asm_1", itemId: "item_1" },
+      params: Promise.resolve({ id: "asm_1", itemId: "item_1" }),
     })) as Response;
     const json = await res.json();
 
@@ -181,7 +181,7 @@ describe("Assessment item API route", () => {
     });
 
     const res = (await assessmentItemPatch(req, {
-      params: { id: "asm_1", itemId: "missing" },
+      params: Promise.resolve({ id: "asm_1", itemId: "missing" }),
     })) as Response;
 
     expect(res.status).toBe(404);
@@ -203,7 +203,7 @@ describe("Assessment item API route", () => {
     });
 
     const res = (await assessmentItemPatch(req, {
-      params: { id: "asm_1", itemId: "item_1" },
+      params: Promise.resolve({ id: "asm_1", itemId: "item_1" }),
     })) as Response;
 
     expect(res.status).toBe(422);
@@ -221,7 +221,7 @@ describe("Assessment item API route", () => {
     });
 
     const res = (await assessmentItemPatch(req, {
-      params: { id: "asm_1", itemId: "item_1" },
+      params: Promise.resolve({ id: "asm_1", itemId: "item_1" }),
     })) as Response;
 
     expect(res.status).toBe(401);

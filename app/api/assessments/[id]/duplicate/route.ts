@@ -4,16 +4,16 @@ import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export const POST = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
 
   const session = await requireAuth();
-  const { id } = params;
+  const { id } = await params;
 
   const sourceAssessment = await prisma.assessment.findFirst({
     where: {
