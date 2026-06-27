@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     let body;
     try {
       body = await req.json();
-    } catch (err) {
+    } catch {
       await incrementFailureCount(abuseKey, RATE_LIMIT_CONFIGS.registerAbuse.windowSeconds);
       return errorResponse("Invalid JSON payload", 400);
     }

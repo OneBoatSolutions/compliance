@@ -20,8 +20,9 @@
  * FIX — Issue #11 (ZIP bypass):
  *   Office OOXML files are now structurally validated by walking the ZIP
  *   central directory (pure-JS, no native deps) and asserting the presence of
- *   `[Content_Types].xml` plus the correct root-level subfolder (`word/`,
- *   `xl/`, or `ppt/`) before the upload is accepted.
+ *   `[Content_Types].xml`, `_rels/.rels`, and the correct format root document
+ *   (`word/document.xml`, `xl/workbook.xml`, or `ppt/presentation.xml`) before
+ *   the upload is accepted.
  *
  * FIX — Issue #12 (CSV/text injection):
  *   text/plain and text/csv uploads are scanned for spreadsheet formula-
@@ -179,27 +180,29 @@ function listZipEntries(buf: Buffer): Set<string> {
  * Required OOXML structural entries per declared Office MIME type.
  *
  * Every valid Office Open XML package MUST contain `[Content_Types].xml`.
- * Additionally each format has a mandatory root-level content folder:
- *   - DOCX: word/
- *   - XLSX: xl/
- *   - PPTX: ppt/
- *
- * We check for the folder prefix rather than an exact filename so that minor
- * schema variations (e.g. `word/document.xml` vs `word/document2.xml`) do not
- * cause false rejections of legitimately authored documents.
+ * Additionally each format has a mandatory root document:
+ *   - DOCX: word/document.xml
+ *   - XLSX: xl/workbook.xml
+ *   - PPTX: ppt/presentation.xml
  */
-const ooxmlRequiredEntries: Record<string, { contentTypes: string; rootFolder: string }> = {
+const ooxmlRequiredEntries: Record<
+  string,
+  { contentTypes: string; rels: string; rootDocument: string }
+> = {
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
     contentTypes: "[content_types].xml",
-    rootFolder: "word/",
+    rels: "_rels/.rels",
+    rootDocument: "word/document.xml",
   },
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
     contentTypes: "[content_types].xml",
-    rootFolder: "xl/",
+    rels: "_rels/.rels",
+    rootDocument: "xl/workbook.xml",
   },
   "application/vnd.openxmlformats-officedocument.presentationml.presentation": {
     contentTypes: "[content_types].xml",
-    rootFolder: "ppt/",
+    rels: "_rels/.rels",
+    rootDocument: "ppt/presentation.xml",
   },
 };
 
@@ -208,7 +211,8 @@ const ooxmlRequiredEntries: Record<string, { contentTypes: string; rootFolder: s
  *   1. Confirming the ZIP magic bytes are present.
  *   2. Parsing the ZIP central directory.
  *   3. Asserting the presence of `[Content_Types].xml`.
- *   4. Asserting the presence of the format-specific root folder.
+ *   4. Asserting the presence of `_rels/.rels`.
+ *   5. Asserting the presence of the format-specific root document.
  *
  * Returns a `FileValidationResult` — valid on success, rejected with a
  * descriptive reason on failure.
@@ -247,13 +251,20 @@ function verifyOoxmlStructure(buf: Buffer, declaredMime: string): FileValidation
     };
   }
 
-  // Step 4: Root content folder must be present (check any entry with that prefix).
-  const hasRootFolder = [...entries].some((e) => e.startsWith(required.rootFolder));
-  if (!hasRootFolder) {
+  // Step 4: Root package relationships must be present.
+  if (!entries.has(required.rels)) {
+    return {
+      valid: false,
+      reason: 'Missing required OOXML relationships entry "_rels/.rels"',
+    };
+  }
+
+  // Step 5: Format-specific root document must be present exactly.
+  if (!entries.has(required.rootDocument)) {
     return {
       valid: false,
       reason:
-        `Missing required OOXML content folder "${required.rootFolder}" — ` +
+        `Missing required OOXML root document "${required.rootDocument}" — ` +
         "file does not match the declared Office format",
     };
   }

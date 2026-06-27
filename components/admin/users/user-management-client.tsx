@@ -36,7 +36,6 @@ export function UserManagementClient({ currentUserId }: UserManagementClientProp
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserPublic | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   // Extract query filters from URL
   const page = Number(searchParams.get("page") ?? "1");
   const search = searchParams.get("search") ?? "";

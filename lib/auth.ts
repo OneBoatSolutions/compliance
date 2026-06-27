@@ -25,7 +25,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
 
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         try {
           if (!credentials?.email || !credentials?.password) {
             throw new Error("Missing credentials");

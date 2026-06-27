@@ -4,7 +4,6 @@ import { Control, type Status } from "@/app/(user)/assessments/[id]/checklist/ty
 import { useState } from "react";
 import Link from "next/link";
 import StatusDropdown from "./StatusDropdown";
-import EvidenceUploader from "../user/evidence-uploader";
 import {
   CheckCircle2,
   Circle,
