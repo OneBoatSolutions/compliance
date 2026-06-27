@@ -133,7 +133,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/frameworks", req.url));
   }
 
-  // ── Nonce & CSP ───────────────────────────────────────────────────────────
+  // -- Nonce & CSP ---------------------------------------------------------------
   const nonce = generateNonce();
   const csp = buildCspHeader(nonce);
 
@@ -150,7 +150,7 @@ export async function middleware(req: NextRequest) {
   // Attach CSP to response headers for browser enforcement
   response.headers.set("Content-Security-Policy", csp);
 
-  // ── CORS (API routes only) ────────────────────────────────────────────────
+  // -- CORS (API routes only) -----------------------------------------------------
   if (pathname.startsWith("/api/")) {
     const requestOrigin = req.headers.get("origin");
     const allowedOrigin = getCorsOrigin(requestOrigin);

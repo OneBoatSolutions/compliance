@@ -23,11 +23,11 @@ export const metadata: Metadata = {
 };
 
 /**
- * Root layout — async Server Component so we can read the per-request nonce
+ * Root layout - async Server Component so we can read the per-request nonce
  * that middleware.ts injects via the `x-nonce` header.
  *
  * HOW THE NONCE PROPAGATION ACTUALLY WORKS (Next.js 15):
- *   The browser does NOT process or enforce the `nonce` attribute on `<html>` —
+ *   The browser does NOT process or enforce the `nonce` attribute on `<html>` --
  *   it is not a valid HTML5 nonce location.  However, Next.js 15's React SSR
  *   engine inspects the `nonce` prop on the root `<html>` element during
  *   server-side rendering and uses it to stamp `nonce="..."` onto every

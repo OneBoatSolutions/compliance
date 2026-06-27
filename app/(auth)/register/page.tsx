@@ -264,6 +264,7 @@ export default function RegisterPage() {
               <FormItem className="flex items-start space-x-2">
                 <FormControl>
                   <Checkbox
+                    id="terms-checkbox"
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     className="mt-0.5"
@@ -271,13 +272,24 @@ export default function RegisterPage() {
                 </FormControl>
 
                 <div>
-                  <FormLabel className="text-sm font-medium text-slate-600">
+                  <FormLabel
+                    htmlFor="terms-checkbox"
+                    className="text-sm font-medium text-slate-600"
+                  >
                     I agree to the{" "}
-                    <Link href="/terms" className="underline text-primary">
+                    <Link
+                      href="/terms"
+                      className="underline text-primary"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       Terms
                     </Link>{" "}
                     and{" "}
-                    <Link href="/privacy" className="underline text-primary">
+                    <Link
+                      href="/privacy"
+                      className="underline text-primary"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       Privacy Policy
                     </Link>
                   </FormLabel>
@@ -310,7 +322,7 @@ export default function RegisterPage() {
         </form>
       </Form>
       <p className="mt-6 text-center text-xs text-slate-400">
-        © 2026 Cipherion. All rights reserved.
+        &copy; 2026 Cipherion. All rights reserved.
       </p>
     </div>
   );

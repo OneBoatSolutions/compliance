@@ -13,9 +13,9 @@ function CheckIcon() {
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex min-h-screen flex-col lg:flex-row">
+    <main className="flex h-svh min-h-0 flex-col lg:flex-row overflow-hidden">
       {/* LEFT PANEL */}
-      <section className="lg:w-3/5 relative overflow-hidden bg-gradient-to-br from-[#6d18ff] to-[#4c1d95] text-white p-8 lg:p-16 flex flex-col justify-between">
+      <section className="hidden lg:flex lg:w-3/5 relative overflow-hidden bg-gradient-to-br from-[#6d18ff] to-[#4c1d95] text-white p-6 xl:p-14 flex-col justify-between">
         {/* geometric overlay */}
         <div
           className="absolute inset-0 opacity-30 pointer-events-none
@@ -61,7 +61,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             />
           </svg>
           {/* Logo */}
-          <div className="flex items-center gap-2 mb-12">
+          <div className="flex items-center gap-2 mb-8 xl:mb-12">
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 d="M9 12l2 2 4-4m5.6-4A11.9 11.9 0 0112 2.9a11.9 11.9 0 01-8.6 3A12 12 0 003 9c0 5.6 3.8 10.3 9 11.6C17.2 19.3 21 14.6 21 9c0-1-.13-2-.38-3z"
@@ -76,16 +76,16 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
           {/* Hero Text */}
           <div className="max-w-xl my-auto">
-            <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-5 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+            <h1 className="text-3xl xl:text-5xl font-bold leading-tight mb-4 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
               AI-Powered Compliance, Simplified
             </h1>
 
-            <p className="text-white/85 text-lg leading-relaxed mb-8">
+            <p className="text-white/85 text-base xl:text-lg leading-relaxed mb-6">
               Discover, assess, and maintain regulatory readiness across multiple frameworks
               automatically.
             </p>
 
-            <ul className="space-y-6 text-lg text-white/90">
+            <ul className="space-y-4 xl:space-y-6 text-base xl:text-lg text-white/90">
               <li className="flex items-start gap-3">
                 <CheckIcon />
                 <span>AI Framework Mapping</span>
@@ -108,8 +108,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </ul>
           </div>
 
-          {/* Trust badges */}
-          <div className="mt-12 flex items-center gap-6 opacity-80 text-xs">
+          {/* Trust badges -- hidden on short viewports to prevent overflow */}
+          <div className="mt-8 hidden xl:flex items-center gap-6 opacity-80 text-xs">
             <div className="w-14 h-14 flex items-center justify-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-md text-white/70">
               SOC 2
             </div>
@@ -129,12 +129,12 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
       </section>
 
-      {/* RIGHT PANEL */}
-      <section className="lg:w-2/5 relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#fafafa] via-[#ffffff] to-[#e9ddff] p-8 lg:p-12 ">
+      {/* RIGHT PANEL -- independently scrollable so content is always reachable */}
+      <section className="flex-1 lg:w-2/5 relative flex items-start justify-center overflow-y-auto bg-gradient-to-br from-[#fafafa] via-[#ffffff] to-[#e9ddff] p-6 sm:p-8 lg:p-10">
         {/* gradient glow background */}
-        <div className="absolute -top-32 -right-32 w-[400px] h-[400px] bg-[#6d18ff] rounded-full blur-[120px]" />
-        <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-[#8f4dff] rounded-full blur-[120px]" />
-        <div className="w-full max-w-md ">
+        <div className="pointer-events-none absolute -top-32 -right-32 w-[400px] h-[400px] bg-[#6d18ff] rounded-full blur-[120px] opacity-30" />
+        <div className="pointer-events-none absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-[#8f4dff] rounded-full blur-[120px] opacity-30" />
+        <div className="relative w-full max-w-md my-auto">
           <AuthRouteTransition>{children}</AuthRouteTransition>
         </div>
       </section>
