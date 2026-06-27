@@ -6,10 +6,10 @@ import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     planId: string;
     stepId: string;
-  };
+  }>;
 }
 
 const updateStepSchema = z
@@ -24,6 +24,7 @@ const updateStepSchema = z
 
 export const PATCH = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   const session = await requireAuth();
+  const { planId, stepId } = await params;
   const body = await req.json();
   const parsed = updateStepSchema.safeParse(body);
 
@@ -33,8 +34,8 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
 
   const existing = await prisma.remediationStep.findFirst({
     where: {
-      id: params.stepId,
-      planId: params.planId,
+      id: stepId,
+      planId: planId,
       plan: {
         userId: session.user.id,
       },
@@ -52,7 +53,7 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
   const updated = await prisma.$transaction(async (tx: typeof prisma) => {
     const step = await tx.remediationStep.update({
       where: {
-        id: params.stepId,
+        id: stepId,
       },
       data: {
         ...("owner" in parsed.data ? { owner: parsed.data.owner } : {}),
@@ -78,7 +79,7 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
 
     const remainingOpenSteps = await tx.remediationStep.count({
       where: {
-        planId: params.planId,
+        planId: planId,
         status: {
           not: "DONE",
         },
@@ -87,7 +88,7 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
 
     await tx.remediationPlan.update({
       where: {
-        id: params.planId,
+        id: planId,
       },
       data: {
         status: remainingOpenSteps === 0 ? "COMPLETED" : "ACTIVE",

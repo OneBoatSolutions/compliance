@@ -5,15 +5,16 @@ import { requireAdmin } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export const POST = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
   await requireAdmin();
+  const { id } = await params;
 
   const framework = await prisma.framework.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: {
       id: true,
       code: true,
@@ -53,7 +54,7 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
   }
 
   const controlCount = await prisma.control.count({
-    where: { frameworkId: params.id },
+    where: { frameworkId: id },
   });
 
   if (controlCount === 0) {
@@ -63,7 +64,7 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
   }
 
   const updated = await prisma.framework.update({
-    where: { id: params.id },
+    where: { id: id },
     data: {
       status: FrameworkStatus.PUBLISHED,
       publishedAt: new Date(),

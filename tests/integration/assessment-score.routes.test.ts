@@ -61,7 +61,7 @@ describe("Assessment score API route", () => {
       method: "GET",
     });
 
-    const res = (await scoreGet(req, { params: { id: "asm_1" } })) as Response;
+    const res = (await scoreGet(req, { params: Promise.resolve({ id: "asm_1" }) })) as Response;
     const json = await res.json();
 
     expect(res.status).toBe(200);
@@ -91,7 +91,7 @@ describe("Assessment score API route", () => {
       method: "GET",
     });
 
-    const res = (await scoreGet(req, { params: { id: "asm_404" } })) as Response;
+    const res = (await scoreGet(req, { params: Promise.resolve({ id: "asm_404" }) })) as Response;
 
     expect(res.status).toBe(404);
     expect(prisma.assessmentItem.findMany).not.toHaveBeenCalled();
@@ -104,7 +104,7 @@ describe("Assessment score API route", () => {
       method: "GET",
     });
 
-    const res = (await scoreGet(req, { params: { id: "asm_1" } })) as Response;
+    const res = (await scoreGet(req, { params: Promise.resolve({ id: "asm_1" }) })) as Response;
 
     expect(res.status).toBe(401);
   });

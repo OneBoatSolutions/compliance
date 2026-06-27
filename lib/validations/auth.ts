@@ -37,10 +37,10 @@ export const loginSchema = z.object({
   password: z
     .string()
     .min(1, "Password is required")
-    // Must match the registration cap — otherwise a 73-char password set at
-    // registration would be accepted at login (both bcrypt-truncated to 72 bytes),
-    // but this schema would reject the login attempt, locking the user out.
-    .max(72, "Password must be at most 72 characters")
+    // Tune limit to accommodate legacy password strings exceeding 72 characters,
+    // which are automatically truncated by bcrypt to 72 bytes under the hood,
+    // while preventing high-capacity payload delivery attacks (capped at 256).
+    .max(256, "Password must be at most 256 characters")
     .min(8, "Password must be at least 8 characters"),
 });
 

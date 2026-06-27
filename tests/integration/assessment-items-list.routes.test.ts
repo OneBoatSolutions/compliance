@@ -56,7 +56,9 @@ describe("Assessment items list API route", () => {
     vi.spyOn(prisma.assessmentItem, "count").mockResolvedValue(1);
 
     const req = new Request("http://localhost/api/assessments/asm_1/items", { method: "GET" });
-    const res = (await listAssessmentItems(req, { params: { id: "asm_1" } })) as Response;
+    const res = (await listAssessmentItems(req, {
+      params: Promise.resolve({ id: "asm_1" }),
+    })) as Response;
     const json = await res.json();
 
     expect(res.status).toBe(200);
@@ -90,7 +92,9 @@ describe("Assessment items list API route", () => {
       { method: "GET" },
     );
 
-    const res = (await listAssessmentItems(req, { params: { id: "asm_1" } })) as Response;
+    const res = (await listAssessmentItems(req, {
+      params: Promise.resolve({ id: "asm_1" }),
+    })) as Response;
 
     expect(res.status).toBe(200);
     expect(prisma.assessmentItem.findMany).toHaveBeenCalledWith(
@@ -125,7 +129,9 @@ describe("Assessment items list API route", () => {
     vi.spyOn(prisma.assessment, "findFirst").mockResolvedValue(null as never);
 
     const req = new Request("http://localhost/api/assessments/asm_404/items", { method: "GET" });
-    const res = (await listAssessmentItems(req, { params: { id: "asm_404" } })) as Response;
+    const res = (await listAssessmentItems(req, {
+      params: Promise.resolve({ id: "asm_404" }),
+    })) as Response;
 
     expect(res.status).toBe(404);
     expect(prisma.assessmentItem.findMany).not.toHaveBeenCalled();
@@ -137,7 +143,9 @@ describe("Assessment items list API route", () => {
     const req = new Request("http://localhost/api/assessments/asm_1/items?limit=1000", {
       method: "GET",
     });
-    const res = (await listAssessmentItems(req, { params: { id: "asm_1" } })) as Response;
+    const res = (await listAssessmentItems(req, {
+      params: Promise.resolve({ id: "asm_1" }),
+    })) as Response;
 
     expect(res.status).toBe(422);
   });

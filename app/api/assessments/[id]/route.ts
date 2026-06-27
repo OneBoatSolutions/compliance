@@ -4,16 +4,16 @@ import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   void req;
 
   const session = await requireAuth();
-  const { id } = params;
+  const { id } = await params;
 
   const assessment = await prisma.assessment.findFirst({
     where: {
@@ -49,7 +49,7 @@ export const DELETE = withErrorHandler(async (req: Request, { params }: RouteCon
   void req;
 
   const session = await requireAuth();
-  const { id } = params;
+  const { id } = await params;
 
   const ownedAssessment = await prisma.assessment.findFirst({
     where: {

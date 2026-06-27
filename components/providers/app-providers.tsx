@@ -33,6 +33,7 @@ export function AppProviders({ children, nonce }: AppProvidersProps) {
         defaultTheme="light"
         enableSystem={false}
         forcedTheme="light"
+        nonce={nonce}
       >
         <QueryProvider>
           <AuthProvider>{children}</AuthProvider>

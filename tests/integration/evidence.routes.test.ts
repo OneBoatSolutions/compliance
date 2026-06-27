@@ -125,7 +125,7 @@ describe("Evidence API routes", () => {
     vi.mocked(generateSignedDownloadUrl).mockResolvedValue("https://signed.example.com/download");
 
     const req = new Request("http://localhost/api/evidence/ev_1", { method: "GET" });
-    const res = (await GET(req, { params: { id: "ev_1" } })) as Response;
+    const res = (await GET(req, { params: Promise.resolve({ id: "ev_1" }) })) as Response;
     const json = await res.json();
 
     expect(res.status).toBe(200);
@@ -142,7 +142,7 @@ describe("Evidence API routes", () => {
     vi.mocked(deleteFileFromStorage).mockResolvedValue();
 
     const req = new Request("http://localhost/api/evidence/ev_1", { method: "DELETE" });
-    const res = (await DELETE(req, { params: { id: "ev_1" } })) as Response;
+    const res = (await DELETE(req, { params: Promise.resolve({ id: "ev_1" }) })) as Response;
     const json = await res.json();
 
     expect(res.status).toBe(200);

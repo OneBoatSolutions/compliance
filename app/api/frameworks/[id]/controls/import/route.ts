@@ -15,14 +15,15 @@ import { csvMaxBytes, parseControlCsvText } from "@/lib/csv/parse-control-csv";
 import { prisma } from "@/lib/prisma";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export const POST = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   await requireAdmin();
+  const { id } = await params;
 
   const framework = await prisma.framework.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: { id: true },
   });
 
@@ -65,7 +66,7 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
   const validated: Prisma.ControlCreateManyInput[] = rows
     .filter((row) => row.data)
     .map((row) => ({
-      frameworkId: params.id,
+      frameworkId: id,
       code: row.data!.code,
       title: row.data!.title,
       description: row.data!.description,

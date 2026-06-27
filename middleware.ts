@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
-import { randomBytes } from "crypto";
 
 // ---------------------------------------------------------------------------
 // Route definitions
@@ -24,7 +23,9 @@ const adminRoutes = ["/admin", "/frameworks"];
 // ---------------------------------------------------------------------------
 
 function generateNonce(): string {
-  return randomBytes(16).toString("base64");
+  const arr = new Uint8Array(16);
+  globalThis.crypto.getRandomValues(arr);
+  return btoa(String.fromCharCode(...arr));
 }
 
 const trustedImgOrigins = ["https://images.unsplash.com", "https://lh3.googleusercontent.com"];
@@ -36,11 +37,13 @@ function buildCspHeader(nonce: string): string {
     " ",
   );
 
+  const scriptSrc = isDev
+    ? ["'self'", "'unsafe-inline'", "'unsafe-eval'"]
+    : ["'self'", `'nonce-${nonce}'`, "'strict-dynamic'"];
+
   return [
     "default-src 'self'",
-    // nonce allows Next.js inline scripts; 'strict-dynamic' propagates trust
-    // to dynamically loaded scripts without needing a full allow-list.
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    `script-src ${scriptSrc.join(" ")}`,
     "style-src 'self' 'unsafe-inline'", // Tailwind requires inline styles
     `img-src 'self' data: blob: ${trustedImgOrigins.join(" ")}`,
     "font-src 'self' data:",
@@ -130,24 +133,24 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/frameworks", req.url));
   }
 
-  // ── Nonce & CSP ───────────────────────────────────────────────────────────
+  // -- Nonce & CSP ---------------------------------------------------------------
   const nonce = generateNonce();
   const csp = buildCspHeader(nonce);
 
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("Content-Security-Policy", csp);
+
   const response = NextResponse.next({
     request: {
-      headers: new Headers({
-        ...Object.fromEntries(req.headers.entries()),
-        // Forward the nonce to Server Components via a custom header.
-        "x-nonce": nonce,
-      }),
+      headers: requestHeaders,
     },
   });
 
-  // Override the static CSP set in next.config.js with the nonce-based one.
+  // Attach CSP to response headers for browser enforcement
   response.headers.set("Content-Security-Policy", csp);
 
-  // ── CORS (API routes only) ────────────────────────────────────────────────
+  // -- CORS (API routes only) -----------------------------------------------------
   if (pathname.startsWith("/api/")) {
     const requestOrigin = req.headers.get("origin");
     const allowedOrigin = getCorsOrigin(requestOrigin);

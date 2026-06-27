@@ -19,9 +19,16 @@ vi.mock("@/lib/auth-helpers", () => ({
 vi.mock("@/lib/rate-limiter", () => ({
   rateLimit: vi.fn().mockResolvedValue(null),
   rateLimitByKey: vi.fn().mockResolvedValue(false),
+  isRateLimited: vi.fn().mockResolvedValue(false),
+  incrementFailureCount: vi.fn().mockResolvedValue(undefined),
+  resetAttempts: vi.fn().mockResolvedValue(undefined),
   RATE_LIMIT_CONFIGS: {
     auth: { name: "rl:auth", limit: 10, windowSeconds: 900 },
     sensitive: { name: "rl:sensitive", limit: 5, windowSeconds: 3600 },
+    loginIpVolumetric: { name: "rl:login:ip:volumetric", limit: 20, windowSeconds: 60 },
+    registerIp: { name: "rl:register:ip", limit: 50, windowSeconds: 900 },
+    registerEmail: { name: "rl:register:email", limit: 5, windowSeconds: 3600 },
+    registerAbuse: { name: "rl:register:abuse", limit: 10, windowSeconds: 900 },
   },
 }));
 

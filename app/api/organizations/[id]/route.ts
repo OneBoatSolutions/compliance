@@ -10,13 +10,13 @@ import { prisma } from "@/lib/prisma";
 import { updateOrganizationSchema } from "@/lib/validations/organization";
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 export const GET = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   const session = await requireAuth();
-  const { id } = params;
+  const { id } = await params;
 
   const organization = await prisma.organization.findUnique({
     where: { id },
@@ -49,7 +49,7 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
 
 export const PATCH = withErrorHandler(async (req: Request, { params }: RouteContext) => {
   const session = await requireAuth();
-  const { id } = params;
+  const { id } = await params;
 
   const organization = await prisma.organization.findUnique({
     where: { id },

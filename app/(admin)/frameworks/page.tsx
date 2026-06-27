@@ -11,7 +11,7 @@ import { listFrameworks } from "@/services/framework-admin-service";
 import type { Framework } from "@/types/framework";
 
 interface FrameworksPageProps {
-  searchParams: Record<string, string | string[] | undefined>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 function toQueryRecord(
@@ -43,6 +43,7 @@ function serializeFramework(
 }
 
 export default async function FrameworksPage({ searchParams }: FrameworksPageProps) {
+  const resolvedSearchParams = await searchParams;
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -53,7 +54,7 @@ export default async function FrameworksPage({ searchParams }: FrameworksPagePro
     redirect("/dashboard");
   }
 
-  const parsed = frameworkListQuerySchema.safeParse(toQueryRecord(searchParams));
+  const parsed = frameworkListQuerySchema.safeParse(toQueryRecord(resolvedSearchParams));
 
   if (!parsed.success) {
     redirect("/frameworks");

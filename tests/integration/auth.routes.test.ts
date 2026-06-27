@@ -9,13 +9,21 @@ import { POST as logoutPost } from "@/app/api/auth/logout/route";
 import { GET as meGet } from "@/app/api/auth/me/route";
 import { POST as forgotPasswordPost } from "@/app/api/auth/forgot-password/route";
 import { POST as resetPasswordPost } from "@/app/api/auth/reset-password/route";
+import { rateLimitByKey, isRateLimited } from "@/lib/rate-limiter";
 
 vi.mock("@/lib/rate-limiter", () => ({
   rateLimit: vi.fn().mockResolvedValue(null),
   rateLimitByKey: vi.fn().mockResolvedValue(false),
+  isRateLimited: vi.fn().mockResolvedValue(false),
+  incrementFailureCount: vi.fn().mockResolvedValue(undefined),
+  resetAttempts: vi.fn().mockResolvedValue(undefined),
   RATE_LIMIT_CONFIGS: {
     auth: { name: "rl:auth", limit: 10, windowSeconds: 900 },
     sensitive: { name: "rl:sensitive", limit: 5, windowSeconds: 3600 },
+    loginIpVolumetric: { name: "rl:login:ip:volumetric", limit: 20, windowSeconds: 60 },
+    registerIp: { name: "rl:register:ip", limit: 50, windowSeconds: 900 },
+    registerEmail: { name: "rl:register:email", limit: 5, windowSeconds: 3600 },
+    registerAbuse: { name: "rl:register:abuse", limit: 10, windowSeconds: 900 },
   },
 }));
 
@@ -374,5 +382,50 @@ describe("Auth API routes", () => {
         }),
       }),
     );
+  });
+
+  describe("Concurrency & Lockout Defenses", () => {
+    it("Concurrency Defense - Parallel auth sweeps do not exhaust server capacity", async () => {
+      let callCount = 0;
+      vi.mocked(rateLimitByKey).mockImplementation(async (key) => {
+        if (key.includes("volumetric")) {
+          callCount++;
+          return callCount > 5;
+        }
+        return false;
+      });
+
+      const requests = Array.from({ length: 10 }, () =>
+        loginPost(
+          new Request("http://localhost/api/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ email: "user@example.com", password: "BadPassword123!" }),
+            headers: { "Content-Type": "application/json" },
+          }),
+        ),
+      );
+
+      const responses = await Promise.all(requests);
+      const rateLimitedCount = responses.filter((r) => r.status === 429).length;
+      expect(rateLimitedCount).toBeGreaterThan(0);
+    });
+
+    it("Registration Abuse & Order of Operations - blocks abuse upfront without parsing", async () => {
+      vi.mocked(isRateLimited).mockImplementation(async (key) => {
+        if (key.includes("abuse")) {
+          return true;
+        }
+        return false;
+      });
+
+      const req = new Request("http://localhost/api/auth/register", {
+        method: "POST",
+        body: "faulty json string ...",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const res = await registerPost(req);
+      expect(res.status).toBe(429);
+    });
   });
 });

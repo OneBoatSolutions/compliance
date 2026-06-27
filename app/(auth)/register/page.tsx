@@ -100,14 +100,16 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
-    <div className="w-full max-w-md rounded-2xl border border-slate-200/60 bg-white/80 backdrop-blur-md shadow-xl p-8 auth-route-enter">
-      <div className="mb-8 text-left">
+    <div className="w-full max-w-[460px] rounded-2xl border border-slate-200/60 bg-white/80 backdrop-blur-md shadow-xl flex flex-col pt-8 px-11 pb-8 auth-route-enter">
+      <div className="mb-5 text-left">
         <h2 className="text-3xl font-bold text-slate-900">Create your account</h2>
-        <p className="mt-2 text-sm text-slate-600">Start your compliance journey with Cipherion</p>
+        <p className="mt-1.5 text-sm text-slate-500">
+          Start your compliance journey with Cipherion
+        </p>
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           {/* Full Name */}
           <FormField
             control={form.control}
@@ -116,7 +118,7 @@ export default function RegisterPage() {
               <FormItem>
                 <FormLabel className="text-sm font-medium text-slate-700">Full Name</FormLabel>
                 <FormControl>
-                  <div className="relative mt-1">
+                  <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
                     <Input
                       placeholder="Enter your full name"
@@ -138,7 +140,7 @@ export default function RegisterPage() {
               <FormItem>
                 <FormLabel className="text-sm font-medium text-slate-700">Company Name</FormLabel>
                 <FormControl>
-                  <div className="relative mt-1">
+                  <div className="relative">
                     <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
                     <Input
                       placeholder="Your company or organization"
@@ -160,7 +162,7 @@ export default function RegisterPage() {
               <FormItem>
                 <FormLabel className="text-sm font-medium text-slate-700">Work Email</FormLabel>
                 <FormControl>
-                  <div className="relative mt-1">
+                  <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
                     <Input
                       type="email"
@@ -184,7 +186,7 @@ export default function RegisterPage() {
                 <FormLabel className="text-sm font-medium text-slate-700">Password</FormLabel>
 
                 <FormControl>
-                  <div className="relative mt-1">
+                  <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
 
                     <Input
@@ -232,7 +234,7 @@ export default function RegisterPage() {
                   Confirm Password
                 </FormLabel>
                 <FormControl>
-                  <div className="relative mt-1">
+                  <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
                     <Input
                       type={showConfirmPassword ? "text" : "password"}
@@ -261,9 +263,10 @@ export default function RegisterPage() {
             control={form.control}
             name="terms"
             render={({ field }) => (
-              <FormItem className="flex items-start space-x-2">
+              <FormItem className="flex items-start space-x-2.5 mt-5">
                 <FormControl>
                   <Checkbox
+                    id="terms-checkbox"
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     className="mt-0.5"
@@ -271,13 +274,24 @@ export default function RegisterPage() {
                 </FormControl>
 
                 <div>
-                  <FormLabel className="text-sm font-medium text-slate-600">
+                  <FormLabel
+                    htmlFor="terms-checkbox"
+                    className="text-sm font-medium text-slate-600"
+                  >
                     I agree to the{" "}
-                    <Link href="/terms" className="underline text-primary">
+                    <Link
+                      href="/terms"
+                      className="underline text-primary"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       Terms
                     </Link>{" "}
                     and{" "}
-                    <Link href="/privacy" className="underline text-primary">
+                    <Link
+                      href="/privacy"
+                      className="underline text-primary"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       Privacy Policy
                     </Link>
                   </FormLabel>
@@ -291,7 +305,7 @@ export default function RegisterPage() {
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full h-11 text-sm font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full h-11 mt-5 text-sm font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
@@ -309,8 +323,8 @@ export default function RegisterPage() {
           </p>
         </form>
       </Form>
-      <p className="mt-6 text-center text-xs text-slate-400">
-        © 2026 Cipherion. All rights reserved.
+      <p className="mt-5 text-center text-xs text-slate-400">
+        &copy; 2026 Cipherion. All rights reserved.
       </p>
     </div>
   );

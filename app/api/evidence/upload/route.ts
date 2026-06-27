@@ -79,7 +79,20 @@ export const POST = withErrorHandler(async (req: Request) => {
     }
 
     // 7. Magic-byte verification — confirms true file type.
+    //    For text/CSV uploads the validator may also neutralise formula-
+    //    injection fields and return a sanitizedBuffer; we use that for all
+    //    subsequent steps so only clean content reaches storage.
     const magicCheck = verifyFileMagic(file.buffer, file.mimetype);
+
+    // Oversized text/CSV: the file is valid UTF-8 but exceeds the in-memory
+    // scanning ceiling.  Return 413 so the client knows to split the file.
+    if (magicCheck.oversized) {
+      return errorResponse(
+        `File "${file.originalname}" is too large for content scanning: ${magicCheck.reason}`,
+        413,
+      );
+    }
+
     if (!magicCheck.valid) {
       return errorResponse(
         `File "${file.originalname}" failed content verification: ${magicCheck.reason}`,
@@ -87,8 +100,23 @@ export const POST = withErrorHandler(async (req: Request) => {
       );
     }
 
+    // If the validator sanitised formula-injection fields, switch to the clean
+    // buffer for the remainder of this file's processing pipeline.
+    const effectiveBuffer = magicCheck.sanitizedBuffer ?? file.buffer;
+    if (magicCheck.sanitizedBuffer) {
+      // eslint-disable-next-line no-console
+      console.info(
+        `[upload] Neutralised ${magicCheck.neutralizedFieldCount ?? 0} formula-injection ` +
+          `field(s) in "${file.originalname}" — persisting sanitised content.`,
+      );
+      // Update the file object in place so the storage step picks up the
+      // sanitised buffer without needing extra branching below.
+      file.buffer = effectiveBuffer;
+      file.size = effectiveBuffer.length;
+    }
+
     // 8. Virus scan (ClamAV stub — fail-open; set CLAMAV_FAIL_OPEN=false to harden)
-    const scanResult = await scanFileBuffer(file.buffer);
+    const scanResult = await scanFileBuffer(effectiveBuffer);
     if (!scanResult.clean) {
       return errorResponse(
         `File "${file.originalname}" failed virus scan: ${scanResult.threat ?? "threat detected"}`,
