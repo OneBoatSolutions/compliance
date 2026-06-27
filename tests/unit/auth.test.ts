@@ -29,20 +29,42 @@ vi.mock("bcrypt", () => ({
 
 vi.mock("@/lib/rate-limiter", () => ({
   rateLimitByKey: vi.fn(),
+  isRateLimited: vi.fn(),
+  incrementFailureCount: vi.fn(),
+  resetAttempts: vi.fn(),
   RATE_LIMIT_CONFIGS: {
     auth: { name: "rl:auth", limit: 10, windowSeconds: 900 },
     sensitive: { name: "rl:sensitive", limit: 5, windowSeconds: 3600 },
+    loginIpVolumetric: { name: "rl:login:ip:volumetric", limit: 20, windowSeconds: 60 },
+    registerIp: { name: "rl:register:ip", limit: 50, windowSeconds: 900 },
+    registerEmail: { name: "rl:register:email", limit: 5, windowSeconds: 3600 },
+    registerAbuse: { name: "rl:register:abuse", limit: 10, windowSeconds: 900 },
   },
+}));
+
+vi.mock("next/headers", () => ({
+  headers: vi.fn().mockResolvedValue({
+    get: vi.fn().mockReturnValue("127.0.0.1"),
+  }),
 }));
 
 import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
-import { rateLimitByKey } from "@/lib/rate-limiter";
+import {
+  rateLimitByKey,
+  isRateLimited,
+  incrementFailureCount,
+  resetAttempts,
+} from "@/lib/rate-limiter";
 import { authOptions } from "@/lib/auth";
 
 describe("auth.ts: next-auth configuration", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(rateLimitByKey).mockResolvedValue(false);
+    vi.mocked(isRateLimited).mockResolvedValue(false);
+    vi.mocked(incrementFailureCount).mockResolvedValue(undefined);
+    vi.mocked(resetAttempts).mockResolvedValue(undefined);
   });
 
   it("configures jwt session strategy with 7-day max age", () => {
@@ -130,7 +152,7 @@ describe("auth.ts: next-auth configuration", () => {
     });
 
     it("throws when identifier is locked", async () => {
-      vi.mocked(rateLimitByKey).mockResolvedValue(true);
+      vi.mocked(isRateLimited).mockResolvedValue(true);
       const fn = getAuthorize();
 
       await expect(
@@ -227,6 +249,68 @@ describe("auth.ts: next-auth configuration", () => {
       await expect(fn!({ email: "a@b.com", password: "secret" }, { headers: {} })).rejects.toThrow(
         "Invalid email or password",
       );
+    });
+
+    it("throws when volumetric IP limit is exceeded", async () => {
+      vi.mocked(rateLimitByKey).mockImplementation(async (key) => {
+        if (key.includes("volumetric")) {
+          return true;
+        }
+        return false;
+      });
+      const fn = getAuthorize();
+
+      await expect(
+        fn!(
+          { email: "a@b.com", password: "secret" },
+          { headers: { "x-forwarded-for": "127.0.0.1" } },
+        ),
+      ).rejects.toThrow("Too many login attempts");
+    });
+
+    it("increments failure count on password mismatch", async () => {
+      vi.mocked(prisma.user.findUnique).mockResolvedValue({
+        id: "u1",
+        email: "a@b.com",
+        name: "User",
+        role: "USER",
+        password: "hash",
+        isActive: true,
+      } as never);
+      vi.mocked(bcrypt.compare).mockResolvedValue(false as never);
+      const fn = getAuthorize();
+
+      await expect(fn!({ email: "a@b.com", password: "wrong" }, {})).rejects.toThrow(
+        "Invalid email or password",
+      );
+      expect(incrementFailureCount).toHaveBeenCalled();
+    });
+
+    it("resets attempts on successful authorize", async () => {
+      vi.mocked(prisma.user.findUnique).mockResolvedValue({
+        id: "u1",
+        email: "a@b.com",
+        name: "Alice",
+        role: "ADMIN",
+        password: "hash",
+        isActive: true,
+      } as never);
+      vi.mocked(bcrypt.compare).mockResolvedValue(true as never);
+      vi.mocked(prisma.user.update).mockResolvedValue({} as never);
+      const fn = getAuthorize();
+
+      await fn!({ email: "a@b.com", password: "secret" }, {});
+      expect(resetAttempts).toHaveBeenCalled();
+    });
+
+    it("does not increment failure count on database connection error", async () => {
+      vi.mocked(prisma.user.findUnique).mockRejectedValue(new Error("DB Down"));
+      const fn = getAuthorize();
+
+      await expect(fn!({ email: "a@b.com", password: "secret" }, {})).rejects.toThrow(
+        "Internal server error",
+      );
+      expect(incrementFailureCount).not.toHaveBeenCalled();
     });
   });
 });

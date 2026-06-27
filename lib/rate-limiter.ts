@@ -24,6 +24,7 @@
 
 import { NextResponse } from "next/server";
 import { redis } from "@/lib/redis";
+import crypto from "crypto";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -73,6 +74,30 @@ export const RATE_LIMIT_CONFIGS = {
     name: "rl:sensitive",
     limit: 5,
     windowSeconds: 60 * 60,
+  },
+  /** IP Volumetric preset: lightweight upfront throttling to mitigate bcrypt concurrency DoS. */
+  loginIpVolumetric: {
+    name: "rl:login:ip:volumetric",
+    limit: 20,
+    windowSeconds: 60,
+  },
+  /** Registration IP budget: higher allowance for shared office/NAT/VPN networks. */
+  registerIp: {
+    name: "rl:register:ip",
+    limit: 50,
+    windowSeconds: 15 * 60,
+  },
+  /** Registration Email budget: throttles identity verification. */
+  registerEmail: {
+    name: "rl:register:email",
+    limit: 5,
+    windowSeconds: 60 * 60,
+  },
+  /** Registration Abuse budget: strict rate limiting on malformed JSON or invalid validation attempts. */
+  registerAbuse: {
+    name: "rl:register:abuse",
+    limit: 10,
+    windowSeconds: 15 * 60,
   },
 } satisfies Record<string, RateLimitConfig>;
 
@@ -244,5 +269,61 @@ export async function rateLimitByKey(key: string, config: RateLimitConfig): Prom
   } catch (err) {
     console.warn("[rate-limiter] Redis unavailable, allowing request (fail-open):", err);
     return false;
+  }
+}
+
+/**
+ * Checks if a key has exceeded its rate limit without incrementing the count.
+ * Returns true if locked, false otherwise.
+ * Fail-opens if Redis is unavailable.
+ */
+export async function isRateLimited(key: string, config: RateLimitConfig): Promise<boolean> {
+  if (process.env.DISABLE_RATE_LIMIT === "true") {
+    return false;
+  }
+  try {
+    const now = Date.now();
+    const windowStart = now - config.windowSeconds * 1000;
+    const count = await redis.zcount(key, windowStart, now);
+    return count >= config.limit;
+  } catch (err) {
+    console.warn("[rate-limiter] Redis unavailable, allowing request (fail-open):", err);
+    return false;
+  }
+}
+
+/**
+ * Increments the failure count for a specific key.
+ * Uses a Redis pipeline to zrem old items, zadd the new failure, and expire the key.
+ * Fail-opens if Redis is unavailable.
+ */
+export async function incrementFailureCount(key: string, windowSeconds: number): Promise<void> {
+  if (process.env.DISABLE_RATE_LIMIT === "true") {
+    return;
+  }
+  try {
+    const now = Date.now();
+    const pipeline = redis.pipeline();
+    pipeline.zremrangebyscore(key, 0, now - windowSeconds * 1000);
+    pipeline.zadd(key, now, `${now}-${crypto.randomUUID()}`);
+    pipeline.expire(key, windowSeconds);
+    await pipeline.exec();
+  } catch (err) {
+    console.warn("[rate-limiter] Redis unavailable, could not increment failure count:", err);
+  }
+}
+
+/**
+ * Flushes/deletes the sliding window history for a specific key (resets attempts).
+ * Fail-opens if Redis is unavailable.
+ */
+export async function resetAttempts(key: string): Promise<void> {
+  if (process.env.DISABLE_RATE_LIMIT === "true") {
+    return;
+  }
+  try {
+    await redis.del(key);
+  } catch (err) {
+    console.warn("[rate-limiter] Redis unavailable, could not reset attempts:", err);
   }
 }
