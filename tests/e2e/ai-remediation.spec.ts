@@ -216,8 +216,8 @@ test.describe("AI Remediation Plan Flow", () => {
     await expect(page.locator("text=Data Protection Policy")).toBeVisible();
 
     // Verify Technical Controls in the sidebar are visible
-    await expect(page.locator("text=MFA Enforcement")).toBeVisible();
-    await expect(page.locator("text=Database Encryption")).toBeVisible();
+    await expect(page.locator("li", { hasText: "MFA Enforcement" })).toBeVisible();
+    await expect(page.locator("li", { hasText: "Database Encryption" })).toBeVisible();
 
     // Verify effort total in sidebar (12 + 8 + 4 = 24h)
     await expect(page.locator("text=24h")).toBeVisible();

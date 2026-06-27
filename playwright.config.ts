@@ -10,6 +10,7 @@ const baseURL = process.env.NEXTAUTH_URL || `http://localhost:${port}`;
 
 export default defineConfig({
   testDir: "./tests/e2e",
+  outputDir: "./test-results-new",
   fullyParallel: false, // Turn off fully parallel to avoid db lock collision during test runs
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -28,9 +29,12 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "pnpm run dev",
+    command: "npm run start",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
+    env: {
+      DISABLE_RATE_LIMIT: "true",
+    },
   },
 });

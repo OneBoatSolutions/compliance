@@ -346,6 +346,7 @@ test.describe("Admin User Management", () => {
 
     // Filter by Status: Inactive
     await adminPage.locator("select").first().selectOption(""); // reset
+    await adminPage.waitForResponse((response) => response.url().includes("/api/admin/users"));
     await adminPage.locator("select").nth(1).selectOption("false");
     rows = adminPage.locator("table tbody tr");
     await expect(rows).toHaveCount(1);

@@ -818,7 +818,7 @@ space-y-10
                 >
                   <button
                     type="submit"
-                    aria-label="Continue to AI recommendations"
+                    aria-label="Next: AI Recommendations"
                     disabled={
                       isSubmitting ||
                       (currentStep === 1 && !isStep1Valid) ||

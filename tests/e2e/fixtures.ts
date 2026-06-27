@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks, no-empty-pattern */
 import { test as base, Page } from "@playwright/test";
 
 const adminUserCredentials = {
@@ -17,10 +18,10 @@ export const test = base.extend<{
   adminPage: Page;
   userPage: Page;
 }>({
-  adminUser: async (args, use) => {
+  adminUser: async ({}, use) => {
     await use(adminUserCredentials);
   },
-  regularUser: async (args, use) => {
+  regularUser: async ({}, use) => {
     await use(regularUserCredentials);
   },
   loggedInPage: async ({ page }, use) => {

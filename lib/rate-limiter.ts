@@ -145,6 +145,9 @@ export async function rateLimit(
   req: Request,
   config: RateLimitConfig,
 ): Promise<NextResponse | null> {
+  if (process.env.DISABLE_RATE_LIMIT === "true") {
+    return null;
+  }
   const key = getIdentifier(req, config);
 
   let count: number;
@@ -190,6 +193,9 @@ export async function rateLimitByUser(
   userId: string,
   config: RateLimitConfig,
 ): Promise<NextResponse | null> {
+  if (process.env.DISABLE_RATE_LIMIT === "true") {
+    return null;
+  }
   const url = new URL(req.url);
   const key = `${config.name}:user:${userId}:${url.pathname}`;
 
@@ -229,6 +235,9 @@ export async function rateLimitByUser(
  * Fail-opens if Redis is unavailable.
  */
 export async function rateLimitByKey(key: string, config: RateLimitConfig): Promise<boolean> {
+  if (process.env.DISABLE_RATE_LIMIT === "true") {
+    return false;
+  }
   try {
     const count = await getSlidingWindowCount(key, config.windowSeconds);
     return count >= config.limit;

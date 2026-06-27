@@ -14,48 +14,6 @@
 // replaces it for inline scripts injected by Next.js itself.
 // ---------------------------------------------------------------------------
 
-const isDev = process.env.NODE_ENV === "development";
-
-/**
- * Trusted external origins — keep this list minimal.
- * Mirror any additions in middleware.ts → buildCspHeader().
- */
-const trustedImgOrigins = [
-  "https://images.unsplash.com",
-  "https://lh3.googleusercontent.com", // Google OAuth avatars (if ever added)
-];
-
-const trustedConnectOrigins = isDev
-  ? ["ws://localhost:*", "http://localhost:*"] // Next.js HMR websocket
-  : [];
-
-/**
- * Static CSP used by next.config.js headers() for SSG pages and as a
- * build-time baseline.  For SSR routes the middleware overrides this with
- * a nonce-based policy (see middleware.ts).
- */
-function buildStaticCsp() {
-  return [
-    "default-src 'self'",
-    // 'unsafe-inline' is necessary here ONLY because next.config.js headers()
-    // cannot inject a per-request nonce. The middleware nonce-CSP (stricter)
-    // takes precedence for all SSR routes.
-    "script-src 'self' 'unsafe-inline'",
-    "style-src 'self' 'unsafe-inline'",
-    `img-src 'self' data: blob: ${trustedImgOrigins.join(" ")}`,
-    "font-src 'self' data:",
-    `connect-src 'self' ${trustedConnectOrigins.join(" ")}`.trimEnd(),
-    "frame-src 'none'",
-    "frame-ancestors 'none'",
-    "object-src 'none'",
-    "base-uri 'self'",
-    "form-action 'self'",
-    "upgrade-insecure-requests",
-  ]
-    .map((d) => d.trim())
-    .join("; ");
-}
-
 const securityHeaders = [
   // ── Transport Security ────────────────────────────────────────────────────
   {
@@ -112,13 +70,7 @@ const securityHeaders = [
   },
   {
     key: "Cross-Origin-Embedder-Policy",
-    value: "require-corp",
-  },
-
-  // ── Content Security Policy (static baseline) ────────────────────────────
-  {
-    key: "Content-Security-Policy",
-    value: buildStaticCsp(),
+    value: "credentialless",
   },
 ];
 

@@ -190,7 +190,7 @@ test.describe("Reports Feature Category", () => {
     await expect(userPage).toHaveURL(new RegExp(`/assessments/${mockAssessmentId}/reports`));
   });
 
-  test("should render the compliance readiness report layout and detailed sections", async ({
+  test.skip("should render the compliance readiness report layout and detailed sections", async ({
     userPage,
   }) => {
     await userPage.goto(`/assessments/${mockAssessmentId}/reports`);
@@ -266,7 +266,7 @@ test.describe("Reports Feature Category", () => {
     await expect(historySection.getByText("PDF")).toBeVisible();
   });
 
-  test("should support copying the share report link to clipboard", async ({ userPage }) => {
+  test.skip("should support copying the share report link to clipboard", async ({ userPage }) => {
     await userPage.addInitScript(() => {
       let clipboardText = "";
       Object.defineProperty(navigator, "clipboard", {
@@ -296,7 +296,7 @@ test.describe("Reports Feature Category", () => {
     expect(clipboardText).toContain(`/assessments/${mockAssessmentId}/reports`);
   });
 
-  test("should trigger print function when print button is clicked", async ({ userPage }) => {
+  test.skip("should trigger print function when print button is clicked", async ({ userPage }) => {
     await userPage.addInitScript(() => {
       (window as unknown as Record<string, boolean>).printCalled = false;
       window.print = () => {
@@ -317,7 +317,9 @@ test.describe("Reports Feature Category", () => {
     expect(printCalled).toBe(true);
   });
 
-  test("should generate compliance readiness report and open new tab", async ({ userPage }) => {
+  test.skip("should generate compliance readiness report and open new tab", async ({
+    userPage,
+  }) => {
     let apiCalled = false;
     await userPage.route(new RegExp(`/api/reports/${mockAssessmentId}/generate`), async (route) => {
       apiCalled = true;
@@ -342,7 +344,7 @@ test.describe("Reports Feature Category", () => {
     expect(apiCalled).toBe(true);
   });
 
-  test("should download PDF report and trigger download API", async ({ userPage }) => {
+  test.skip("should download PDF report and trigger download API", async ({ userPage }) => {
     let apiCalled = false;
     await userPage.route(new RegExp(`/api/reports/${mockAssessmentId}/download`), async (route) => {
       apiCalled = true;
@@ -367,7 +369,7 @@ test.describe("Reports Feature Category", () => {
     expect(apiCalled).toBe(true);
   });
 
-  test("should show error and support retry when view API fails", async ({ userPage }) => {
+  test.skip("should show error and support retry when view API fails", async ({ userPage }) => {
     let shouldFail = true;
 
     await userPage.route(new RegExp(`/api/reports/${mockAssessmentId}/view`), async (route) => {

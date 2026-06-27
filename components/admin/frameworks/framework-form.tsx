@@ -253,7 +253,7 @@ focus-visible:ring-[#6d18ff]/30"
             </button>
             <button
               type="submit"
-              aria-label="Create compliance framework"
+              aria-label="Create Framework"
               disabled={isSubmitting}
               className="rounded-2xl bg-[#6d18ff] px-7 py-4 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(109,24,255,0.28)] transition hover:scale-[1.01] hover:bg-[#5412cc] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none
 focus-visible:ring-4

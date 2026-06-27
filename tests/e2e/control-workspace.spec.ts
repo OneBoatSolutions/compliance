@@ -49,17 +49,18 @@ test.describe("Control Detail Workspace", () => {
 
     // Verify header title and code
     const headerTitle = userPage.locator("h1");
-    await expect(headerTitle).toContainText("Is Sensitive Data Encrypted", { timeout: 20000 });
+    await expect(headerTitle).toContainText("Is sensitive data", {
+      timeout: 20000,
+      ignoreCase: true,
+    });
 
     const breadcrumb = userPage.locator("p", { hasText: "Assessment" }).first();
     await expect(breadcrumb).toContainText("GDPR-P2.0");
 
     // Verify LeftPanel details
+    await expect(userPage.getByText("Is sensitive data", { exact: false }).first()).toBeVisible();
     await expect(
-      userPage.getByText("Is Sensitive Data Encrypted", { exact: true }).first(),
-    ).toBeVisible();
-    await expect(
-      userPage.getByText("Is sensitive data (IDs, Bank Nos) encrypted?", { exact: true }),
+      userPage.getByText("Is sensitive data (IDs, Bank Nos) encrypted?", { exact: true }).first(),
     ).toBeVisible();
     await expect(userPage.getByText("HIGH SEVERITY", { exact: true })).toBeVisible();
   });

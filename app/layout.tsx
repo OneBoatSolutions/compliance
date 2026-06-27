@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // Read the nonce forwarded by middleware.ts via a custom request header.
   // Falls back to undefined (not empty string) so the attribute is omitted
   // entirely when middleware hasn't run (e.g. static export fallback).
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const nonce = (await headers()).get("x-nonce") || undefined;
 
   return (
     // Next.js SSR reads this nonce prop and propagates it to all
@@ -54,11 +54,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body
         className={`${inter.variable} ${robotoMono.variable} font-sans antialiased bg-background text-foreground`}
       >
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=optional"
-        />
         {/* Pass nonce to providers so child <Script> components can consume it */}
         <AppProviders nonce={nonce}>{children}</AppProviders>
       </body>
