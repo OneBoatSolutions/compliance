@@ -22,6 +22,21 @@ const getCachedFramework = unstable_cache(
       include: {
         controls: {
           orderBy: { code: "asc" },
+          select: {
+            id: true,
+            frameworkId: true,
+            code: true,
+            title: true,
+            description: true,
+            category: true,
+            severity: true,
+            weight: true,
+            createdAt: true,
+            updatedAt: true,
+            // metadata and isGateway are intentionally omitted:
+            // metadata is a raw JSON blob not rendered in the admin UI.
+            // isGateway is a server-only scoring flag not surfaced to admins.
+          },
         },
       },
     });

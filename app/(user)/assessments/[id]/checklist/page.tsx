@@ -2,10 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { FileText } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { Search } from "lucide-react";
+import { FileText, Search } from "lucide-react";
 import {
   deleteAssessment,
   duplicateAssessment,

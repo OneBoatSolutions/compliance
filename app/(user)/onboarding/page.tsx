@@ -552,8 +552,6 @@ export default function OnboardingPage() {
   };
 
   const onError = (errors: FieldErrors<OnboardingFormValues>) => {
-    // eslint-disable-next-line no-console
-    console.log("FORM ERRORS", errors);
     const firstError = Object.keys(errors)[0] as keyof OnboardingFormValues;
 
     const el = document.querySelector(`[name="${firstError}"]`) as HTMLElement | null;
