@@ -1050,36 +1050,43 @@ export default function AnalyticsPage() {
           </Card>
         </div>
 
-        {/* ── NON-COMPLIANT CATEGORIES + RECENT ACTIVITY ───────────────── */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-          {/* Category Bar */}
-          <Card className="xl:col-span-2 p-5">
-            <div className="mb-4">
+        {/* ── NON-COMPLIANT CATEGORIES ─────────────────────────────────── */}
+        <Card className="p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+            <div>
               <h3 className="text-[20px] font-semibold text-foreground">
                 Top Areas Requiring Attention
               </h3>
               <p className="text-sm text-muted-foreground">Highest non-compliance categories</p>
             </div>
-            {categoryData.length === 0 ||
-            categoryData.every(
-              (d) => d.compliant + d.partial + d.nonCompliant + d.notApplicable === 0,
-            ) ? (
-              <EmptyState
-                title="No category breakdown available"
-                description="Category analytics will appear once controls are evaluated."
-              />
-            ) : (
-              <div className="flex justify-center mt-6 h-[360px]">
-                <CategoryBar data={categoryData} />
-              </div>
-            )}
             {filters.category && (
-              <div className="mt-2 text-xs text-primary font-semibold">
-                Filtered by: {filters.category}
+              <div className="flex items-center gap-2 self-start sm:self-auto bg-primary/10 text-primary text-xs font-semibold px-3 py-1.5 rounded-full border border-primary/20 transition-all">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                Filtered by: {filters.category.replaceAll("_", " ")}
+                <button
+                  onClick={() => setFilters((f) => ({ ...f, category: "" }))}
+                  className="ml-1.5 text-muted-foreground hover:text-foreground font-black text-xs cursor-pointer"
+                  title="Clear filter"
+                >
+                  ✕
+                </button>
               </div>
             )}
-          </Card>
-        </div>
+          </div>
+          {categoryData.length === 0 ||
+          categoryData.every(
+            (d) => d.compliant + d.partial + d.nonCompliant + d.notApplicable === 0,
+          ) ? (
+            <EmptyState
+              title="No category breakdown available"
+              description="Category analytics will appear once controls are evaluated."
+            />
+          ) : (
+            <div className="flex justify-center h-[500px] w-full">
+              <CategoryBar data={categoryData} />
+            </div>
+          )}
+        </Card>
 
         {/* ── EXPORT + SHARE ────────────────────────────────────────────── */}
         <div className="flex justify-end gap-3 pb-8">

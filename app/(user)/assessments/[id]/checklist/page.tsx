@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
 import { FileText, Search } from "lucide-react";
 import {
@@ -565,7 +567,7 @@ export default function ChecklistPage() {
   return (
     <div className="p-6 space-y-6">
       {/* HEADER */}
-      <div className="space-y-2 p-6">
+      <div className="space-y-2 p-6 pb-0">
         {/* Breadcrumb */}
         <p className="text-sm text-gray-500 hover:text-purple-600 cursor-pointer">
           Assessments / <span className="text-gray-800 font-medium">Assessment {assessmentId}</span>
@@ -610,6 +612,7 @@ export default function ChecklistPage() {
       </div>
 
       <MetricsBar
+        className="!mt-2"
         controls={allControls}
         overallScore={overallScore}
         frameworkScores={scoreQuery.data?.frameworkScores}

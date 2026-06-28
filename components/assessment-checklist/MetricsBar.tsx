@@ -21,6 +21,7 @@ interface Props {
   isUpdating?: boolean;
   onFilterFramework?: (fw: string) => void;
   onFilterStatus?: (status: Status) => void;
+  className?: string;
 }
 
 export default function MetricsBar({
@@ -31,6 +32,7 @@ export default function MetricsBar({
   isUpdating = false,
   onFilterFramework,
   onFilterStatus,
+  className,
 }: Props) {
   const fallbackTotal = controls.length;
   const fallbackCompliant = controls.filter((c) => c.status === "COMPLIANT").length;
@@ -85,28 +87,28 @@ export default function MetricsBar({
     <div
       className={`sticky top-15 z-40 bg-white border rounded-xl shadow-sm grid grid-cols-4 divide-x divide-slate-100 items-stretch transition-all duration-300 ${
         isUpdating ? "ring-1 ring-purple-200" : ""
-      }`}
+      } ${className || ""}`}
     >
       {/*  1. Overall Progress */}
-      <div className="flex items-center p-6">
-        <div className="relative w-20 h-20">
-          <svg className="w-full h-full -rotate-90">
+      <div className="flex items-center py-3 px-6 gap-4">
+        <div className="relative w-18 h-18 shrink-0">
+          <svg className="w-full h-full -rotate-90" viewBox="0 0 72 72">
             <circle
-              cx="40"
-              cy="40"
-              r="34"
+              cx="36"
+              cy="36"
+              r="30"
               strokeWidth="6"
               className="text-gray-200"
               stroke="currentColor"
               fill="none"
             />
             <circle
-              cx="40"
-              cy="40"
-              r="34"
+              cx="36"
+              cy="36"
+              r="30"
               strokeWidth="6"
-              strokeDasharray="213"
-              strokeDashoffset={213 - (percent / 100) * 213}
+              strokeDasharray="188"
+              strokeDashoffset={188 - (percent / 100) * 188}
               className="text-purple-600"
               stroke="currentColor"
               fill="none"
@@ -116,39 +118,47 @@ export default function MetricsBar({
             />
           </svg>
 
-          <span className="absolute inset-0 flex items-center justify-center text-lg font-bold">
+          <span className="absolute inset-0 flex items-center justify-center text-base font-bold text-gray-900">
             {percent}%
           </span>
         </div>
 
-        <div>
-          <p className="text-xs uppercase font-semibold text-gray-500">Overall Compliance</p>
-          <p className="font-semibold text-gray-900">
+        <div className="flex flex-col justify-center">
+          <p className="text-[11px] tracking-wider uppercase font-semibold text-gray-500">
+            Overall Compliance
+          </p>
+          <p className="font-extrabold text-gray-900 text-base mt-0.5">
             {compliant}/{total} items
           </p>
-          {isUpdating && <p className="text-[11px] text-purple-600 animate-pulse">Updating...</p>}
+          {isUpdating && (
+            <p className="text-[10px] text-purple-600 animate-pulse mt-0.5">Updating...</p>
+          )}
         </div>
       </div>
 
       {/*  2. Framework Breakdown */}
-      <div className="p-6">
-        <p className="text-xs uppercase font-semibold text-gray-500 mb-3">Framework Breakdown</p>
+      <div className="py-3 px-6 flex flex-col justify-center">
+        <p className="text-[10px] tracking-wider uppercase font-semibold text-gray-500 mb-2">
+          Framework Breakdown
+        </p>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           {frameworkStats.map((f) => (
             <div
               key={f.id}
               onClick={() => onFilterFramework?.(f.id)}
-              className="cursor-pointer hover:opacity-80"
+              className="cursor-pointer hover:opacity-80 group"
             >
-              <div className="flex justify-between text-sm">
-                <span className="flex items-center gap-2">{f.fw}</span>
-                <span className="text-gray-600">{f.pct}%</span>
+              <div className="flex justify-between text-xs font-medium text-gray-700">
+                <span className="flex items-center gap-2 group-hover:text-purple-600 transition-colors">
+                  {f.fw}
+                </span>
+                <span className="text-gray-500">{f.pct}%</span>
               </div>
 
-              <div className="h-2 bg-gray-200 rounded mt-1">
+              <div className="h-1.5 bg-gray-200 rounded mt-1 overflow-hidden">
                 <div
-                  className="h-2 bg-purple-600 rounded"
+                  className="h-1.5 bg-purple-600 rounded"
                   style={{
                     width: `${f.pct}%`,
                     transition: "width 320ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -161,10 +171,12 @@ export default function MetricsBar({
       </div>
 
       {/*  3. Status Distribution */}
-      <div className="p-6 flex flex-col justify-center">
-        <p className="text-xs uppercase font-semibold text-gray-500 mb-3">Status Distribution</p>
+      <div className="py-3 px-6 flex flex-col justify-center">
+        <p className="text-[10px] tracking-wider uppercase font-semibold text-gray-500 mb-2">
+          Status Distribution
+        </p>
 
-        <div className="h-3 flex rounded overflow-hidden">
+        <div className="h-2 flex rounded overflow-hidden">
           <div
             title={`Compliant: ${compliant}`}
             onClick={() => onFilterStatus?.("COMPLIANT")}
@@ -206,10 +218,25 @@ export default function MetricsBar({
         </div>
 
         {/* Labels */}
-        <div className="flex justify-between text-xs text-gray-500 mt-2">
-          <span className="flex items-center gap-1">🟢 {compliant}</span>
-          <span className="flex items-center gap-1">🟡 {partial}</span>
-          <span className="flex items-center gap-1">🔴 {gap}</span>
+        <div className="flex justify-between text-[11px] text-gray-500 mt-1.5 font-medium">
+          <span
+            className="flex items-center gap-1 cursor-pointer hover:text-green-600 transition-colors"
+            onClick={() => onFilterStatus?.("COMPLIANT")}
+          >
+            🟢 {compliant}
+          </span>
+          <span
+            className="flex items-center gap-1 cursor-pointer hover:text-yellow-600 transition-colors"
+            onClick={() => onFilterStatus?.("PARTIALLY_COMPLIANT")}
+          >
+            🟡 {partial}
+          </span>
+          <span
+            className="flex items-center gap-1 cursor-pointer hover:text-red-600 transition-colors"
+            onClick={() => onFilterStatus?.("NOT_COMPLIANT")}
+          >
+            🔴 {gap}
+          </span>
           <span className="flex items-center gap-1">⚪ {notStarted}</span>
         </div>
       </div>
@@ -217,20 +244,24 @@ export default function MetricsBar({
       {/* 🔹 4. Critical Issues */}
       <div
         onClick={() => onFilterStatus?.("NOT_COMPLIANT")}
-        className="p-6 flex flex-col justify-center cursor-pointer hover:opacity-80"
+        className="py-3 px-6 flex flex-col justify-center cursor-pointer hover:opacity-80 group"
       >
-        <p className="text-xs uppercase font-semibold text-gray-500">Critical Issues</p>
+        <p className="text-[10px] tracking-wider uppercase font-semibold text-gray-500">
+          Critical Issues
+        </p>
 
-        <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center justify-between mt-1">
           {/* LEFT: number + text */}
           <div className="flex items-baseline gap-2">
-            <span className="text-red-500 text-3xl font-bold tracking-tight">{gap}</span>
-            <span className="text-red-500 text-sm font-medium">Attention Required</span>
+            <span className="text-red-500 text-3xl font-extrabold tracking-tight">{gap}</span>
+            <span className="text-red-500 text-xs font-bold uppercase tracking-wider">
+              Attention Required
+            </span>
           </div>
 
           {/* RIGHT: icon */}
-          <span className="bg-red-50 rounded-sm p-2 text-red-500 text-xl">
-            <TriangleAlert />
+          <span className="bg-red-50 rounded-lg p-2 text-red-500 transition-colors group-hover:bg-red-100">
+            <TriangleAlert className="w-5 h-5" />
           </span>
         </div>
       </div>
