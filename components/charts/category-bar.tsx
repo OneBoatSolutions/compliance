@@ -66,16 +66,16 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
 }
 
 interface CustomYAxisTickProps {
-  x: number;
-  y: number;
-  payload: {
+  x?: number;
+  y?: number;
+  payload?: {
     value: string;
   };
 }
 
 const CustomYAxisTick = (props: CustomYAxisTickProps) => {
-  const { x, y, payload } = props;
-  const val = payload.value;
+  const { x = 0, y = 0, payload } = props;
+  const val = payload?.value ?? "";
   // Truncate only extremely long category names to make sure they are written fully
   const truncated = val.length > 60 ? `${val.substring(0, 57)}...` : val;
   return (

@@ -28,7 +28,7 @@ export default function Sidebar({
 
   return (
     <aside
-      className={`fixed top-16 left-0 h-[calc(100vh-4rem)] border-r border-gray-200 flex flex-col transition-all duration-300 ${
+      className={`fixed top-16 left-0 h-[calc(100vh-4rem)] border-r border-gray-200 flex flex-col transition-all duration-300 overflow-hidden ${
         collapsed ? "w-20" : "w-60"
       } ${isMobile ? "flex w-60" : "hidden md:flex"} bg-gray-50`}
     >
@@ -82,7 +82,7 @@ export default function Sidebar({
 
       {/*  SUPPORT CARD */}
       {!collapsed && (
-        <div className="p-4">
+        <div className="flex-shrink-0 p-4">
           <div className="rounded-xl border border-gray-200 bg-white p-4 text-sm shadow-sm">
             <div className="flex items-center gap-2 mb-2">
               <LifeBuoy className="w-4 h-4 text-primary" />

@@ -556,7 +556,8 @@ test.describe("Assessment Checklist E2E", () => {
 
     // Overall Compliance Progress Check
     await expect(userPage.locator("text=Overall Compliance")).toBeVisible();
-    await expect(userPage.locator("text=26%")).toBeVisible(); // overall score: 26%
+    await expect(userPage.locator("text=92%")).toBeVisible(); // completionPercent: 92%
+    await expect(userPage.locator("text=26% Compliance Rate")).toBeVisible(); // overall score: 26%
 
     // Verify framework groups are listed in collapsed form
     await expect(userPage.locator("text=GDPR - Data Protection")).toBeVisible({ timeout: 20000 });
@@ -707,6 +708,6 @@ test.describe("Assessment Checklist E2E", () => {
     await expect(userPage.locator("text=Control status updated.")).toBeVisible();
 
     // Verify Overall Compliance score updates to 37%
-    await expect(userPage.locator("text=37%")).toBeVisible();
+    await expect(userPage.locator("text=37% Compliance Rate")).toBeVisible();
   });
 });

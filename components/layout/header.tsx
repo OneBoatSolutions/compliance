@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import MobileSidebar from "./mobile-sidebar";
 import { HelpCircle, Bell, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
@@ -14,7 +13,6 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/stores/auth-store";
-import { isNavItemActive } from "@/lib/nav-utils";
 
 interface HeaderItem {
   label: string;
@@ -26,7 +24,6 @@ interface HeaderProps {
 }
 
 export default function Header({ items = [] }: HeaderProps) {
-  const pathname = usePathname();
   const router = useRouter();
   const { logout, user } = useAuthStore();
   const initial = user?.name?.charAt(0)?.toUpperCase() ?? "U";
@@ -39,9 +36,6 @@ export default function Header({ items = [] }: HeaderProps) {
       toast.error("Unable to log out. Please try again.");
     }
   };
-
-  // Remove Settings from header
-  const headerItems = items.filter((item) => item.label !== "Settings");
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 px-6 flex items-center justify-between bg-white border-b border-gray-200">
@@ -58,27 +52,6 @@ export default function Header({ items = [] }: HeaderProps) {
           <span className="font-semibold text-black">Cipherion</span>
         </div>
       </div>
-
-      {/*  CENTER NAV */}
-      <nav className="hidden md:flex items-center gap-8">
-        {headerItems.map((item) => {
-          const isActive = isNavItemActive(item, pathname);
-
-          return (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={`text-sm transition-all duration-200 ${
-                isActive
-                  ? "text-primary font-semibold scale-105 underline underline-offset-4"
-                  : "text-gray-600 hover:text-primary hover:font-semibold hover:scale-105 hover:underline underline-offset-4"
-              }`}
-            >
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
 
       {/*  RIGHT */}
       <div className="flex items-center gap-4">

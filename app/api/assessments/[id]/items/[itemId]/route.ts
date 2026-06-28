@@ -4,6 +4,7 @@ import { recalculateAssessmentScore } from "@/lib/assessment-score";
 import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { updateAssessmentItemSchema } from "@/lib/validations/assessment";
+import { revalidateTag } from "next/cache";
 
 interface RouteContext {
   params: Promise<{
@@ -92,6 +93,8 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
 
     return score;
   });
+
+  revalidateTag("dashboard");
 
   return successResponse({ score: data.score }, 200);
 });

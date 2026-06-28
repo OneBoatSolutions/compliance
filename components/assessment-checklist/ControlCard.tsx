@@ -4,6 +4,7 @@ import { Control, type Status } from "@/app/(user)/assessments/[id]/checklist/ty
 import { useState } from "react";
 import Link from "next/link";
 import StatusDropdown from "./StatusDropdown";
+import { toast } from "sonner";
 import {
   CheckCircle2,
   Circle,
@@ -141,7 +142,12 @@ export default function ControlCard({
                 Status: {control.status}
               </p>
               <p>Updated: {control.updatedAt}</p>
-              <button className="text-purple-600 text-xs hover:underline">View history →</button>
+              <button
+                onClick={() => toast("Feature coming soon")}
+                className="text-purple-600 text-xs hover:underline"
+              >
+                View history →
+              </button>
             </div>
 
             {/* AI REMEDIATION */}
@@ -227,19 +233,19 @@ export default function ControlCard({
 
             {/* QUICK ACTIONS */}
             <div className="flex gap-3 pt-2">
-              {control.status !== "COMPLIANT" && (
-                <button
-                  disabled={isStatusUpdating}
-                  onClick={() => onStatusChange?.(control.itemId, "COMPLIANT")}
-                  className="bg-green-600 text-white px-3 py-1 rounded text-sm disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  Mark as Compliant
-                </button>
-              )}
+              <button
+                onClick={() => toast("Feature coming soon")}
+                className="border px-3 py-1 rounded text-sm"
+              >
+                Request Help
+              </button>
 
-              <button className="border px-3 py-1 rounded text-sm">Request Help</button>
-
-              <button className="border px-3 py-1 rounded text-sm">Copy Link</button>
+              <button
+                onClick={() => toast("Feature coming soon")}
+                className="border px-3 py-1 rounded text-sm"
+              >
+                Copy Link
+              </button>
 
               {assessmentId && (
                 <Link

@@ -11,6 +11,7 @@ interface StatusDistribution {
   partial: number;
   gap: number;
   notStarted: number;
+  notApplicable: number;
 }
 
 interface Props {
@@ -39,18 +40,25 @@ export default function MetricsBar({
   const fallbackPartial = controls.filter((c) => c.status === "PARTIALLY_COMPLIANT").length;
   const fallbackGap = controls.filter((c) => c.status === "NOT_COMPLIANT").length;
   const fallbackNotStarted = controls.filter((c) => c.status === "NOT_STARTED").length;
+  const fallbackNotApplicable = controls.filter((c) => c.status === "NOT_APPLICABLE").length;
 
   const total = statusDistribution?.total ?? fallbackTotal;
   const compliant = statusDistribution?.compliant ?? fallbackCompliant;
   const partial = statusDistribution?.partial ?? fallbackPartial;
   const gap = statusDistribution?.gap ?? fallbackGap;
   const notStarted = statusDistribution?.notStarted ?? fallbackNotStarted;
+  const notApplicable = statusDistribution?.notApplicable ?? fallbackNotApplicable;
 
-  const percent =
+  const completionPercent = total
+    ? Math.round(((compliant + partial + gap + notApplicable) / total) * 100)
+    : 0;
+
+  const applicableTotal = total - notApplicable;
+  const compliancePercent =
     typeof overallScore === "number"
       ? Math.max(0, Math.min(100, Math.round(overallScore)))
-      : total
-        ? Math.round((compliant / total) * 100)
+      : applicableTotal > 0
+        ? Math.round(((compliant + partial * 0.5) / applicableTotal) * 100)
         : 0;
 
   const frameworkStats =
@@ -108,7 +116,7 @@ export default function MetricsBar({
               r="30"
               strokeWidth="6"
               strokeDasharray="188"
-              strokeDashoffset={188 - (percent / 100) * 188}
+              strokeDashoffset={188 - (completionPercent / 100) * 188}
               className="text-purple-600"
               stroke="currentColor"
               fill="none"
@@ -119,7 +127,7 @@ export default function MetricsBar({
           </svg>
 
           <span className="absolute inset-0 flex items-center justify-center text-base font-bold text-gray-900">
-            {percent}%
+            {completionPercent}%
           </span>
         </div>
 
@@ -128,7 +136,10 @@ export default function MetricsBar({
             Overall Compliance
           </p>
           <p className="font-extrabold text-gray-900 text-base mt-0.5">
-            {compliant}/{total} items
+            {compliancePercent}% Compliance Rate
+          </p>
+          <p className="text-[10px] text-gray-500 mt-0.5">
+            {compliant + partial + gap + notApplicable}/{total} items assessed
           </p>
           {isUpdating && (
             <p className="text-[10px] text-purple-600 animate-pulse mt-0.5">Updating...</p>
