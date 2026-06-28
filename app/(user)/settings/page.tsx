@@ -8,7 +8,6 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  Settings,
   AlertTriangle,
   Loader2,
   Sliders,
@@ -201,15 +200,24 @@ function SettingsContent() {
   // Handle empty state
   if (!assessments || assessments.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 text-center max-w-md mx-auto h-[60vh]">
-        <div className="rounded-full bg-slate-100 p-4 mb-4">
-          <Settings className="w-10 h-10 text-slate-400" />
+      <div className="w-full flex flex-col items-center justify-center min-h-[calc(100vh-10rem)]">
+        <div className="flex flex-col items-center text-center max-w-lg px-8">
+          <div className="rounded-2xl bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-100 p-6 mb-6 shadow-sm">
+            <Sliders className="w-12 h-12 text-purple-400 mx-auto" />
+          </div>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">No workspace configured</h2>
+          <p className="text-slate-500 mb-8 font-normal leading-relaxed">
+            Settings will appear here once you have an active assessment. Start by creating your
+            first assessment from the dashboard.
+          </p>
+          <Button
+            size="lg"
+            className="font-semibold px-8"
+            onClick={() => router.push("/dashboard")}
+          >
+            Go to Dashboard
+          </Button>
         </div>
-        <h2 className="text-xl font-semibold text-slate-900 mb-2">No Assessments</h2>
-        <p className="text-slate-500 mb-6 font-normal">
-          No assessments found. Create an assessment to get started.
-        </p>
-        <Button onClick={() => router.push("/dashboard")}>Go to Dashboard</Button>
       </div>
     );
   }
