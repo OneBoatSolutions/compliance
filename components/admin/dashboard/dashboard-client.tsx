@@ -4,11 +4,17 @@ import { useState } from "react";
 import DashboardHeader from "./dashboard-header";
 import DashboardStats from "./dashboard-stats";
 import FrameworkStatusTable from "./framework-status-table";
-import UserStatusChart from "./user-status-charts";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
 import RecentActivity from "./recent-activity";
 import SystemHealth from "./system-health";
 import QuickActions from "./quick-actions";
 import DashboardCalendar from "./dashboard-calendar";
+
+const UserStatusChart = dynamic(() => import("./user-status-charts"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-64 w-full rounded-lg" />,
+});
 
 interface DashboardClientProps {
   stats: {

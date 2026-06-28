@@ -78,6 +78,8 @@ const nextConfig = {
   // In Next.js 15, serverComponentsExternalPackages moved to the top level.
   serverExternalPackages: ["pdfkit", "svg-to-pdfkit"],
 
+  compress: true,
+
   images: {
     // Prefer remotePatterns (hostname + pathname glob) over the deprecated `domains`.
     remotePatterns: [
@@ -107,6 +109,24 @@ const nextConfig = {
 
   // Prevent server-side source maps from leaking into the client bundle.
   productionBrowserSourceMaps: false,
+
+  bundlePagesRouterDependencies: true,
+
+  experimental: {
+    optimizePackageImports: ["recharts", "lucide-react", "@radix-ui/react-icons"],
+  },
+
+  webpack(config) {
+    config.module.rules.push({
+      test: /[\\/]node_modules[\\/]recharts[\\/]/,
+      sideEffects: false,
+    });
+    return config;
+  },
 };
 
-module.exports = nextConfig;
+module.exports =
+  process.env.ANALYZE === "true"
+    ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require("@next/bundle-analyzer")({ enabled: true })(nextConfig)
+    : nextConfig;

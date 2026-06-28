@@ -29,6 +29,7 @@ describe("Controls details API route", () => {
     vi.mocked(prisma.control.findUnique).mockResolvedValue({
       id: "ctrl_1",
       frameworkId: "fw_1",
+      category: "Cat",
       description: "A control",
       metadata: { foo: "bar" },
       gatewayDependencies: [
@@ -81,18 +82,19 @@ describe("Controls details API route", () => {
           },
         },
       ],
-    } as never);
-
-    vi.mocked(prisma.control.findMany).mockResolvedValue([
-      {
-        id: "ctrl_4",
-        frameworkId: "fw_1",
-        code: "C-4",
-        title: "Related 1",
-        description: "d",
-        category: "Cat",
+      framework: {
+        controls: [
+          {
+            id: "ctrl_4",
+            frameworkId: "fw_1",
+            code: "C-4",
+            title: "Related 1",
+            description: "d",
+            category: "Cat",
+          },
+        ],
       },
-    ] as never);
+    } as never);
 
     const req = new Request("http://localhost/api/controls/ctrl_1/details");
     const res = (await GET(req, { params: Promise.resolve({ id: "ctrl_1" }) })) as Response;

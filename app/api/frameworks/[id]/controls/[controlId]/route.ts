@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 import { withErrorHandler } from "@/lib/api-handler";
 import {
   errorResponse,
@@ -77,6 +78,9 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
       },
     });
 
+    revalidateTag("controls");
+    revalidateTag("frameworks");
+
     return successResponse(control);
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
@@ -103,6 +107,9 @@ export const DELETE = withErrorHandler(async (req: Request, { params }: RouteCon
   await prisma.control.delete({
     where: { id: controlId },
   });
+
+  revalidateTag("controls");
+  revalidateTag("frameworks");
 
   return successResponse({ deleted: true });
 });

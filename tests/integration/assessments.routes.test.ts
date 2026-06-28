@@ -50,14 +50,8 @@ describe("Assessments API routes", () => {
     } as never);
 
     vi.spyOn(prisma.framework, "findMany").mockResolvedValue([
-      { id: "fw_1" },
-      { id: "fw_2" },
-    ] as never);
-
-    vi.spyOn(prisma.control, "findMany").mockResolvedValue([
-      { id: "ctrl_1" },
-      { id: "ctrl_2" },
-      { id: "ctrl_3" },
+      { id: "fw_1", controls: [{ id: "ctrl_1" }, { id: "ctrl_2" }] },
+      { id: "fw_2", controls: [{ id: "ctrl_3" }] },
     ] as never);
 
     vi.spyOn(prisma.assessment, "create").mockResolvedValue({ id: "asm_1" } as never);
@@ -111,8 +105,9 @@ describe("Assessments API routes", () => {
       id: "org_1",
       userId: "user_1",
     } as never);
-    vi.spyOn(prisma.framework, "findMany").mockResolvedValue([{ id: "fw_1" }] as never);
-    vi.spyOn(prisma.control, "findMany").mockResolvedValue([] as never);
+    vi.spyOn(prisma.framework, "findMany").mockResolvedValue([
+      { id: "fw_1", controls: [] },
+    ] as never);
 
     const req = new Request("http://localhost/api/assessments", {
       method: "POST",

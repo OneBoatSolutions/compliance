@@ -1,4 +1,5 @@
 import type { ItemStatus } from "@prisma/client";
+import { unstable_cache } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
 import type {
@@ -259,4 +260,11 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
   };
 }
 
-export const getCachedDashboardData = async (userId: string) => buildDashboardData(userId);
+export const getCachedDashboardData = unstable_cache(
+  async (userId: string) => buildDashboardData(userId),
+  ["dashboard-data"],
+  {
+    revalidate: 60,
+    tags: ["dashboard"],
+  },
+);

@@ -3,8 +3,14 @@ import RelatedControls from "./RelatedControls";
 import ControlRequirements from "./ControlRequirements";
 import AuditTrail from "./AuditTrail";
 import AIAssistantCard from "./AIAssisstentCard";
-import RemediationDrawer from "@/components/ai/remediation-drawer";
 import { useState } from "react";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const RemediationDrawer = dynamic(() => import("@/components/ai/remediation-drawer"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-screen w-full md:w-[78%] ml-auto rounded-l-2xl" />,
+});
 
 interface RightSidebarProps {
   control?: {

@@ -3,6 +3,7 @@
  * Body: raw CSV text (Content-Type: text/csv or text/plain).
  */
 import { Prisma } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 import { withErrorHandler } from "@/lib/api-handler";
 import {
   errorResponse,
@@ -91,6 +92,9 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
         }),
       ),
     );
+
+    revalidateTag("controls");
+    revalidateTag("frameworks");
 
     return successResponse({ imported: validated.length }, 201);
   } catch (e) {

@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { FileText } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Search } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { FileText, Search } from "lucide-react";
 import {
   deleteAssessment,
   duplicateAssessment,
@@ -18,9 +17,15 @@ import { type AssessmentSortField, useAssessmentStore } from "@/stores/assessmen
 import MetricsBar from "@/components/assessment-checklist/MetricsBar";
 import FilterBar from "@/components/assessment-checklist/FilterBar";
 import ChecklistGroup from "@/components/assessment-checklist/ChecklistGroup";
-import RemediationDrawer from "@/components/ai/remediation-drawer";
 import Pagination from "@/components/assessment-checklist/Pagination";
 import Skeleton from "@/components/assessment-checklist/Skeleton";
+import dynamic from "next/dynamic";
+import { Skeleton as UiSkeleton } from "@/components/ui/skeleton";
+
+const RemediationDrawer = dynamic(() => import("@/components/ai/remediation-drawer"), {
+  ssr: false,
+  loading: () => <UiSkeleton className="h-screen w-full md:w-[78%] ml-auto rounded-l-2xl" />,
+});
 import MoreActionsDropdown from "@/components/assessment-checklist/MoreActionsDropdown";
 import {
   type AssessmentDetailResponse,
@@ -562,7 +567,7 @@ export default function ChecklistPage() {
   return (
     <div className="p-6 space-y-6">
       {/* HEADER */}
-      <div className="space-y-2 p-6">
+      <div className="space-y-2 p-6 pb-0">
         {/* Breadcrumb */}
         <p className="text-sm text-gray-500 hover:text-purple-600 cursor-pointer">
           Assessments / <span className="text-gray-800 font-medium">Assessment {assessmentId}</span>
@@ -607,6 +612,7 @@ export default function ChecklistPage() {
       </div>
 
       <MetricsBar
+        className="!mt-2"
         controls={allControls}
         overallScore={overallScore}
         frameworkScores={scoreQuery.data?.frameworkScores}

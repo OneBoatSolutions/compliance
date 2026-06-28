@@ -47,6 +47,11 @@ export const POST = withErrorHandler(async (req: Request) => {
     },
     select: {
       id: true,
+      controls: {
+        select: {
+          id: true,
+        },
+      },
     },
   });
 
@@ -54,16 +59,9 @@ export const POST = withErrorHandler(async (req: Request) => {
     return errorResponse("One or more frameworks were not found or are not published", 400);
   }
 
-  const controls = await prisma.control.findMany({
-    where: {
-      frameworkId: {
-        in: uniqueFrameworkIds,
-      },
-    },
-    select: {
-      id: true,
-    },
-  });
+  const controls = frameworks.flatMap(
+    (f: { id: string; controls: Array<{ id: string }> }) => f.controls,
+  );
 
   if (controls.length === 0) {
     return errorResponse("No controls found for selected frameworks", 400);

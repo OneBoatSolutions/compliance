@@ -3,7 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // --- Enums ---
@@ -189,6 +191,7 @@ model Control {
   @@unique([frameworkId, code])
   @@index([frameworkId])
   @@index([severity])
+  @@index([frameworkId, severity])
   @@map("controls")
 }
 
@@ -217,6 +220,7 @@ model Assessment {
   @@index([status])
   @@index([createdAt])
   @@index([userId, createdAt(sort: Desc)], map: "assessments_userId_createdAt_desc_idx")
+  @@index([userId, organizationId])
   @@map("assessments")
 }
 
@@ -244,6 +248,8 @@ model AssessmentItem {
   @@index([controlId])
   @@index([status])
   @@index([assessmentId, status], map: "assessment_items_assessmentId_status_idx")
+  @@index([assessmentId, status, controlId])
+  @@index([assessmentId, updatedAt(sort: Desc)])
   @@map("assessment_items")
 }
 
@@ -296,6 +302,7 @@ model Evidence {
 
   @@index([assessmentItemId])
   @@index([uploadedAt])
+  @@index([assessmentItemId, uploadedAt(sort: Desc)])
   @@map("evidence")
 }
 
@@ -400,6 +407,7 @@ model AIInteraction {
 
   @@index([assessmentId])
   @@index([type])
+  @@index([assessmentId, type])
   @@index([createdAt])
   @@map("ai_interactions")
 }

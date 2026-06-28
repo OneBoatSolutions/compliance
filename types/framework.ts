@@ -31,8 +31,10 @@ export interface Control {
   category: string | null;
   severity: Severity;
   weight: number;
-  metadata: unknown;
-  isGateway: boolean;
+  /** Returned by PATCH; omitted from GET /api/frameworks/[id] (not rendered in admin UI). */
+  metadata?: unknown;
+  /** Returned by PATCH; omitted from GET /api/frameworks/[id] (server-only scoring flag). */
+  isGateway?: boolean;
   createdAt: string;
   updatedAt: string;
 }
