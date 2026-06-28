@@ -8,6 +8,7 @@ import {
 import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { createAssessmentSchema } from "@/lib/validations/assessment";
+import { revalidateTag } from "next/cache";
 
 export const POST = withErrorHandler(async (req: Request) => {
   const session = await requireAuth();
@@ -90,6 +91,8 @@ export const POST = withErrorHandler(async (req: Request) => {
       totalItems: itemResult.count,
     };
   });
+
+  revalidateTag("dashboard");
 
   return successResponse(created, 201);
 });

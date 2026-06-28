@@ -2,6 +2,7 @@ import { withErrorHandler } from "@/lib/api-handler";
 import { errorResponse, notFoundResponse, successResponse } from "@/lib/api-helpers";
 import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
+import { revalidateTag } from "next/cache";
 
 interface RouteContext {
   params: Promise<{
@@ -83,6 +84,8 @@ export const POST = withErrorHandler(async (req: Request, { params }: RouteConte
       totalItems: itemResult.count,
     };
   });
+
+  revalidateTag("dashboard");
 
   return successResponse(duplicated, 201);
 });

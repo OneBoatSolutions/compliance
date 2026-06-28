@@ -2,6 +2,7 @@ import { withErrorHandler } from "@/lib/api-handler";
 import { notFoundResponse, successResponse } from "@/lib/api-helpers";
 import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
+import { revalidateTag } from "next/cache";
 
 interface RouteContext {
   params: Promise<{
@@ -70,6 +71,10 @@ export const DELETE = withErrorHandler(async (req: Request, { params }: RouteCon
       id: ownedAssessment.id,
     },
   });
+
+  // Bust the server-side unstable_cache for dashboard data so the next
+  // GET /api/dashboard call returns fresh data without the deleted assessment.
+  revalidateTag("dashboard");
 
   return successResponse({ id: ownedAssessment.id }, 200);
 });

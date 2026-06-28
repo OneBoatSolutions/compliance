@@ -8,6 +8,7 @@ import {
 import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { updateOrganizationSchema } from "@/lib/validations/organization";
+import { revalidateTag } from "next/cache";
 
 interface RouteContext {
   params: Promise<{
@@ -78,6 +79,8 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
     where: { id },
     data: parsed.data,
   });
+
+  revalidateTag("dashboard");
 
   return successResponse(updatedOrganization);
 });
