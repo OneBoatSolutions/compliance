@@ -402,6 +402,7 @@ export default function ChecklistPage() {
     let partial = 0;
     let gap = 0;
     let notStarted = 0;
+    let notApplicable = 0;
 
     for (const item of rawItems) {
       if (item.status === "COMPLIANT") {
@@ -421,6 +422,11 @@ export default function ChecklistPage() {
 
       if (item.status === "NOT_STARTED") {
         notStarted += 1;
+        continue;
+      }
+
+      if (item.status === "NOT_APPLICABLE") {
+        notApplicable += 1;
       }
     }
 
@@ -430,6 +436,7 @@ export default function ChecklistPage() {
       partial,
       gap,
       notStarted,
+      notApplicable,
     };
   }, [rawItems]);
 
