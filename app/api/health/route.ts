@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 // NOTE: Do NOT add `export const revalidate` here.
 // Caching this route freezes the `timestamp` field in the response body.
@@ -22,6 +23,11 @@ import { NextResponse } from "next/server";
 // load-balancers / Kubernetes liveness probes can use THIS endpoint, while
 // readiness probes / uptime dashboards use /api/ready.
 //
+// ── Database Monitoring Extension ─────────────────────────────────────────
+// Pass ?db_metrics=true to include database performance metrics in the
+// response. This is intended for monitoring dashboards, NOT for liveness
+// probes. The database query is only executed when explicitly requested.
+//
 // ── DDoS Protection ──────────────────────────────────────────────────────
 // Rate-limiting at the application layer is deliberately ABSENT here.
 // Liveness probes must never be blocked by 429 responses — a single shared
@@ -34,19 +40,70 @@ import { NextResponse } from "next/server";
 //   • Network-level rate limiting on the ingress controller
 // Those controls are transparent to application-level monitors.
 
-export async function GET() {
-  const response = NextResponse.json(
-    {
-      // "ok" signals the process is alive. It does NOT imply all downstream
-      // dependencies are reachable — use /api/ready for that.
-      status: "ok",
-      // Monitors compare this timestamp against wall-clock time to detect
-      // hung or frozen processes. Must be fresh on every request.
-      timestamp: new Date().toISOString(),
-      version: process.env.npm_package_version ?? "1.0.0",
-    },
-    { status: 200 },
-  );
+export async function GET(req: NextRequest) {
+  const includeDbMetrics = req.nextUrl.searchParams.get("db_metrics") === "true";
+
+  // Base liveness payload — always returned.
+  const body: Record<string, unknown> = {
+    // "ok" signals the process is alive. It does NOT imply all downstream
+    // dependencies are reachable — use /api/ready for that.
+    status: "ok",
+    // Monitors compare this timestamp against wall-clock time to detect
+    // hung or frozen processes. Must be fresh on every request.
+    timestamp: new Date().toISOString(),
+    version: process.env.npm_package_version ?? "1.0.0",
+  };
+
+  // ── Optional: Database monitoring metrics ──────────────────────────────
+  // Only runs when explicitly requested to avoid adding latency to liveness
+  // probes. Useful for monitoring dashboards and alerting on DB performance.
+  if (includeDbMetrics) {
+    try {
+      // Lazy-import prisma to avoid pulling in the DB client when the
+      // endpoint is used purely as a liveness probe.
+      const { prisma } = await import("@/lib/prisma");
+
+      const dbStart = Date.now();
+      await prisma.$queryRaw`SELECT 1`;
+      const dbLatencyMs = Date.now() - dbStart;
+
+      let activeConnections = 0;
+      let maxConnections = 0;
+      let connError: string | undefined;
+
+      try {
+        // Fetch active connection count (Postgres-specific).
+        const connectionStats = await prisma.$queryRaw<
+          { active_connections: bigint; max_connections: string }[]
+        >`
+          SELECT
+            (SELECT count(*) FROM pg_stat_activity WHERE state = 'active') AS active_connections,
+            current_setting('max_connections') AS max_connections
+        `;
+        activeConnections = Number(connectionStats[0]?.active_connections ?? 0);
+        maxConnections = Number(connectionStats[0]?.max_connections ?? 0);
+      } catch (connErr) {
+        connError =
+          connErr instanceof Error
+            ? connErr.message.split("\n")[0]
+            : "Connection metrics unavailable";
+      }
+
+      body.database = {
+        latencyMs: dbLatencyMs,
+        activeConnections,
+        maxConnections,
+        ...(connError ? { error: connError, status: "degraded" } : { status: "healthy" }),
+      };
+    } catch (err) {
+      body.database = {
+        error: err instanceof Error ? err.message.split("\n")[0] : "Unknown error",
+        status: "degraded",
+      };
+    }
+  }
+
+  const response = NextResponse.json(body, { status: 200 });
 
   // Prevent all caching layers (CDN, browser, reverse proxy) from storing
   // this response. A stale liveness response is worse than no response at all.

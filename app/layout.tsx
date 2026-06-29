@@ -3,6 +3,7 @@ import { Inter, Roboto_Mono } from "next/font/google"; // valid Google Fonts
 import { headers } from "next/headers";
 import "./globals.css";
 import { AppProviders } from "@/components/providers/app-providers";
+import { Analytics } from "@vercel/analytics/react";
 // Replace Geist with Inter
 const inter = Inter({
   variable: "--font-inter",
@@ -56,6 +57,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       >
         {/* Pass nonce to providers so child <Script> components can consume it */}
         <AppProviders nonce={nonce}>{children}</AppProviders>
+        {/* Vercel Analytics — lightweight page-view & web-vitals tracking */}
+        <Analytics />
       </body>
     </html>
   );

@@ -40,9 +40,21 @@ import { redis } from "@/lib/redis";
 // ---------------------------------------------------------------------------
 
 describe("GET /api/health (liveness probe)", () => {
+  function makeHealthReq(dbMetrics = false) {
+    const url = dbMetrics
+      ? "http://localhost/api/health?db_metrics=true"
+      : "http://localhost/api/health";
+    return new NextRequest(url);
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(prisma.$queryRaw).mockResolvedValue([{}]);
+  });
+
   it("returns 200 with status:ok and a fresh timestamp", async () => {
     const before = Date.now();
-    const res = (await healthGet()) as Response;
+    const res = (await healthGet(makeHealthReq())) as Response;
     const after = Date.now();
 
     expect(res.status).toBe(200);
@@ -57,15 +69,63 @@ describe("GET /api/health (liveness probe)", () => {
   });
 
   it("does NOT expose a services block (dependency checks belong in /api/ready)", async () => {
-    const res = (await healthGet()) as Response;
+    const res = (await healthGet(makeHealthReq())) as Response;
     const json = await res.json();
     // The liveness probe must remain dependency-free — no services field.
     expect(json.services).toBeUndefined();
   });
 
   it("sets Cache-Control: no-store", async () => {
-    const res = (await healthGet()) as Response;
+    const res = (await healthGet(makeHealthReq())) as Response;
     expect(res.headers.get("cache-control")).toContain("no-store");
+  });
+
+  it("returns database metrics when db_metrics=true is requested and DB is healthy", async () => {
+    vi.mocked(prisma.$queryRaw)
+      .mockResolvedValueOnce([{}]) // SELECT 1 succeeds
+      .mockResolvedValueOnce([{ active_connections: BigInt(5), max_connections: "100" }]); // connection stats succeed
+
+    const res = (await healthGet(makeHealthReq(true))) as Response;
+    expect(res.status).toBe(200);
+
+    const json = await res.json();
+    expect(json.status).toBe("ok");
+    expect(json.database).toBeDefined();
+    expect(json.database.status).toBe("healthy");
+    expect(typeof json.database.latencyMs).toBe("number");
+    expect(json.database.activeConnections).toBe(5);
+    expect(json.database.maxConnections).toBe(100);
+  });
+
+  it("returns degraded database status but preserves latency when connection stats query fails", async () => {
+    vi.mocked(prisma.$queryRaw)
+      .mockResolvedValueOnce([{}]) // SELECT 1 succeeds
+      .mockRejectedValueOnce(new Error("Permission denied to pg_stat_activity")); // connection stats fail
+
+    const res = (await healthGet(makeHealthReq(true))) as Response;
+    expect(res.status).toBe(200);
+
+    const json = await res.json();
+    expect(json.status).toBe("ok");
+    expect(json.database).toBeDefined();
+    expect(json.database.status).toBe("degraded");
+    expect(typeof json.database.latencyMs).toBe("number");
+    expect(json.database.error).toContain("Permission denied");
+    expect(json.database.activeConnections).toBe(0);
+  });
+
+  it("returns degraded database status when database is completely unreachable", async () => {
+    vi.mocked(prisma.$queryRaw).mockRejectedValue(new Error("Connection refused"));
+
+    const res = (await healthGet(makeHealthReq(true))) as Response;
+    expect(res.status).toBe(200);
+
+    const json = await res.json();
+    expect(json.status).toBe("ok");
+    expect(json.database).toBeDefined();
+    expect(json.database.status).toBe("degraded");
+    expect(json.database.error).toContain("Connection refused");
+    expect(json.database.latencyMs).toBeUndefined();
   });
 });
 

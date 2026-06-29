@@ -30,12 +30,23 @@ function generateNonce(): string {
 
 const trustedImgOrigins = ["https://images.unsplash.com", "https://lh3.googleusercontent.com"];
 
+// ── Sentry & Vercel Analytics domains for CSP ─────────────────────────────
+// These must be allowed in connect-src so the SDKs can send telemetry data.
+const sentryIngestDomains = ["https://*.ingest.sentry.io", "https://*.ingest.us.sentry.io"];
+const vercelAnalyticsDomains = [
+  "https://vitals.vercel-insights.com",
+  "https://va.vercel-scripts.com",
+];
+
 function buildCspHeader(nonce: string): string {
   const isDev = process.env.NODE_ENV === "development";
 
-  const connectSrc = ["'self'", ...(isDev ? ["ws://localhost:*", "http://localhost:*"] : [])].join(
-    " ",
-  );
+  const connectSrc = [
+    "'self'",
+    ...sentryIngestDomains,
+    ...vercelAnalyticsDomains,
+    ...(isDev ? ["ws://localhost:*", "http://localhost:*"] : []),
+  ].join(" ");
 
   const scriptSrc = isDev
     ? ["'self'", "'unsafe-inline'", "'unsafe-eval'"]
