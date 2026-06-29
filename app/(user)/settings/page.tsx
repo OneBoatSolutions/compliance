@@ -307,7 +307,7 @@ function SettingsContent() {
     : "N/A";
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 pt-24 px-6 pb-12">
+    <div className="max-w-6xl mx-auto space-y-6 pt-24 px-6 pb-12 ">
       {/* Header Banner */}
       <section className="rounded-2xl border border-purple-100 bg-gradient-to-br from-[#f1eaff] via-white to-[#ede3ff] p-6 md:p-8 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="space-y-2">
@@ -329,7 +329,12 @@ function SettingsContent() {
         {/* ── Left Column ── */}
         <div className="lg:col-span-3 flex flex-col gap-6">
           {/* Active Profile Selector */}
-          <Card className="border-slate-100 bg-white shadow-sm">
+          <Card
+            className="border-slate-100 bg-white shadow-sm transition-all
+duration-300
+hover:-translate-y-1
+hover:shadow-lg"
+          >
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500">
                 <Shield className="size-4 text-purple-600" />
@@ -344,7 +349,14 @@ function SettingsContent() {
                   setConfirmName("");
                 }}
               >
-                <SelectTrigger className="w-full h-10 bg-white text-slate-900 border-input">
+                <SelectTrigger
+                  aria-label="Select active assessment"
+                  className="w-full h-10 bg-white transition-all
+duration-200
+hover:border-purple-300
+focus:ring-2
+focus:ring-purple-300 border-input "
+                >
                   <SelectValue placeholder="Select an assessment" />
                 </SelectTrigger>
                 <SelectContent>
@@ -359,7 +371,12 @@ function SettingsContent() {
           </Card>
 
           {/* Live Status */}
-          <Card className="border-slate-100 bg-white shadow-sm flex-1 flex flex-col">
+          <Card
+            className="border-slate-100 bg-white shadow-sm flex-1 flex flex-col transition-all
+duration-300
+hover:-translate-y-1
+hover:shadow-lg"
+          >
             <CardHeader className="pb-3">
               <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-500">
                 Live Status
@@ -420,7 +437,12 @@ function SettingsContent() {
               </CardContent>
             </Card>
           ) : (
-            <Card className="border-slate-100 bg-white shadow-sm flex-1 flex flex-col">
+            <Card
+              className="border-slate-100 bg-white shadow-sm transition-all
+duration-300
+hover:-translate-y-1
+hover:shadow-lg flex-1 flex flex-col"
+            >
               <CardHeader>
                 <CardTitle className="text-lg font-bold text-slate-900">
                   Assessment Details
@@ -445,7 +467,10 @@ function SettingsContent() {
                           type="text"
                           {...register("productName")}
                           aria-invalid={!!errors.productName}
-                          className="h-11 bg-white text-slate-900"
+                          className="h-11 bg-white text-slate-900 transition-all
+duration-200
+hover:border-purple-300
+focus-visible:ring-purple-400"
                         />
                       </div>
                       {errors.productName && (
@@ -465,7 +490,30 @@ function SettingsContent() {
                           rows={4}
                           {...register("description")}
                           aria-invalid={!!errors.description}
-                          className="w-full min-w-0 rounded-md border border-input bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none placeholder:text-slate-400 transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
+                          className=" w-full
+    min-w-0
+    rounded-md
+    border
+    border-input
+    bg-white
+    px-3
+    py-2
+    text-sm
+    text-slate-900
+    shadow-sm
+    transition-all
+    duration-200
+    outline-none
+    placeholder:text-slate-400
+    hover:border-purple-300
+    focus-visible:border-purple-400
+    focus-visible:ring-2
+    focus-visible:ring-purple-400
+    disabled:cursor-not-allowed
+    disabled:opacity-50
+    aria-invalid:border-destructive
+    aria-invalid:ring-destructive/20
+    resize-none"
                         />
                       </div>
                       {errors.description && (
@@ -488,7 +536,10 @@ function SettingsContent() {
                           type="text"
                           {...register("targetCustomers")}
                           aria-invalid={!!errors.targetCustomers}
-                          className="h-11 bg-white text-slate-900"
+                          className="h-11 bg-white text-slate-900 transition-all
+duration-200
+hover:border-purple-300
+focus-visible:ring-purple-400"
                         />
                       </div>
                       {errors.targetCustomers && (
@@ -503,7 +554,10 @@ function SettingsContent() {
                     <Button
                       type="submit"
                       size="lg"
-                      className="font-semibold"
+                      className="font-semibold transition-all
+duration-200
+hover:scale-[1.02]
+active:scale-[0.98]"
                       disabled={isSubmitting}
                     >
                       {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -520,23 +574,70 @@ function SettingsContent() {
         {!loadingActiveAssessment && !loadingOrg && (
           <div className="lg:col-span-10">
             {/* Delete Assessment Card */}
-            <Card className="border-red-200 bg-red-50/30 shadow-sm">
-              <CardHeader>
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                  <div className="space-y-1">
-                    <CardTitle className="flex items-center gap-2 text-base font-bold text-red-700">
-                      <Trash2 className="size-4 text-red-650" />
+            <Card
+              className="overflow-hidden
+    border border-red-200
+    bg-white p-0
+    shadow-sm
+    transition-all
+    duration-300
+    hover:-translate-y-1
+    hover:shadow-lg"
+            >
+              <div
+                className="border-b border-red-100
+    bg-gradient-to-r
+    from-red-50
+    via-red-50/20
+    to-white
+    px-6 py-5"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-100 text-red-600">
+                    <Trash2 className="size-5" />
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold text-red-700">Danger Zone</h3>
+
+                    <p className="text-sm text-red-600/80">
+                      Permanently delete this assessment and all associated data.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <CardHeader className="pb-6 px-6">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between ">
+                  <div className="space-y-1 ">
+                    <CardTitle className="text-base font-semibold text-slate-900">
                       Delete Assessment
                     </CardTitle>
-                    <CardDescription className="max-w-xl text-xs text-red-700/70">
-                      Permanently delete this assessment, including checklist scores, compliance
-                      status, and uploaded evidence. This action is irreversible.
+                    <CardDescription>
+                      <p className="text-sm text-slate-600">
+                        Deleting this assessment removes all associated compliance data and cannot
+                        be undone.
+                      </p>
+                      <div className="mt-5 rounded-lg border border-red-100 bg-red-50 p-4">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-red-700">
+                          This action removes:
+                        </p>
+
+                        <ul className="mt-2 space-y-2 text-sm text-red-700">
+                          <li>• Assessment progress and compliance score</li>
+                          <li>• Uploaded evidence and checklist responses</li>
+                          <li>• Workspace data linked to this assessment</li>
+                        </ul>
+                      </div>
                     </CardDescription>
                   </div>
                   <Button
                     variant="destructive"
+                    aria-label={`Delete assessment ${activeOrgName}`}
                     size="lg"
-                    className="shrink-0 font-semibold px-8 md:self-center"
+                    className="shrink-0 font-semibold px-8 md:self-center transition-all
+duration-200
+hover:scale-[1.02]
+active:scale-[0.98]"
                     onClick={() => {
                       setConfirmName("");
                       setShowDeleteConfirm(true);
@@ -554,15 +655,26 @@ function SettingsContent() {
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs transition-opacity duration-300">
-          <div className="w-full max-w-md rounded-2xl border border-red-100 bg-white p-6 shadow-2xl animate-in fade-in-50 zoom-in-95 duration-200">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-dialog-title"
+            aria-describedby="delete-dialog-description"
+            className="w-full max-w-md rounded-2xl border border-red-100 bg-white p-6 shadow-2xl animate-in fade-in-50 zoom-in-95 duration-200"
+          >
             <div className="flex items-center gap-2.5 mb-4 text-red-650">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-650">
                 <AlertTriangle className="size-5" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900">Delete Assessment</h3>
+              <h3 id="delete-dialog-title" className="text-lg font-bold text-slate-900">
+                Delete Assessment
+              </h3>
             </div>
 
-            <p className="text-sm text-slate-650 font-normal leading-relaxed">
+            <p
+              id="delete-dialog-description"
+              className="text-sm text-slate-650 font-normal leading-relaxed"
+            >
               This action cannot be undone. This will permanently delete the assessment for{" "}
               <strong className="text-slate-900 font-semibold">{activeOrgName}</strong>, including
               all compliance status details and uploaded evidence.
@@ -615,6 +727,22 @@ function SettingsContent() {
           </div>
         </div>
       )}
+      <footer className="mt-10 rounded-xl border border-slate-200 bg-slate-50 px-6 py-5">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="font-semibold text-slate-800">Workspace Settings</p>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Updates made here are reflected across your compliance workspace and future
+              assessments.
+            </p>
+          </div>
+
+          <div className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700">
+            Securely managed by Cipherion
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
