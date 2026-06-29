@@ -102,23 +102,26 @@ export default function FilterBar({
   return (
     <div className="bg-slate-100 p-4 rounded-xl flex flex-wrap gap-3 items-center">
       {/* SEARCH */}
-      <div className="relative w-full">
+      <div className="relative w-full lg:flex-1">
         <input
-          className="w-full pl-10 pr-8 py-2 bg-white rounded-lg w-[300px] border shadow-sm "
+          type="search"
+          aria-label="Search controls"
+          className="w-full pl-10 pr-8 py-2 bg-white rounded-lg w-[300px] border shadow-sm  focus:outline-none focus:ring-2 focus:ring-purple-500 [&::-webkit-search-cancel-button]:hidden"
           placeholder="Search controls by ID or title..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <Search className="absolute left-3 top-2 text-gray-400" size={20} />
+        <Search aria-hidden="true" className="absolute left-3 top-2 text-gray-400" size={20} />
 
         {/* CLEAR BUTTON */}
         {search && (
           <button
+            aria-label="Clear search"
             onClick={() => setSearch("")}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black"
           >
-            <X size={20} />
+            <X aria-hidden="true" size={20} />
           </button>
         )}
       </div>
@@ -126,15 +129,27 @@ export default function FilterBar({
       {/* FRAMEWORK FILTER */}
       <div className="relative ">
         <button
+          aria-label="Filter by framework"
+          aria-haspopup="menu"
+          aria-expanded={open === "framework"}
           onClick={() => setOpen(open === "framework" ? null : "framework")}
-          className="px-3 py-2 border rounded-lg flex items-center gap-2 bg-white shadow-sm"
+          className="  w-full
+sm:w-auto transition-colors
+duration-200
+hover:bg-slate-50 px-3 py-2 border rounded-lg flex items-center gap-2 bg-white shadow-sm  focus:outline-none focus:ring-2 focus:ring-purple-500"
         >
           Framework: {frameworks.length || "All"}
-          <ChevronDown size={14} />
+          <ChevronDown aria-hidden="true" size={14} />
         </button>
 
         {open === "framework" && (
-          <div className="absolute mt-2 bg-white border rounded-lg shadow p-2 w-48 z-50">
+          <div
+            role="menu"
+            className="absolute mt-2 animate-in
+fade-in
+zoom-in-95
+duration-150 bg-white border rounded-lg shadow p-2 w-48 z-50"
+          >
             {frameworkOptions.map((framework) => (
               <label key={framework.id} className="flex items-center gap-2 p-1 text-sm">
                 <input
@@ -152,15 +167,27 @@ export default function FilterBar({
       {/* STATUS FILTER */}
       <div className="relative">
         <button
+          aria-label="Filter by status"
+          aria-haspopup="menu"
+          aria-expanded={open === "status"}
           onClick={() => setOpen(open === "status" ? null : "status")}
-          className="px-3 py-2 border rounded-lg flex items-center gap-2 bg-white shadow-sm"
+          className=" w-full
+sm:w-auto transition-colors
+duration-200
+hover:bg-slate-50 px-3 py-2 border rounded-lg flex items-center gap-2 bg-white shadow-sm  focus:outline-none focus:ring-2 focus:ring-purple-500"
         >
           Status: {status.length || "All"}
-          <ChevronDown size={14} />
+          <ChevronDown aria-hidden="true" size={14} />
         </button>
 
         {open === "status" && (
-          <div className="absolute mt-2 bg-white border rounded-lg shadow p-2 w-52 z-50">
+          <div
+            role="menu"
+            className="absolute mt-2 animate-in
+fade-in
+zoom-in-95
+duration-150 bg-white border rounded-lg shadow p-2 w-52 z-50"
+          >
             {statusOptions.map((s) => (
               <label key={s} className="flex items-center gap-2 p-1 text-sm">
                 <input
@@ -192,17 +219,29 @@ export default function FilterBar({
       {/* SEVERITY FILTER */}
       <div className="relative">
         <button
+          aria-label="Filter by severity"
+          aria-haspopup="menu"
+          aria-expanded={open === "severity"}
           onClick={() => setOpen(open === "severity" ? null : "severity")}
-          className="px-3 py-2 border rounded-lg flex items-center gap-2 bg-white shadow-sm"
+          className=" w-full
+sm:w-auto transition-colors
+duration-200
+hover:bg-slate-50 px-3 py-2 border rounded-lg flex items-center gap-2 bg-white shadow-sm  focus:outline-none focus:ring-2 focus:ring-purple-500"
         >
           Severity: {severity.length || "All"}
-          <ChevronDown size={14} />
+          <ChevronDown aria-hidden="true" size={14} />
         </button>
 
         {open === "severity" && (
-          <div className="absolute mt-2 bg-white border rounded-lg shadow p-2 w-52 z-50">
+          <div
+            role="menu"
+            className="absolute mt-2 animate-in
+fade-in
+zoom-in-95
+duration-150 bg-white border rounded-lg shadow p-2 w-52 z-50 "
+          >
             {severityOptions.map((s) => (
-              <label key={s} className="flex items-center gap-2 p-1 text-sm">
+              <label key={s} className="flex items-center gap-2 p-1 text-sm ">
                 <input
                   type="checkbox"
                   checked={severity.includes(s)}
@@ -217,9 +256,13 @@ export default function FilterBar({
 
       {/* SORT */}
       <select
+        aria-label="Sort checklist"
         value={sort}
         onChange={(e) => setSort(e.target.value as ChecklistSort)}
-        className="px-3 py-2 rounded-lg border bg-white shadow-sm"
+        className=" w-full
+sm:w-auto transition-colors
+duration-200
+hover:bg-slate-50 px-3 py-2 rounded-lg border bg-white shadow-sm  focus:outline-none focus:ring-2 focus:ring-purple-500"
       >
         <option value="severity">Severity ↓</option>
         <option value="status">Status</option>
@@ -232,10 +275,12 @@ export default function FilterBar({
         {selectedTags.map((tag) => (
           <span
             key={`${tag.type}:${tag.value}`}
-            className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs flex items-center gap-1"
+            className="bg-purple-100 transition-colors
+duration-200 text-purple-700 px-2 py-1 rounded-full text-xs flex items-center gap-1"
           >
             {tag.label}
             <button
+              aria-label={`Remove ${tag.label} filter`}
               onClick={() => {
                 if (tag.type === "framework") {
                   setFrameworks(frameworks.filter((framework) => framework !== tag.value));
@@ -250,19 +295,21 @@ export default function FilterBar({
                 setSeverity(severity.filter((item) => item !== tag.value));
               }}
             >
-              <X size={12} />
+              <X aria-hidden="true" size={12} />
             </button>
           </span>
         ))}
 
         {(frameworks.length > 0 || status.length > 0 || severity.length > 0) && (
           <button
+            aria-label="Clear all filters"
             onClick={() => {
               setFrameworks([]);
               setStatus([]);
               setSeverity([]);
             }}
-            className="text-purple-600 text-sm"
+            className="text-purple-600 hover:text-purple-800
+transition-colors text-sm"
           >
             Clear all
           </button>

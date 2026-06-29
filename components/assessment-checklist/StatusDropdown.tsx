@@ -53,18 +53,46 @@ export default function StatusDropdown({ status, onChange, disabled = false }: P
     <div className="relative inline-block text-left">
       {/* BUTTON */}
       <button
-        onClick={() => setOpen(!open)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={`Status: ${current.label}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(!open);
+        }}
+        onKeyDown={(e) => {
+          e.stopPropagation();
+
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen((prev) => !prev);
+          }
+        }}
         disabled={disabled}
-        className={`flex items-center gap-2 px-2 py-1 rounded-md text-xs font-semibold ${current.bg} ${current.color}`}
+        className={`flex items-center gap-2 px-2 py-1 rounded-md text-xs font-semibold transition-all duration-200
+hover:shadow-sm
+hover:scale-[1] focus:outline-none
+  focus-visible:ring-2
+  focus-visible:ring-purple-500
+  focus-visible:ring-offset-2 ${current.bg} ${current.color}`}
       >
         {current.icon}
         {current.label}
-        <ChevronDown size={14} />
+        <ChevronDown
+          size={14}
+          className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        />
       </button>
 
       {/* DROPDOWN */}
       {open && (
-        <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow z-50">
+        <div
+          className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow z-50 origin-top-right
+animate-in
+fade-in
+zoom-in-95
+duration-150  "
+        >
           {statuses.map((s) => (
             <button
               key={s}
@@ -73,7 +101,10 @@ export default function StatusDropdown({ status, onChange, disabled = false }: P
                 setOpen(false);
               }}
               disabled={disabled}
-              className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-100"
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-100 focus:outline-none
+  focus-visible:ring-2
+  focus-visible:ring-purple-500
+  focus-visible:ring-offset-2"
             >
               {statusConfig[s].icon}
               <span className={statusConfig[s].color}>{statusConfig[s].label}</span>

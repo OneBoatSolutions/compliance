@@ -93,13 +93,26 @@ export default function MetricsBar({
 
   return (
     <div
-      className={`sticky top-15 z-40 bg-white border rounded-xl shadow-sm grid grid-cols-4 divide-x divide-slate-100 items-stretch transition-all duration-300 ${
+      className={`sticky top-15 z-40 bg-white border rounded-xl shadow-sm grid
+grid-cols-1
+sm:grid-cols-2
+xl:grid-cols-4 divide-x divide-slate-100 items-stretch transition-all duration-300 ${
         isUpdating ? "ring-1 ring-purple-200" : ""
       } ${className || ""}`}
     >
       {/*  1. Overall Progress */}
-      <div className="flex items-center py-3 px-6 gap-4">
-        <div className="relative w-18 h-18 shrink-0">
+      <div
+        className="flex items-center py-3 px-6 gap-4 transition-all
+duration-200
+hover:bg-slate-50
+hover:shadow-sm
+hover:-translate-y-0.5"
+      >
+        <div
+          className="relative w-18 h-18 shrink-0"
+          role="img"
+          aria-label={`Overall compliance ${compliant} of ${total} controls compliant`}
+        >
           <svg className="w-full h-full -rotate-90" viewBox="0 0 72 72">
             <circle
               cx="36"
@@ -148,7 +161,13 @@ export default function MetricsBar({
       </div>
 
       {/*  2. Framework Breakdown */}
-      <div className="py-3 px-6 flex flex-col justify-center">
+      <div
+        className="py-3 px-6 flex flex-col justify-center transition-all
+duration-200
+hover:bg-slate-50
+hover:shadow-sm
+hover:-translate-y-0.5"
+      >
         <p className="text-[10px] tracking-wider uppercase font-semibold text-gray-500 mb-2">
           Framework Breakdown
         </p>
@@ -157,8 +176,23 @@ export default function MetricsBar({
           {frameworkStats.map((f) => (
             <div
               key={f.id}
+              role="button"
+              tabIndex={0}
+              aria-label={`Filter by framework ${f.fw}`}
               onClick={() => onFilterFramework?.(f.id)}
-              className="cursor-pointer hover:opacity-80 group"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onFilterFramework?.(f.id);
+                }
+              }}
+              className="cursor-pointer hover:opacity-80 group transition-all
+duration-200
+hover:bg-slate-50
+hover:shadow-sm
+hover:-translate-y-0.5 focus-visible:ring-2
+focus-visible:ring-purple-500
+focus-visible:ring-offset-2"
             >
               <div className="flex justify-between text-xs font-medium text-gray-700">
                 <span className="flex items-center gap-2 group-hover:text-purple-600 transition-colors">
@@ -182,16 +216,34 @@ export default function MetricsBar({
       </div>
 
       {/*  3. Status Distribution */}
-      <div className="py-3 px-6 flex flex-col justify-center">
+      <div
+        className="py-3 px-6 flex flex-col justify-center transition-all
+duration-200
+hover:bg-slate-50
+hover:shadow-sm
+hover:-translate-y-0.5"
+      >
         <p className="text-[10px] tracking-wider uppercase font-semibold text-gray-500 mb-2">
           Status Distribution
         </p>
 
         <div className="h-2 flex rounded overflow-hidden">
           <div
+            role="button"
+            tabIndex={0}
+            aria-label={`Filter compliant controls. ${compliant} items`}
             title={`Compliant: ${compliant}`}
             onClick={() => onFilterStatus?.("COMPLIANT")}
-            className="bg-green-500 cursor-pointer"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onFilterStatus?.("COMPLIANT");
+              }
+            }}
+            className="bg-green-500 cursor-pointer focus-visible:outline
+focus-visible:outline-2
+focus-visible:outline-white
+focus-visible:outline-offset-[-2px]"
             style={{
               width: `${safeBarPercent(compliant)}%`,
               transition: "width 320ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -199,9 +251,21 @@ export default function MetricsBar({
           />
 
           <div
+            role="button"
+            tabIndex={0}
+            aria-label={`Filter partially compliant controls. ${partial} items`}
             title={`Partial: ${partial}`}
             onClick={() => onFilterStatus?.("PARTIALLY_COMPLIANT")}
-            className="bg-yellow-400 cursor-pointer"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onFilterStatus?.("PARTIALLY_COMPLIANT");
+              }
+            }}
+            className="bg-yellow-400 cursor-pointer focus-visible:outline
+focus-visible:outline-2
+focus-visible:outline-white
+focus-visible:outline-offset-[-2px]"
             style={{
               width: `${safeBarPercent(partial)}%`,
               transition: "width 320ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -209,9 +273,21 @@ export default function MetricsBar({
           />
 
           <div
+            role="button"
+            tabIndex={0}
+            aria-label={`Filter non-compliant controls. ${gap} items`}
             title={`Non-compliant: ${gap}`}
             onClick={() => onFilterStatus?.("NOT_COMPLIANT")}
-            className="bg-red-500 cursor-pointer"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onFilterStatus?.("NOT_COMPLIANT");
+              }
+            }}
+            className="bg-red-500 cursor-pointer focus-visible:outline
+focus-visible:outline-2
+focus-visible:outline-white
+focus-visible:outline-offset-[-2px]"
             style={{
               width: `${safeBarPercent(gap)}%`,
               transition: "width 320ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -254,8 +330,23 @@ export default function MetricsBar({
 
       {/* 🔹 4. Critical Issues */}
       <div
+        role="button"
+        tabIndex={0}
+        aria-label={`Show ${gap} critical issues`}
         onClick={() => onFilterStatus?.("NOT_COMPLIANT")}
-        className="py-3 px-6 flex flex-col justify-center cursor-pointer hover:opacity-80 group"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onFilterStatus?.("NOT_COMPLIANT");
+          }
+        }}
+        className=" py-3 px-6 flex flex-col justify-center cursor-pointer hover:opacity-80 group transition-all
+duration-200
+hover:bg-slate-50
+hover:shadow-sm
+hover:-translate-y-0.5 focus-visible:ring-2
+focus-visible:ring-purple-500
+focus-visible:ring-offset-2"
       >
         <p className="text-[10px] tracking-wider uppercase font-semibold text-gray-500">
           Critical Issues

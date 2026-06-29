@@ -45,7 +45,6 @@ export default function ControlCard({
   const [commentsOpen, setCommentsOpen] = useState(true);
   const isOwn = true; // later from backend (user auth)
   const [uploadOpen, setUploadOpen] = useState(false);
-
   const statusConfig = {
     COMPLIANT: {
       color: "border-green-500",
@@ -80,12 +79,25 @@ export default function ControlCard({
     <div
       className={`border-l-4 ${
         statusConfig[control.status]?.color
-      } bg-white rounded-xl shadow-sm hover:shadow-md transition-all overflow-visible`}
+      } bg-white rounded-xl shadow-sm hover:shadow-md 
+transition-shadow transition-all duration-200 overflow-visible`}
     >
       {/* HEADER */}
       <div
+        role="button"
+        tabIndex={0}
+        aria-expanded={open}
+        aria-label={`${control.id} ${control.title}`}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen(!open);
+          }
+        }}
         onClick={() => setOpen(!open)}
-        className="p-5 grid grid-cols-[70%_20%_10%] items-center cursor-pointer"
+        className="p-5 grid grid-cols-[70%_20%_10%] items-center cursor-pointer focus-visible:ring-2
+focus-visible:ring-purple-500
+focus-visible:ring-offset-2 focus: rounded"
       >
         {/* LEFT */}
         <div className="space-y-1">
@@ -102,7 +114,11 @@ export default function ControlCard({
         </div>
 
         {/* MIDDLE */}
-        <div className="flex justify-center" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="flex justify-center"
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+        >
           <StatusDropdown
             status={control.status}
             disabled={isStatusUpdating}
@@ -119,7 +135,12 @@ export default function ControlCard({
             {control.evidenceCount}
           </span>
 
-          <button className="text-gray-500 hover:text-black">
+          <button
+            araia-label="More actions"
+            className="text-gray-500 hover:text-black focus-visible:ring-2
+focus-visible:ring-purple-500
+focus-visible:ring-offset-2"
+          >
             <MoreVertical size={16} />
           </button>
         </div>
@@ -179,7 +200,9 @@ export default function ControlCard({
                         severity: control.severity,
                       });
                     }}
-                    className="mt-4 inline-block bg-white text-purple-700 px-4 py-2 rounded-md text-sm font-medium"
+                    className="mt-4 inline-block bg-white text-purple-700 px-4 py-2 rounded-md text-sm font-medium focus:outline-none
+focus:ring-2
+focus:ring-purple-500 transition-all duration-200 hover:scale-105 active:scale-95"
                   >
                     Get AI Remediation Plan →
                   </button>
@@ -209,7 +232,7 @@ export default function ControlCard({
                 {/* RIGHT BUTTON */}
                 <button
                   onClick={() => setUploadOpen(true)}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-purple-600 border border-purple-600 rounded-lg hover:bg-purple-50 transition"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-purple-600 border border-purple-600 rounded-lg hover:bg-purple-50 transition focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 hover:scale-105 active:scale-95"
                 >
                   <Upload size={16} />
                   Upload Evidence
@@ -220,7 +243,9 @@ export default function ControlCard({
                 {assessmentId ? (
                   <Link
                     href={`/assessments/${assessmentId}/control-workspace/${control.id}`}
-                    className="inline-flex items-center gap-2 border border-slate-300 rounded-lg px-3 py-2 text-sm text-purple-600"
+                    className="inline-flex items-center gap-2 border border-slate-300 rounded-lg px-3 py-2 text-sm text-purple-600 focus:outline-none
+focus:ring-2
+focus:ring-purple-500 transition-all duration-200 hover:scale-105 active:scale-95"
                   >
                     <FileText size={16} />
                     View workspace
@@ -250,7 +275,9 @@ export default function ControlCard({
               {assessmentId && (
                 <Link
                   href={`/assessments/${assessmentId}/control-workspace/${control.id}`}
-                  className="border border-[#6d18ff] text-[#6d18ff] px-3 py-1 rounded text-sm hover:bg-[#6d18ff]/5 transition-colors"
+                  className="border border-[#6d18ff] text-[#6d18ff] px-3 py-1 rounded text-sm hover:bg-[#6d18ff]/5 transition-colors focus:outline-none
+focus:ring-2
+focus:ring-purple-500 transition-all duration-200 hover:scale-105 active:scale-95"
                 >
                   View Full Workspace →
                 </Link>
@@ -289,7 +316,7 @@ export default function ControlCard({
                       {/* ✅ ADD THIS */}
                       {isOwn && (
                         <div className="flex gap-2 text-xs text-gray-400">
-                          <button className="hover:text-black">Edit</button>
+                          <button className="hover:text-black ">Edit</button>
                           <button className="text-red-500 hover:text-red-600">Delete</button>
                         </div>
                       )}
@@ -318,8 +345,12 @@ export default function ControlCard({
                       {/* ✅ ADD THIS */}
                       {isOwn && (
                         <div className="flex gap-2 text-xs text-gray-400">
-                          <button className="hover:text-black">Edit</button>
-                          <button className="text-red-500 hover:text-red-600">Delete</button>
+                          <button className="hover:text-black transition-all duration-200 hover:scale-105 active:scale-95">
+                            Edit
+                          </button>
+                          <button className="text-red-500 hover:text-red-600 transition-all duration-200 hover:scale-105 active:scale-95">
+                            Delete
+                          </button>
                         </div>
                       )}
                     </div>
@@ -345,13 +376,22 @@ export default function ControlCard({
               />
 
               {/* FLOATING BUTTON (CORRECT POSITION) */}
-              <button className="absolute right-3 bottom-3 bg-gradient-to-r from-purple-600 to-purple-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-lg">
+              <button
+                aria-label="Add comment"
+                className="absolute right-3 bottom-3 bg-gradient-to-r from-purple-600 to-purple-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 hover:scale-105 active:scale-95"
+              >
                 <Plus size={18} />
               </button>
             </div>
 
             {/* POST BUTTON */}
-            <button className="w-full bg-black text-white py-3 rounded-xl text-sm font-medium hover:opacity-90 transition">
+            <button
+              className="w-full bg-black text-white py-3 rounded-xl text-sm font-medium hover:opacity-90 transition focus:outline-none
+focus-visible:ring-2
+focus-visible:ring-white
+focus-visible:ring-offset-2
+focus-visible:ring-offset-black transition-all duration-200 hover:scale-105 active:scale-95"
+            >
               Post Comment
             </button>
           </div>
@@ -360,13 +400,21 @@ export default function ControlCard({
       {uploadOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           {/* MODAL BOX */}
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 space-y-4">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="upload-title"
+            className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 space-y-4"
+          >
             {/* HEADER */}
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-gray-900">Upload Evidence</h3>
+              <h3 id="upload-title" className="text-lg font-semibold text-gray-900">
+                Upload Evidence
+              </h3>
               <button
+                aria-label="Close upload dialog"
                 onClick={() => setUploadOpen(false)}
-                className="text-gray-400 hover:text-black"
+                className="text-gray-400 hover:text-black transition-all duration-200 hover:scale-105 active:scale-95"
               >
                 ✕
               </button>
@@ -376,10 +424,15 @@ export default function ControlCard({
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
               <p className="text-sm text-gray-500 mb-2">Drag & drop your file here</p>
 
-              <input type="file" className="hidden" id="fileUpload" />
+              <input
+                aria-label="Upload evidence file"
+                type="file"
+                className="hidden"
+                id={`fileUpload-${control.itemId}`}
+              />
 
               <label
-                htmlFor="fileUpload"
+                htmlFor={`fileUpload-${control.itemId}`}
                 className="cursor-pointer inline-block mt-2 px-4 py-2 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700"
               >
                 Browse files
@@ -390,12 +443,12 @@ export default function ControlCard({
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setUploadOpen(false)}
-                className="px-4 py-2 text-sm border rounded-md"
+                className="px-4 py-2 text-sm border rounded-md transition-all duration-200 hover:scale-105 active:scale-95"
               >
                 Cancel
               </button>
 
-              <button className="px-4 py-2 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700">
+              <button className="px-4 py-2 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-all duration-200 hover:scale-105 active:scale-95">
                 Upload
               </button>
             </div>
