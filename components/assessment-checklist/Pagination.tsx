@@ -55,12 +55,13 @@ export default function Pagination({ total, page, perPage, setPage, setPerPage }
         <div className="flex items-center gap-2">
           <span>Show:</span>
           <select
+            aria-label="Items per page"
             value={perPage}
             onChange={(e) => {
               setPerPage?.(Number(e.target.value));
               setPage(1); // reset page when changing size
             }}
-            className="border rounded-md px-2 py-1 text-sm bg-white"
+            className="border rounded-md px-2 py-1 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           >
             <option value={10}>10</option>
             <option value={20}>20</option>
@@ -74,9 +75,13 @@ export default function Pagination({ total, page, perPage, setPage, setPerPage }
       <div className="flex items-center gap-2">
         {/* PREVIOUS */}
         <button
+          aria-label="Previous page"
           onClick={() => setPage(Math.max(1, page - 1))}
           disabled={page === 1}
-          className="px-3 py-1 rounded-md border text-sm disabled:opacity-40"
+          className="px-3 py-1 rounded-md border transition-all
+duration-200
+hover:bg-gray-100
+hover:shadow-sm text-sm disabled:opacity-40 focus:outline-none focus:ring-2 focus:ring-purple-500"
         >
           <ChevronLeft />
         </button>
@@ -84,12 +89,14 @@ export default function Pagination({ total, page, perPage, setPage, setPerPage }
         {/* PAGE NUMBERS */}
         {getPages().map((p, i) =>
           p === "..." ? (
-            <span key={i} className="px-2 text-gray-400">
+            <span key={i} className="px-2 text-gray-400 ">
               ...
             </span>
           ) : (
             <button
               key={i}
+              aria-label={`Go to page ${p}`}
+              aria-current={page === p ? "page" : undefined}
               onClick={() => setPage(p as number)}
               className={`px-3 py-1 rounded-md text-sm ${
                 page === p ? "bg-purple-600 text-white" : "hover:bg-gray-100"
@@ -102,9 +109,13 @@ export default function Pagination({ total, page, perPage, setPage, setPerPage }
 
         {/* NEXT */}
         <button
+          aria-label="Next page"
           onClick={() => setPage(Math.min(totalPages, page + 1))}
           disabled={page === totalPages}
-          className="px-3 py-1 rounded-md border text-sm disabled:opacity-40"
+          className="px-3 py-1 rounded-md border transition-all
+duration-200
+hover:bg-gray-100
+hover:shadow-sm text-sm disabled:opacity-40  focus:outline-none focus:ring-2 focus:ring-purple-500"
         >
           <ChevronRight />
         </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
@@ -222,6 +222,8 @@ export default function ChecklistPage() {
   const [perPage, setPerPage] = useState(50);
   const [isHeaderActionPending, setIsHeaderActionPending] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
+  const deleteButtonRef = useRef<HTMLButtonElement>(null);
 
   const [remediationOpen, setRemediationOpen] = useState(false);
   const [remediationContext, setRemediationContext] = useState<{
@@ -257,6 +259,12 @@ export default function ChecklistPage() {
       clearChecklistState();
     };
   }, [clearChecklistState]);
+
+  useEffect(() => {
+    if (showDeleteConfirm) {
+      cancelButtonRef.current?.focus();
+    }
+  }, [showDeleteConfirm]);
 
   const checklistQueryPrefix = useMemo(
     () => ["assessment-checklist", assessmentId] as const,
@@ -441,7 +449,16 @@ export default function ChecklistPage() {
   }, [rawItems]);
 
   if (assessmentQuery.isPending || checklistQuery.isPending || scoreQuery.isPending) {
-    return <Skeleton />;
+    return (
+      <div
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+        aria-label="Loading assessment checklist"
+      >
+        <Skeleton />
+      </div>
+    );
   }
 
   if (assessmentQuery.isError) {
@@ -455,8 +472,12 @@ export default function ChecklistPage() {
               : "Please try again."}
           </p>
           <button
+            aria-label="Retry loading assessment"
             onClick={() => void assessmentQuery.refetch()}
-            className="mt-4 px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700"
+            className="mt-4 px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none
+focus:ring-2
+focus:ring-purple-500
+focus:ring-offset-2"
           >
             Retry
           </button>
@@ -476,8 +497,12 @@ export default function ChecklistPage() {
               : "Please try again."}
           </p>
           <button
+            aria-label="Retry loading checklist"
             onClick={() => void checklistQuery.refetch()}
-            className="mt-4 px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700"
+            className="mt-4 px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none
+focus:ring-2
+focus:ring-purple-500
+focus:ring-offset-2"
           >
             Retry
           </button>
@@ -495,8 +520,12 @@ export default function ChecklistPage() {
             {scoreQuery.error instanceof Error ? scoreQuery.error.message : "Please try again."}
           </p>
           <button
+            aria-label="Retry loading score"
             onClick={() => void scoreQuery.refetch()}
-            className="mt-4 px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700"
+            className="mt-4 px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-70 focus:outline-none
+focus:ring-2
+focus:ring-purple-500
+focus:ring-offset-2"
           >
             Retry
           </button>
@@ -572,13 +601,16 @@ export default function ChecklistPage() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <main className="p-6 space-y-6">
       {/* HEADER */}
       <div className="space-y-2 p-6 pb-0">
         {/* Breadcrumb */}
-        <p className="text-sm text-gray-500 hover:text-purple-600 cursor-pointer">
-          Assessments / <span className="text-gray-800 font-medium">Assessment {assessmentId}</span>
-        </p>
+        <nav aria-label="Breadcrumb">
+          <p className="text-sm text-gray-500 hover:text-purple-600 cursor-pointer">
+            Assessments /{" "}
+            <span className="text-gray-800 font-medium">Assessment {assessmentId}</span>
+          </p>
+        </nav>
 
         {/* Title Row */}
         <div className="flex justify-between items-center">
@@ -592,19 +624,27 @@ export default function ChecklistPage() {
 
           <div className="flex items-center gap-3">
             <button
+              aria-label="Back to dashboard"
               onClick={() => router.push("/dashboard")}
               disabled={isHeaderActionPending}
-              className="px-4 py-2 text-sm border border-slate-300 rounded-lg hover:bg-gray-100 disabled:opacity-60"
+              className="px-4 py-2 text-sm border border-slate-300 rounded-lg hover:bg-gray-100 disabled:opacity-60 focus:outline-none
+focus:ring-2
+focus:ring-purple-500
+focus:ring-offset-2"
             >
               ← Back to Dashboard
             </button>
 
             <button
+              aria-label="View assessment report"
               onClick={() => router.push("/reports")}
               disabled={isHeaderActionPending}
-              className="flex items-center gap-2 px-4 py-2 text-sm border border-primary text-primary rounded-lg hover:bg-purple-50 disabled:opacity-60"
+              className="flex items-center gap-2 px-4 py-2 text-sm border border-primary text-primary rounded-lg hover:bg-purple-50 disabled:opacity-60 focus:outline-none
+focus:ring-2
+focus:ring-purple-500
+focus:ring-offset-2"
             >
-              <FileText className="w-4 h-4" /> View Report
+              <FileText aria-hidden="true" className="w-4 h-4" /> View Report
             </button>
             <MoreActionsDropdown
               onExportCsv={exportChecklistCsv}
@@ -646,11 +686,15 @@ export default function ChecklistPage() {
       {/* GROUPS */}
 
       {hasNoResults ? (
-        <div className="rounded-2xl border border-slate-200 bg-white py-16 px-6 shadow-sm">
+        <div
+          role="status"
+          aria-live="polite"
+          className="rounded-2xl border border-slate-200 bg-white py-16 px-6 shadow-sm"
+        >
           <div className="mx-auto max-w-md text-center">
             {/* Icon */}
             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100">
-              <Search className="h-8 w-8 text-purple-600" />
+              <Search aria-hidden="true" className="h-8 w-8 text-purple-600" />
             </div>
 
             {/* Heading */}
@@ -672,7 +716,10 @@ export default function ChecklistPage() {
             <div className="mt-6 flex justify-center gap-3">
               <button
                 onClick={() => resetChecklistViewState()}
-                className="rounded-lg bg-purple-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-purple-700"
+                className="rounded-lg bg-purple-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none
+focus:ring-2
+focus:ring-purple-500
+focus:ring-offset-2"
               >
                 Clear Filters
               </button>
@@ -725,27 +772,62 @@ export default function ChecklistPage() {
         />
       )}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900">Delete Assessment?</h3>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-title"
+          aria-describedby="delete-description"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              setShowDeleteConfirm(false);
+            }
+          }}
+        >
+          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl" tabIndex={-1}>
+            <h3 className="text-lg font-semibold text-gray-900" id="delete-title">
+              Delete Assessment?
+            </h3>
 
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-gray-600" id="delete-description">
               This assessment and all associated compliance data will be permanently deleted.
             </p>
 
             <div className="mt-6 flex justify-end gap-3">
               <button
+                aria-label="Cancel deletion"
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={isHeaderActionPending}
-                className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50"
+                ref={cancelButtonRef}
+                onKeyDown={(e) => {
+                  if (e.key === "Tab" && e.shiftKey) {
+                    e.preventDefault();
+                    deleteButtonRef.current?.focus();
+                  }
+                }}
+                className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50 focus:outline-none
+focus:ring-2
+focus:ring-purple-500
+focus:ring-offset-2"
               >
                 Cancel
               </button>
 
               <button
+                aria-label="Delete assessment"
                 onClick={handleDeleteAssessment}
                 disabled={isHeaderActionPending}
-                className="rounded-lg bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700 disabled:opacity-50"
+                ref={deleteButtonRef}
+                onKeyDown={(e) => {
+                  if (e.key === "Tab" && !e.shiftKey) {
+                    e.preventDefault();
+                    cancelButtonRef.current?.focus();
+                  }
+                }}
+                className="rounded-lg bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700 disabled:opacity-50 focus:outline-none
+focus:ring-2
+focus:ring-purple-500
+focus:ring-offset-2"
               >
                 {isHeaderActionPending ? "Deleting..." : "Delete"}
               </button>
@@ -766,6 +848,6 @@ export default function ChecklistPage() {
           severity={remediationContext.severity}
         />
       )}
-    </div>
+    </main>
   );
 }

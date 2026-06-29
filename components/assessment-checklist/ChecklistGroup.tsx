@@ -34,22 +34,31 @@ export default function ChecklistGroup({
   const total = controls.length;
   const percent = total ? Math.round((completed / total) * 100) : 0;
   const [globalUploadOpen, setGlobalUploadOpen] = useState(false);
-
   return (
     <div className="border rounded-lg overflow-visible">
       {/* Header */}
       <div
+        role="button"
+        tabIndex={0}
+        aria-expanded={open}
+        aria-label={`${framework}${category ? ` ${category}` : ""} section`}
         onClick={() => setOpen(!open)}
-        className={`p-4 cursor-pointer flex justify-between items-center transition border-l-4 ${
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen(!open);
+          }
+        }}
+        className={`p-4 cursor-pointer flex justify-between items-center transition-all duration-200 border-l-4 focus:outline-none focus:ring-2 focus:ring-purple-500  ${
           open
             ? "bg-purple-50 border-purple-600"
-            : "bg-gray-100 border-transparent hover:bg-gray-200"
+            : "bg-gray-100 border-transparent hover:bg-gray-200 hover:shadow-sm"
         }`}
       >
         {/* LEFT SIDE */}
         <div className="flex items-center gap-3">
           {/*  CHEVRON */}
-          <ChevronDown size={18} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+          <ChevronDown size={18} className={`transition-transform  ${open ? "rotate-180" : ""}`} />
 
           {/* Title + progress text */}
           <div>
@@ -67,7 +76,10 @@ export default function ChecklistGroup({
         <div className="flex items-center gap-4">
           {/*  Mini progress bar */}
           <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-purple-600" style={{ width: `${percent}%` }} />
+            <div
+              className="h-full bg-purple-600"
+              style={{ width: `${percent}%`, transition: "width 300ms ease" }}
+            />
           </div>
 
           {/* Score badge */}
@@ -105,9 +117,14 @@ export default function ChecklistGroup({
 
         {/* Button */}
         <button
+          aria-label="Quick add evidence"
           onClick={() => setGlobalUploadOpen(true)}
           className="w-14 h-14 rounded-full bg-linear-to-r from-purple-600 to-purple-500 
-    text-white flex items-center justify-center shadow-lg hover:scale-105 transition"
+    text-white flex items-center justify-center shadow-lg transition-all
+duration-200
+hover:scale-110
+hover:shadow-xl
+active:scale-95"
         >
           <Plus size={22} />
         </button>
@@ -115,11 +132,22 @@ export default function ChecklistGroup({
       {/* GLOBAL UPLOAD MODAL */}
       {globalUploadOpen && (
         <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 space-y-4">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="quick-upload-title"
+            className="bg-white animate-in
+fade-in
+zoom-in-95
+duration-150 rounded-xl shadow-xl w-full max-w-md p-6 space-y-4"
+          >
             {/* HEADER */}
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-gray-900">Quick Add Evidence</h3>
+              <h3 id="quick-upload-title" className="text-lg font-semibold text-gray-900">
+                Quick Add Evidence
+              </h3>
               <button
+                aria-label="Close upload dialog"
                 onClick={() => setGlobalUploadOpen(false)}
                 className="text-gray-400 hover:text-black"
               >
@@ -141,7 +169,12 @@ export default function ChecklistGroup({
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
               <p className="text-sm text-gray-500 mb-2">Drag & drop your file here</p>
 
-              <input type="file" className="hidden" id="globalUpload" />
+              <input
+                type="file"
+                className="hidden"
+                id="globalUpload"
+                aria-label="Upload evidence file"
+              />
 
               <label
                 htmlFor="globalUpload"
