@@ -125,8 +125,49 @@ const nextConfig = {
   },
 };
 
-module.exports =
+// ---------------------------------------------------------------------------
+// Sentry build-time integration
+// ---------------------------------------------------------------------------
+// withSentryConfig wraps the Next.js config to:
+//   1. Upload source maps to Sentry during production builds (if auth token
+//      is configured) for readable stack traces.
+//   2. Automatically instrument server-side routes for performance monitoring.
+//
+// IMPORTANT: The options below are conservative to avoid breaking the build.
+//   • Source-map upload is opt-in via SENTRY_AUTH_TOKEN env var.
+//   • Middleware is NOT auto-instrumented (we already handle it manually
+//     via sentry.edge.config.ts and the instrumentation hook).
+//   • The Sentry webpack plugin runs silently (silent: true) so build logs
+//     stay clean unless there is an actual error.
+// ---------------------------------------------------------------------------
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { withSentryConfig } = require("@sentry/nextjs");
+
+const resolvedConfig =
   process.env.ANALYZE === "true"
     ? // eslint-disable-next-line @typescript-eslint/no-require-imports
       require("@next/bundle-analyzer")({ enabled: true })(nextConfig)
     : nextConfig;
+
+module.exports = withSentryConfig(resolvedConfig, {
+  // Suppresses Sentry CLI logs during build unless there is an error.
+  silent: true,
+
+  // Organisation and project slugs for source-map uploads.
+  // These are only used when SENTRY_AUTH_TOKEN is set.
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+
+  // ── Safe defaults ────────────────────────────────────────────────────────
+  // Do not widen the existing source map configuration.
+  hideSourceMaps: true,
+
+  // Disable the Sentry build-time telemetry to keep builds deterministic.
+  telemetry: false,
+
+  // Webpack-specific options.
+  webpack: {
+    // Do not auto-instrument middleware — we handle it via instrumentation.ts.
+    autoInstrumentMiddleware: false,
+  },
+});

@@ -40,9 +40,16 @@ import { redis } from "@/lib/redis";
 // ---------------------------------------------------------------------------
 
 describe("GET /api/health (liveness probe)", () => {
+  function makeHealthReq(dbMetrics = false) {
+    const url = dbMetrics
+      ? "http://localhost/api/health?db_metrics=true"
+      : "http://localhost/api/health";
+    return new NextRequest(url);
+  }
+
   it("returns 200 with status:ok and a fresh timestamp", async () => {
     const before = Date.now();
-    const res = (await healthGet()) as Response;
+    const res = (await healthGet(makeHealthReq())) as Response;
     const after = Date.now();
 
     expect(res.status).toBe(200);
@@ -57,14 +64,14 @@ describe("GET /api/health (liveness probe)", () => {
   });
 
   it("does NOT expose a services block (dependency checks belong in /api/ready)", async () => {
-    const res = (await healthGet()) as Response;
+    const res = (await healthGet(makeHealthReq())) as Response;
     const json = await res.json();
     // The liveness probe must remain dependency-free — no services field.
     expect(json.services).toBeUndefined();
   });
 
   it("sets Cache-Control: no-store", async () => {
-    const res = (await healthGet()) as Response;
+    const res = (await healthGet(makeHealthReq())) as Response;
     expect(res.headers.get("cache-control")).toContain("no-store");
   });
 });
