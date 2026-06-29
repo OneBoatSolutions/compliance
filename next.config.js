@@ -149,25 +149,26 @@ const resolvedConfig =
       require("@next/bundle-analyzer")({ enabled: true })(nextConfig)
     : nextConfig;
 
-module.exports = withSentryConfig(resolvedConfig, {
-  // Suppresses Sentry CLI logs during build unless there is an error.
-  silent: true,
+module.exports = withSentryConfig(
+  resolvedConfig,
+  {
+    // Suppresses Sentry CLI logs during build unless there is an error.
+    silent: true,
 
-  // Organisation and project slugs for source-map uploads.
-  // These are only used when SENTRY_AUTH_TOKEN is set.
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
+    // Organisation and project slugs for source-map uploads.
+    // These are only used when SENTRY_AUTH_TOKEN is set.
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+  },
+  {
+    // ── Safe defaults ────────────────────────────────────────────────────────
+    // Do not widen the existing source map configuration.
+    hideSourceMaps: true,
 
-  // ── Safe defaults ────────────────────────────────────────────────────────
-  // Do not widen the existing source map configuration.
-  hideSourceMaps: true,
+    // Disable the Sentry build-time telemetry to keep builds deterministic.
+    telemetry: false,
 
-  // Disable the Sentry build-time telemetry to keep builds deterministic.
-  telemetry: false,
-
-  // Webpack-specific options.
-  webpack: {
     // Do not auto-instrument middleware — we handle it via instrumentation.ts.
     autoInstrumentMiddleware: false,
   },
-});
+);

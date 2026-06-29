@@ -64,24 +64,41 @@ export async function GET(req: NextRequest) {
       const { prisma } = await import("@/lib/prisma");
 
       const dbStart = Date.now();
-      await prisma.$queryRawUnsafe("SELECT 1");
+      await prisma.$queryRaw`SELECT 1`;
       const dbLatencyMs = Date.now() - dbStart;
 
-      // Fetch active connection count (Postgres-specific).
-      const connectionStats = (await prisma.$queryRawUnsafe(
-        `SELECT
-           (SELECT count(*) FROM pg_stat_activity WHERE state = 'active') AS active_connections,
-           current_setting('max_connections') AS max_connections`,
-      )) as { active_connections: bigint; max_connections: string }[];
+      let activeConnections = 0;
+      let maxConnections = 0;
+      let connError: string | undefined;
+
+      try {
+        // Fetch active connection count (Postgres-specific).
+        const connectionStats = await prisma.$queryRaw<
+          { active_connections: bigint; max_connections: string }[]
+        >`
+          SELECT
+            (SELECT count(*) FROM pg_stat_activity WHERE state = 'active') AS active_connections,
+            current_setting('max_connections') AS max_connections
+        `;
+        activeConnections = Number(connectionStats[0]?.active_connections ?? 0);
+        maxConnections = Number(connectionStats[0]?.max_connections ?? 0);
+      } catch (connErr) {
+        connError =
+          connErr instanceof Error
+            ? connErr.message.split("\n")[0]
+            : "Connection metrics unavailable";
+      }
 
       body.database = {
         latencyMs: dbLatencyMs,
-        activeConnections: Number(connectionStats[0]?.active_connections ?? 0),
-        maxConnections: Number(connectionStats[0]?.max_connections ?? 0),
+        activeConnections,
+        maxConnections,
+        ...(connError ? { error: connError, status: "degraded" } : { status: "healthy" }),
       };
     } catch (err) {
       body.database = {
         error: err instanceof Error ? err.message.split("\n")[0] : "Unknown error",
+        status: "degraded",
       };
     }
   }
