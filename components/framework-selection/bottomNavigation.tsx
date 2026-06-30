@@ -17,6 +17,7 @@ export default function BottomNavigation({ onNext, loading = false }: BottomNavi
       <div className="grid grid-cols-2 gap-3 md:flex md:justify-between md:items-center">
         {/* Exit */}
         <button
+          aria-label="Exit framework selection"
           type="button"
           onClick={() => router.push("/dashboard")}
           className="
@@ -38,6 +39,7 @@ export default function BottomNavigation({ onNext, loading = false }: BottomNavi
 
         {/* Back */}
         <button
+          aria-label="Go back to organization details"
           type="button"
           onClick={() => router.back()}
           className="
@@ -57,6 +59,7 @@ export default function BottomNavigation({ onNext, loading = false }: BottomNavi
 
         {/* Next */}
         <button
+          aria-label="Create assessment with selected frameworks"
           type="button"
           onClick={onNext}
           disabled={loading}

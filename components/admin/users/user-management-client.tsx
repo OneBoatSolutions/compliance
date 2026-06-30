@@ -104,6 +104,7 @@ export function UserManagementClient({ currentUserId }: UserManagementClientProp
               <button
                 onClick={() => refetch()}
                 className="mt-2 rounded-2xl bg-rose-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-rose-200 hover:bg-rose-700 transition"
+                aria-label="Retry loading users"
               >
                 Retry Request
               </button>
@@ -113,11 +114,15 @@ export function UserManagementClient({ currentUserId }: UserManagementClientProp
               <UsersTable users={data.items} currentUserId={currentUserId} onEdit={handleEdit} />
 
               {data.meta.totalPages > 1 && (
-                <div className="flex flex-col gap-5 rounded-[28px] border border-[#e5e5e5] bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                <div
+                  className="flex flex-col gap-5 rounded-[28px] border border-[#e5e5e5] bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+                  aria-live="polite"
+                >
                   <p className="text-sm text-[#737373]">Navigate through registered user pages</p>
                   <div className="flex items-center gap-4">
                     <button
                       type="button"
+                      aria-label="Go to previous page"
                       onClick={() => goToPage(Math.max(page - 1, 1))}
                       disabled={page <= 1 || isPending}
                       className="rounded-2xl border border-[#e5e5e5] bg-white px-5 py-3 text-sm font-semibold text-[#525252] transition hover:border-[#6d18ff] hover:text-[#6d18ff] disabled:cursor-not-allowed disabled:opacity-40"
@@ -129,6 +134,7 @@ export function UserManagementClient({ currentUserId }: UserManagementClientProp
                     </div>
                     <button
                       type="button"
+                      aria-label="Go to next page"
                       onClick={() => goToPage(page + 1)}
                       disabled={page >= data.meta.totalPages || isPending}
                       className="rounded-2xl border border-[#e5e5e5] bg-white px-5 py-3 text-sm font-semibold text-[#525252] transition hover:border-[#6d18ff] hover:text-[#6d18ff] disabled:cursor-not-allowed disabled:opacity-40"

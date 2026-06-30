@@ -48,7 +48,7 @@ export function ComplianceHealthDonut({
         className="relative"
         style={{ width: size, height: size }}
         role="progressbar"
-        aria-label={label}
+        aria-label={`${label}: ${roundedPercent}% healthy`}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={roundedPercent}

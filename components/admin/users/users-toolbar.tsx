@@ -83,6 +83,7 @@ export function UsersToolbar({ total, onCreateClick }: UsersToolbarProps) {
               <Button
                 onClick={onCreateClick}
                 className="rounded-2xl bg-white px-6 py-4 text-sm font-semibold text-[#6d18ff] shadow-lg hover:bg-slate-50 transition hover:scale-[1.02] border-0 outline-none"
+                aria-label="Create new user"
               >
                 <UserPlus className="mr-2 h-4 w-4" />
                 Create New User
@@ -102,7 +103,10 @@ export function UsersToolbar({ total, onCreateClick }: UsersToolbarProps) {
                 Search profiles and filter by assigned roles or account status
               </p>
             </div>
-            <div className="rounded-2xl border border-[#e5e5e5] bg-[#fafafa] px-4 py-2 text-sm font-medium text-[#525252]">
+            <div
+              className="rounded-2xl border border-[#e5e5e5] bg-[#fafafa] px-4 py-2 text-sm font-medium text-[#525252]"
+              aria-live="polite"
+            >
               {isPending ? "Updating..." : `Showing ${total} users`}
             </div>
           </div>
@@ -113,6 +117,7 @@ export function UsersToolbar({ total, onCreateClick }: UsersToolbarProps) {
               onChange={(event) => setSearchInput(event.target.value)}
               placeholder="Search users by name or email address..."
               className="w-full rounded-2xl border border-[#e5e5e5] bg-[#fafafa] px-5 py-4 text-sm outline-none transition focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff]"
+              aria-label="Search users"
             />
           </div>
 
@@ -121,6 +126,7 @@ export function UsersToolbar({ total, onCreateClick }: UsersToolbarProps) {
               value={roleFilter}
               onChange={(event) => updateFilters({ role: event.target.value })}
               className="rounded-2xl border border-[#e5e5e5] bg-white px-4 py-4 text-sm font-medium outline-none transition focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff]"
+              aria-label="Filter users by role"
             >
               <option value="">All Roles</option>
               <option value={Role.ADMIN}>Admin</option>
@@ -131,6 +137,7 @@ export function UsersToolbar({ total, onCreateClick }: UsersToolbarProps) {
               value={isActiveFilter}
               onChange={(event) => updateFilters({ isActive: event.target.value })}
               className="rounded-2xl border border-[#e5e5e5] bg-white px-4 py-4 text-sm font-medium outline-none transition focus:border-[#6d18ff] focus:ring-4 focus:ring-[#e9ddff]"
+              aria-label="Filter users by account status"
             >
               <option value="">All Statuses</option>
               <option value="true">Active</option>
@@ -147,6 +154,7 @@ export function UsersToolbar({ total, onCreateClick }: UsersToolbarProps) {
                   updateFilters({ role: "", isActive: "", search: "" });
                 }}
                 className="rounded-full border border-[#e5e5e5] px-4 py-2 text-sm font-medium text-[#525252] transition hover:border-[#6d18ff] hover:text-[#6d18ff]"
+                aria-label="Clear all filters"
               >
                 Clear Filters
               </button>

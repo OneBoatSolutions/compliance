@@ -17,7 +17,11 @@ export function AssigneeDueDate({
     <div className="rounded-2xl border border-purple-100 bg-gradient-to-br from-purple-50/50 to-white p-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Assignee */}
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md">
+        <div
+          className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md"
+          role="group"
+          aria-labelledby="assignee-heading"
+        >
           <div className="flex items-center gap-2 mb-3">
             <User size={14} className="text-purple-600" />
             <p className="text-sm font-medium text-slate-700">Assignee</p>
@@ -44,6 +48,9 @@ export function AssigneeDueDate({
               placeholder="Select assignee"
             />
           </div>
+          <p id="assignee-help" className="mt-2  text-xs text-slate-500">
+            Person responsible for this control.
+          </p>
         </div>
 
         {/* Due Date */}
@@ -67,15 +74,19 @@ export function AssigneeDueDate({
             <Calendar size={16} className="text-slate-400" />
 
             <input
-              aria-label="Due date"
               type="date"
               value={dueDate}
+              min={new Date().toISOString().split("T")[0]}
               onChange={(e) => setDueDate(e.target.value)}
+              aria-label="Due date"
+              aria-describedby="due-date-help"
               className="w-full bg-transparent outline-none text-sm"
             />
           </div>
 
-          <p className="mt-2 text-xs text-slate-500">Target completion date for this control.</p>
+          <p className="mt-2 text-xs text-slate-500" id="due-date-help">
+            Target completion date for this control.
+          </p>
         </div>
       </div>
     </div>

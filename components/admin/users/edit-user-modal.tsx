@@ -140,7 +140,10 @@ export function EditUserModal({ isOpen, onClose, user, currentUserId }: EditUser
         }
       }}
     >
-      <DialogContent className="max-w-md rounded-[28px] border border-[#e5e5e5] bg-white p-0 shadow-2xl overflow-hidden">
+      <DialogContent
+        className="max-w-md rounded-[28px] border border-[#e5e5e5] bg-white p-0 shadow-2xl overflow-hidden"
+        aria-describedby="edit-user-description"
+      >
         <div
           className="max-h-[90vh] overflow-y-auto p-7 pr-5 
        [&::-webkit-scrollbar]:w-2
@@ -153,7 +156,7 @@ export function EditUserModal({ isOpen, onClose, user, currentUserId }: EditUser
             <DialogTitle className="text-2xl font-bold text-[#171717]">
               Edit User Profile
             </DialogTitle>
-            <DialogDescription className="text-sm text-[#737373] mt-1">
+            <DialogDescription className="text-sm text-[#737373] mt-1" id="edit-user-description">
               Update role permissions or deactivate user access.
             </DialogDescription>
           </DialogHeader>
@@ -163,21 +166,38 @@ export function EditUserModal({ isOpen, onClose, user, currentUserId }: EditUser
               <label className="text-sm font-semibold tracking-wide text-[#171717]">
                 Full Name
               </label>
-              <input type="text" readOnly className={disabledInputClass} value={user.name} />
+              <input
+                type="text"
+                readOnly
+                className={disabledInputClass}
+                value={user.name}
+                aria-label="Full name"
+              />
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-semibold tracking-wide text-[#171717]">
                 Email Address
               </label>
-              <input type="email" readOnly className={disabledInputClass} value={user.email} />
+              <input
+                type="email"
+                readOnly
+                className={disabledInputClass}
+                value={user.email}
+                aria-label="Email address"
+              />
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-semibold tracking-wide text-[#171717]">Role</label>
               {isSelf ? (
                 <div className="relative">
-                  <select className={disabledInputClass} disabled value={user.role}>
+                  <select
+                    className={disabledInputClass}
+                    disabled
+                    value={user.role}
+                    aria-label="User role"
+                  >
                     <option value={Role.ADMIN}>Admin (Full Access)</option>
                     <option value={Role.USER}>User (Auditor/Member)</option>
                   </select>
@@ -202,7 +222,12 @@ export function EditUserModal({ isOpen, onClose, user, currentUserId }: EditUser
               </label>
               {isSelf ? (
                 <div className="relative">
-                  <select className={disabledInputClass} disabled value="true">
+                  <select
+                    className={disabledInputClass}
+                    disabled
+                    value="true"
+                    aria-label="Account status"
+                  >
                     <option value="true">Active</option>
                     <option value="false">Inactive</option>
                   </select>
@@ -227,7 +252,10 @@ export function EditUserModal({ isOpen, onClose, user, currentUserId }: EditUser
             </div>
 
             {showDeactivateConfirm && !isSelf && (
-              <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 flex gap-3 text-rose-800">
+              <div
+                className="rounded-2xl border border-rose-200 bg-rose-50 p-4 flex gap-3 text-rose-800"
+                role="alert"
+              >
                 <AlertTriangle className="h-5 w-5 shrink-0 text-rose-600" />
                 <div className="text-xs font-medium space-y-1">
                   <p className="font-bold text-rose-900">Deactivation Warning</p>
@@ -239,7 +267,10 @@ export function EditUserModal({ isOpen, onClose, user, currentUserId }: EditUser
               </div>
             )}
             {showDeleteConfirm && (
-              <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 flex gap-3 text-rose-800">
+              <div
+                className="rounded-2xl border border-rose-200 bg-rose-50 p-4 flex gap-3 text-rose-800"
+                role="alert"
+              >
                 <AlertTriangle className="h-5 w-5 shrink-0 text-rose-600" />
 
                 <div className="text-xs font-medium space-y-3 w-full">
@@ -257,6 +288,7 @@ export function EditUserModal({ isOpen, onClose, user, currentUserId }: EditUser
                       type="button"
                       variant="outline"
                       onClick={() => setShowDeleteConfirm(false)}
+                      aria-label="Cancel editing"
                     >
                       Cancel
                     </Button>
@@ -266,6 +298,7 @@ export function EditUserModal({ isOpen, onClose, user, currentUserId }: EditUser
                       variant="destructive"
                       onClick={handleDelete}
                       disabled={isDeleting}
+                      aria-label="Delete user"
                     >
                       {isDeleting ? "Deleting..." : "Confirm Delete"}
                     </Button>
@@ -281,6 +314,7 @@ export function EditUserModal({ isOpen, onClose, user, currentUserId }: EditUser
                 disabled={isSelf || isDeleting}
                 onClick={() => setShowDeleteConfirm(true)}
                 className="rounded-2xl"
+                aria-label="Delete user"
               >
                 Delete User
               </Button>
@@ -289,6 +323,7 @@ export function EditUserModal({ isOpen, onClose, user, currentUserId }: EditUser
                 variant="outline"
                 onClick={onClose}
                 className="rounded-2xl border border-[#d4d4d4] bg-white px-5 py-3.5 text-sm font-semibold text-[#525252] hover:bg-[#fafafa]"
+                aria-label="Cancel editing"
               >
                 Cancel
               </Button>
@@ -296,6 +331,7 @@ export function EditUserModal({ isOpen, onClose, user, currentUserId }: EditUser
                 type="submit"
                 disabled={isPending}
                 className="rounded-2xl bg-[#6d18ff] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(109,24,255,0.28)] hover:bg-[#5412cc] disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label="Save user changes"
               >
                 {isPending ? "Saving..." : "Save Changes"}
               </Button>

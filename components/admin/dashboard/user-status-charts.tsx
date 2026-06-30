@@ -1,13 +1,15 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useMemo } from "react";
+import {
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
 
-const UserStatusPie = dynamic(() => import("@/components/charts/user-status-pie"), {
-  ssr: false,
-  loading: () => <Skeleton className="h-full w-full rounded-2xl" />,
-});
+
 
 const data = [
   {
@@ -23,10 +25,14 @@ const data = [
 ];
 
 export default function UserStatusChart() {
-  const totalUsers = data.reduce((acc, item) => acc + item.value, 0);
+  const totalUsers = useMemo(
+  () => data.reduce((acc, item) => acc + item.value, 0),
+  [],
+);
 
   return (
     <section
+      aria-labelledby="user-status-title"
       className="
         relative
         overflow-hidden
@@ -46,6 +52,7 @@ export default function UserStatusChart() {
     >
       {/* TOP LIGHT */}
       <div
+        aria-hidden="true"
         className="
           pointer-events-none
           absolute
@@ -60,6 +67,7 @@ export default function UserStatusChart() {
 
       {/* PURPLE GLOW */}
       <div
+      aria-hidden="true"
         className="
           absolute
           -right-16
@@ -74,15 +82,40 @@ export default function UserStatusChart() {
 
       {/* HEADER */}
       <div className="relative z-10 mb-6">
-        <h2 className="text-lg font-semibold text-slate-900">User Status</h2>
+        <h2 className="text-lg font-semibold text-slate-900" id="user-status-title">
+          User Status
+        </h2>
 
         <p className="text-sm text-slate-500">Active and inactive user distribution.</p>
       </div>
 
       {/* CHART */}
       <div className="relative z-10 flex items-center justify-center">
-        <div className="relative h-[240px] w-full">
-          <UserStatusPie data={data} />
+        <div
+          className="relative h-[240px] w-full"
+          role="img"
+          aria-label={`User status chart showing ${data[0].value} active users and ${data[1].value} inactive users.`}
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={data}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                innerRadius={68}
+                outerRadius={95}
+                paddingAngle={4}
+                stroke="rgba(255,255,255,0.6)"
+                strokeWidth={4}
+              >
+                {data.map((entry) => (
+                  <Cell key={entry.name} fill={entry.fill} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
 
           {/* CENTER LABEL */}
           <div
@@ -99,6 +132,7 @@ export default function UserStatusChart() {
             "
           >
             <div
+              
               className="
                 relative
                 overflow-hidden
@@ -114,6 +148,7 @@ export default function UserStatusChart() {
             >
               {/* GLOSS */}
               <div
+                aria-hidden="true"
                 className="
                   pointer-events-none
                   absolute
@@ -127,7 +162,7 @@ export default function UserStatusChart() {
               />
 
               <div className="relative z-10 text-center">
-                <p className="text-2xl font-bold text-violet-700">{totalUsers}</p>
+                <p className="text-2xl font-bold text-violet-700" aria-live="polite">{totalUsers}</p>
 
                 <span className="text-xs font-medium text-slate-500">Total Users</span>
               </div>
@@ -139,9 +174,10 @@ export default function UserStatusChart() {
       {/* LEGENDS */}
       <div className="relative z-10 mt-6 flex items-center justify-center gap-6">
         {data.map((item) => (
-          <div key={item.name} className="flex items-center gap-2">
+          <div key={item.name} className="flex items-center gap-2"  aria-label={`${item.name}: ${item.value} users`}>
             {/* COLOR CHIP */}
             <div
+              aria-hidden="true"
               className="
                 relative
                 h-3.5
@@ -176,6 +212,7 @@ export default function UserStatusChart() {
         ))}
       </div>
       <Link
+        aria-label="Manage users"
         href="/admin/users"
         className="
     group
@@ -202,6 +239,10 @@ export default function UserStatusChart() {
     hover:bg-violet-100
     hover:shadow-lg
     hover:shadow-violet-100/50
+    focus-visible:outline-none
+    focus-visible:ring-2
+    focus-visible:ring-violet-500
+    focus-visible:ring-offset-2
   "
       >
         {/* GLOSS */}
@@ -221,6 +262,7 @@ export default function UserStatusChart() {
         <span className="relative z-10">Manage Users</span>
 
         <span
+          aria-hidden="true"
           className="
       relative
       z-10

@@ -32,11 +32,11 @@ export default function SidebarSummary({ selected, onContinue, loading }: Props)
     <div className="sticky top-6 p-5 rounded-2xl bg-purple-50 border border-purple-100 h-fit flex flex-col">
       <div className="flex flex-col h-full space-y-8">
         {/* Heading + List */}
-        <div className="space-y-6">
+        <ul className="space-y-6" aria-label="Selected frameworks">
           <h3 className="font-semibold text-lg text-purple-800">Selected Frameworks</h3>
 
           {/* Framework List */}
-          <div className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
+          <li className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
             {selected.length === 0 ? (
               <p className="text-sm text-gray-500">No frameworks selected</p>
             ) : (
@@ -55,8 +55,8 @@ export default function SidebarSummary({ selected, onContinue, loading }: Props)
                 </div>
               ))
             )}
-          </div>
-        </div>
+          </li>
+        </ul>
         <p className="text-sm text-gray-500">{selected.length} frameworks selected</p>
 
         {/* Divider */}
@@ -87,6 +87,7 @@ export default function SidebarSummary({ selected, onContinue, loading }: Props)
 
           {/* CTA */}
           <button
+            aria-label="Continue to assessment creation"
             onClick={onContinue}
             disabled={loading}
             className={`w-full py-3 rounded-md text-white font-semibold transition-all
@@ -131,7 +132,7 @@ export default function SidebarSummary({ selected, onContinue, loading }: Props)
             <div className="flex items-center gap-3">
               <span className="w-3 h-3 rounded-full bg-red-500" />
 
-              <span className="w-14 text-xs font-medium text-slate-700"> &lt;60% </span>
+              <span className="w-14 text-xs font-medium text-slate-700">below 60%</span>
 
               <span className="text-xs text-slate-500"> Low</span>
             </div>

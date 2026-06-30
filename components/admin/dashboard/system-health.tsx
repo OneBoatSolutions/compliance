@@ -113,6 +113,7 @@ export default function SystemHealth() {
         hover:shadow-2xl
         hover:shadow-violet-100/50
       "
+      aria-labelledby="system-health-title"
     >
       {/* TOP LIGHT */}
       <div
@@ -146,7 +147,9 @@ export default function SystemHealth() {
       <div className="relative z-10">
         {/* HEADER */}
         <div className="mb-5">
-          <h2 className="text-lg font-semibold text-slate-900">System Health</h2>
+          <h2 className="text-lg font-semibold text-slate-900" id="system-health-title">
+            System Health
+          </h2>
 
           <p className="text-sm text-slate-500">Operational platform monitoring overview.</p>
         </div>
@@ -176,6 +179,8 @@ export default function SystemHealth() {
                   hover:shadow-lg
                   hover:shadow-violet-100/40
                 "
+                role="group"
+                aria-label={`${item.title}: ${item.status}`}
               >
                 {/* GLOSS */}
                 <div
@@ -264,6 +269,7 @@ export default function SystemHealth() {
                       rounded-full
                       ${dotColor}
                     `}
+                    aria-hidden="true"
                   />
                 </div>
               </div>

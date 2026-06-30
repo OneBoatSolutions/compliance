@@ -1,4 +1,4 @@
-import { CheckCircle2, Circle, Clock3, ListChecks, User, ClipboardList } from "lucide-react";
+import { CheckCircle2, Circle, Clock3, ListChecks, User } from "lucide-react";
 
 import type { RemediationStepData, RemediationStepStatus } from "@/services/types";
 
@@ -9,7 +9,17 @@ interface PriorityActionsProps {
 }
 
 function getNextStatus(status?: RemediationStepStatus): RemediationStepStatus {
-  return status === "DONE" ? "TODO" : "DONE";
+  switch (status) {
+    case "TODO":
+      return "IN_PROGRESS";
+
+    case "IN_PROGRESS":
+      return "DONE";
+
+    case "DONE":
+    default:
+      return "TODO";
+  }
 }
 
 export default function PriorityActions({
@@ -25,7 +35,6 @@ export default function PriorityActions({
       </div>
 
       {steps.map((step, index) => {
-        const isDone = step.status === "DONE";
         const isUpdating = updatingStepIndex === index;
 
         return (
@@ -41,15 +50,41 @@ export default function PriorityActions({
                 disabled={isUpdating}
                 onClick={() => onStepStatusChange(index, getNextStatus(step.status))}
                 className="mt-0.5 text-purple-600 disabled:opacity-50"
-                aria-label={isDone ? "Mark step incomplete" : "Mark step complete"}
+                aria-label={`Next status: ${
+                  getNextStatus(step.status) === "IN_PROGRESS"
+                    ? "In Progress"
+                    : getNextStatus(step.status) === "DONE"
+                      ? "Completed"
+                      : "Todo"
+                }`}
+                title={`Next status: ${
+                  getNextStatus(step.status) === "IN_PROGRESS"
+                    ? "In Progress"
+                    : getNextStatus(step.status) === "DONE"
+                      ? "Completed"
+                      : "Todo"
+                }`}
               >
-                {isDone ? <CheckCircle2 size={20} /> : <Circle size={20} />}
+                {/* icon */}
+                {step.status === "DONE" ? (
+                  <CheckCircle2 size={20} />
+                ) : step.status === "IN_PROGRESS" ? (
+                  <Clock3 size={20} />
+                ) : (
+                  <Circle size={20} />
+                )}
               </button>
 
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p
-                    className={`font-medium ${isDone ? "line-through text-muted-foreground" : ""}`}
+                    className={`font-medium ${
+                      step.status === "DONE"
+                        ? "line-through text-muted-foreground"
+                        : step.status === "IN_PROGRESS"
+                          ? "text-yellow-700"
+                          : ""
+                    }`}
                   >
                     {step.title}
                   </p>
@@ -85,7 +120,7 @@ export default function PriorityActions({
                     {step.estimatedHours}h
                   </span>
                   <span
-                    className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs ${
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs transition-all duration-300 ${
                       step.status === "DONE"
                         ? "bg-green-50 text-green-700"
                         : step.status === "IN_PROGRESS"
@@ -93,7 +128,13 @@ export default function PriorityActions({
                           : "bg-slate-50 text-slate-600"
                     }
                          `}
-                  ></span>
+                  >
+                    {step.status === "DONE"
+                      ? "Completed"
+                      : step.status === "IN_PROGRESS"
+                        ? "In Progress"
+                        : "Todo"}
+                  </span>
                 </div>
               </div>
             </div>

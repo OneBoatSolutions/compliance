@@ -63,6 +63,8 @@ export default function DashboardStats({
 
         return (
           <div
+            role="group"
+            aria-label={`${stat.title}: ${stat.value}`}
             key={stat.title}
             className={`
               relative

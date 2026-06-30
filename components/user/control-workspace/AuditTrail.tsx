@@ -64,6 +64,13 @@ export default function AuditTrail({ assessmentId, assessmentItemId }: AuditTrai
   if (!assessmentId || !assessmentItemId) {
     return null;
   }
+  const truncateText = (text: string, limit = 45) => {
+    if (text.length <= limit) {
+      return text;
+    }
+
+    return `${text.slice(0, limit)}...`;
+  };
 
   return (
     <div className="bg-white shadow-sm p-5 rounded-xl border">
@@ -72,10 +79,10 @@ export default function AuditTrail({ assessmentId, assessmentItemId }: AuditTrai
         <p className="font-semibold">Audit Trail</p>
       </div>
 
-      <div className="relative">
-        {/* 🔥 CONTINUOUS LINE */}
-        <div className="absolute left-5 top-0 bottom-0 w-[2px] bg-purple-200" />
-        <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2">
+      <div className="max-h-[400px] overflow-y-auto pr-2">
+        <div className="relative space-y-6">
+          <div className="absolute left-5 top-5 bottom-5 w-[2px] bg-purple-200" />
+
           {isLoading ? (
             <div className="space-y-4">
               <Skeleton className="h-10 w-full" />
@@ -104,7 +111,7 @@ export default function AuditTrail({ assessmentId, assessmentItemId }: AuditTrai
                 <div className="pb-4 flex-1">
                   <p className="text-sm font-semibold text-slate-900">{item.user}</p>
 
-                  <p className="text-xs text-muted-foreground">{item.details}</p>
+                  <p className="text-xs text-muted-foreground"> {truncateText(item.details)}</p>
                   <p className="text-xs text-muted-foreground mt-0.5">
                     {formatDistanceToNow(new Date(item.date), { addSuffix: true })}
                   </p>
@@ -113,9 +120,6 @@ export default function AuditTrail({ assessmentId, assessmentItemId }: AuditTrai
             ))
           )}
         </div>
-
-        {/* 🔥 EXTENSION LINE (below last item) */}
-        <div className="absolute left-[10px] bottom-[-20px] w-[2px] h-6 bg-muted opacity-50" />
       </div>
     </div>
   );

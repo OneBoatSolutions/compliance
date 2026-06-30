@@ -9,9 +9,12 @@ const options = ["All", "High", "Medium", "Low"];
 
 export default function ConfidenceFilter({ active, setActive }: Props) {
   return (
-    <div className="flex gap-2 flex-wrap">
+    <div className="flex gap-2 flex-wrap" role="tablist" aria-label="Confidence filters">
       {options.map((opt) => (
         <button
+          role="tab"
+          aria-selected={active === opt}
+          aria-label={`${opt} confidence`}
           key={opt}
           onClick={() => setActive(opt)}
           className={`px-3 py-1 rounded-full text-sm transition ${

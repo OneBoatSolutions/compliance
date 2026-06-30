@@ -122,6 +122,19 @@ export default function RemediationDrawer({
   const [saving, setSaving] = useState(false);
   const [updatingStepIndex, setUpdatingStepIndex] = useState<number | null>(null);
 
+  // useEffect for the background page scrollbar//
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.documentElement.style.overflow = "";
+    };
+  }, [open]);
+
   useEffect(() => {
     if (!open) {
       return;
@@ -331,22 +344,33 @@ export default function RemediationDrawer({
   const isBusy = loading || regenerating || saving;
 
   return (
-    <div className="remediation-print-container fixed inset-0 z-50 flex">
+    <div className="remediation-print-container fixed inset-0 z-50 flex overflow-hidden">
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm print:hidden"
         onClick={onClose}
       />
 
       <div
-        className={`remediation-print-root relative ml-auto h-full w-full md:w-[78%] bg-white shadow-2xl rounded-l-2xl flex flex-col transform transition-all duration-300 ease-in-out ${
+        className={`remediation-print-root relative ml-auto h-full w-full md:w-[78%] bg-white shadow-2xl rounded-l-2xl flex flex-col transform transition-all duration-300 ease-in-out overflow-hidden ${
           open ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
         }`}
       >
         <RemediationHeader data={data ?? undefined} onClose={onClose} />
 
-        <div className="flex-1 overflow-y-auto px-8 py-8 space-y-8">
+        <div className=" min-h-0 flex-1 overflow-y-auto px-8 py-8 space-y-8">
           {loading || !data ? (
             <LoadingState />
+          ) : data.steps.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <h3 className="text-lg font-semibold text-slate-700">
+                {" "}
+                No remediation actions generated
+              </h3>
+              <p className="mt-2 text-sm text-slate-500 max-w-md">
+                The AI could not generate remediation steps for this control.Try regenerating the
+                plan.
+              </p>
+            </div>
           ) : (
             <>
               <RemediationTop data={data} />

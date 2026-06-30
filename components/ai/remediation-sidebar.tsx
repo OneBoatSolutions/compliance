@@ -26,7 +26,10 @@ export default function RemediationSidebar({ data }: { data: RemediationData }) 
             <span>{data.steps.length} total</span>
           </div>
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-purple-600" style={{ width: `${completionRate}%` }} />
+            <div
+              className="h-full bg-purple-600 transition-all duration-500"
+              style={{ width: `${completionRate}%` }}
+            />
           </div>
           <span className="inline-flex rounded-full bg-purple-50 px-2.5 py-1 text-xs font-medium text-purple-700 border border-purple-100">
             {" "}

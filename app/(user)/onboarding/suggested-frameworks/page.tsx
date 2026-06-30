@@ -13,7 +13,6 @@ import BottomNavigation from "@/components/framework-selection/bottomNavigation"
 import { useRouter } from "next/navigation";
 import { Search, Plus, X } from "lucide-react";
 import { Shield } from "lucide-react";
-import { toast } from "sonner";
 
 /* ---------------- PAGE ---------------- */
 
@@ -77,9 +76,7 @@ export default function Page() {
   const [showLoader, setShowLoader] = useState(true);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("All");
-  const handleSaveDraft = async () => {
-    toast.success("Draft saved successfully");
-  };
+
   // Manual add state
   const [showManualAdd, setShowManualAdd] = useState(false);
   const [manualSearch, setManualSearch] = useState("");
@@ -220,6 +217,18 @@ export default function Page() {
     return publishedFrameworks.filter((fw) => !existingIds.has(fw.id));
   }, [publishedFrameworks, allFrameworks]);
 
+  // Initial page loader
+  useEffect(() => {
+    setIsHydrated(true);
+
+    const timer = setTimeout(() => {
+      setShowLoader(false);
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Redirect if there are no frameworks
   useEffect(() => {
     if (!isHydrated || showLoader) {
       return;
@@ -228,17 +237,29 @@ export default function Page() {
     if (suggestions.length === 0 && manuallyAdded.length === 0) {
       router.replace("/onboarding");
     }
-  }, [isHydrated, router, showLoader, suggestions.length, manuallyAdded.length]);
+  }, [isHydrated, showLoader, suggestions.length, manuallyAdded.length, router]);
 
+  // Close manual dialog with Escape
   useEffect(() => {
-    setIsHydrated(true);
-    // Force loader to stay for a short duration for smooth transition.
-    const timer = setTimeout(() => {
-      setShowLoader(false);
-    }, 600);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!showManualAdd) {
+      return;
+    }
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowManualAdd(false);
+        setManualSearch("");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showManualAdd]);
+
+  // Loading states
   if (!isHydrated || showLoader) {
     return <LoadingScreen />;
   }
@@ -329,7 +350,7 @@ export default function Page() {
             hover:shadow-md
           "
                   >
-                    <Plus size={16} />
+                    <Plus size={16} className="text-lg font-semibold text-gray-900" />
                     Add Framework
                   </button>
                 </div>
@@ -380,10 +401,20 @@ export default function Page() {
       {/* Manual Add Modal */}
       {showManualAdd && (
         <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 space-y-4 max-h-[80vh] flex flex-col">
+          <div
+            className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 space-y-4 max-h-[80vh] flex flex-col "
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="manual-framework-title"
+            aria-describedby="manual-framework-description"
+          >
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-gray-900">Add Framework</h3>
+              <h3 id="manual-framework-title" className="text-lg font-semibold text-gray-900">
+                Add Framework
+              </h3>
               <button
+                type="button"
+                aria-label="Close Add Framework dialog"
                 onClick={() => {
                   setShowManualAdd(false);
                   setManualSearch("");
@@ -394,27 +425,41 @@ export default function Page() {
               </button>
             </div>
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500" id="manual-framework-description">
               Search and add published frameworks that the AI may not have suggested.
             </p>
 
             {/* Search input */}
             <div className="relative">
               <Search
+                aria-label="Search published frameworks"
+                aria-describedby="framework-search-help"
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                 size={18}
               />
+
               <input
+                aria-label="Search published frameworks"
+                aria-describedby="framework-search-help"
                 className="w-full pl-10 pr-4 py-2.5 bg-slate-50 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#6d18ff]/40 focus:border-[#6d18ff]"
                 placeholder="Search by name or code..."
                 value={manualSearch}
                 onChange={(e) => setManualSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && availablePublished.length > 0) {
+                    handleAddManualFramework(availablePublished[0]);
+                  }
+                }}
                 autoFocus
               />
             </div>
 
             {/* Results */}
-            <div className="flex-1 overflow-y-auto space-y-2 min-h-0">
+            <div
+              className="flex-1 overflow-y-auto space-y-2 min-h-0"
+              role="list"
+              aria-label="Published frameworks"
+            >
               {isLoadingPublished ? (
                 <div className="py-8 text-center text-sm text-slate-400">
                   Searching frameworks...
@@ -428,6 +473,9 @@ export default function Page() {
               ) : (
                 availablePublished.map((fw) => (
                   <button
+                    type="button"
+                    role="listitem"
+                    aria-label={`Add ${fw.name} (${fw.code})`}
                     key={fw.id}
                     onClick={() => handleAddManualFramework(fw)}
                     className="w-full text-left rounded-lg border border-slate-200 bg-white p-3 hover:border-[#6d18ff]/40 hover:bg-[#6d18ff]/5 transition-all"

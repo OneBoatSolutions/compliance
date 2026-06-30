@@ -169,8 +169,13 @@ export default function ActiveDashboard({ data }: Props) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 pb-16 pt-24">
-        <section className="mb-8 rounded-2xl border border-[#6d18ff]/15 bg-gradient-to-br from-[#f1eaff] via-white to-[#efe3ff] p-6 shadow-sm md:p-8">
-          <h1 className="text-3xl font-bold text-slate-900 md:text-4xl">Dashboard</h1>
+        <section
+          className="mb-8 rounded-2xl border border-[#6d18ff]/15 bg-gradient-to-br from-[#f1eaff] via-white to-[#efe3ff] p-6 shadow-sm md:p-8"
+          aria-labelledby="dashboard-heading"
+        >
+          <h1 className="text-3xl font-bold text-slate-900 md:text-4xl" id="dashboard-heading">
+            Dashboard
+          </h1>
           <p className="mt-2 max-w-2xl text-sm text-slate-600 md:text-base">
             Monitor compliance momentum in real time, track critical gaps, and keep your team
             audit-ready with a single purple-powered command center.
@@ -185,6 +190,7 @@ export default function ActiveDashboard({ data }: Props) {
               <article
                 key={metric.title}
                 className="rounded-xl border border-slate-100 bg-white p-5 shadow-sm"
+                aria-label={`${metric.title}: ${metric.value}`}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -206,10 +212,15 @@ export default function ActiveDashboard({ data }: Props) {
         <section className="grid grid-cols-1 gap-8 lg:grid-cols-10">
           <div className="space-y-6 lg:col-span-7">
             {/* Active Assessments */}
-            <article className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
+            <article
+              className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm"
+              aria-labelledby="active-assessments-heading"
+            >
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="text-lg font-bold text-slate-900">Active Assessments</h2>
+                  <h2 className="text-lg font-bold text-slate-900" id="active-assessments-heading">
+                    Active Assessments
+                  </h2>
                   <p className="text-sm text-slate-500">
                     Current compliance workstreams with progress and ownership.
                   </p>
@@ -228,6 +239,7 @@ export default function ActiveDashboard({ data }: Props) {
                       key={assessment.id}
                       href={`/assessments/${assessment.id}/checklist`}
                       className="block rounded-xl border border-slate-100 bg-slate-50/70 p-4 hover:border-[#6d18ff]/20 hover:shadow-sm transition-all md:p-5"
+                      aria-label={`Open ${assessment.organizationName} assessment`}
                     >
                       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div>
@@ -243,6 +255,7 @@ export default function ActiveDashboard({ data }: Props) {
                                     ? "bg-slate-100 text-slate-600"
                                     : "bg-amber-100 text-amber-700"
                               }`}
+                              aria-label={`Assessment status ${assessmentStatusLabel(assessment.status)}`}
                             >
                               {assessmentStatusLabel(assessment.status)}
                             </span>
@@ -250,6 +263,7 @@ export default function ActiveDashboard({ data }: Props) {
                               <span
                                 key={fs.frameworkCode}
                                 className="rounded-full bg-[#6d18ff]/10 px-2.5 py-1 text-[11px] font-semibold text-[#6d18ff]"
+                                aria-label={`${fs.frameworkCode} compliance score ${Math.round(fs.score)} percent`}
                               >
                                 {fs.frameworkCode}: {Math.round(fs.score)}%
                               </span>
@@ -279,8 +293,13 @@ export default function ActiveDashboard({ data }: Props) {
             </article>
 
             {/* Recent Activity */}
-            <article className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-bold text-slate-900">Recent Activity</h2>
+            <article
+              className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm"
+              aria-labelledby="recent-activity-heading"
+            >
+              <h2 className="text-lg font-bold text-slate-900" id="recent-activity-heading">
+                Recent Activity
+              </h2>
               <p className="mt-1 text-sm text-slate-500">
                 Latest compliance events from your team.
               </p>
@@ -288,14 +307,23 @@ export default function ActiveDashboard({ data }: Props) {
               {data.recentActivity.length === 0 ? (
                 <p className="mt-6 py-8 text-center text-sm text-slate-400">No recent activity.</p>
               ) : (
-                <div className="relative mt-6 space-y-5">
+                <div
+                  className="relative mt-6 space-y-5"
+                  role="list"
+                  aria-label="Recent activity timeline"
+                >
                   <div className="absolute bottom-2 left-[19px] top-2 w-0.5 bg-gradient-to-b from-[#6d18ff] to-[#6d18ff]/20" />
                   {data.recentActivity.map((event: DashboardActivityItem) => {
                     const Icon = getActivityIcon(event.type);
                     const tone = getActivityTone(event.type);
 
                     return (
-                      <div key={event.id} className="relative flex gap-4">
+                      <div
+                        key={event.id}
+                        className="relative flex gap-4"
+                        role="listitem"
+                        aria-label={`${event.title}. ${event.detail}. ${formatRelativeTime(event.occurredAt)}`}
+                      >
                         <div
                           className={`z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-4 border-white shadow ${timelineToneClasses[tone]}`}
                         >
@@ -330,6 +358,7 @@ export default function ActiveDashboard({ data }: Props) {
                 <Link
                   href="/onboarding"
                   className="flex w-full items-center justify-center rounded-lg bg-white px-3 py-2 text-sm font-semibold text-[#5b14d8] transition hover:bg-white/90"
+                  aria-label="Create a new assessment"
                 >
                   Create New Assessment
                 </Link>
@@ -337,6 +366,7 @@ export default function ActiveDashboard({ data }: Props) {
                   <Link
                     href={`/assessments/${data.assessments[0].id}/checklist`}
                     className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-white/45 bg-white/10 px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
+                    aria-label="Continue latest assessment"
                   >
                     <PlayCircle className="size-4" />
                     Continue Latest
@@ -345,6 +375,7 @@ export default function ActiveDashboard({ data }: Props) {
                 <Link
                   href="/analytics"
                   className="flex w-full items-center justify-center rounded-lg border border-white/45 bg-white/10 px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
+                  aria-label="Open analytics dashboard"
                 >
                   View Analytics Dashboard
                 </Link>
@@ -352,8 +383,14 @@ export default function ActiveDashboard({ data }: Props) {
             </article>
 
             {/* Compliance Health */}
-            <article className="rounded-xl border border-slate-100 bg-white p-5 shadow-sm">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500">
+            <article
+              className="rounded-xl border border-slate-100 bg-white p-5 shadow-sm"
+              aria-labelledby="compliance-health-heading"
+            >
+              <h3
+                className="text-sm font-bold uppercase tracking-wider text-slate-500"
+                id="compliance-health-heading"
+              >
                 Compliance Health
               </h3>
               <div className="mt-4 flex justify-center">
@@ -368,15 +405,21 @@ export default function ActiveDashboard({ data }: Props) {
             </article>
 
             {/* Critical Gaps Summary */}
-            <article className="rounded-xl border border-slate-100 bg-white p-5 shadow-sm">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500">
+            <article
+              className="rounded-xl border border-slate-100 bg-white p-5 shadow-sm"
+              aria-labelledby="critical-gaps-heading"
+            >
+              <h3
+                className="text-sm font-bold uppercase tracking-wider text-slate-500"
+                id="critical-gaps-heading"
+              >
                 Critical Gaps
               </h3>
               <div className="mt-4 flex items-center gap-3">
                 {data.criticalGaps > 0 ? (
                   <>
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-rose-100">
-                      <ShieldAlert className="size-5 text-rose-600" />
+                      <ShieldAlert className="size-5 text-rose-600" aria-hidden="true" />
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-slate-900">{data.criticalGaps}</p>
@@ -386,7 +429,7 @@ export default function ActiveDashboard({ data }: Props) {
                 ) : (
                   <>
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
-                      <CheckCircle2 className="size-5 text-emerald-600" />
+                      <CheckCircle2 className="size-5 text-emerald-600" aria-hidden="true" />
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-emerald-700">All clear</p>

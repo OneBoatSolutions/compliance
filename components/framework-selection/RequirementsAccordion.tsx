@@ -11,8 +11,13 @@ export default function RequirementsAccordion({ why, requirements }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="mt-2">
-      <button onClick={() => setOpen(!open)} className="text-sm text-purple-600 font-medium">
+    <div className="mt-2" id={`requirements-${why.slice(0, 20)}`}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="text-sm text-purple-600 font-medium"
+        aria-expanded={open}
+        aria-controls={`requirements-${why.slice(0, 20)}`}
+      >
         Why this applies {open ? "▲" : "▼"}
       </button>
 

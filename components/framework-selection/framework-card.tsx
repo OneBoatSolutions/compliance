@@ -32,7 +32,8 @@ export default function FrameworkCard({ framework, selected, onToggle }: Props) 
 
   return (
     <div
-      role="button"
+      role="checkbox"
+      aria-checked={selected}
       tabIndex={0}
       onClick={onToggle}
       onKeyDown={(e) => {
@@ -42,7 +43,6 @@ export default function FrameworkCard({ framework, selected, onToggle }: Props) 
         }
       }}
       aria-label={`Select ${framework.name} framework`}
-      aria-pressed={selected}
       className={cn(
         ` h-full flex flex-col rounded-3xl border bg-white p-6 transition-all duration-200 transition-all duration-200
 hover:-translate-y-1
@@ -90,16 +90,12 @@ hover:shadow-lg`,
       </div>
 
       <div
-        role="img"
-        aria-label={`${framework.confidence}% confidence score`}
-        className="
-    mt-5
-    rounded-2xl
-    border
-    border-slate-100
-    bg-slate-50
-    p-4
-  "
+        role="meter"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={framework.confidence}
+        aria-label={`Confidence score ${framework.confidence} percent`}
+        className=" mt-5 rounded-2xl border border-slate-100 bg-slate-50 p-4"
       >
         <div className=" flex flex-col items-center text-center lg:flex-row lg:justify-between lg:items-center lg:text-left gap-7px ">
           <div>
