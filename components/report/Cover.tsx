@@ -13,8 +13,10 @@ interface CoverProps {
 
 export function CoverSkeleton() {
   return (
-    <section className="relative w-full min-h-[90vh] flex flex-col bg-white overflow-hidden py-8"
-             aria-labelledby="report-cover-title">
+    <section
+      className="relative w-full min-h-[90vh] flex flex-col bg-white overflow-hidden py-8"
+      aria-labelledby="report-cover-title"
+    >
       {/* Top Bar */}
       <div className="flex justify-between items-center px-8 py-4 border-b">
         <SkeletonBlock className="h-4 w-52" />
@@ -69,9 +71,6 @@ export default function Cover({
 
   return (
     <section className="relative w-full min-h-[90vh] flex flex-col overflow-hidden">
-      
-
-          
       {/* Background */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Gradient */}
@@ -112,7 +111,7 @@ export default function Cover({
           </p>
 
           <h1
-          id="report-cover-title"
+            id="report-cover-title"
             className="
     text-7xl
     font-bold

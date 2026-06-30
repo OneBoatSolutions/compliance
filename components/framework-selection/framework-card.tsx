@@ -44,7 +44,7 @@ export default function FrameworkCard({ framework, selected, onToggle }: Props) 
       }}
       aria-label={`Select ${framework.name} framework`}
       className={cn(
-        ` h-full flex flex-col rounded-3xl border bg-white p-6 transition-all duration-200 transition-all duration-200
+        ` h-full flex flex-col rounded-3xl border bg-white p-6 transition-all duration-200
 hover:-translate-y-1
 hover:shadow-lg`,
         selected ? "border-purple-500 shadow-md" : "border-gray-200 hover:shadow-sm",

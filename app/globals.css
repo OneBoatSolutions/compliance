@@ -342,7 +342,7 @@ body {
     color: black !important;
     background: white !important;
   }
-   
+
   .remediation-print-container {
     position: static !important;
     display: block !important;
@@ -364,10 +364,10 @@ body {
   .remediation-print-root * {
     box-shadow: none !important;
   }
+}
 
-  @keyframes shimmer {
+@keyframes shimmer {
   100% {
     transform: translateX(100%);
   }
-}
 }

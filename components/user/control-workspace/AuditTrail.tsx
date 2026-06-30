@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from "date-fns";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface AuditTrailProps {
   assessmentId?: string;
@@ -111,7 +112,18 @@ export default function AuditTrail({ assessmentId, assessmentItemId }: AuditTrai
                 <div className="pb-4 flex-1">
                   <p className="text-sm font-semibold text-slate-900">{item.user}</p>
 
-                  <p className="text-xs text-muted-foreground"> {truncateText(item.details)}</p>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <p className="text-xs text-muted-foreground cursor-help hover:text-slate-900 transition-colors">
+                          {truncateText(item.details)}
+                        </p>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs text-xs">{item.details}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                   <p className="text-xs text-muted-foreground mt-0.5">
                     {formatDistanceToNow(new Date(item.date), { addSuffix: true })}
                   </p>

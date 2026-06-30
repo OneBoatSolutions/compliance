@@ -95,7 +95,7 @@ export default function PriorityActions({
                         ? "bg-red-50 text-red-700 border-red-200"
                         : step.priority === "MEDIUM"
                           ? "bg-yellow-50 text-yellow-700 border-yellow-200"
-                          : "bg-blue-50 text-blue-700 border-blue-20"
+                          : "bg-blue-50 text-blue-700 border-blue-200"
                     } `}
                   >
                     {step.priority}

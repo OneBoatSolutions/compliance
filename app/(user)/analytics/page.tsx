@@ -230,16 +230,26 @@ function Badge({
   );
 }
 
-function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function Card({ children, className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={`bg-card rounded-xl border border-border p-6 shadow-sm ${className}`}>
+    <div
+      className={`bg-card rounded-xl border border-border p-6 shadow-sm ${className}`}
+      {...props}
+    >
       {children}
     </div>
   );
 }
-function EmptyState({ title, description }: { title: string; description: string }) {
+interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
+  title: string;
+  description: string;
+}
+function EmptyState({ title, description, ...props }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center h-[180px] text-center px-6">
+    <div
+      className="flex flex-col items-center justify-center h-[180px] text-center px-6"
+      {...props}
+    >
       <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
         <FileText className="w-5 h-5 text-muted-foreground" />
       </div>
@@ -350,21 +360,13 @@ function CustomTooltip({
 
       <div className="space-y-1">
         {payload.map((entry, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-between gap-4 text-sm"
-          >
+          <div key={index} className="flex items-center justify-between gap-4 text-sm">
             <div className="flex items-center gap-2">
-              <span
-                className="h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: entry.color }}
-              />
+              <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: entry.color }} />
               <span>{entry.name}</span>
             </div>
 
-            <span className="font-semibold">
-              {entry.value}%
-            </span>
+            <span className="font-semibold">{entry.value}%</span>
           </div>
         ))}
       </div>
@@ -421,25 +423,19 @@ export default function AnalyticsPage() {
     }
   }, [analyticsData, animated]);
 
-
-
   //key nav for dropdown
   useEffect(() => {
-  const close = () => setExportOpen(false);
+    const close = () => setExportOpen(false);
 
-  document.addEventListener("click", close);
+    document.addEventListener("click", close);
 
-  return () => document.removeEventListener("click", close);
-}, []);
+    return () => document.removeEventListener("click", close);
+  }, []);
 
   // ── Derived data ────────────────────────
   const overallScore = getOverallScore(analyticsData);
   const complianceLabel =
-  overallScore >= 80
-    ? "Healthy"
-    : overallScore >= 60
-      ? "Needs Attention"
-      : "Critical";
+    overallScore >= 80 ? "Healthy" : overallScore >= 60 ? "Needs Attention" : "Critical";
 
   const donutData = getDonutData(analyticsData);
   const frameworkBarData = getFrameworkBarData(analyticsData);
@@ -613,10 +609,10 @@ export default function AnalyticsPage() {
                 <select
                   aria-label="Select analytics time range"
                   value={timeRange}
-                  onChange={(e) => {setTimeRange(e.target.value);
-                     setExportOpen(false);
-                    }}
-                   
+                  onChange={(e) => {
+                    setTimeRange(e.target.value);
+                    setExportOpen(false);
+                  }}
                   className="h-11 rounded-xl border border-violet-200 bg-white/80 px-4 text-sm font-medium shadow-sm backdrop-blur-sm focus:ring-2 focus:ring-violet-300"
                 >
                   {rangeOptions.map((option) => (
@@ -658,9 +654,11 @@ export default function AnalyticsPage() {
                 </button>
 
                 {exportOpen && (
-            <div className="absolute right-0 mt-3 w-48 overflow-hidden rounded-xl border border-violet-100 bg-white shadow-xl z-50"
-                  onClick={(e) => e.stopPropagation()}>                    
-                  <button
+                  <div
+                    className="absolute right-0 mt-3 w-48 overflow-hidden rounded-xl border border-violet-100 bg-white shadow-xl z-50"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button
                       onClick={handleExportCSV}
                       disabled={exportLoading}
                       aria-label="Export analytics as CSV"
@@ -719,9 +717,13 @@ export default function AnalyticsPage() {
               <GaugeChart value={overallScore} />
             </div>
             <div className="mt-3">
-              <Badge variant={ overallScore >= 80 ? "success" : overallScore >= 60 ? "warning" : "destructive"}
-                 aria-label={`Compliance status ${complianceLabel}`}>
-               {complianceLabel}
+              <Badge
+                variant={
+                  overallScore >= 80 ? "success" : overallScore >= 60 ? "warning" : "destructive"
+                }
+                aria-label={`Compliance status ${complianceLabel}`}
+              >
+                {complianceLabel}
               </Badge>
             </div>
           </Card>
@@ -904,10 +906,11 @@ shadow-sm
                   />
                 </div>
                 <div className="mt-3">
-                  <Badge 
-                     variant="success"
-                     aria-label={`Remediation progress ${remediationProgress.completionRate} percent complete`}>
-                    {remediationProgress.completionRate}% Complete 
+                  <Badge
+                    variant="success"
+                    aria-label={`Remediation progress ${remediationProgress.completionRate} percent complete`}
+                  >
+                    {remediationProgress.completionRate}% Complete
                   </Badge>
                 </div>
               </div>
@@ -1142,7 +1145,6 @@ border-violet-100"
           <Card
             role="img"
             className="xl:col-span-2 h-full"
-            
             aria-label="Compliance score trend over time"
           >
             <div className="flex items-start justify-between mb-1">
@@ -1321,10 +1323,15 @@ border-violet-100"
 `}
                                     role="button"
                                     tabIndex={0}
-                                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") {
-                                          e.preventDefault(); setFilters({
-                                         impact: sev,
-                                          category: sta, }); }}}
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter" || e.key === " ") {
+                                        e.preventDefault();
+                                        setFilters({
+                                          impact: sev,
+                                          category: sta,
+                                        });
+                                      }
+                                    }}
                                     aria-label={`${sev} severity, ${sta.replaceAll("_", " ")}, ${count} controls`}
                                     style={{ backgroundColor: bg }}
                                     title={`${sev} • ${sta.replaceAll("_", " ")} : ${count} controls`}
@@ -1361,13 +1368,14 @@ border-violet-100"
                       <button
                         onClick={() => setFilters({ impact: "", category: "" })}
                         onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                         e.preventDefault();
-                         setFilters({ impact: "", category: "" });}}}
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setFilters({ impact: "", category: "" });
+                          }
+                        }}
                         aria-live="polite"
                         className="ml-auto text-muted-foreground hover:text-foreground"
                         aria-label="Clear selected heatmap filters"
-
                       >
                         ✕ Clear
                       </button>
@@ -1490,7 +1498,6 @@ border-violet-100"
                 Filtered by: {filters.category.replaceAll("_", " ")}
                 <button
                   onClick={() => setFilters((f) => ({ ...f, category: "" }))}
-                  
                   className="ml-1.5 text-muted-foreground hover:text-foreground font-black text-xs cursor-pointer"
                   title="Clear filter"
                 >

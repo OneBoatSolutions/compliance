@@ -22,10 +22,7 @@ import {
 } from "@/lib/report-api";
 import { Skeleton } from "@/components/ui/skeleton";
 
-
 import { ArrowLeft, Download, Share2, Printer, FileDown } from "lucide-react";
-
-
 
 export default function ReportPage() {
   const { id } = useParams<{ id: string }>();
@@ -41,78 +38,70 @@ export default function ReportPage() {
     retry: 1,
   });
 
-  const {
-  data: historyData = [],
-  refetch: refetchHistory,
-} = useQuery({
-  queryKey: ["report-history", id],
-  queryFn: () => fetchReportHistory(id as string),
-  enabled: !!id,
-});
+  const { data: historyData = [], refetch: refetchHistory } = useQuery({
+    queryKey: ["report-history", id],
+    queryFn: () => fetchReportHistory(id as string),
+    enabled: !!id,
+  });
 
-const hasReport =
-  historyData.length > 0 &&
-  historyData[0]?.url != null;
-  
+  const hasReport = historyData.length > 0 && historyData[0]?.url !== null;
 
-    const handleGenerate = async () => {
-  try {
-    setIsGenerating(true);
+  const handleGenerate = async () => {
+    try {
+      setIsGenerating(true);
 
-    await generateReport(id as string);
+      await generateReport(id as string);
 
-    toast.success("Report generated");
+      toast.success("Report generated");
 
-    await Promise.all([
-  refetch(),
-  refetchHistory(),
-]);
-     } catch (error) {
-    console.error(error);
-    toast.error("Failed to generate report");
-  } finally {
-    setIsGenerating(false);
-  }
-};
+      await Promise.all([refetch(), refetchHistory()]);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to generate report");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
-    const handleDownload = async () => {
-  try {
-    setIsDownloading(true);
+  const handleDownload = async () => {
+    try {
+      setIsDownloading(true);
 
-    const url = await downloadReport(id as string);
+      const url = await downloadReport(id as string);
 
-window.open(url, "_blank", "noopener,noreferrer");
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch {
+      toast.error("Download failed");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
-  } catch {
-    toast.error("Download failed");
-  } finally {
-    setIsDownloading(false);
-  }
-};
-    
-
-  
- 
-
- if (isLoading) {
+  if (isLoading) {
     return (
       <div className="report-print-root space-y-10">
-        <Skeleton className="h-[90vh] w-full rounded-xl" 
-                  aria-label="Loading compliance report"/>
-        <ExecutiveSummarySkeleton  aria-label="Loading executive summary"/>
+        <Skeleton className="h-[90vh] w-full rounded-xl" aria-label="Loading compliance report" />
+        <ExecutiveSummarySkeleton aria-label="Loading executive summary" />
         <Skeleton className="h-32 w-full rounded-xl" aria-label="Loading report section" />
         <Skeleton className="h-32 w-full rounded-xl" aria-label="Loading report section" />
-        <Skeleton className="h-32 w-full rounded-xl" aria-label="Loading report section"/>
+        <Skeleton className="h-32 w-full rounded-xl" aria-label="Loading report section" />
       </div>
     );
   }
 
   if (isError || !data) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 space-y-4" role="alert"
-  aria-live="assertive">
+      <div
+        className="flex flex-col items-center justify-center h-64 space-y-4"
+        role="alert"
+        aria-live="assertive"
+      >
         <p className="text-gray-500">Failed to load report data.</p>
-        <button aria-label="Retry loading compliance report" onClick={() => refetch()} className="px-4 py-2 bg-purple-600 text-white rounded">
+        <button
+          aria-label="Retry loading compliance report"
+          onClick={() => refetch()}
+          className="px-4 py-2 bg-purple-600 text-white rounded"
+        >
           Retry
         </button>
       </div>
@@ -185,8 +174,7 @@ window.open(url, "_blank", "noopener,noreferrer");
   }));
 
   return (
-    <main className="report-print-root space-y-10"
-         aria-labelledby="report-page-title">
+    <main className="report-print-root space-y-10" aria-labelledby="report-page-title">
       {/* Share / Print bar — preserved from our branch (investigate.md: Missing share link) */}
       <div className="print:hidden bg-white rounded-xl border border-slate-200 shadow-sm p-6 mt-5">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 ">
@@ -202,7 +190,7 @@ window.open(url, "_blank", "noopener,noreferrer");
               <span>Back to Assessment</span>
             </button>
 
-            <h1  id="report-page-title" className="mt-3 text-2xl font-semibold text-slate-900">
+            <h1 id="report-page-title" className="mt-3 text-2xl font-semibold text-slate-900">
               Compliance Readiness Report
             </h1>
 
@@ -225,7 +213,6 @@ window.open(url, "_blank", "noopener,noreferrer");
                   navigator.clipboard.writeText(window.location.href);
                   toast.success("Link copied!");
                 }}
-                
                 className="px-4 py-2 border border-purple-200 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-50 transition flex items-center gap-2"
               >
                 <Share2 className="w-4 h-4" />
@@ -244,7 +231,9 @@ window.open(url, "_blank", "noopener,noreferrer");
 
               {/* Generate */}
               <button
-                 aria-label={ isGenerating  ? "Generating compliance report"  : "Generate compliance report"}
+                aria-label={
+                  isGenerating ? "Generating compliance report" : "Generate compliance report"
+                }
                 onClick={handleGenerate}
                 disabled={isGenerating}
                 className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium hover:bg-slate-50 transition disabled:opacity-50 flex items-center gap-2"
@@ -255,7 +244,11 @@ window.open(url, "_blank", "noopener,noreferrer");
 
               {/* Download */}
               <button
-                aria-label={ isDownloading   ? "Downloading compliance report"   : "Download compliance report as PDF" }
+                aria-label={
+                  isDownloading
+                    ? "Downloading compliance report"
+                    : "Download compliance report as PDF"
+                }
                 onClick={handleDownload}
                 disabled={isDownloading || !hasReport}
                 className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition disabled:opacity-50 flex items-center gap-2"
@@ -269,7 +262,7 @@ window.open(url, "_blank", "noopener,noreferrer");
       </div>
 
       <Cover
-         aria-labelledby="report-page-title"
+        aria-labelledby="report-page-title"
         appName={data.organization.productName}
         frameworks={data.frameworkScores.map((f) => f.frameworkCode)}
         generatedAt={data.generatedAt}
@@ -307,13 +300,13 @@ window.open(url, "_blank", "noopener,noreferrer");
       <Methodology appName={data.organization.productName} />
 
       <div className="border-t border-gray-200 my-4" />
-      
 
       <FrameworkReference appName={data.organization.productName} />
 
       {/* Report History — preserved from our branch (investigate.md: Missing Report History) */}
       <div className="border-t border-gray-200 my-4" />
-      <section aria-labelledby="report-history-heading"
+      <section
+        aria-labelledby="report-history-heading"
         className="
     bg-white
     rounded-xl
@@ -324,8 +317,11 @@ window.open(url, "_blank", "noopener,noreferrer");
     border-[#7C3AED]
   "
       >
-        <div className="
-        pb-4" aria-hidden="true">
+        <div
+          className="
+        pb-4"
+          aria-hidden="true"
+        >
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
             {data.organization.productName}
           </p>
@@ -333,7 +329,10 @@ window.open(url, "_blank", "noopener,noreferrer");
           <p className="mt-1 text-sm text-slate-500">Compliance Readiness Report • Section 09</p>
         </div>
         <div className="border-l-4 border-primary pl-4">
-          <h2 id="report-history-heading" className="text-xl font-bold text-slate-900 tracking-wide uppercase">
+          <h2
+            id="report-history-heading"
+            className="text-xl font-bold text-slate-900 tracking-wide uppercase"
+          >
             Report History
           </h2>
 
@@ -356,7 +355,7 @@ window.open(url, "_blank", "noopener,noreferrer");
               </thead>
               <tbody>
                 {historyData.map((h: ReportHistoryItem, i: number) => (
-                  <tr key={i} className="border-t" >
+                  <tr key={i} className="border-t">
                     <td className="p-3">{h.type || "Compliance Report"}</td>
                     <td className="p-3">{h.format || "PDF"}</td>
                     <td className="p-3">
@@ -370,9 +369,11 @@ window.open(url, "_blank", "noopener,noreferrer");
                           }
                         }}
                         className="text-purple-600 hover:underline"
-                        aria-label={`Download ${h.type ?? "compliance"} report generated on ${ h.generatedAt
-                                   ? new Date(h.generatedAt).toLocaleDateString()
-                                   : "unknown date" }`}
+                        aria-label={`Download ${h.type ?? "compliance"} report generated on ${
+                          h.generatedAt
+                            ? new Date(h.generatedAt).toLocaleDateString()
+                            : "unknown date"
+                        }`}
                       >
                         Download
                       </button>

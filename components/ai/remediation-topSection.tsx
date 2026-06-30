@@ -1,5 +1,5 @@
 import { RemediationData } from "@/services/types";
-import { ShieldAlert, CheckCircle2, TrendingUp, Layers3 } from "lucide-react";
+import { CheckCircle2, TrendingUp, Layers3 } from "lucide-react";
 export default function RemediationTop({ data }: { data: RemediationData }) {
   const completedSteps = data.steps.filter((step) => step.status === "DONE").length;
   const scoreImpact = Math.max(1, Math.round(data.steps.length * 1.5));

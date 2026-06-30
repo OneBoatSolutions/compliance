@@ -2,14 +2,7 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
-import {
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
-
-
+import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 const data = [
   {
@@ -25,10 +18,7 @@ const data = [
 ];
 
 export default function UserStatusChart() {
-  const totalUsers = useMemo(
-  () => data.reduce((acc, item) => acc + item.value, 0),
-  [],
-);
+  const totalUsers = useMemo(() => data.reduce((acc, item) => acc + item.value, 0), []);
 
   return (
     <section
@@ -67,7 +57,7 @@ export default function UserStatusChart() {
 
       {/* PURPLE GLOW */}
       <div
-      aria-hidden="true"
+        aria-hidden="true"
         className="
           absolute
           -right-16
@@ -132,7 +122,6 @@ export default function UserStatusChart() {
             "
           >
             <div
-              
               className="
                 relative
                 overflow-hidden
@@ -162,7 +151,9 @@ export default function UserStatusChart() {
               />
 
               <div className="relative z-10 text-center">
-                <p className="text-2xl font-bold text-violet-700" aria-live="polite">{totalUsers}</p>
+                <p className="text-2xl font-bold text-violet-700" aria-live="polite">
+                  {totalUsers}
+                </p>
 
                 <span className="text-xs font-medium text-slate-500">Total Users</span>
               </div>
@@ -174,7 +165,11 @@ export default function UserStatusChart() {
       {/* LEGENDS */}
       <div className="relative z-10 mt-6 flex items-center justify-center gap-6">
         {data.map((item) => (
-          <div key={item.name} className="flex items-center gap-2"  aria-label={`${item.name}: ${item.value} users`}>
+          <div
+            key={item.name}
+            className="flex items-center gap-2"
+            aria-label={`${item.name}: ${item.value} users`}
+          >
             {/* COLOR CHIP */}
             <div
               aria-hidden="true"

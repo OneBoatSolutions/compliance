@@ -20,7 +20,6 @@ const EvidenceUploader = dynamic(() => import("@/components/user/evidence-upload
   loading: () => <Skeleton className="h-[200px] w-full rounded-xl" />,
 });
 
-
 interface ControlData {
   id: string; // The database control ID for API calls
   code: string; // The visual code like GDPR-D1.0
@@ -66,43 +65,39 @@ export default function ControlWorkspace({ control }: Props) {
     notStarted: 0,
   });
 
-  
   useEffect(() => {
     if (!control?.assessmentId || !control?.itemId) {
       return;
     }
 
-   const fetchAssessmentItem = async () => {
-    try {
-      const response = await apiClient.get<{
-        status: AssessmentItemStatus;
-        comments: string | null;
-        owner: string | null;
-        targetDate: string | null;
-      }>(`/api/assessments/${control.assessmentId}/items/${control.itemId}`);
+    const fetchAssessmentItem = async () => {
+      try {
+        const response = await apiClient.get<{
+          status: AssessmentItemStatus;
+          comments: string | null;
+          owner: string | null;
+          targetDate: string | null;
+        }>(`/api/assessments/${control.assessmentId}/items/${control.itemId}`);
 
-      setStatus(response.status);
-      setComments(response.comments || "");
-      setAssignee(response.owner || "");
-      setDueDate(response.targetDate?.slice(0, 10) || "");
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
+        setStatus(response.status);
+        setComments(response.comments || "");
+        setAssignee(response.owner || "");
+        setDueDate(response.targetDate?.slice(0, 10) || "");
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
     const fetchEvidence = async () => {
       try {
         const response = await apiClient.get<{ evidence: ExistingFile[] }>(
           `/api/assessments/${control.assessmentId}/items/${control.itemId}`,
         );
-       setExistingFiles(response.evidence ?? []);
+        setExistingFiles(response.evidence ?? []);
       } catch (error) {
         console.error("Failed to fetch existing evidence", error);
       }
     };
-
-  
 
     const fetchProgress = async () => {
       try {
@@ -249,6 +244,8 @@ export default function ControlWorkspace({ control }: Props) {
             comments={comments}
             setComments={setComments}
             control={control}
+            onSave={() => handleSave("final")}
+            isSaving={isSaving}
           />
 
           <div className="bg-white shadow-sm border rounded-xl p-5 space-y-6">

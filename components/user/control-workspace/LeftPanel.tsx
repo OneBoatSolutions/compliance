@@ -15,6 +15,8 @@ export default function LeftPanel({
   comments,
   setComments,
   control,
+  onSave,
+  isSaving,
 }: {
   status: AssessmentItemStatus;
   setStatus: (s: AssessmentItemStatus) => void;
@@ -22,6 +24,8 @@ export default function LeftPanel({
   setComments: (c: string) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control?: any;
+  onSave?: () => void;
+  isSaving?: boolean;
 }) {
   const options = [
     {
@@ -55,6 +59,25 @@ export default function LeftPanel({
 
       // later:
       // handleSaveDraft()
+    }
+  };
+
+  // NOTE: This assumes options container only has option children at matched indices.
+  // If other non-option sibling elements are added later, this index-based focus traversal will break.
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, i: number) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setStatus(options[i].value);
+    } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      e.preventDefault();
+      const nextIndex = (i + 1) % options.length;
+      setStatus(options[nextIndex].value);
+      (e.currentTarget.parentElement?.children[nextIndex] as HTMLElement)?.focus();
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const prevIndex = (i - 1 + options.length) % options.length;
+      setStatus(options[prevIndex].value);
+      (e.currentTarget.parentElement?.children[prevIndex] as HTMLElement)?.focus();
     }
   };
 
@@ -99,15 +122,10 @@ export default function LeftPanel({
               <div
                 key={i}
                 onClick={() => setStatus(item.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setStatus(item.value);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                aria-pressed={isActive}
+                onKeyDown={(e) => handleKeyDown(e, i)}
+                role="radio"
+                tabIndex={isActive || (status === "NOT_STARTED" && i === 0) ? 0 : -1}
+                aria-checked={isActive}
                 aria-label={`Set status to ${item.label}`}
                 className={`cursor-pointer border rounded-xl p-4 transition-all duration-200
               ${
@@ -159,11 +177,12 @@ export default function LeftPanel({
         <div className="flex justify-end mt-3">
           <button
             type="button"
+            disabled={isSaving}
+            onClick={onSave}
             aria-label="Save compliance gap details"
-            className="  rounded-lg  bg-purple-600 px-4 py-2 text-sm text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 "
+            className="  rounded-lg  bg-purple-600 px-4 py-2 text-sm text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 "
           >
-            {" "}
-            Save
+            {isSaving ? "Saving..." : "Save"}
           </button>
         </div>
       </div>

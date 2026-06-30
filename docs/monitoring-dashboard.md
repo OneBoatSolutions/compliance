@@ -37,28 +37,28 @@ This document describes the monitoring, error tracking, and analytics infrastruc
 
 ### 2.1 SDK Files
 
-| File                       | Runtime   | Purpose                                        |
-| -------------------------- | --------- | ---------------------------------------------- |
-| `sentry.client.config.ts`  | Browser   | Captures client-side errors & performance data |
-| `sentry.server.config.ts`  | Node.js   | Captures server-side errors & API latency      |
-| `sentry.edge.config.ts`    | Edge      | Captures middleware & edge API errors          |
-| `instrumentation.ts`       | Both      | Next.js hook that bootstraps the correct SDK   |
+| File                      | Runtime | Purpose                                        |
+| ------------------------- | ------- | ---------------------------------------------- |
+| `sentry.client.config.ts` | Browser | Captures client-side errors & performance data |
+| `sentry.server.config.ts` | Node.js | Captures server-side errors & API latency      |
+| `sentry.edge.config.ts`   | Edge    | Captures middleware & edge API errors          |
+| `instrumentation.ts`      | Both    | Next.js hook that bootstraps the correct SDK   |
 
 ### 2.2 Environment Variables
 
-| Variable                  | Required | Description                                       |
-| ------------------------- | -------- | ------------------------------------------------- |
-| `NEXT_PUBLIC_SENTRY_DSN`  | Yes      | Sentry Data Source Name (public, safe for client)  |
-| `SENTRY_AUTH_TOKEN`       | No       | Auth token for source-map uploads during build     |
-| `SENTRY_ORG`              | No       | Sentry organization slug                           |
-| `SENTRY_PROJECT`          | No       | Sentry project slug                                |
+| Variable                 | Required | Description                                       |
+| ------------------------ | -------- | ------------------------------------------------- |
+| `NEXT_PUBLIC_SENTRY_DSN` | Yes      | Sentry Data Source Name (public, safe for client) |
+| `SENTRY_AUTH_TOKEN`      | No       | Auth token for source-map uploads during build    |
+| `SENTRY_ORG`             | No       | Sentry organization slug                          |
+| `SENTRY_PROJECT`         | No       | Sentry project slug                               |
 
 ### 2.3 Sampling Rates
 
-| Environment  | `tracesSampleRate` | Rationale                                    |
-| ------------ | ------------------ | -------------------------------------------- |
-| Production   | 0.1 (10%)          | Balances observability with Sentry quota      |
-| Development  | 1.0 (100%)         | Full visibility during local development      |
+| Environment | `tracesSampleRate` | Rationale                                |
+| ----------- | ------------------ | ---------------------------------------- |
+| Production  | 0.1 (10%)          | Balances observability with Sentry quota |
+| Development | 1.0 (100%)         | Full visibility during local development |
 
 ---
 
@@ -129,23 +129,23 @@ Configure the following alerts in the Sentry dashboard:
 
 ### 6.1 Error Rate Alert
 
-| Setting          | Value                     |
-| ---------------- | ------------------------- |
-| **Metric**       | Error count               |
-| **Threshold**    | > 1% of total events      |
-| **Time Window**  | 5 minutes                 |
-| **Action**       | Notify via Slack / Email   |
-| **Severity**     | Warning                   |
+| Setting         | Value                    |
+| --------------- | ------------------------ |
+| **Metric**      | Error count              |
+| **Threshold**   | > 1% of total events     |
+| **Time Window** | 5 minutes                |
+| **Action**      | Notify via Slack / Email |
+| **Severity**    | Warning                  |
 
 ### 6.2 Performance Alert (P95 Latency)
 
-| Setting          | Value                     |
-| ---------------- | ------------------------- |
-| **Metric**       | Transaction duration (p95) |
-| **Threshold**    | > 1000ms (1 second)       |
-| **Time Window**  | 10 minutes                |
-| **Action**       | Notify via Slack / Email   |
-| **Severity**     | Warning                   |
+| Setting         | Value                      |
+| --------------- | -------------------------- |
+| **Metric**      | Transaction duration (p95) |
+| **Threshold**   | > 1000ms (1 second)        |
+| **Time Window** | 10 minutes                 |
+| **Action**      | Notify via Slack / Email   |
+| **Severity**    | Warning                    |
 
 ### 6.3 How to Create Alerts in Sentry
 
@@ -161,12 +161,12 @@ Configure the following alerts in the Sentry dashboard:
 
 All monitoring SDKs require network access. The `middleware.ts` CSP has been updated to allow:
 
-| Domain                              | Directive     | Purpose                      |
-| ----------------------------------- | ------------- | ---------------------------- |
-| `*.ingest.sentry.io`               | `connect-src` | Sentry event ingestion       |
-| `*.ingest.us.sentry.io`            | `connect-src` | Sentry US region ingestion   |
-| `vitals.vercel-insights.com`       | `connect-src` | Vercel Analytics data        |
-| `va.vercel-scripts.com`            | `connect-src` | Vercel Analytics scripts     |
+| Domain                       | Directive     | Purpose                    |
+| ---------------------------- | ------------- | -------------------------- |
+| `*.ingest.sentry.io`         | `connect-src` | Sentry event ingestion     |
+| `*.ingest.us.sentry.io`      | `connect-src` | Sentry US region ingestion |
+| `vitals.vercel-insights.com` | `connect-src` | Vercel Analytics data      |
+| `va.vercel-scripts.com`      | `connect-src` | Vercel Analytics scripts   |
 
 ---
 

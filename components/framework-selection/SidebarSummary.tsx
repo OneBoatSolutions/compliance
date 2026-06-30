@@ -31,32 +31,34 @@ export default function SidebarSummary({ selected, onContinue, loading }: Props)
   return (
     <div className="sticky top-6 p-5 rounded-2xl bg-purple-50 border border-purple-100 h-fit flex flex-col">
       <div className="flex flex-col h-full space-y-8">
-        {/* Heading + List */}
-        <ul className="space-y-6" aria-label="Selected frameworks">
-          <h3 className="font-semibold text-lg text-purple-800">Selected Frameworks</h3>
+        <div>
+          <h3 className="font-semibold text-lg text-purple-800 mb-6">Selected Frameworks</h3>
+          <ul className="space-y-6" aria-label="Selected frameworks">
+            {/* Framework List */}
+            <li className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
+              {selected.length === 0 ? (
+                <p className="text-sm text-gray-500">No frameworks selected</p>
+              ) : (
+                selected.map((f, i) => (
+                  <div
+                    key={i}
+                    className="flex justify-between items-center gap-3 text-sm px-2 py-1 rounded-md hover:bg-purple-100 transition"
+                  >
+                    <span
+                      className={cn("font-medium truncate min-w-0", categoryColors[f.category])}
+                    >
+                      {f.name}
+                    </span>
 
-          {/* Framework List */}
-          <li className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
-            {selected.length === 0 ? (
-              <p className="text-sm text-gray-500">No frameworks selected</p>
-            ) : (
-              selected.map((f, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between items-center gap-3 text-sm px-2 py-1 rounded-md hover:bg-purple-100 transition"
-                >
-                  <span className={cn("font-medium truncate min-w-0", categoryColors[f.category])}>
-                    {f.name}
-                  </span>
-
-                  <span className="text-purple-800 font-semibold shrink-0 whitespace-nowrap">
-                    {f.controls} controls
-                  </span>
-                </div>
-              ))
-            )}
-          </li>
-        </ul>
+                    <span className="text-purple-800 font-semibold shrink-0 whitespace-nowrap">
+                      {f.controls} controls
+                    </span>
+                  </div>
+                ))
+              )}
+            </li>
+          </ul>
+        </div>
         <p className="text-sm text-gray-500">{selected.length} frameworks selected</p>
 
         {/* Divider */}

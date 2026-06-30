@@ -208,7 +208,7 @@ export default function RiskAnalysis({ appName, data }: Props) {
         </div>
 
         {/* 🔹 Heatmap */}
-        <div className="rounded-2xl bg-whiteborder border-slate-100 p-6 shadow-[0_6px_24px_rgba(15,23,42,0.06)]">
+        <div className="rounded-2xl bg-white border border-slate-100 p-6 shadow-[0_6px_24px_rgba(15,23,42,0.06)]">
           <h3 className="text-md font-bold mb-4 text-gray-800 text-center">
             Risk Severity Heatmap
           </h3>

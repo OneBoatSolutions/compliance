@@ -14,27 +14,19 @@ export const fetchReport = async (assessmentId: string) => {
 };
 
 export const fetchReportView = async (assessmentId: string) => {
-  return await apiClient.get<ReportViewResponse>(
-    `/api/reports/${assessmentId}/view`,
-  );
+  return await apiClient.get<ReportViewResponse>(`/api/reports/${assessmentId}/view`);
 };
 
 export const generateReport = async (assessmentId: string) => {
-  return await apiClient.post<{ fileUrl: string }>(
-    `/api/reports/${assessmentId}/generate`,
-  );
+  return await apiClient.post<{ fileUrl: string }>(`/api/reports/${assessmentId}/generate`);
 };
 
 export const downloadReport = async (assessmentId: string) => {
-  const response = await apiClient.get<{ url: string }>(
-    `/api/reports/${assessmentId}/download`,
-  );
+  const response = await apiClient.get<{ url: string }>(`/api/reports/${assessmentId}/download`);
 
   return response.url;
 };
 
 export const fetchReportHistory = async (assessmentId: string) => {
-  return await apiClient.get<ReportHistoryItem[]>(
-    `/api/reports/${assessmentId}/history`,
-  );
+  return await apiClient.get<ReportHistoryItem[]>(`/api/reports/${assessmentId}/history`);
 };
