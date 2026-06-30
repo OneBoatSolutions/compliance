@@ -71,7 +71,7 @@ export default function StatusDropdown({ status, onChange, disabled = false }: P
         disabled={disabled}
         className={`flex items-center gap-2 px-2 py-1 rounded-md text-xs font-semibold transition-all duration-200
 hover:shadow-sm
-hover:scale-[1] focus:outline-none
+hover:scale-105 active:scale-95 focus:outline-none
   focus-visible:ring-2
   focus-visible:ring-purple-500
   focus-visible:ring-offset-2 ${current.bg} ${current.color}`}

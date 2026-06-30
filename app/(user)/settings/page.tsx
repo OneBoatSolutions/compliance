@@ -598,7 +598,7 @@ active:scale-[0.98]"
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-red-700">Danger Zone</h3>
+                    <h3 className="font-semibold text-red-700">Deletion Zone</h3>
 
                     <p className="text-sm text-red-600/80">
                       Permanently delete this assessment and all associated data.

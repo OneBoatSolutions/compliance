@@ -97,7 +97,7 @@ transition-shadow transition-all duration-200 overflow-visible`}
         onClick={() => setOpen(!open)}
         className="p-5 grid grid-cols-[70%_20%_10%] items-center cursor-pointer focus-visible:ring-2
 focus-visible:ring-purple-500
-focus-visible:ring-offset-2 focus: rounded"
+focus-visible:ring-offset-2 focus:outline-none"
       >
         {/* LEFT */}
         <div className="space-y-1">
@@ -136,7 +136,7 @@ focus-visible:ring-offset-2 focus: rounded"
           </span>
 
           <button
-            araia-label="More actions"
+            aria-label="More actions"
             className="text-gray-500 hover:text-black focus-visible:ring-2
 focus-visible:ring-purple-500
 focus-visible:ring-offset-2"

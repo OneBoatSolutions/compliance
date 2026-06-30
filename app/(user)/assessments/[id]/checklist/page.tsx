@@ -522,7 +522,7 @@ focus:ring-offset-2"
           <button
             aria-label="Retry loading score"
             onClick={() => void scoreQuery.refetch()}
-            className="mt-4 px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-70 focus:outline-none
+            className="mt-4 px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none
 focus:ring-2
 focus:ring-purple-500
 focus:ring-offset-2"
