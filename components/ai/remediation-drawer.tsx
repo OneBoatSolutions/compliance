@@ -1,10 +1,12 @@
 "use client";
 
 import LoadingState from "@/components/framework-selection/LoadingScreen";
+import type { ExistingFile } from "@/components/user/evidence-uploader";
+import { requestRemediation } from "@/lib/ai-api";
 import { apiClient } from "@/lib/api-client";
-import type { RemediationResponse } from "@/types/ai";
+import type { GenerateRemediationInput, RemediationResponse } from "@/types/ai";
 import type { RemediationData, RemediationStepData, RemediationStepStatus } from "@/services/types";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import RemediationHeader from "./remediation-header";
@@ -20,11 +22,17 @@ interface RemediationDrawerProps {
   onClose: () => void;
   controlId: string;
   assessmentItemId: string;
+  assessmentId: string;
   controlTitle: string;
   controlDescription: string;
   framework: string;
   status: string;
   severity: string;
+  userNotes?: string;
+}
+
+interface EvidenceResponse {
+  evidence: ExistingFile[];
 }
 
 function toRemediationData(
@@ -42,6 +50,10 @@ function toRemediationData(
     })),
     policies: response.policies,
     technicalControls: response.technicalControls,
+    // Pass through optional enriched fields from the AI response
+    businessFit: response.businessFit,
+    evidenceValidation: response.evidenceValidation,
+    confidence: response.confidence,
   };
 }
 
@@ -105,22 +117,63 @@ function downloadText(filename: string, content: string) {
   window.URL.revokeObjectURL(url);
 }
 
+function formatEvidenceMetadata(files: ExistingFile[]): string[] {
+  return files.map((file) => {
+    const parts = [
+      file.originalName,
+      `type: ${file.mimeType}`,
+      `size: ${file.fileSize} bytes`,
+      `uploaded: ${new Date(file.uploadedAt).toISOString()}`,
+      file.description?.trim() ? `note: ${file.description.trim()}` : null,
+    ].filter((value): value is string => Boolean(value));
+
+    return parts.join(" | ");
+  });
+}
+
 export default function RemediationDrawer({
   open,
   onClose,
   controlId,
   assessmentItemId,
+  assessmentId,
   controlTitle,
   controlDescription,
   framework,
   status,
   severity,
+  userNotes,
 }: RemediationDrawerProps) {
   const [data, setData] = useState<RemediationData | null>(null);
   const [loading, setLoading] = useState(true);
   const [regenerating, setRegenerating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [updatingStepIndex, setUpdatingStepIndex] = useState<number | null>(null);
+  const [evidenceMetadata, setEvidenceMetadata] = useState<string[]>([]);
+
+  const buildRemediationRequest = useCallback(
+    (metadata: string[]): GenerateRemediationInput => ({
+      controlId,
+      controlTitle,
+      controlDescription,
+      frameworkName: framework,
+      currentStatus: status,
+      severity,
+      assessmentId,
+      userNotes: userNotes?.trim() ? userNotes.trim() : undefined,
+      uploadedEvidenceFiles: metadata.length > 0 ? metadata : undefined,
+    }),
+    [
+      assessmentId,
+      controlDescription,
+      controlId,
+      controlTitle,
+      framework,
+      severity,
+      status,
+      userNotes,
+    ],
+  );
 
   // useEffect for the background page scrollbar//
   useEffect(() => {
@@ -155,9 +208,21 @@ export default function RemediationDrawer({
     const loadPlan = async () => {
       try {
         setLoading(true);
-        const savedPlan = await apiClient.get<RemediationData | null>(
-          `/api/remediation-plans?assessmentItemId=${encodeURIComponent(assessmentItemId)}`,
-        );
+        const [savedPlan, evidenceResponse] = await Promise.all([
+          apiClient.get<RemediationData | null>(
+            `/api/remediation-plans?assessmentItemId=${encodeURIComponent(assessmentItemId)}`,
+          ),
+          apiClient
+            .get<EvidenceResponse>(
+              `/api/assessments/${encodeURIComponent(assessmentId)}/items/${encodeURIComponent(
+                assessmentItemId,
+              )}`,
+            )
+            .catch(() => ({ evidence: [] as ExistingFile[] })),
+        ]);
+
+        const metadata = formatEvidenceMetadata(evidenceResponse?.evidence ?? []);
+        setEvidenceMetadata(metadata);
 
         if (cancelled) {
           return;
@@ -168,16 +233,7 @@ export default function RemediationDrawer({
           return;
         }
 
-        const generated = await apiClient.post<RemediationResponse>("/api/ai/remediation", {
-          body: {
-            controlId,
-            controlTitle,
-            controlDescription,
-            frameworkName: framework,
-            currentStatus: status,
-            severity,
-          },
-        });
+        const generated = await requestRemediation(buildRemediationRequest(metadata));
 
         if (!cancelled) {
           setData(toRemediationData(generated, context));
@@ -202,11 +258,14 @@ export default function RemediationDrawer({
     open,
     controlId,
     assessmentItemId,
+    assessmentId,
     controlTitle,
     controlDescription,
     framework,
     status,
     severity,
+    userNotes,
+    buildRemediationRequest,
   ]);
 
   if (!open) {
@@ -245,16 +304,9 @@ export default function RemediationDrawer({
     setRegenerating(true);
     setLoading(true);
     try {
-      const generated = await apiClient.post<RemediationResponse>("/api/ai/remediation", {
-        body: {
-          controlId,
-          controlTitle,
-          controlDescription,
-          frameworkName: framework,
-          currentStatus: status,
-          severity,
-          regenerate: true,
-        },
+      const generated = await requestRemediation({
+        ...buildRemediationRequest(evidenceMetadata),
+        regenerate: true,
       });
 
       setData(
@@ -374,6 +426,62 @@ export default function RemediationDrawer({
           ) : (
             <>
               <RemediationTop data={data} />
+
+              {/* Business Fit & Confidence */}
+              {data.businessFit && (
+                <div className="bg-card border rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span
+                      className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                        data.businessFit.applicability === "APPLICABLE"
+                          ? "bg-green-100 text-green-700"
+                          : data.businessFit.applicability === "NOT_APPLICABLE"
+                            ? "bg-gray-100 text-gray-500"
+                            : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {data.businessFit.applicability.replaceAll("_", " ")}
+                    </span>
+                    {data.confidence !== undefined && (
+                      <span className="text-xs text-muted-foreground ml-auto">
+                        Confidence: {data.confidence}%
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground">{data.businessFit.rationale}</p>
+                </div>
+              )}
+
+              {/* Evidence Health */}
+              {data.evidenceValidation && (
+                <div className="bg-card border rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span
+                      className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                        data.evidenceValidation.overallHealth === "SUFFICIENT"
+                          ? "bg-green-100 text-green-700"
+                          : data.evidenceValidation.overallHealth === "MISSING"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      Evidence: {data.evidenceValidation.overallHealth.replaceAll("_", " ")}
+                    </span>
+                  </div>
+                  {data.evidenceValidation.missingTypes.length > 0 && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Missing: {data.evidenceValidation.missingTypes.join(", ")}
+                    </p>
+                  )}
+                  {data.evidenceValidation.recommendations.length > 0 && (
+                    <ul className="text-xs text-muted-foreground mt-1 list-disc list-inside">
+                      {data.evidenceValidation.recommendations.map((r, i) => (
+                        <li key={i}>{r}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 xl:gap-10">
                 <div className="lg:col-span-2 space-y-8">

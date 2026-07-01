@@ -33,4 +33,15 @@ export interface RemediationPlanData {
   generatedAt?: string;
   createdAt?: string;
   updatedAt?: string;
+  // Enriched AI output fields (optional — only present for AI-generated data)
+  businessFit?: {
+    applicability: "APPLICABLE" | "PARTIALLY_APPLICABLE" | "NOT_APPLICABLE";
+    rationale: string;
+  };
+  evidenceValidation?: {
+    overallHealth: "SUFFICIENT" | "PARTIALLY_SUFFICIENT" | "INSUFFICIENT" | "MISSING";
+    missingTypes: string[];
+    recommendations: string[];
+  };
+  confidence?: number;
 }

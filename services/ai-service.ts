@@ -58,6 +58,7 @@ const frameworkCatalogCacheTtl = 5 * 60 * 1000; // 5 minutes
 const remediationTimeoutMs = 10_000;
 const remediationMaxRetries = 3;
 const aiCacheTtlSeconds = 24 * 60 * 60;
+const remediationPromptVersion = 3;
 let cacheKeySalt = "";
 
 const remediationResponseSchema = z.object({
@@ -75,7 +76,121 @@ const remediationResponseSchema = z.object({
     .max(5),
   policies: z.array(z.string().trim().min(1)).min(2).max(3),
   technicalControls: z.array(z.string().trim().min(1)).min(2).max(3),
+  // Optional enriched response fields
+  businessFit: z
+    .object({
+      applicability: z.enum(["APPLICABLE", "PARTIALLY_APPLICABLE", "NOT_APPLICABLE"]),
+      rationale: z.string().trim().min(1),
+    })
+    .optional(),
+  evidenceValidation: z
+    .object({
+      overallHealth: z.enum(["SUFFICIENT", "PARTIALLY_SUFFICIENT", "INSUFFICIENT", "MISSING"]),
+      missingTypes: z.array(z.string()),
+      recommendations: z.array(z.string()).max(3),
+    })
+    .optional(),
+  confidence: z.number().min(0).max(100).optional(),
 });
+
+function normalizeApplicability(
+  value: unknown,
+): RemediationResponse["businessFit"] extends infer T
+  ? T extends { applicability: infer A }
+    ? A
+    : never
+  : never {
+  if (typeof value !== "string") {
+    return "PARTIALLY_APPLICABLE" as never;
+  }
+
+  const normalized = value.trim().toLowerCase();
+
+  if (normalized.includes("not applicable") || normalized.includes("not_applicable")) {
+    return "NOT_APPLICABLE" as never;
+  }
+
+  if (normalized.includes("required") && normalized.includes("clearly")) {
+    return "APPLICABLE" as never;
+  }
+
+  if (normalized.includes("likely") || normalized.includes("potential")) {
+    return "PARTIALLY_APPLICABLE" as never;
+  }
+
+  if (normalized.includes("applicable")) {
+    return "APPLICABLE" as never;
+  }
+
+  return "PARTIALLY_APPLICABLE" as never;
+}
+
+function normalizeOverallHealth(
+  value: unknown,
+): RemediationResponse["evidenceValidation"] extends infer T
+  ? T extends { overallHealth: infer H }
+    ? H
+    : never
+  : never {
+  if (typeof value !== "string") {
+    return "PARTIALLY_SUFFICIENT" as never;
+  }
+
+  const normalized = value.trim().toLowerCase();
+
+  if (normalized.includes("missing")) {
+    return "MISSING" as never;
+  }
+
+  if (normalized.includes("insufficient")) {
+    return "INSUFFICIENT" as never;
+  }
+
+  if (normalized.includes("partial")) {
+    return "PARTIALLY_SUFFICIENT" as never;
+  }
+
+  if (normalized.includes("sufficient")) {
+    return "SUFFICIENT" as never;
+  }
+
+  return "PARTIALLY_SUFFICIENT" as never;
+}
+
+function normalizeRemediationResponse(parsed: unknown): unknown {
+  if (!parsed || typeof parsed !== "object") {
+    return parsed;
+  }
+
+  const candidate = parsed as Record<string, unknown>;
+
+  if ("policySuggestions" in candidate && !("policies" in candidate)) {
+    candidate.policies = candidate.policySuggestions;
+  }
+
+  const businessFit = candidate.businessFit;
+  if (businessFit && typeof businessFit === "object") {
+    const businessFitCandidate = businessFit as Record<string, unknown>;
+    businessFitCandidate.applicability = normalizeApplicability(businessFitCandidate.applicability);
+    candidate.businessFit = businessFitCandidate;
+  }
+
+  const evidenceValidation = candidate.evidenceValidation;
+  if (evidenceValidation && typeof evidenceValidation === "object") {
+    const evidenceCandidate = evidenceValidation as Record<string, unknown>;
+    evidenceCandidate.overallHealth = normalizeOverallHealth(evidenceCandidate.overallHealth);
+    candidate.evidenceValidation = evidenceCandidate;
+  }
+
+  if (typeof candidate.confidence === "string") {
+    const parsedConfidence = Number(candidate.confidence);
+    if (!Number.isNaN(parsedConfidence)) {
+      candidate.confidence = parsedConfidence;
+    }
+  }
+
+  return candidate;
+}
 
 let frameworkCatalogCache: { data: FrameworkCatalogEntry[]; expiry: number } = {
   data: [],
@@ -256,14 +371,30 @@ class RemediationParseError extends Error {
 }
 
 function buildRemediationPrompt(input: GenerateRemediationInput): string {
+  const hasNotes = input.userNotes && input.userNotes.trim().length > 0;
+  const hasEvidence = input.uploadedEvidenceFiles && input.uploadedEvidenceFiles.length > 0;
+  const hasProductDesc = input.productDescription && input.productDescription.trim().length > 0;
+  const hasAudience = input.targetAudience && input.targetAudience.trim().length > 0;
+
   return `
-You are a compliance expert. Generate a remediation plan.
+You are a compliance auditor. Generate a remediation assessment that reasons from the available evidence and business context, not a legal authority or generic checklist.
+
+Return valid JSON only. Keep the existing response structure, but make the reasoning in each section auditor-like and specific.
+
+The response must clearly cover these sections:
+1. Business Model Fit Analysis
+2. Remediation Action Plan
+3. Evidence Validation Summary
 
 Framework: ${input.frameworkName}
 Control: ${input.controlId} - ${input.controlTitle}
 Description: ${input.controlDescription}
 Current Status: ${input.currentStatus}
 Severity: ${input.severity}
+${hasProductDesc ? `\nProduct Description: ${input.productDescription}` : ""}
+${hasAudience ? `\nTarget Audience: ${input.targetAudience}` : ""}
+${hasNotes ? `\nUser Notes / Gap Details: ${input.userNotes}` : ""}
+${hasEvidence ? `\nUploaded Evidence Files: ${input.uploadedEvidenceFiles?.join(", ")}` : "\nUploaded Evidence Files: None"}
 
 Requirements:
 - Return ONLY valid JSON (no extra text)
@@ -275,39 +406,128 @@ Requirements:
 - Suggest 2-3 technical controls
 - Prioritize based on severity
 - Prefer real-world tools where relevant
+- Keep the response concise, specific, and context-aware
+- Do not add generic compliance advice or recommendations for unrelated controls
+- If required information is missing, state the uncertainty instead of assuming
+- If confidence is lower because context is incomplete, briefly name the missing inputs in the relevant explanation text
+
+Business context usage:
+- Use the product description and target audience to judge whether this control is Likely applicable or Potentially applicable when the available information is incomplete.
+- Explain why the control applies, may apply, or may not apply to this organization based on the provided product, audience, and scope.
+- Do not state that a control "must" apply unless the available information clearly supports that conclusion.
+- If company size, processing scale, jurisdiction, or regulatory scope is not provided, say that the applicability is context-dependent and name the missing information.
+- Refer to the product by its name where natural. Do not repeat the entire product description in every step.
+- Keep all business reasoning inside the businessFit section only.
+
+Compliance status:
+- COMPLIANT → recommend monitoring, maintenance, and periodic review only. Do not suggest work that is already complete.
+- PARTIALLY_COMPLIANT → focus exclusively on the remaining gaps.
+- NOT_COMPLIANT → generate implementation steps to achieve full compliance.
+- Every remediation action must be directly related to the current control and its documented gap, not a broad security program recommendation.
+
+User notes:
+- If user notes describe specific gaps or implementation details, address them directly instead of generating generic recommendations.
+- If user notes are missing, do not invent them and do not pretend they were reviewed.
+
+Uploaded evidence:
+- If evidence metadata is provided, treat it as metadata only.
+- Do not claim to inspect file contents unless extracted text is explicitly provided.
+- Base evidence validation on the provided metadata only.
+- If evidence exists, validate only whether the metadata suggests the right kind of evidence is present and identify gaps that remain visible from metadata alone.
+- If no evidence exists, state that compliance cannot be verified and specify what evidence should be uploaded.
+
+Remediation steps:
+- Each step must represent one clear action. Do not merge multiple actions into one step.
+- Do not repeat information from previous steps.
+- Explain what should be done, not why the regulation exists.
+- Keep each step to 1–3 sentences.
+- Be concrete. Avoid phrases like "follow industry best practices," "ensure compliance," or "implement appropriate controls." Instead, describe specific actions tied to this control.
+
+Business fit:
+- Determine applicability honestly: APPLICABLE, PARTIALLY_APPLICABLE, or NOT_APPLICABLE.
+- Do not assume every control is mandatory.
+- In the rationale, state whether the control is Likely applicable or Potentially applicable, then explain why.
+- If context is incomplete, explicitly call out the missing information instead of filling in gaps.
+
+Structure guidance:
+- businessFit.rationale should answer the Business Model Fit Analysis.
+- steps should form the Remediation Action Plan.
+- evidenceValidation should form the Evidence Validation Summary.
+- The businessFit section should explain why the control applies or may apply to the organization.
+- The evidenceValidation section should only evaluate the evidence actually provided.
+- For GDPR-related controls, do not assume legal obligations solely because the product processes financial or personal data.
+- If GDPR scope is unclear, explicitly call out what is missing, such as organization size, processing scale, regulatory jurisdiction, or whether the processing is large-scale.
+
+Confidence:
+- Return a score from 0 to 100 reflecting how complete the available information is.
+- Lower the score when business information, user notes, or evidence is missing, or when applicability is uncertain.
+- Raise the score only when sufficient context is available to make a confident assessment.
+- If the confidence score is not high, briefly explain in the rationale text what missing information prevents a higher score.
+
+Confidence guidance:
+- If company size, processing scale, jurisdiction, or regulatory scope is missing, reduce confidence and say which inputs are missing.
+- If evidence is only metadata, note that verification is limited to the provided metadata.
+
+Remediation sequencing:
+- When applicability is uncertain, make the first remediation action "Assess whether this control is legally required for the organization" before recommending implementation.
+- Only recommend mandatory implementation if the available information supports that conclusion.
+- Use "may", "likely", or "depending on..." instead of absolute statements when the conclusion is not fully supported.
+
+General tone:
+- Write like an experienced compliance consultant giving specific, actionable advice.
+- Use the provided business information rather than generic examples.
+- Do not invent company details, products, regulations, evidence contents, or implementation status that were not provided.
 
 Output format:
 {
   "steps": [
     {
       "title": "Action title",
-      "description": "Detailed steps...",
+      "description": "Concise actionable step (1-3 sentences, single action)",
       "priority": "HIGH|MEDIUM|LOW",
       "owner": "IT Security|Compliance|HR|...",
       "estimatedHours": 24
     }
   ],
   "policies": ["Policy 1", "Policy 2"],
-  "technicalControls": ["Control 1", "Control 2"]
+  "technicalControls": ["Control 1", "Control 2"],
+  "businessFit": { "applicability": "APPLICABLE|PARTIALLY_APPLICABLE|NOT_APPLICABLE", "rationale": "Brief explanation using provided business context" },
+  "evidenceValidation": { "overallHealth": "SUFFICIENT|PARTIALLY_SUFFICIENT|INSUFFICIENT|MISSING", "missingTypes": ["List of document categories not yet provided"], "recommendations": ["Actions to improve evidence coverage"] },
+  "confidence": 85
 }
 `;
 }
 
 function getRemediationCacheKey(input: GenerateRemediationInput): string {
+  const sortedEvidence = (input.uploadedEvidenceFiles ?? [])
+    .map((f) => f.trim().toLowerCase())
+    .sort((a, b) => a.localeCompare(b));
+
   const keyPayload = JSON.stringify({
+    promptVersion: remediationPromptVersion,
     frameworkName: input.frameworkName.trim().toLowerCase(),
     controlId: input.controlId.trim().toLowerCase(),
     controlDescription: input.controlDescription.trim().toLowerCase(),
     currentStatus: input.currentStatus.trim().toLowerCase(),
     severity: input.severity.trim().toLowerCase(),
+    userNotes: (input.userNotes ?? "").trim().toLowerCase(),
+    uploadedEvidenceFiles: sortedEvidence,
+    productDescription: (input.productDescription ?? "").trim().toLowerCase(),
+    targetAudience: (input.targetAudience ?? "").trim().toLowerCase(),
     cacheKeySalt,
   });
   const key = `remediation:${keyPayload}`;
   return crypto.createHash("md5").update(key).digest("hex");
 }
 
-function getPriorityFromSeverity(severity: string): RemediationPriority {
+function getPriorityFromSeverity(severity: string, currentStatus?: string): RemediationPriority {
   const normalized = severity.trim().toUpperCase();
+  const status = (currentStatus ?? "").trim().toUpperCase();
+
+  // COMPLIANT controls always get LOW priority (maintenance only)
+  if (status === "COMPLIANT") {
+    return "LOW";
+  }
 
   if (normalized === "CRITICAL" || normalized === "HIGH") {
     return "HIGH";
@@ -321,40 +541,38 @@ function getPriorityFromSeverity(severity: string): RemediationPriority {
 }
 
 function getFallbackRemediation(input: GenerateRemediationInput): RemediationResponse {
-  const defaultPriority = getPriorityFromSeverity(input.severity);
+  const priority = getPriorityFromSeverity(input.severity, input.currentStatus);
+  const statusLabel = (input.currentStatus ?? "unknown").replaceAll("_", " ").toLowerCase();
 
   return {
     steps: [
       {
-        title: `Perform a targeted gap assessment for ${input.controlId}`,
-        description:
-          "Review current implementation evidence, compare it against control expectations, and document exact gaps with owners and due dates.",
-        priority: defaultPriority,
+        title: `Assess ${input.controlId} against ${input.frameworkName}`,
+        description: `Current status is ${statusLabel}. Review current implementation, document gaps against control ${input.controlId} requirements, and assign remediation owners.`,
+        priority,
         owner: "Compliance",
         estimatedHours: 8,
       },
       {
-        title: "Implement and document remediation controls",
-        description:
-          "Deploy required technical and process changes, update procedures, and capture verifiable evidence that maps to the control.",
-        priority: defaultPriority,
+        title: "Implement and document required controls",
+        description: `Address identified gaps for ${input.controlId}. Deploy required controls, update procedures, and collect evidence for ${input.frameworkName} compliance.`,
+        priority,
         owner: "IT Security",
         estimatedHours: 16,
       },
       {
-        title: "Validate effectiveness and close findings",
+        title: "Validate compliance and obtain sign-off",
         description:
-          "Run control testing, confirm residual risks are addressed, and obtain sign-off from compliance stakeholders.",
+          "Test implemented controls, confirm residual risk is acceptable, and obtain compliance stakeholder approval.",
         priority: "MEDIUM",
         owner: "Internal Audit",
         estimatedHours: 6,
       },
     ],
-    policies: ["Access Control Policy", "Information Security Policy", "Risk Management Policy"],
+    policies: ["Access Control Policy", "Information Security Policy"],
     technicalControls: [
       "SIEM alerting and log retention",
       "Multi-factor authentication enforcement",
-      "Centralized endpoint configuration baseline",
     ],
   };
 }
@@ -411,6 +629,8 @@ export function parseRemediationResponse(text: string): RemediationResponse {
     parsed = candidate;
   }
 
+  parsed = normalizeRemediationResponse(parsed);
+
   const result = remediationResponseSchema.safeParse(parsed);
 
   if (!result.success) {
@@ -453,20 +673,63 @@ async function logRemediationInteraction(
   }
 }
 
+async function enrichInputWithOrgData(
+  input: GenerateRemediationInput,
+): Promise<GenerateRemediationInput> {
+  // If business context is already provided, use it as-is
+  if (input.productDescription && input.targetAudience) {
+    return input;
+  }
+
+  // If we have an assessmentId, fetch org data from the database
+  if (input.assessmentId) {
+    try {
+      const assessment = await prisma.assessment.findFirst({
+        where: { id: input.assessmentId },
+        select: {
+          organization: {
+            select: {
+              productName: true,
+              description: true,
+              targetCustomers: true,
+            },
+          },
+        },
+      });
+
+      if (assessment?.organization) {
+        const org = assessment.organization;
+        return {
+          ...input,
+          productDescription:
+            input.productDescription ?? org.productName ?? org.description ?? undefined,
+          targetAudience: input.targetAudience ?? org.targetCustomers ?? undefined,
+        };
+      }
+    } catch {
+      // Swallow DB errors — fall back to whatever input we have
+    }
+  }
+
+  return input;
+}
+
 export async function generateRemediation(
   input: GenerateRemediationInput,
 ): Promise<RemediationResponse> {
-  const cacheKey = getRemediationCacheKey(input);
+  // Enrich with business context from the database if not provided by caller
+  const enriched = await enrichInputWithOrgData(input);
+  const cacheKey = getRemediationCacheKey(enriched);
 
-  if (!input.regenerate) {
+  if (!enriched.regenerate) {
     const cached = await getCache<RemediationResponse>(cacheKey);
     if (cached) {
-      void logRemediationInteraction(input, cached, "cache", 0);
+      void logRemediationInteraction(enriched, cached, "cache", 0);
       return cached;
     }
   }
 
-  const prompt = buildRemediationPrompt(input);
+  const prompt = buildRemediationPrompt(enriched);
   let lastError: Error | null = null;
   let sawTimeout = false;
 

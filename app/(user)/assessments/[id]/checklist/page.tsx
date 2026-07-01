@@ -29,10 +29,10 @@ const RemediationDrawer = dynamic(() => import("@/components/ai/remediation-draw
 import MoreActionsDropdown from "@/components/assessment-checklist/MoreActionsDropdown";
 import {
   type AssessmentDetailResponse,
+  type Status,
   type ChecklistSort,
   type Control,
   type FrameworkFilterOption,
-  type Status,
 } from "./types";
 
 function formatRelativeTime(value: string): string {
@@ -234,6 +234,8 @@ export default function ChecklistPage() {
     framework: string;
     status: string;
     severity: string;
+    assessmentId: string;
+    userNotes?: string | null;
   } | null>(null);
 
   const openRemediationDrawer = (context: {
@@ -244,6 +246,8 @@ export default function ChecklistPage() {
     framework: string;
     status: string;
     severity: string;
+    assessmentId: string;
+    userNotes?: string | null;
   }) => {
     setRemediationContext(context);
     setRemediationOpen(true);
@@ -659,7 +663,7 @@ focus:ring-offset-2"
       </div>
 
       <MetricsBar
-        className="!mt-2"
+        className="mt-2!"
         controls={allControls}
         overallScore={overallScore}
         frameworkScores={scoreQuery.data?.frameworkScores}
@@ -744,7 +748,7 @@ focus:ring-offset-2"
               updateStatusMutation.mutate(
                 {
                   itemId,
-                  payload: { status: nextStatus },
+                  payload: { status: nextStatus as Status },
                 },
                 {
                   onSuccess: () => {
@@ -841,11 +845,13 @@ focus:ring-offset-2"
           onClose={closeRemediationDrawer}
           controlId={remediationContext.controlId}
           assessmentItemId={remediationContext.assessmentItemId}
+          assessmentId={remediationContext.assessmentId}
           controlTitle={remediationContext.controlTitle}
           controlDescription={remediationContext.controlDescription}
           framework={remediationContext.framework}
           status={remediationContext.status}
           severity={remediationContext.severity}
+          userNotes={remediationContext.userNotes ?? undefined}
         />
       )}
     </main>

@@ -18,6 +18,11 @@ const remediationRequestSchema = z.object({
   currentStatus: z.string().trim().min(1),
   severity: z.string().trim().min(1),
   regenerate: z.boolean().optional(),
+  assessmentId: z.string().optional(),
+  userNotes: z.string().optional(),
+  uploadedEvidenceFiles: z.array(z.string()).optional(),
+  productDescription: z.string().optional(),
+  targetAudience: z.string().optional(),
 });
 
 function getRegenerateFlag(req: NextRequest, bodyRegenerate?: boolean): boolean {

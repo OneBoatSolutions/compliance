@@ -31,6 +31,8 @@ interface Props {
     framework: string;
     status: string;
     severity: string;
+    assessmentId: string;
+    userNotes?: string | null;
   }) => void;
 }
 
@@ -198,6 +200,8 @@ focus-visible:ring-offset-2"
                         framework: control.framework,
                         status: control.status,
                         severity: control.severity,
+                        assessmentId: assessmentId,
+                        userNotes: control.comments,
                       });
                     }}
                     className="mt-4 inline-block bg-white text-purple-700 px-4 py-2 rounded-md text-sm font-medium focus:outline-none

@@ -22,6 +22,7 @@ interface RightSidebarProps {
     framework: string;
     severity: string;
     assessmentId: string;
+    comments?: string | null;
   };
   status: string;
 }
@@ -68,11 +69,13 @@ export default function RightSidebar({ control, status }: RightSidebarProps) {
             onClose={() => setIsDrawerOpen(false)}
             controlId={control.id}
             assessmentItemId={control.itemId}
+            assessmentId={control.assessmentId}
             controlTitle={control.title}
             controlDescription={control.description}
             framework={control.framework}
             status={status}
             severity={control.severity}
+            userNotes={control.comments ?? undefined}
           />
         )}
       </WidgetErrorBoundary>
