@@ -1,10 +1,11 @@
 "use client";
 
 import { Control, type Status } from "@/app/(user)/assessments/[id]/checklist/types";
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import StatusDropdown from "./StatusDropdown";
 import { toast } from "sonner";
+import { useUpdateAssessmentItemMutation } from "@/lib/hooks/use-update-assessment-item-mutation";
 import {
   CheckCircle2,
   Circle,
@@ -13,9 +14,7 @@ import {
   FileText,
   MoreVertical,
   Sparkles,
-  Plus,
   Upload,
-  User,
 } from "lucide-react";
 
 interface Props {
@@ -44,9 +43,109 @@ export default function ControlCard({
   onOpenRemediation,
 }: Props) {
   const [open, setOpen] = useState(false);
-  const [commentsOpen, setCommentsOpen] = useState(true);
-  const isOwn = true; // later from backend (user auth)
   const [uploadOpen, setUploadOpen] = useState(false);
+
+  const [noteText, setNoteText] = useState(control.comments || "");
+  const [isFocused, setIsFocused] = useState(false);
+  const lastSavedValueRef = useRef(control.comments || "");
+  const noteTextRef = useRef(noteText);
+
+  const mutation = useUpdateAssessmentItemMutation(assessmentId || "", {
+    checklistQueryPrefix: ["assessment-checklist", assessmentId || ""],
+    scoreQueryKey: ["assessment-score", assessmentId || ""],
+  });
+
+  // Keep noteTextRef in sync for the unmount cleanup closure
+  useEffect(() => {
+    noteTextRef.current = noteText;
+  }, [noteText]);
+
+  // Sync server-side updates ONLY when control.comments or control.itemId changes, and ONLY if the user isn't typing
+  useEffect(() => {
+    if (!isFocused) {
+      setNoteText(control.comments || "");
+      lastSavedValueRef.current = control.comments || "";
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [control.comments, control.itemId]);
+
+  const triggerAutoSave = useCallback(() => {
+    const finalVal = noteTextRef.current.trim();
+    const originalVal = (lastSavedValueRef.current || "").trim();
+
+    if (finalVal !== originalVal) {
+      lastSavedValueRef.current = finalVal; // Synchronous lock
+      mutation.mutate(
+        {
+          itemId: control.itemId,
+          payload: { comments: finalVal === "" ? null : finalVal },
+        },
+        {
+          onError: () => {
+            lastSavedValueRef.current = control.comments || "";
+          },
+        },
+      );
+    }
+  }, [control.itemId, control.comments, mutation]);
+
+  // Auto-save on collapse
+  const prevOpenRef = useRef(open);
+  useEffect(() => {
+    if (prevOpenRef.current && !open) {
+      triggerAutoSave();
+    }
+    prevOpenRef.current = open;
+  }, [open, triggerAutoSave]);
+
+  // Auto-save on unmount (using ref to avoid premature runs on dependency changes)
+  const triggerAutoSaveRef = useRef(triggerAutoSave);
+  useEffect(() => {
+    triggerAutoSaveRef.current = triggerAutoSave;
+  }, [triggerAutoSave]);
+
+  useEffect(() => {
+    return () => {
+      triggerAutoSaveRef.current();
+    };
+  }, []);
+
+  const saveIfDirty = useCallback(() => {
+    const finalVal = noteText.trim();
+    const originalVal = (lastSavedValueRef.current || "").trim();
+
+    if (finalVal !== originalVal) {
+      lastSavedValueRef.current = finalVal; // Synchronous lock
+      mutation.mutate(
+        {
+          itemId: control.itemId,
+          payload: { comments: finalVal === "" ? null : finalVal },
+        },
+        {
+          onError: () => {
+            // Revert lock on error
+            lastSavedValueRef.current = control.comments || "";
+            toast.error("Failed to save note");
+          },
+          onSuccess: () => {
+            toast.success("Note saved successfully");
+          },
+        },
+      );
+    }
+  }, [noteText, control.itemId, control.comments, mutation]);
+
+  const handleBlur = useCallback(() => {
+    setIsFocused(false);
+    const isDirty = noteText.trim() !== (lastSavedValueRef.current || "").trim();
+    if (isDirty) {
+      saveIfDirty();
+    } else if (!mutation.isPending) {
+      // Sync to capture any server changes that occurred during focus, but ONLY if we aren't currently saving
+      setNoteText(control.comments || "");
+      lastSavedValueRef.current = control.comments || "";
+    }
+  }, [noteText, control.comments, saveIfDirty, mutation.isPending]);
   const statusConfig = {
     COMPLIANT: {
       color: "border-green-500",
@@ -288,116 +387,66 @@ focus:ring-purple-500 transition-all duration-200 hover:scale-105 active:scale-9
               )}
             </div>
           </div>
+          <div className="space-y-4 w-full min-w-0 max-w-full p-6 bg-slate-50/55 rounded-xl border border-slate-100">
+            <div className="flex justify-between items-center">
+              <h5 className="text-sm font-semibold text-slate-900">Internal Notes</h5>
 
-          {/* RIGHT SIDE PANEL */}
-          <div className="space-y-5 w-full min-w-0 max-w-full p-6">
-            <h5
-              onClick={() => setCommentsOpen(!commentsOpen)}
-              className="text-sm font-semibold cursor-pointer flex justify-between items-center"
-            >
-              Comments (2)
-              <span>{commentsOpen ? "−" : "+"}</span>
-            </h5>
-
-            {/* COMMENTS LIST */}
-            {commentsOpen && (
-              <div className="space-y-4">
-                {/* Comment 1 */}
-                <div className="flex gap-3">
-                  {/* Avatar */}
-                  <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm font-medium">
-                    <User size={20} />
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium text-sm">Sarah</p>
-                        <span className="text-xs text-gray-400">1h ago</span>
-                      </div>
-
-                      {/* ✅ ADD THIS */}
-                      {isOwn && (
-                        <div className="flex gap-2 text-xs text-gray-400">
-                          <button className="hover:text-black ">Edit</button>
-                          <button className="text-red-500 hover:text-red-600">Delete</button>
-                        </div>
-                      )}
-                    </div>
-
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      Starting the risk assessment. I&apos;ll need input from the DevOps team
-                      regarding infrastructure exposure.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Comment 2 */}
-                <div className="flex gap-3">
-                  <div className="w-9 h-9 rounded-full bg-purple-200 flex items-center justify-center text-purple-700 text-sm font-medium">
-                    <User size={20} />
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium text-sm">You</p>
-                        <span className="text-xs text-gray-400">1h ago</span>
-                      </div>
-
-                      {/* ✅ ADD THIS */}
-                      {isOwn && (
-                        <div className="flex gap-2 text-xs text-gray-400">
-                          <button className="hover:text-black transition-all duration-200 hover:scale-105 active:scale-95">
-                            Edit
-                          </button>
-                          <button className="text-red-500 hover:text-red-600 transition-all duration-200 hover:scale-105 active:scale-95">
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
-
-                    <p className="text-sm text-gray-600">
-                      Uploaded the draft template for review. Let&apos;s aim to complete this by
-                      Friday.
-                    </p>
-                  </div>
-                </div>
+              {/* React Focus Status Indicators */}
+              <div className="flex items-center gap-2 text-xs font-normal">
+                {mutation.isPending && (
+                  <span className="text-purple-600 flex items-center gap-1 animate-pulse">
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>
+                    Saving...
+                  </span>
+                )}
+                {!mutation.isPending && noteText.trim() !== (control.comments || "").trim() && (
+                  <span className="text-amber-500 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                    Unsaved changes
+                  </span>
+                )}
+                {!mutation.isPending && noteText.trim() === (control.comments || "").trim() && (
+                  <span className="text-green-600 flex items-center gap-1 font-medium animate-fade-in">
+                    ✓ Saved
+                  </span>
+                )}
               </div>
-            )}
-
-            {/* DIVIDER */}
-            <div className="border-t border-slate-200 " />
-
-            {/* ADD COMMENT */}
-            <div className="relative w-full">
-              <textarea
-                placeholder="Add a comment..."
-                rows={3}
-                className="w-full border border-slate-200 bg-white rounded-xl p-4 pr-14 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-
-              {/* FLOATING BUTTON (CORRECT POSITION) */}
-              <button
-                aria-label="Add comment"
-                className="absolute right-3 bottom-3 bg-gradient-to-r from-purple-600 to-purple-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 hover:scale-105 active:scale-95"
-              >
-                <Plus size={18} />
-              </button>
             </div>
 
-            {/* POST BUTTON */}
-            <button
-              className="w-full bg-black text-white py-3 rounded-xl text-sm font-medium hover:opacity-90 transition focus:outline-none
-focus-visible:ring-2
-focus-visible:ring-white
-focus-visible:ring-offset-2
-focus-visible:ring-offset-black transition-all duration-200 hover:scale-105 active:scale-95"
-            >
-              Post Comment
-            </button>
+            <textarea
+              placeholder="Add notes, context, or evidence descriptions for this control..."
+              rows={6}
+              value={noteText}
+              onFocus={() => {
+                setIsFocused(true);
+              }}
+              onBlur={handleBlur}
+              onChange={(e) => setNoteText(e.target.value)}
+              className="w-full border border-slate-200 bg-white rounded-xl p-4 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+
+            <div className="flex gap-3 justify-end">
+              {noteText.trim() !== (control.comments || "").trim() && (
+                <button
+                  onClick={() => {
+                    setNoteText(control.comments || "");
+                    lastSavedValueRef.current = control.comments || "";
+                  }}
+                  disabled={mutation.isPending}
+                  className="px-4 py-2 text-xs border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition disabled:opacity-50"
+                >
+                  Discard Changes
+                </button>
+              )}
+
+              <button
+                onClick={saveIfDirty}
+                disabled={mutation.isPending || noteText.trim() === (control.comments || "").trim()}
+                className="px-4 py-2 text-xs bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium disabled:opacity-50 transition"
+              >
+                {mutation.isPending ? "Saving..." : "Save Notes"}
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -411,20 +460,34 @@ focus-visible:ring-offset-black transition-all duration-200 hover:scale-105 acti
             className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 space-y-4"
           >
             {/* HEADER */}
-            <div className="flex justify-between items-center">
-              <h3 id="upload-title" className="text-lg font-semibold text-gray-900">
-                Upload Evidence
+            <div className="flex justify-between items-start gap-4">
+              <h3 id="upload-title" className="text-base font-semibold text-gray-900">
+                Upload evidence demonstrating compliance with: {control.title}
               </h3>
               <button
                 aria-label="Close upload dialog"
                 onClick={() => setUploadOpen(false)}
-                className="text-gray-400 hover:text-black transition-all duration-200 hover:scale-105 active:scale-95"
+                className="text-gray-400 hover:text-black transition-all duration-200 hover:scale-105 active:scale-95 shrink-0 pt-0.5"
               >
                 ✕
               </button>
             </div>
 
             {/* FILE INPUT */}
+            <div className="space-y-3">
+              <div className="bg-slate-50 p-3 rounded-lg border text-xs text-gray-600 space-y-1">
+                <p className="font-semibold text-gray-700">Control Requirement:</p>
+                <div className="max-h-20 overflow-y-auto pr-1 leading-relaxed">
+                  {control.description}
+                </div>
+              </div>
+
+              <p className="text-xs text-gray-500">
+                <span className="font-semibold text-gray-600">Acceptable evidence types:</span>{" "}
+                policy documents, audit logs, screenshots of configurations, and system reports.
+              </p>
+            </div>
+
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
               <p className="text-sm text-gray-500 mb-2">Drag & drop your file here</p>
 
