@@ -202,18 +202,20 @@ All UI design assets, mockups, and style guides are located in the **`/assets`**
 
 Before you begin, ensure you have the following installed:
 
-- **Node.js**: v20.x LTS or higher
-- **npm** or **pnpm**: Latest version (pnpm recommended)
-- **PostgreSQL**: v16 or higher
-- **Redis**: v7 or higher (optional for local dev)
+- **Node.js**: v18.x or v20.x LTS
+- **Package Manager**: pnpm v10.x (locked at `pnpm@10.30.3` in package.json)
+- **Backing Services**:
+  - **PostgreSQL**: v16 or higher
+  - **Redis**: v7 or higher
+  - **MinIO**: Latest (for local S3 object storage emulation)
 - **Git**: Latest version
-- **Docker** (optional): For running services locally
+- **Docker / Docker Desktop**: For spinning up backing services locally
 
 ### Recommended Tools
 
-- **VS Code**: With ESLint, Prettier, Prisma extensions
-- **Postman** or **Insomnia**: For API testing
-- **pgAdmin** or **TablePlus**: For database management
+- **VS Code**: With ESLint, Prettier, and Prisma extensions
+- **pgAdmin** or **TablePlus**: For database inspection and query reviews
+- **AWS CLI**: For testing local MinIO/S3 bucket configurations
 
 ---
 
@@ -228,57 +230,49 @@ cd compliance
 
 ### 2. Install Dependencies
 
-```bash
-# Using pnpm (recommended)
-pnpm install
+Ensure you use pnpm to lock package footprints:
 
-# Or using npm
-npm install
+```bash
+pnpm install
 ```
 
 ### 3. Set Up Environment Variables
 
-Copy the example environment file and configure your local settings:
+Copy the example configuration to initialize environment variables:
 
 ```bash
-cp .env.example .env.local
+cp .env.example .env
 ```
 
-See the [Environment Variables](#environment-variables) section for required values.
+_(Next.js and Prisma Client natively read environment variables from the `.env` file at the project root)._
 
-### 4. Set Up the Database
+### 4. Start Local Backing Services
 
-#### Option A: Using Docker Compose (Recommended)
+Spin up Postgres, Redis, and MinIO locally via Docker Compose:
 
 ```bash
-# Start PostgreSQL, Redis, and MinIO
-docker-compose up -d
-
-# Verify services are running
-docker-compose ps
+docker compose up -d
 ```
 
-#### Option B: Local PostgreSQL Installation
+Verify that all containers are running and healthy:
 
 ```bash
-# Create database
-createdb compliance_db
-
-# Or using psql
-psql -U postgres -c "CREATE DATABASE compliance_db;"
+docker compose ps
 ```
 
-### 5. Run Database Migrations
+### 5. Initialize the Database Schema
+
+Run Prisma migrations to construct tables, generate client bindings, and seed static frameworks (GDPR, HIPAA, PCI-DSS):
 
 ```bash
-# Generate Prisma Client
-pnpm prisma generate
+# Apply schemas
+pnpm exec prisma db push
 
-# Run migrations
-pnpm prisma migrate dev
+# Generate client typescript interfaces
+pnpm exec prisma generate
 
-# Seed database with sample data (optional)
-pnpm prisma db seed
+# Seed database with sample profiles and controls
+pnpm exec prisma db seed
 ```
 
 ### 6. Start the Development Server
@@ -287,12 +281,28 @@ pnpm prisma db seed
 pnpm dev
 ```
 
-The application should now be running at `http://localhost:3000`
+The dashboard will be available at [http://localhost:3000](http://localhost:3000).
 
-### 7. Verify Installation
+### 7. Sanity Checks
 
-- Visit `http://localhost:3000` - You should see the login page
-- Visit `http://localhost:3000/api/health` - Should return `{ "status": "ok" }`
+Verify your installation:
+
+- Liveness Probe: `GET http://localhost:3000/api/health` should return `{"status":"ok"}`.
+- Readiness Probe: `GET http://localhost:3000/api/ready` should return `{"status":"healthy","services":{"database":"healthy","redis":"healthy"}}`.
+
+---
+
+## 🛠 Troubleshooting Engine
+
+Here is a quick reference matrix of known edge cases and mitigation steps:
+
+| Failure Mode                                                                          | Root Cause                                                                                 | copy-paste Mitigation Command                                                                                                                                                        |
+| :------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Prisma Client out of sync**<br>_(Type errors or missing relations in routes)_       | The Prisma Client was not re-generated after a schema change or dependency sync.           | `pnpm exec prisma generate`                                                                                                                                                          |
+| **Docker Compose Port Conflicts**<br>_(Containers fail to start or exit with code 1)_ | An existing Postgres (5432) or Redis (6379) service is already running on the host system. | **Windows**: Stop host services or locate PID and term:<br>`netstat -ano \| findstr 5432`<br>`taskkill /F /PID <PID>`<br>**Linux/macOS**:<br>`sudo lsof -i :5432`<br>`kill -9 <PID>` |
+| **Redis connection timeouts**<br>_(Limiter / API requests fail to resolve)_           | Redis is down or connection string is misconfigured.                                       | Verify Redis is running: `docker compose ps`. If running, check configuration URL in `.env`: `REDIS_URL="redis://localhost:6379"`.                                                   |
+| **Prisma DB Connection Timeouts**<br>_(Database migrations fail on Neon)_             | Pooled connections (via PgBouncer) multiplex connection sessions, causing DDL errors.      | For local migrations use `DATABASE_URL_UNPOOLED` direct connection strings rather than pooled ones.                                                                                  |
+| **ClamAV Scanner Failure**<br>_(File uploads fail with status 422)_                   | ClamAV host connection failed or scan timed out.                                           | Set `CLAMAV_FAIL_OPEN=true` in local `.env` to skip scanning in developer environments.                                                                                              |
 
 ---
 
