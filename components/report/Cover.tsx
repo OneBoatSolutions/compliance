@@ -1,9 +1,10 @@
 "use client";
 
+import React from "react";
 import { ShieldCheck } from "lucide-react";
 import SkeletonBlock from "@/components/ui/skeletons/skeleton-block";
 
-interface CoverProps {
+interface CoverProps extends React.HTMLAttributes<HTMLElement> {
   appName: string;
   frameworks: string[];
   generatedAt: string;
@@ -62,6 +63,8 @@ export default function Cover({
   generatedAt,
   preparedFor,
   version,
+  className,
+  ...props
 }: CoverProps) {
   const formattedDate = new Date(generatedAt).toLocaleDateString(undefined, {
     year: "numeric",
@@ -70,7 +73,10 @@ export default function Cover({
   });
 
   return (
-    <section className="relative w-full min-h-[90vh] flex flex-col overflow-hidden">
+    <section
+      {...props}
+      className={`relative w-full min-h-[90vh] flex flex-col overflow-hidden ${className || ""}`}
+    >
       {/* Background */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Gradient */}

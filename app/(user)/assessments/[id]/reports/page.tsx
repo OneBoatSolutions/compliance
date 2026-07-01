@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ExecutiveSummary, { ExecutiveSummarySkeleton } from "@/components/report/ExecutiveSummary";
 import AssessmentScope from "@/components/report/AssessmentScope";
@@ -13,23 +12,14 @@ import Roadmap from "@/components/report/Roadmap";
 import Methodology from "@/components/report/Methodology";
 import FrameworkReference from "@/components/report/FrameworkReference";
 import { toast } from "sonner";
-import {
-  fetchReportView,
-  fetchReportHistory,
-  generateReport,
-  downloadReport,
-  type ReportHistoryItem,
-} from "@/lib/report-api";
+import { fetchReportView } from "@/lib/report-api";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { ArrowLeft, Download, Share2, Printer, FileDown } from "lucide-react";
+import { ArrowLeft, Share2, Printer } from "lucide-react";
 
 export default function ReportPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
-
   // Primary data: use the rich /view endpoint
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["reportView", id],
@@ -37,45 +27,6 @@ export default function ReportPage() {
     enabled: !!id,
     retry: 1,
   });
-
-  const { data: historyData = [], refetch: refetchHistory } = useQuery({
-    queryKey: ["report-history", id],
-    queryFn: () => fetchReportHistory(id as string),
-    enabled: !!id,
-  });
-
-  const hasReport = historyData.length > 0 && historyData[0]?.url !== null;
-
-  const handleGenerate = async () => {
-    try {
-      setIsGenerating(true);
-
-      await generateReport(id as string);
-
-      toast.success("Report generated");
-
-      await Promise.all([refetch(), refetchHistory()]);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to generate report");
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  const handleDownload = async () => {
-    try {
-      setIsDownloading(true);
-
-      const url = await downloadReport(id as string);
-
-      window.open(url, "_blank", "noopener,noreferrer");
-    } catch {
-      toast.error("Download failed");
-    } finally {
-      setIsDownloading(false);
-    }
-  };
 
   if (isLoading) {
     return (
@@ -228,34 +179,6 @@ export default function ReportPage() {
                 <Printer className="w-4 h-4" />
                 Print
               </button>
-
-              {/* Generate */}
-              <button
-                aria-label={
-                  isGenerating ? "Generating compliance report" : "Generate compliance report"
-                }
-                onClick={handleGenerate}
-                disabled={isGenerating}
-                className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium hover:bg-slate-50 transition disabled:opacity-50 flex items-center gap-2"
-              >
-                <FileDown className="w-4 h-4" />
-                {isGenerating ? "Generating..." : "Generate Report"}
-              </button>
-
-              {/* Download */}
-              <button
-                aria-label={
-                  isDownloading
-                    ? "Downloading compliance report"
-                    : "Download compliance report as PDF"
-                }
-                onClick={handleDownload}
-                disabled={isDownloading || !hasReport}
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition disabled:opacity-50 flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                {isDownloading ? "Downloading..." : "Download PDF"}
-              </button>
             </div>
           </div>
         </div>
@@ -302,89 +225,6 @@ export default function ReportPage() {
       <div className="border-t border-gray-200 my-4" />
 
       <FrameworkReference appName={data.organization.productName} />
-
-      {/* Report History — preserved from our branch (investigate.md: Missing Report History) */}
-      <div className="border-t border-gray-200 my-4" />
-      <section
-        aria-labelledby="report-history-heading"
-        className="
-    bg-white
-    rounded-xl
-    shadow
-    p-8
-    space-y-6
-    border-t-2
-    border-[#7C3AED]
-  "
-      >
-        <div
-          className="
-        pb-4"
-          aria-hidden="true"
-        >
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
-            {data.organization.productName}
-          </p>
-
-          <p className="mt-1 text-sm text-slate-500">Compliance Readiness Report • Section 09</p>
-        </div>
-        <div className="border-l-4 border-primary pl-4">
-          <h2
-            id="report-history-heading"
-            className="text-xl font-bold text-slate-900 tracking-wide uppercase"
-          >
-            Report History
-          </h2>
-
-          <p className="mt-1 text-sm text-slate-500">
-            Historical assessments, generated reports, and compliance progress over time
-          </p>
-        </div>
-        {!historyData || historyData.length === 0 ? (
-          <p className="text-gray-500">No previous reports found.</p>
-        ) : (
-          <div className="overflow-x-auto border rounded-lg">
-            <table aria-label="Compliance report history" className="w-full text-sm">
-              <thead className="bg-gray-50 text-gray-500 text-xs text-left">
-                <tr>
-                  <th className="p-3">Report Type</th>
-                  <th className="p-3">Format</th>
-                  <th className="p-3">Generated At</th>
-                  <th className="p-3">Download</th>
-                </tr>
-              </thead>
-              <tbody>
-                {historyData.map((h: ReportHistoryItem, i: number) => (
-                  <tr key={i} className="border-t">
-                    <td className="p-3">{h.type || "Compliance Report"}</td>
-                    <td className="p-3">{h.format || "PDF"}</td>
-                    <td className="p-3">
-                      {h.generatedAt ? new Date(h.generatedAt).toLocaleDateString() : "Unknown"}
-                    </td>
-                    <td className="p-3">
-                      <button
-                        onClick={() => {
-                          if (h.url) {
-                            window.open(h.url, "_blank", "noopener,noreferrer");
-                          }
-                        }}
-                        className="text-purple-600 hover:underline"
-                        aria-label={`Download ${h.type ?? "compliance"} report generated on ${
-                          h.generatedAt
-                            ? new Date(h.generatedAt).toLocaleDateString()
-                            : "unknown date"
-                        }`}
-                      >
-                        Download
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
     </main>
   );
 }

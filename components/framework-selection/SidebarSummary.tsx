@@ -33,14 +33,13 @@ export default function SidebarSummary({ selected, onContinue, loading }: Props)
       <div className="flex flex-col h-full space-y-8">
         <div>
           <h3 className="font-semibold text-lg text-purple-800 mb-6">Selected Frameworks</h3>
-          <ul className="space-y-6" aria-label="Selected frameworks">
-            {/* Framework List */}
-            <li className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
-              {selected.length === 0 ? (
-                <p className="text-sm text-gray-500">No frameworks selected</p>
-              ) : (
-                selected.map((f, i) => (
-                  <div
+          <div className="max-h-[55vh] overflow-y-auto pr-1">
+            {selected.length === 0 ? (
+              <p className="text-sm text-gray-500">No frameworks selected</p>
+            ) : (
+              <ul className="space-y-3" aria-label="Selected frameworks">
+                {selected.map((f, i) => (
+                  <li
                     key={i}
                     className="flex justify-between items-center gap-3 text-sm px-2 py-1 rounded-md hover:bg-purple-100 transition"
                   >
@@ -53,11 +52,11 @@ export default function SidebarSummary({ selected, onContinue, loading }: Props)
                     <span className="text-purple-800 font-semibold shrink-0 whitespace-nowrap">
                       {f.controls} controls
                     </span>
-                  </div>
-                ))
-              )}
-            </li>
-          </ul>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
         <p className="text-sm text-gray-500">{selected.length} frameworks selected</p>
 

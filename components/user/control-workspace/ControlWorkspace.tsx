@@ -120,10 +120,10 @@ export default function ControlWorkspace({ control }: Props) {
     fetchProgress();
   }, [control?.assessmentId, control?.itemId, control?.id]);
 
-  const handleSave = async (type: "draft" | "final" = "final") => {
+  const handleSave = async (type: "draft" | "final" = "final"): Promise<boolean> => {
     if (!control?.assessmentId || !control?.itemId) {
       toast.error("Missing assessment or item reference");
-      return;
+      return false;
     }
 
     setIsSaving(true);
@@ -158,7 +158,7 @@ export default function ControlWorkspace({ control }: Props) {
       if (Object.keys(payload).length === 0) {
         toast.info("No changes to save");
         setIsSaving(false);
-        return;
+        return true;
       }
 
       await apiClient.patch<{ score: number }>(
@@ -167,12 +167,14 @@ export default function ControlWorkspace({ control }: Props) {
       );
 
       toast.success(type === "draft" ? "Draft saved" : "Changes saved successfully");
+      return true;
     } catch (err) {
       if (err instanceof ApiClientError && err.isUnauthorized) {
         toast.error("Session expired. Please refresh and log in again.");
       } else {
         toast.error(err instanceof Error ? err.message : "Failed to save");
       }
+      return false;
     } finally {
       setIsSaving(false);
     }
@@ -211,7 +213,10 @@ export default function ControlWorkspace({ control }: Props) {
     );
   };
   const handleNextControl = async () => {
-    await handleSave("final");
+    const saveSuccess = await handleSave("final");
+    if (!saveSuccess) {
+      return;
+    }
 
     if (!nextControl) {
       router.push(`/assessments/${control.assessmentId}/checklist`);

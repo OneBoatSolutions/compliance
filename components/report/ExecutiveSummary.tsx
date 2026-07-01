@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import SkeletonBlock from "@/components/ui/skeletons/skeleton-block";
 
 import { CheckCircle, AlertTriangle, Info, BarChart3 } from "lucide-react";
@@ -15,9 +16,12 @@ interface Props {
   }[];
 }
 
-export function ExecutiveSummarySkeleton() {
+export function ExecutiveSummarySkeleton({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLElement>) {
   return (
-    <section className="bg-white rounded-xl shadow p-6 space-y-6">
+    <section {...props} className={`bg-white rounded-xl shadow p-6 space-y-6 ${className || ""}`}>
       <SkeletonBlock className="h-6 w-52" />
 
       <div className="grid md:grid-cols-2 gap-6">

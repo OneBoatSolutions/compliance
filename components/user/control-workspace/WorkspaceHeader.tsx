@@ -22,7 +22,13 @@ export default function WorkspaceHeader({
         {/* Back Link */}
         <button
           type="button"
-          onClick={() => router.push(`/assessments/${control?.assessmentId}/checklist`)}
+          onClick={() => {
+            if (control?.assessmentId) {
+              router.push(`/assessments/${control.assessmentId}/checklist`);
+            } else {
+              router.back();
+            }
+          }}
           className="mb-4 text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors"
         >
           ← Back to Assessment

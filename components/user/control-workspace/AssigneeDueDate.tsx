@@ -13,6 +13,14 @@ export function AssigneeDueDate({
   dueDate,
   setDueDate,
 }: AssigneeDueDateProps) {
+  const localTodayString = (() => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  })();
+
   return (
     <div className="rounded-2xl border border-purple-100 bg-gradient-to-br from-purple-50/50 to-white p-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -24,7 +32,9 @@ export function AssigneeDueDate({
         >
           <div className="flex items-center gap-2 mb-3">
             <User size={14} className="text-purple-600" />
-            <p className="text-sm font-medium text-slate-700">Assignee</p>
+            <p id="assignee-heading" className="text-sm font-medium text-slate-700">
+              Assignee
+            </p>
           </div>
 
           <div
@@ -76,7 +86,7 @@ export function AssigneeDueDate({
             <input
               type="date"
               value={dueDate}
-              min={new Date().toISOString().split("T")[0]}
+              min={localTodayString}
               onChange={(e) => setDueDate(e.target.value)}
               aria-label="Due date"
               aria-describedby="due-date-help"
