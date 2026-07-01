@@ -15,6 +15,8 @@ export default function SearchInput({ value, onChange }: Props) {
 
       {/* Input */}
       <input
+        aria-label="Search compliance frameworks"
+        aria-describedby="framework-search-help"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search frameworks (e.g. SOC 2, GDPR, ISO 27001...)"
@@ -37,6 +39,9 @@ export default function SearchInput({ value, onChange }: Props) {
           focus:shadow-md
         "
       />
+      <p id="framework-search-help" className="sr-only">
+        Search by framework name such as GDPR, ISO 27001 or SOC 2.
+      </p>
     </div>
   );
 }

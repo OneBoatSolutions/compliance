@@ -1,13 +1,33 @@
-export default function PriorityBadge({ level }: { level: string }) {
+import type { RemediationPriority } from "@/types/remediation";
+
+interface PriorityBadgeProps {
+  level: RemediationPriority;
+}
+
+export default function PriorityBadge({ level }: PriorityBadgeProps) {
   const colors = {
-    HIGH: "bg-red-100 text-red-600",
-    MEDIUM: "bg-yellow-100 text-yellow-600",
-    LOW: "bg-green-100 text-green-600",
+    HIGH: "bg-red-50 border border-red-200 text-red-700",
+
+    MEDIUM: "bg-yellow-50 border border-yellow-200 text-yellow-700",
+
+    LOW: "bg-blue-50 border border-blue-200 text-blue-700",
   };
 
   return (
-    <span className={`text-xs px-2 py-1 rounded ${colors[level as keyof typeof colors]}`}>
-      {level} PRIORITY
+    <span
+      className={`
+        inline-flex
+        items-center
+        rounded-full
+        px-3
+        py-1
+        text-xs
+        font-medium
+        shadow-sm
+        ${colors[level]}
+      `}
+    >
+      {level}
     </span>
   );
 }

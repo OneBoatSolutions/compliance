@@ -238,7 +238,10 @@ export default function FrameworkActivityTable({ selectedDate }: FrameworkActivi
                 "
               />
 
-              <span className="relative z-10 flex items-center gap-2">
+              <span
+                className="relative z-10 flex items-center gap-2"
+                aria-label="View all framework activity"
+              >
                 View All
                 <span
                   className="
@@ -273,6 +276,8 @@ export default function FrameworkActivityTable({ selectedDate }: FrameworkActivi
                 hover:shadow-md
                 hover:shadow-violet-100/50
               "
+              aria-expanded={showCustomize}
+              aria-controls="customize-panel"
             >
               Customize View
             </button>
@@ -293,10 +298,12 @@ export default function FrameworkActivityTable({ selectedDate }: FrameworkActivi
               bg-violet-50/60
               p-4
             "
+            id="customize-panel"
           >
             <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
               <input
                 type="checkbox"
+                aria-label="Show Version column"
                 checked={showVersion}
                 onChange={() => setShowVersion(!showVersion)}
               />
@@ -306,6 +313,7 @@ export default function FrameworkActivityTable({ selectedDate }: FrameworkActivi
             <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
               <input
                 type="checkbox"
+                aria-label="Show Actor column"
                 checked={showActor}
                 onChange={() => setShowActor(!showActor)}
               />
@@ -335,7 +343,10 @@ export default function FrameworkActivityTable({ selectedDate }: FrameworkActivi
         {/* TABLE */}
         {!isFuture && filteredData.length > 0 && (
           <div className="overflow-x-auto">
-            <table className="w-full border-separate border-spacing-y-3">
+            <table
+              className="w-full border-separate border-spacing-y-3"
+              aria-label="Framework activity table"
+            >
               <thead>
                 <tr>
                   <th className="px-4 pb-3 text-left text-sm font-semibold text-slate-800 drop-shadow-sm">
@@ -419,6 +430,7 @@ export default function FrameworkActivityTable({ selectedDate }: FrameworkActivi
                               shadow-sm
                               ${severityStyles[activity.severity as keyof typeof severityStyles]}
                             `}
+                        aria-label={`Severity ${activity.severity}`}
                       >
                         {/* GLOSS */}
                         <span
@@ -452,6 +464,7 @@ export default function FrameworkActivityTable({ selectedDate }: FrameworkActivi
                               font-semibold
                               text-violet-700
                             "
+                        aria-label={`Status ${activity.status}`}
                       >
                         {activity.status}
                       </span>

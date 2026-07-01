@@ -6,13 +6,14 @@ import LeftPanel from "./LeftPanel";
 import RightSidebar from "./RightSidebar";
 import FooterNav from "./FooterNav";
 import ProgressSection from "./ProgressSection";
-import TagsInput from "./TagsInput";
 import { AssigneeDueDate } from "./AssigneeDueDate";
 import WorkspaceHeader from "./WorkspaceHeader";
 import { apiClient, ApiClientError } from "@/lib/api-client";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ExistingFile } from "@/components/user/evidence-uploader";
+import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 
 const EvidenceUploader = dynamic(() => import("@/components/user/evidence-uploader"), {
   ssr: false,
@@ -50,6 +51,7 @@ export default function ControlWorkspace({ control }: Props) {
   const [status, setStatus] = useState<AssessmentItemStatus>(
     (control?.status as AssessmentItemStatus) || "NOT_STARTED",
   );
+  const router = useRouter();
   const [comments, setComments] = useState(control?.comments || "");
   const [assignee, setAssignee] = useState(control?.owner || "");
   const [dueDate, setDueDate] = useState(control?.targetDate || "");
@@ -67,18 +69,36 @@ export default function ControlWorkspace({ control }: Props) {
     if (!control?.assessmentId || !control?.itemId) {
       return;
     }
+
+    const fetchAssessmentItem = async () => {
+      try {
+        const response = await apiClient.get<{
+          status: AssessmentItemStatus;
+          comments: string | null;
+          owner: string | null;
+          targetDate: string | null;
+        }>(`/api/assessments/${control.assessmentId}/items/${control.itemId}`);
+
+        setStatus(response.status);
+        setComments(response.comments || "");
+        setAssignee(response.owner || "");
+        setDueDate(response.targetDate?.slice(0, 10) || "");
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
     const fetchEvidence = async () => {
       try {
         const response = await apiClient.get<{ evidence: ExistingFile[] }>(
           `/api/assessments/${control.assessmentId}/items/${control.itemId}`,
         );
-        if (response && response.evidence) {
-          setExistingFiles(response.evidence);
-        }
+        setExistingFiles(response.evidence ?? []);
       } catch (error) {
         console.error("Failed to fetch existing evidence", error);
       }
     };
+
     const fetchProgress = async () => {
       try {
         const data = await apiClient.get<{
@@ -95,14 +115,15 @@ export default function ControlWorkspace({ control }: Props) {
         console.error("Failed to fetch section progress", error);
       }
     };
+    fetchAssessmentItem();
     fetchEvidence();
     fetchProgress();
   }, [control?.assessmentId, control?.itemId, control?.id]);
 
-  const handleSave = async (type: "draft" | "final" = "final") => {
+  const handleSave = async (type: "draft" | "final" = "final"): Promise<boolean> => {
     if (!control?.assessmentId || !control?.itemId) {
       toast.error("Missing assessment or item reference");
-      return;
+      return false;
     }
 
     setIsSaving(true);
@@ -137,7 +158,7 @@ export default function ControlWorkspace({ control }: Props) {
       if (Object.keys(payload).length === 0) {
         toast.info("No changes to save");
         setIsSaving(false);
-        return;
+        return true;
       }
 
       await apiClient.patch<{ score: number }>(
@@ -146,21 +167,74 @@ export default function ControlWorkspace({ control }: Props) {
       );
 
       toast.success(type === "draft" ? "Draft saved" : "Changes saved successfully");
+      return true;
     } catch (err) {
       if (err instanceof ApiClientError && err.isUnauthorized) {
         toast.error("Session expired. Please refresh and log in again.");
       } else {
         toast.error(err instanceof Error ? err.message : "Failed to save");
       }
+      return false;
     } finally {
       setIsSaving(false);
     }
   };
 
+  const { data: assessmentItems } = useQuery({
+    queryKey: ["assessment-controls", control.assessmentId],
+    queryFn: () =>
+      apiClient.get<{
+        items: {
+          id: string;
+          control: {
+            code: string;
+          };
+        }[];
+      }>(`/api/assessments/${control.assessmentId}/items?limit=100`),
+    enabled: !!control.assessmentId,
+  });
+
+  const controls = assessmentItems?.items ?? [];
+
+  const currentIndex = controls.findIndex((item) => item.control.code === control.code);
+
+  const previousControl = currentIndex > 0 ? controls[currentIndex - 1] : null;
+
+  const nextControl =
+    currentIndex >= 0 && currentIndex < controls.length - 1 ? controls[currentIndex + 1] : null;
+
+  const handlePreviousControl = () => {
+    if (!previousControl) {
+      return;
+    }
+
+    router.push(
+      `/assessments/${control.assessmentId}/control-workspace/${previousControl.control.code}`,
+    );
+  };
+  const handleNextControl = async () => {
+    const saveSuccess = await handleSave("final");
+    if (!saveSuccess) {
+      return;
+    }
+
+    if (!nextControl) {
+      router.push(`/assessments/${control.assessmentId}/checklist`);
+      return;
+    }
+
+    router.push(
+      `/assessments/${control.assessmentId}/control-workspace/${nextControl.control.code}`,
+    );
+  };
+
   return (
     <div className="p-6 md:p-8 space-y-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="space-y-6">
+      <div
+        className="rounded-3xl border border-purple-100 bg-gradient-to-br from-purple-50/80 via-purple-50/30 to-white
+                      p-6 md:p-8"
+      >
         <WorkspaceHeader control={control} />
         <ProgressSection {...sectionProgress} />
       </div>
@@ -175,6 +249,8 @@ export default function ControlWorkspace({ control }: Props) {
             comments={comments}
             setComments={setComments}
             control={control}
+            onSave={() => handleSave("final")}
+            isSaving={isSaving}
           />
 
           <div className="bg-white shadow-sm border rounded-xl p-5 space-y-6">
@@ -188,8 +264,6 @@ export default function ControlWorkspace({ control }: Props) {
               dueDate={dueDate}
               setDueDate={setDueDate}
             />
-
-            <TagsInput />
           </div>
         </div>
 
@@ -197,7 +271,14 @@ export default function ControlWorkspace({ control }: Props) {
         <RightSidebar control={control} status={status} />
       </div>
 
-      <FooterNav onSave={handleSave} isSaving={isSaving} />
+      <FooterNav
+        onSave={handleSave}
+        isSaving={isSaving}
+        onPrevious={handlePreviousControl}
+        onNext={handleNextControl}
+        hasPrevious={!!previousControl}
+        hasNext={!!nextControl}
+      />
     </div>
   );
 }

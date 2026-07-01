@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from "date-fns";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface AuditTrailProps {
   assessmentId?: string;
@@ -32,29 +33,57 @@ export default function AuditTrail({ assessmentId, assessmentItemId }: AuditTrai
   const getIcon = (type: string) => {
     switch (type) {
       case "EVIDENCE":
-        return <Upload className="text-blue-500" size={16} />;
+        return {
+          icon: <Upload size={16} />,
+          bg: "bg-blue-100",
+          color: "text-blue-600",
+        };
+
       case "COMMENT":
-        return <MessageSquare className="text-purple-500" size={16} />;
+        return {
+          icon: <MessageSquare size={16} />,
+          bg: "bg-purple-100",
+          color: "text-purple-600",
+        };
+
       case "STATUS_CHANGE":
-        return <CheckCircle className="text-purple-500" size={16} />;
-      case "CREATED":
+        return {
+          icon: <CheckCircle size={16} />,
+          bg: "bg-green-100",
+          color: "text-green-600",
+        };
+
       default:
-        return <FilePlus className="text-gray-400" size={16} />;
+        return {
+          icon: <FilePlus size={16} />,
+          bg: "bg-slate-100",
+          color: "text-slate-600",
+        };
     }
   };
+
   if (!assessmentId || !assessmentItemId) {
     return null;
   }
+  const truncateText = (text: string, limit = 45) => {
+    if (text.length <= limit) {
+      return text;
+    }
+
+    return `${text.slice(0, limit)}...`;
+  };
 
   return (
     <div className="bg-white shadow-sm p-5 rounded-xl border">
-      <p className="font-medium mb-5">Audit Trail</p>
+      <div className="flex items-center gap-2 mb-5">
+        <CheckCircle size={16} className="text-purple-600" />
+        <p className="font-semibold">Audit Trail</p>
+      </div>
 
-      <div className="relative">
-        {/* 🔥 CONTINUOUS LINE */}
-        <div className="absolute left-[10px] top-0 bottom-0 w-[2px] bg-primary" />
+      <div className="max-h-[400px] overflow-y-auto pr-2">
+        <div className="relative space-y-6">
+          <div className="absolute left-5 top-5 bottom-5 w-[2px] bg-purple-200" />
 
-        <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2">
           {isLoading ? (
             <div className="space-y-4">
               <Skeleton className="h-10 w-full" />
@@ -64,16 +93,37 @@ export default function AuditTrail({ assessmentId, assessmentItemId }: AuditTrai
             <p className="text-xs text-muted-foreground ml-8">No activity yet.</p>
           ) : (
             timeline.map((item: TimelineItem) => (
-              <div key={item.id} className="relative flex gap-4 animate-fadeIn">
+              <div key={item.id} className="relative flex gap-4 animate-fadeIn items-start">
                 {/* 🔵 ICON ON LINE */}
-                <div className="relative z-10 flex items-center justify-center w-5 h-5 rounded-full bg-white border shadow-sm shrink-0 mt-0.5">
-                  {getIcon(item.type)}
-                </div>
+                {(() => {
+                  const iconData = getIcon(item.type);
+
+                  return (
+                    <div
+                      className={` relative z-10 flex items-center justify-center w-10 h-10 rounded-full
+                       border shadow-sm shrink-0 ${iconData.bg} ${iconData.color}`}
+                    >
+                      {iconData.icon}
+                    </div>
+                  );
+                })()}
 
                 {/* 📄 CONTENT */}
-                <div className="pb-2">
-                  <p className="text-sm font-medium">{item.user}</p>
-                  <p className="text-xs text-muted-foreground">{item.details}</p>
+                <div className="pb-4 flex-1">
+                  <p className="text-sm font-semibold text-slate-900">{item.user}</p>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <p className="text-xs text-muted-foreground cursor-help hover:text-slate-900 transition-colors">
+                          {truncateText(item.details)}
+                        </p>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs text-xs">{item.details}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                   <p className="text-xs text-muted-foreground mt-0.5">
                     {formatDistanceToNow(new Date(item.date), { addSuffix: true })}
                   </p>
@@ -82,9 +132,6 @@ export default function AuditTrail({ assessmentId, assessmentItemId }: AuditTrai
             ))
           )}
         </div>
-
-        {/* 🔥 EXTENSION LINE (below last item) */}
-        <div className="absolute left-[10px] bottom-[-20px] w-[2px] h-6 bg-muted opacity-50" />
       </div>
     </div>
   );

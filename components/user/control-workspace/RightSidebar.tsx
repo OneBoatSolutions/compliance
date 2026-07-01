@@ -11,6 +11,7 @@ const RemediationDrawer = dynamic(() => import("@/components/ai/remediation-draw
   ssr: false,
   loading: () => <Skeleton className="h-screen w-full md:w-[78%] ml-auto rounded-l-2xl" />,
 });
+import WidgetErrorBoundary from "@/components/ui/widget-boundaries";
 
 interface RightSidebarProps {
   control?: {
@@ -33,35 +34,48 @@ export default function RightSidebar({ control, status }: RightSidebarProps) {
       <AIAssistantCard status={status} onOpenDrawer={() => setIsDrawerOpen(true)} />
 
       {/* Requirements */}
-      <div>
-        <ControlRequirements controlId={control?.id} />
-      </div>
-      <div>
-        <RelatedControls controlId={control?.id} />
-      </div>
-      <div>
-        <DiscussionPanel assessmentId={control?.assessmentId} assessmentItemId={control?.itemId} />
-      </div>
+      <WidgetErrorBoundary>
+        <div>
+          <ControlRequirements controlId={control?.id} />
+        </div>
+      </WidgetErrorBoundary>
+      <WidgetErrorBoundary>
+        <div>
+          <RelatedControls controlId={control?.id} />
+        </div>
+      </WidgetErrorBoundary>
+      <WidgetErrorBoundary>
+        <div>
+          <DiscussionPanel
+            assessmentId={control?.assessmentId}
+            assessmentItemId={control?.itemId}
+          />
+        </div>
+      </WidgetErrorBoundary>
 
       {/* Audit Trail */}
-      <div>
-        <AuditTrail assessmentId={control?.assessmentId} assessmentItemId={control?.itemId} />
-      </div>
+      <WidgetErrorBoundary>
+        <div>
+          <AuditTrail assessmentId={control?.assessmentId} assessmentItemId={control?.itemId} />
+        </div>
+      </WidgetErrorBoundary>
 
       {/* Remediation Drawer */}
-      {control && (
-        <RemediationDrawer
-          open={isDrawerOpen}
-          onClose={() => setIsDrawerOpen(false)}
-          controlId={control.id}
-          assessmentItemId={control.itemId}
-          controlTitle={control.title}
-          controlDescription={control.description}
-          framework={control.framework}
-          status={status}
-          severity={control.severity}
-        />
-      )}
+      <WidgetErrorBoundary>
+        {control && (
+          <RemediationDrawer
+            open={isDrawerOpen}
+            onClose={() => setIsDrawerOpen(false)}
+            controlId={control.id}
+            assessmentItemId={control.itemId}
+            controlTitle={control.title}
+            controlDescription={control.description}
+            framework={control.framework}
+            status={status}
+            severity={control.severity}
+          />
+        )}
+      </WidgetErrorBoundary>
     </div>
   );
 }

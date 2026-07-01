@@ -174,12 +174,16 @@ export default function RecentActivity({ selectedDate }: RecentActivityProps) {
       )}
 
       {/* ACTIVITIES */}
-      <div className="relative z-10 space-y-5">
+      <ul
+        role="list"
+        aria-label="Recent administrative activity"
+        className="relative z-10 space-y-5"
+      >
         {activities.map((activity) => {
           const Icon = activity.icon;
 
           return (
-            <div
+            <li
               key={activity.id}
               className="
                 flex
@@ -238,10 +242,10 @@ export default function RecentActivity({ selectedDate }: RecentActivityProps) {
 
                 <span className="text-xs text-slate-500">{activity.time}</span>
               </div>
-            </div>
+            </li>
           );
         })}
-      </div>
+      </ul>
     </section>
   );
 }

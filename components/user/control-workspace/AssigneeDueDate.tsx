@@ -13,35 +13,90 @@ export function AssigneeDueDate({
   dueDate,
   setDueDate,
 }: AssigneeDueDateProps) {
+  const localTodayString = (() => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  })();
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {/* 👤 Assignee */}
-      <div>
-        <p className="text-sm mb-1">Assignee</p>
+    <div className="rounded-2xl border border-purple-100 bg-gradient-to-br from-purple-50/50 to-white p-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Assignee */}
+        <div
+          className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md"
+          role="group"
+          aria-labelledby="assignee-heading"
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <User size={14} className="text-purple-600" />
+            <p id="assignee-heading" className="text-sm font-medium text-slate-700">
+              Assignee
+            </p>
+          </div>
 
-        <div className="flex items-center border border-muted rounded-md px-2">
-          <User size={16} className="text-muted-foreground" />
-          <input
-            value={assignee}
-            onChange={(e) => setAssignee(e.target.value)}
-            className="w-full p-2 outline-none bg-transparent text-sm"
-            placeholder="Select assignee"
-          />
+          <div
+            className="
+              flex items-center gap-2
+              rounded-lg border border-slate-200
+              px-3 py-2 bg-slate-50
+              focus-within:border-purple-500
+              focus-within:ring-4
+              focus-within:ring-purple-500/10
+              transition-all
+            "
+          >
+            <User size={16} className="text-slate-400" />
+
+            <input
+              aria-label="Assignee"
+              value={assignee}
+              onChange={(e) => setAssignee(e.target.value)}
+              className="w-full bg-transparent outline-none text-sm"
+              placeholder="Select assignee"
+            />
+          </div>
+          <p id="assignee-help" className="mt-2  text-xs text-slate-500">
+            Person responsible for this control.
+          </p>
         </div>
-      </div>
 
-      {/* 📅 Due Date */}
-      <div>
-        <p className="text-sm mb-1">Due Date</p>
+        {/* Due Date */}
+        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md">
+          <div className="flex items-center gap-2 mb-3">
+            <Calendar size={14} className="text-purple-600" />
+            <p className="text-sm font-medium text-slate-700">Due Date</p>
+          </div>
 
-        <div className="flex items-center border border-muted rounded-md px-2">
-          <Calendar size={16} className="text-muted-foreground" />
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            className="w-full p-2 outline-none bg-transparent text-sm"
-          />
+          <div
+            className="
+              flex items-center gap-2
+              rounded-lg border border-slate-200
+              px-3 py-2 bg-slate-50
+              focus-within:border-purple-500
+              focus-within:ring-4
+              focus-within:ring-purple-500/10
+              transition-all
+            "
+          >
+            <Calendar size={16} className="text-slate-400" />
+
+            <input
+              type="date"
+              value={dueDate}
+              min={localTodayString}
+              onChange={(e) => setDueDate(e.target.value)}
+              aria-label="Due date"
+              aria-describedby="due-date-help"
+              className="w-full bg-transparent outline-none text-sm"
+            />
+          </div>
+
+          <p className="mt-2 text-xs text-slate-500" id="due-date-help">
+            Target completion date for this control.
+          </p>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
 import ControlWorkspace from "@/components/user/control-workspace/ControlWorkspace";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ApiItem {
   id: string;
@@ -100,16 +101,135 @@ export default function Page() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#6d18ff] border-t-transparent" />
-          <p className="text-sm text-slate-500">Loading control workspace...</p>
+      <div className="space-y-6 p-6">
+        {/* Header */}
+        <div className="space-y-3">
+          <Skeleton className="h-4 w-64" />
+          <Skeleton className="h-10 w-[420px] max-w-full" />
+        </div>
+
+        {/* Progress Section */}
+        <div className="rounded-2xl border border-purple-100 bg-gradient-to-br from-purple-50/40 to-white p-6">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-5 w-36" />
+              <Skeleton className="h-5 w-20" />
+            </div>
+
+            <Skeleton className="h-3 w-full rounded-full" />
+
+            <div className="flex gap-2">
+              <Skeleton className="h-6 w-14 rounded-full" />
+              <Skeleton className="h-6 w-14 rounded-full" />
+              <Skeleton className="h-6 w-14 rounded-full" />
+              <Skeleton className="h-6 w-14 rounded-full" />
+            </div>
+          </div>
+        </div>
+
+        {/* Main Layout */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          {/* LEFT PANEL */}
+          <div className="xl:col-span-2 space-y-6">
+            {/* Control Details */}
+            <div className="rounded-2xl border border-slate-200 p-6 space-y-6">
+              <Skeleton className="h-5 w-28" />
+              <Skeleton className="h-8 w-3/4" />
+              <Skeleton className="h-20 w-full" />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Skeleton className="h-28 rounded-xl" />
+                <Skeleton className="h-28 rounded-xl" />
+                <Skeleton className="h-28 rounded-xl" />
+                <Skeleton className="h-28 rounded-xl" />
+              </div>
+
+              <Skeleton className="h-32 w-full rounded-xl" />
+            </div>
+
+            {/* Evidence Section */}
+            <div className="rounded-2xl border border-slate-200 p-6 space-y-4">
+              <Skeleton className="h-5 w-40" />
+              <Skeleton className="h-24 w-full rounded-xl" />
+              <Skeleton className="h-24 w-full rounded-xl" />
+            </div>
+
+            {/* Footer Actions */}
+            <div className="flex gap-3">
+              <Skeleton className="h-10 w-32" />
+              <Skeleton className="h-10 w-32" />
+            </div>
+          </div>
+
+          {/* RIGHT SIDEBAR */}
+          <div className="space-y-4">
+            {/* AI Assistant */}
+            <div className="rounded-2xl border border-purple-100 bg-gradient-to-br from-purple-50/40 to-white p-5 space-y-4">
+              <Skeleton className="h-6 w-32" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+
+            {/* Requirements */}
+            <div className="rounded-2xl border border-slate-200 p-5 space-y-3">
+              <Skeleton className="h-5 w-40" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6" />
+              <Skeleton className="h-4 w-4/6" />
+            </div>
+
+            {/* Related Controls */}
+            <div className="rounded-2xl border border-slate-200 p-5 space-y-3">
+              <Skeleton className="h-5 w-32" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6" />
+              <Skeleton className="h-4 w-4/6" />
+            </div>
+
+            {/* Discussion */}
+            <div className="rounded-2xl border border-slate-200 p-5 space-y-4">
+              <Skeleton className="h-5 w-24" />
+
+              <div className="flex gap-3">
+                <Skeleton className="h-9 w-9 rounded-full" />
+                <div className="space-y-2 flex-1">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+              </div>
+
+              <Skeleton className="h-24 w-full rounded-xl" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+
+            {/* Audit Trail */}
+            <div className="rounded-2xl border border-slate-200 p-5 space-y-4">
+              <Skeleton className="h-5 w-24" />
+
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                  <Skeleton className="h-12 flex-1" />
+                </div>
+
+                <div className="flex gap-3">
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                  <Skeleton className="h-12 flex-1" />
+                </div>
+
+                <div className="flex gap-3">
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                  <Skeleton className="h-12 flex-1" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
-  if (error || !control) {
+  if ((!loading && error) || !control) {
     return (
       <div className="p-6">
         <div className="rounded-xl border border-red-200 bg-red-50 p-5">

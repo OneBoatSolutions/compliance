@@ -73,6 +73,7 @@ export default function QuickActions() {
                 hover:shadow-lg
                 hover:shadow-purple-100
               "
+              aria-label={action.title}
             >
               <div className="flex flex-col items-center justify-center text-center">
                 {/* ICON */}

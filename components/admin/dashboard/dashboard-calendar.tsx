@@ -62,6 +62,7 @@ export default function DashboardCalendar({
         hover:shadow-2xl
         hover:shadow-violet-100/50
       "
+      aria-labelledby="calendar-title"
     >
       {/* TOP LIGHT */}
       <div
@@ -97,6 +98,7 @@ export default function DashboardCalendar({
         <div className="mb-5 flex items-center justify-between">
           <button
             onClick={handlePrevMonth}
+            aria-label="Previous month"
             className="
               group
               relative
@@ -136,7 +138,7 @@ export default function DashboardCalendar({
 
           {/* MONTH + TODAY */}
           <div className="text-center">
-            <h2 className="text-base font-semibold text-slate-900">
+            <h2 className="text-base font-semibold text-slate-900" id="calendar-title">
               {month} {year}
             </h2>
 
@@ -147,6 +149,7 @@ export default function DashboardCalendar({
 
           <button
             onClick={handleNextMonth}
+            aria-label="Next month"
             className="
               group
               relative
@@ -196,20 +199,26 @@ export default function DashboardCalendar({
             font-semibold
             text-violet-500
           "
+          role="row"
+          aria-label="Days of the week"
         >
-          <span>Mo</span>
-          <span>Tu</span>
-          <span>We</span>
-          <span>Th</span>
-          <span>Fr</span>
-          <span>Sa</span>
-          <span>Su</span>
+          <span aria-label="Monday">Mo</span>
+          <span aria-label="Tuesday">Tu</span>
+          <span aria-label="Wednesday">We</span>
+          <span aria-label="Thursday">Th</span>
+          <span aria-label="Friday">Fr</span>
+          <span aria-label="Saturday">Sa</span>
+          <span aria-label="Sunday">Su</span>
         </div>
 
         {/* DATE GRID */}
-        <div className="grid grid-cols-7 gap-1.5">
+        <div
+          className="grid grid-cols-7 gap-1.5"
+          role="grid"
+          aria-label={`Calendar for ${month} ${year}`}
+        >
           {emptyDays.map((emptyDay, index) => (
-            <div key={index} className="h-9 w-9" />
+            <div key={index} role="presentation" aria-hidden="true" className="h-9 w-9" />
           ))}
 
           {days.map((day) => {
@@ -265,6 +274,11 @@ export default function DashboardCalendar({
                       `
                   }
                 `}
+                aria-label={`${new Date(year, currentMonth.getMonth(), day).toDateString()}${isToday ? ", Today" : ""}${
+                  isSelected ? ", Selected" : ""
+                }`}
+                aria-current={isToday ? "date" : undefined}
+                aria-pressed={isSelected}
               >
                 {/* GLOSS */}
                 {isSelected && (
@@ -301,7 +315,7 @@ export default function DashboardCalendar({
         >
           <p className="text-xs font-medium text-violet-700">Selected Date</p>
 
-          <span className="mt-1 block text-sm font-semibold text-slate-800">
+          <span className="mt-1 block text-sm font-semibold text-slate-800" aria-live="polite">
             {selectedDate.toDateString()}
           </span>
         </div>

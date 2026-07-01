@@ -298,13 +298,22 @@ export default function EvidenceUploader({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" aria-labelledby="supporting-evidence-heading">
+      <div className="sr-only" aria-live="polite">
+        {files.length} file{files.length !== 1 ? "s" : ""} uploaded
+      </div>
       <div className="flex items-center justify-between border-b pb-2">
-        <h3 className="font-semibold text-lg">Supporting Evidence</h3>
+        <h3 id="supporting-evidence-heading" className="font-semibold text-lg">
+          Supporting Evidence
+        </h3>
       </div>
 
       {/* Drag & Drop Zone */}
       <div
+        role="button"
+        tabIndex={0}
+        aria-label="Upload evidence files"
+        aria-describedby="evidence-upload-help"
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -319,12 +328,14 @@ export default function EvidenceUploader({
         <p className="text-sm font-medium mb-1">
           Drag & drop files here or <span className="text-primary underline">browse</span>
         </p>
-        <p className="text-xs text-muted-foreground">
+        <p id="evidence-upload-help" className="text-xs text-muted-foreground">
           Supported: PDF, DOCX, XLSX, TXT, PNG, JPG, CSV, ZIP (Max: 10MB)
         </p>
         <input
           type="file"
           multiple
+          aria-label="Choose evidence files"
+          aria-describedby="evidence-upload-help"
           className="hidden"
           ref={fileInputRef}
           onChange={handleFileInput}
@@ -335,10 +346,12 @@ export default function EvidenceUploader({
       {files.length > 0 && (
         <div className="space-y-4">
           <h4 className="text-sm font-medium text-slate-700">Uploaded Files</h4>
-          <div className="space-y-3">
+          <div className="space-y-3" role="list" aria-label="Uploaded evidence files">
             {files.map((file) => (
               <div
                 key={file.id}
+                role="listitem"
+                aria-label={`Evidence file ${file.name}`}
                 className="bg-white border rounded-xl p-4 shadow-sm flex flex-col space-y-3"
               >
                 <div className="flex items-start justify-between">
@@ -370,6 +383,7 @@ export default function EvidenceUploader({
                         onClick={() => downloadFile(file)}
                         disabled={downloadingIds.has(file.id)}
                         title="Download file"
+                        aria-label={`Download ${file.name}`}
                         className="text-slate-500 hover:text-primary disabled:opacity-50"
                       >
                         {downloadingIds.has(file.id) ? (
@@ -384,6 +398,7 @@ export default function EvidenceUploader({
                       size="icon"
                       onClick={() => removeFile(file.id)}
                       title="Remove file"
+                      aria-label={`Remove ${file.name}`}
                       className="text-slate-500 hover:text-red-500"
                     >
                       <X size={16} />
@@ -398,7 +413,14 @@ export default function EvidenceUploader({
                       <span>Uploading...</span>
                       <span>{Math.round(file.progress)}%</span>
                     </div>
-                    <Progress value={file.progress} className="h-2" />
+                    <Progress
+                      value={file.progress}
+                      className="h-2"
+                      aria-label={`Uploading ${file.name}`}
+                      aria-valuenow={file.progress}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                    />
                   </div>
                 ) : (
                   <div className="pt-2 border-t flex items-center gap-2 mt-2">
@@ -407,6 +429,7 @@ export default function EvidenceUploader({
                       placeholder="Add a description for this evidence..."
                       value={file.description}
                       onChange={(e) => updateDescription(file.id, e.target.value)}
+                      aria-label={`Description for ${file.name}`}
                       className="h-8 text-sm flex-1 bg-slate-50 border-transparent hover:border-slate-200 focus:bg-white transition-all"
                     />
                   </div>

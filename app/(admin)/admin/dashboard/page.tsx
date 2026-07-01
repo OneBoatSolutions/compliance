@@ -7,7 +7,6 @@ import DashboardClient from "@/components/admin/dashboard/dashboard-client";
 
 export default async function AdminDashboardPage() {
   const session = await getServerSession(authOptions);
-
   if (!session) {
     redirect("/login");
   }

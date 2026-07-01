@@ -1,17 +1,34 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ListChecks } from "lucide-react";
+import type { RemediationPlanStep } from "@/types/remediation";
+
 import RemediationStep from "./remediation-step";
 
-export default function PriorityActions({ steps }: any) {
+interface PriorityActionsProps {
+  steps: RemediationPlanStep[];
+}
+
+export default function PriorityActions({ steps }: PriorityActionsProps) {
+  const completedCount = steps.filter((step) => step.status === "DONE").length;
+
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="font-semibold">Priority Actions</h3>
-        <span className="text-xs text-gray-500">0/{steps.length} completed</span>
+    <div className="space-y-5">
+      <div className="flex items-center justify-between border-b border-purple-100 pb-3">
+        <div className="flex items-center gap-2">
+          <ListChecks className="h-5 w-5 text-purple-600" />
+
+          <h3 className="text-xl font-semibold text-slate-900">Priority Actions</h3>
+        </div>
+
+        <span className="rounded-full bg-purple-50 px-3 py-1 text-xs font-medium text-purple-700">
+          {completedCount}/{steps.length} completed
+        </span>
       </div>
 
-      {steps.map((step: any, i: number) => (
-        <RemediationStep key={i} step={step} index={i} />
-      ))}
+      <div className="space-y-5">
+        {steps.map((step, index) => (
+          <RemediationStep key={step.id ?? index} step={step} index={index} />
+        ))}
+      </div>
     </div>
   );
 }

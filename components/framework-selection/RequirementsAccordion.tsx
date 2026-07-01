@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 
 interface Props {
   why: string;
@@ -9,15 +9,21 @@ interface Props {
 
 export default function RequirementsAccordion({ why, requirements }: Props) {
   const [open, setOpen] = useState(false);
+  const contentId = useId();
 
   return (
     <div className="mt-2">
-      <button onClick={() => setOpen(!open)} className="text-sm text-purple-600 font-medium">
+      <button
+        onClick={() => setOpen(!open)}
+        className="text-sm text-purple-600 font-medium"
+        aria-expanded={open}
+        aria-controls={contentId}
+      >
         Why this applies {open ? "▲" : "▼"}
       </button>
 
       {open && (
-        <div className="mt-2 space-y-2 text-sm text-gray-600">
+        <div id={contentId} className="mt-2 space-y-2 text-sm text-gray-600">
           {/* Why */}
           <p>{why}</p>
 

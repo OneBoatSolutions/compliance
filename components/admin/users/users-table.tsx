@@ -32,7 +32,10 @@ export function UsersTable({ users, currentUserId, onEdit }: UsersTableProps) {
   return (
     <div className="overflow-hidden rounded-2xl border border-[#e5e5e5] bg-white shadow-sm">
       <div className="w-full overflow-x-auto">
-        <table className="w-full border-collapse text-left text-sm text-slate-500">
+        <table
+          className="w-full border-collapse text-left text-sm text-slate-500"
+          aria-label="User management table"
+        >
           <thead className="bg-[#fafafa] text-xs font-semibold uppercase tracking-wider text-slate-700 border-b border-[#e5e5e5]">
             <tr>
               <th scope="col" className="px-6 py-4 font-semibold text-slate-900">
@@ -61,7 +64,7 @@ export function UsersTable({ users, currentUserId, onEdit }: UsersTableProps) {
           <tbody className="divide-y divide-[#f5f5f5]">
             {users.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-6 py-10 text-center text-slate-400">
+                <td colSpan={7} className="px-6 py-10 text-center text-slate-400" role="status">
                   No users found matching your filters.
                 </td>
               </tr>

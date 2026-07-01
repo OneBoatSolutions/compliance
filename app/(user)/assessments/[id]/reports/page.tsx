@@ -1,21 +1,25 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import ExecutiveSummary, { ExecutiveSummarySkeleton } from "@/components/report/ExecutiveSummary";
-
+import AssessmentScope from "@/components/report/AssessmentScope";
+import FrameworkComparison from "@/components/report/FrameworkComparision";
 import Cover from "@/components/report/Cover";
-
 import OrganizationProfile from "@/components/report/OrganizationProfile";
 import RiskAnalysis from "@/components/report/RiskAnalysis";
 import Roadmap from "@/components/report/Roadmap";
-
+import Methodology from "@/components/report/Methodology";
+import FrameworkReference from "@/components/report/FrameworkReference";
+import { toast } from "sonner";
 import { fetchReportView } from "@/lib/report-api";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { ArrowLeft, Share2, Printer } from "lucide-react";
+
 export default function ReportPage() {
   const { id } = useParams<{ id: string }>();
-
+  const router = useRouter();
   // Primary data: use the rich /view endpoint
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["reportView", id],
@@ -27,20 +31,28 @@ export default function ReportPage() {
   if (isLoading) {
     return (
       <div className="report-print-root space-y-10">
-        <Skeleton className="h-[90vh] w-full rounded-xl" />
-        <ExecutiveSummarySkeleton />
-        <Skeleton className="h-32 w-full rounded-xl" />
-        <Skeleton className="h-32 w-full rounded-xl" />
-        <Skeleton className="h-32 w-full rounded-xl" />
+        <Skeleton className="h-[90vh] w-full rounded-xl" aria-label="Loading compliance report" />
+        <ExecutiveSummarySkeleton aria-label="Loading executive summary" />
+        <Skeleton className="h-32 w-full rounded-xl" aria-label="Loading report section" />
+        <Skeleton className="h-32 w-full rounded-xl" aria-label="Loading report section" />
+        <Skeleton className="h-32 w-full rounded-xl" aria-label="Loading report section" />
       </div>
     );
   }
 
   if (isError || !data) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 space-y-4">
+      <div
+        className="flex flex-col items-center justify-center h-64 space-y-4"
+        role="alert"
+        aria-live="assertive"
+      >
         <p className="text-gray-500">Failed to load report data.</p>
-        <button onClick={() => refetch()} className="px-4 py-2 bg-purple-600 text-white rounded">
+        <button
+          aria-label="Retry loading compliance report"
+          onClick={() => refetch()}
+          className="px-4 py-2 bg-purple-600 text-white rounded"
+        >
           Retry
         </button>
       </div>
@@ -107,9 +119,73 @@ export default function ReportPage() {
     })),
   };
 
+  const frameworkComparisonUI = data.frameworkScores.map((f) => ({
+    name: f.frameworkName,
+    score: f.score,
+  }));
+
   return (
-    <div className="report-print-root space-y-10">
+    <main className="report-print-root space-y-10" aria-labelledby="report-page-title">
+      {/* Share / Print bar — preserved from our branch (investigate.md: Missing share link) */}
+      <div className="print:hidden bg-white rounded-xl border border-slate-200 shadow-sm p-6 mt-5">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 ">
+          {/* LEFT */}
+          <div>
+            <button
+              aria-label="Go back to assessment checklist"
+              onClick={() => router.push(`/assessments/${id}/checklist`)}
+              className=" group flex items-center gap-2 text-sm font-medium  text-slate-600 hover:text-purple-700 transition-all duration-200"
+            >
+              <ArrowLeft className=" w-5 h-5 text-purple-600 transition-transform duration-200 group-hover:scale-125 group-hover:-translate-x-0.5" />
+
+              <span>Back to Assessment</span>
+            </button>
+
+            <h1 id="report-page-title" className="mt-3 text-2xl font-semibold text-slate-900">
+              Compliance Readiness Report
+            </h1>
+
+            <p className="mt-1 text-sm font-semibold text-slate-500">
+              {data.organization.productName}
+            </p>
+          </div>
+
+          {/* RIGHT */}
+          <div className="flex flex-col items-start lg:items-end gap-3">
+            <p className="text-sm  text-slate-500">
+              Last generated: {new Date(data.generatedAt).toLocaleDateString()}
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+              {/* Share */}
+              <button
+                aria-label="Copy shareable report link"
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  toast.success("Link copied!");
+                }}
+                className="px-4 py-2 border border-purple-200 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-50 transition flex items-center gap-2"
+              >
+                <Share2 className="w-4 h-4" />
+                Share Report
+              </button>
+
+              {/* Print */}
+              <button
+                aria-label="Print compliance report"
+                onClick={() => window.print()}
+                className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium hover:bg-slate-50 transition flex items-center gap-2"
+              >
+                <Printer className="w-4 h-4" />
+                Print
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <Cover
+        aria-labelledby="report-page-title"
         appName={data.organization.productName}
         frameworks={data.frameworkScores.map((f) => f.frameworkCode)}
         generatedAt={data.generatedAt}
@@ -117,15 +193,38 @@ export default function ReportPage() {
         version="1.0"
       />
 
-      {/* Executive Summary — uses real findings/alerts from /view endpoint */}
-      <ExecutiveSummary score={data.overallScore} findings={data.findings} alerts={data.alerts} />
+      <div className="border-t border-gray-200 mb-8" />
 
-      <div className="border-t border-gray-200 my-4" />
+      {/* Executive Summary — uses real findings/alerts from /view endpoint */}
+      <ExecutiveSummary
+        score={data.overallScore}
+        findings={data.findings}
+        alerts={data.alerts}
+        appName={data.organization.productName}
+      />
+
+      <div className="border-t border-gray-200 mb-8 " />
+
       <OrganizationProfile organization={organizationUI} />
       <div className="border-t border-gray-200 my-4" />
-      <RiskAnalysis data={riskUI} />
+
+      <AssessmentScope appName={data.organization.productName} organization={data.organization} />
+
+      <FrameworkComparison
+        appName={data.organization.productName}
+        frameworks={frameworkComparisonUI}
+      />
+
+      <RiskAnalysis data={riskUI} appName={data.organization.productName} />
+
       <div className="border-t border-gray-200 my-4" />
-      <Roadmap roadmap={roadmapUI} />
-    </div>
+      <Roadmap roadmap={roadmapUI} appName={data.organization.productName} />
+
+      <Methodology appName={data.organization.productName} />
+
+      <div className="border-t border-gray-200 my-4" />
+
+      <FrameworkReference appName={data.organization.productName} />
+    </main>
   );
 }

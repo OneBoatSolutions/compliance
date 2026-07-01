@@ -1,6 +1,8 @@
 export default function DashboardHeader() {
   return (
     <section
+      aria-labelledby="dashboard-title"
+      aria-describedby="dashboard-description"
       className="relative
         overflow-hidden
         rounded-3xl
@@ -42,11 +44,14 @@ export default function DashboardHeader() {
           blur-3xl
         "
       />
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900 relative z-0">
+      <h1
+        className="text-2xl font-bold tracking-tight text-slate-900 relative z-0"
+        id="dashboard-title"
+      >
         Admin Dashboard
       </h1>
 
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-500" id="dashboard-description">
         Monitor compliance frameworks, users, system health and platform activity.
       </p>
     </section>

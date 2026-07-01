@@ -29,6 +29,10 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
     },
     select: {
       id: true,
+      status: true,
+      comments: true,
+      owner: true,
+      targetDate: true,
       evidence: {
         orderBy: {
           uploadedAt: "desc",
@@ -49,7 +53,16 @@ export const GET = withErrorHandler(async (req: Request, { params }: RouteContex
     return notFoundResponse("Assessment item not found");
   }
 
-  return successResponse({ evidence: assessmentItem.evidence }, 200);
+  return successResponse(
+    {
+      status: assessmentItem.status,
+      comments: assessmentItem.comments,
+      owner: assessmentItem.owner,
+      targetDate: assessmentItem.targetDate ? assessmentItem.targetDate.toISOString() : null,
+      evidence: assessmentItem.evidence,
+    },
+    200,
+  );
 });
 
 export const PATCH = withErrorHandler(async (req: Request, { params }: RouteContext) => {

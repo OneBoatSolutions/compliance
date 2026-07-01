@@ -31,29 +31,30 @@ export default function SidebarSummary({ selected, onContinue, loading }: Props)
   return (
     <div className="sticky top-6 p-5 rounded-2xl bg-purple-50 border border-purple-100 h-fit flex flex-col">
       <div className="flex flex-col h-full space-y-8">
-        {/* Heading + List */}
-        <div className="space-y-6">
-          <h3 className="font-semibold text-lg text-purple-800">Selected Frameworks</h3>
-
-          {/* Framework List */}
-          <div className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
+        <div>
+          <h3 className="font-semibold text-lg text-purple-800 mb-6">Selected Frameworks</h3>
+          <div className="max-h-[55vh] overflow-y-auto pr-1">
             {selected.length === 0 ? (
               <p className="text-sm text-gray-500">No frameworks selected</p>
             ) : (
-              selected.map((f, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between items-center gap-3 text-sm px-2 py-1 rounded-md hover:bg-purple-100 transition"
-                >
-                  <span className={cn("font-medium truncate min-w-0", categoryColors[f.category])}>
-                    {f.name}
-                  </span>
+              <ul className="space-y-3" aria-label="Selected frameworks">
+                {selected.map((f, i) => (
+                  <li
+                    key={i}
+                    className="flex justify-between items-center gap-3 text-sm px-2 py-1 rounded-md hover:bg-purple-100 transition"
+                  >
+                    <span
+                      className={cn("font-medium truncate min-w-0", categoryColors[f.category])}
+                    >
+                      {f.name}
+                    </span>
 
-                  <span className="text-purple-800 font-semibold shrink-0 whitespace-nowrap">
-                    {f.controls} controls
-                  </span>
-                </div>
-              ))
+                    <span className="text-purple-800 font-semibold shrink-0 whitespace-nowrap">
+                      {f.controls} controls
+                    </span>
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
         </div>
@@ -87,6 +88,7 @@ export default function SidebarSummary({ selected, onContinue, loading }: Props)
 
           {/* CTA */}
           <button
+            aria-label="Continue to assessment creation"
             onClick={onContinue}
             disabled={loading}
             className={`w-full py-3 rounded-md text-white font-semibold transition-all
@@ -104,28 +106,36 @@ export default function SidebarSummary({ selected, onContinue, loading }: Props)
           </p>
 
           <div className="space-y-2 text-xs">
-            <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-              <span className="font-medium">90%+</span>
-              <span className="text-gray-500">Very High Dependability</span>
+            <div className="flex items-center gap-3">
+              <span className="w-3 h-3 rounded-full bg-green-500" />
+
+              <span className="w-14 text-xs font-medium text-slate-700"> 90%+</span>
+
+              <span className="text-xs text-slate-500"> Very High </span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-              <span className="font-medium">75–89%</span>
-              <span className="text-gray-500">High Dependability</span>
+            <div className="flex items-center gap-3">
+              <span className="w-3 h-3 rounded-full bg-blue-500" />
+
+              <span className="w-14 text-xs font-medium text-slate-700"> 75–89% </span>
+
+              <span className="text-xs text-slate-500"> High </span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
-              <span className="font-medium">60–74%</span>
-              <span className="text-gray-500">Moderate Fit</span>
+            <div className="flex items-center gap-3">
+              <span className="w-3 h-3 rounded-full bg-yellow-500" />
+
+              <span className="w-14 text-xs font-medium text-slate-700"> 60–74% </span>
+
+              <span className="text-xs text-slate-500"> Moderate </span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-              <span className="font-medium">&lt;60%</span>
-              <span className="text-gray-500">Low Relevance</span>
+            <div className="flex items-center gap-3">
+              <span className="w-3 h-3 rounded-full bg-red-500" />
+
+              <span className="w-14 text-xs font-medium text-slate-700">below 60%</span>
+
+              <span className="text-xs text-slate-500"> Low</span>
             </div>
           </div>
         </div>

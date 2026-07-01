@@ -71,7 +71,10 @@ export function CreateUserModal({ isOpen, onClose }: CreateUserModalProps) {
         }
       }}
     >
-      <DialogContent className="max-w-md rounded-[28px] border border-[#e5e5e5] bg-white p-0 shadow-2xl overflow-hidden">
+      <DialogContent
+        className="max-w-md rounded-[28px] border border-[#e5e5e5] bg-white p-0 shadow-2xl overflow-hidden"
+        aria-describedby="create-user-description"
+      >
         <div
           className="max-h-[90vh] overflow-y-auto p-7 pr-5
   [&::-webkit-scrollbar]:w-2
@@ -82,7 +85,7 @@ export function CreateUserModal({ isOpen, onClose }: CreateUserModalProps) {
         >
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-[#171717]">Create New User</DialogTitle>
-            <DialogDescription className="text-sm text-[#737373] mt-1">
+            <DialogDescription className="text-sm text-[#737373] mt-1" id="create-user-description">
               Add a new user with dedicated role assignment. An email notification will not be sent,
               they can log in using their credentials immediately.
             </DialogDescription>
@@ -95,6 +98,8 @@ export function CreateUserModal({ isOpen, onClose }: CreateUserModalProps) {
               </label>
               <input
                 type="text"
+                aria-label="Full name"
+                aria-required="true"
                 placeholder="John Doe"
                 className={inputClass}
                 {...register("name")}
@@ -110,6 +115,8 @@ export function CreateUserModal({ isOpen, onClose }: CreateUserModalProps) {
               </label>
               <input
                 type="email"
+                aria-label="Email address"
+                aria-required="true"
                 placeholder="john@example.com"
                 className={inputClass}
                 {...register("email")}
@@ -121,7 +128,7 @@ export function CreateUserModal({ isOpen, onClose }: CreateUserModalProps) {
 
             <div className="space-y-2">
               <label className="text-sm font-semibold tracking-wide text-[#171717]">Role</label>
-              <select className={inputClass} {...register("role")}>
+              <select className={inputClass} {...register("role")} aria-label="Select user role">
                 <option value={Role.USER}>User (Auditor/Member)</option>
                 <option value={Role.ADMIN}>Admin (Full Access)</option>
               </select>
@@ -134,6 +141,8 @@ export function CreateUserModal({ isOpen, onClose }: CreateUserModalProps) {
               <label className="text-sm font-semibold tracking-wide text-[#171717]">Password</label>
               <input
                 type="password"
+                aria-label="Password"
+                aria-required="true"
                 placeholder="••••••••"
                 className={inputClass}
                 {...register("password")}
@@ -148,6 +157,7 @@ export function CreateUserModal({ isOpen, onClose }: CreateUserModalProps) {
             <DialogFooter className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end border-t border-[#f5f5f5] pt-5">
               <Button
                 type="button"
+                aria-label="Cancel user creation"
                 variant="outline"
                 onClick={() => {
                   reset();
@@ -159,6 +169,7 @@ export function CreateUserModal({ isOpen, onClose }: CreateUserModalProps) {
               </Button>
               <Button
                 type="submit"
+                aria-label="Create new user"
                 disabled={isPending}
                 className="rounded-2xl bg-[#6d18ff] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(109,24,255,0.28)] hover:bg-[#5412cc] disabled:cursor-not-allowed disabled:opacity-50"
               >

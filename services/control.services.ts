@@ -8,8 +8,8 @@ interface SaveControlPayload {
   status: string;
   comments: string;
   evidence: unknown[];
-  assignee: string;
-  dueDate: string;
+  owner: string | null;
+  targetDate: string | null;
   saveType?: string;
 }
 

@@ -38,6 +38,7 @@ export function UserRowActions({ user, currentUserId, onEdit }: UserRowActionsPr
               size="icon"
               onClick={() => onEdit(user)}
               className="h-9 w-9 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+              aria-label={`Edit ${user.name}`}
             >
               <Edit2 className="h-4 w-4" />
             </Button>
@@ -59,6 +60,7 @@ export function UserRowActions({ user, currentUserId, onEdit }: UserRowActionsPr
               onClick={() => resetPassword()}
               disabled={isPending}
               className="h-9 w-9 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+              aria-label={`Reset password for ${user.name}`}
             >
               <KeyRound className="h-4 w-4" />
             </Button>

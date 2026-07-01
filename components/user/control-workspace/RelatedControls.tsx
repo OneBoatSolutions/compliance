@@ -60,7 +60,7 @@ export default function RelatedControls({ controlId }: RelatedControlsProps) {
               key={item.id}
               onClick={() => {
                 if (assessmentId) {
-                  router.push(`/assessments/${assessmentId}/control-workspace/${item.id}`);
+                  router.push(`/assessments/${assessmentId}/control-workspace/${item.code}`);
                 }
               }}
               className="flex justify-between items-center text-primary hover:underline cursor-pointer group"

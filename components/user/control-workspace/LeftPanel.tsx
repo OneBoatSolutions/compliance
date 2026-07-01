@@ -15,6 +15,8 @@ export default function LeftPanel({
   comments,
   setComments,
   control,
+  onSave,
+  isSaving,
 }: {
   status: AssessmentItemStatus;
   setStatus: (s: AssessmentItemStatus) => void;
@@ -22,6 +24,8 @@ export default function LeftPanel({
   setComments: (c: string) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control?: any;
+  onSave?: () => void;
+  isSaving?: boolean;
 }) {
   const options = [
     {
@@ -49,6 +53,33 @@ export default function LeftPanel({
       icon: <MinusCircle className="text-gray-400" size={18} />,
     },
   ];
+  const handleGapDetailsKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+      e.preventDefault();
+
+      // later:
+      // handleSaveDraft()
+    }
+  };
+
+  // NOTE: This assumes options container only has option children at matched indices.
+  // If other non-option sibling elements are added later, this index-based focus traversal will break.
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, i: number) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setStatus(options[i].value);
+    } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      e.preventDefault();
+      const nextIndex = (i + 1) % options.length;
+      setStatus(options[nextIndex].value);
+      (e.currentTarget.parentElement?.children[nextIndex] as HTMLElement)?.focus();
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const prevIndex = (i - 1 + options.length) % options.length;
+      setStatus(options[prevIndex].value);
+      (e.currentTarget.parentElement?.children[prevIndex] as HTMLElement)?.focus();
+    }
+  };
 
   return (
     <div className="bg-white shadow-md border border-slate-200 rounded-2xl p-6 space-y-8">
@@ -79,7 +110,11 @@ export default function LeftPanel({
       <div>
         <p className="text-sm font-medium mb-3">Compliance Status</p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+          role="radiogroup"
+          aria-label="Compliance status"
+        >
           {options.map((item, i) => {
             const isActive = status === item.value;
 
@@ -87,6 +122,11 @@ export default function LeftPanel({
               <div
                 key={i}
                 onClick={() => setStatus(item.value)}
+                onKeyDown={(e) => handleKeyDown(e, i)}
+                role="radio"
+                tabIndex={isActive || (status === "NOT_STARTED" && i === 0) ? 0 : -1}
+                aria-checked={isActive}
+                aria-label={`Set status to ${item.label}`}
                 className={`cursor-pointer border rounded-xl p-4 transition-all duration-200
               ${
                 isActive
@@ -114,16 +154,37 @@ export default function LeftPanel({
         <textarea
           value={comments}
           onChange={(e) => setComments(e.target.value)}
+          onKeyDown={handleGapDetailsKeyDown}
           maxLength={1000}
           rows={4}
           placeholder="Describe any compliance gaps..."
+          aria-label="Compliance gap details"
+          aria-describedby="comments-counter"
           className={`
         w-full rounded-xl p-4 text-sm bg-slate-50 transition-all duration-200
         ${!comments ? "border border-red-300 focus:border-red-500 focus:ring-red-500/20" : "border border-slate-200 focus:border-purple-500 focus:ring-purple-500/20"}
         focus:outline-none focus:ring-4 focus:bg-white
       `}
         />
-        <p className="text-xs text-muted-foreground text-right mt-1">{comments.length}/1000</p>
+
+        <p
+          className="text-xs text-muted-foreground text-right mt-1"
+          id="comments-counter"
+          aria-live="polite"
+        >
+          {comments.length}/1000
+        </p>
+        <div className="flex justify-end mt-3">
+          <button
+            type="button"
+            disabled={isSaving}
+            onClick={onSave}
+            aria-label="Save compliance gap details"
+            className="  rounded-lg  bg-purple-600 px-4 py-2 text-sm text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 "
+          >
+            {isSaving ? "Saving..." : "Save"}
+          </button>
+        </div>
       </div>
     </div>
   );

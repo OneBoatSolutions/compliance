@@ -53,7 +53,7 @@ export function CircularProgress({
         className="relative shrink-0"
         style={{ width: size, height: size }}
         role="progressbar"
-        aria-label={label}
+        aria-label={`${label}: ${roundedProgress}%`}
         aria-valuemin={0}
         aria-valuemax={safeMax}
         aria-valuenow={clamp(value, 0, safeMax)}
