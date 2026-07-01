@@ -12,6 +12,17 @@ export interface RemediationResponse {
   steps: RemediationStep[];
   policies: string[];
   technicalControls: string[];
+  // New optional fields for enriched AI output
+  businessFit?: {
+    applicability: "APPLICABLE" | "PARTIALLY_APPLICABLE" | "NOT_APPLICABLE";
+    rationale: string;
+  };
+  evidenceValidation?: {
+    overallHealth: "SUFFICIENT" | "PARTIALLY_SUFFICIENT" | "INSUFFICIENT" | "MISSING";
+    missingTypes: string[];
+    recommendations: string[];
+  };
+  confidence?: number;
 }
 
 export interface GenerateRemediationInput {
@@ -22,4 +33,9 @@ export interface GenerateRemediationInput {
   currentStatus: string;
   severity: string;
   regenerate?: boolean;
+  assessmentId?: string;
+  userNotes?: string;
+  uploadedEvidenceFiles?: string[];
+  productDescription?: string;
+  targetAudience?: string;
 }

@@ -99,6 +99,28 @@ describe("ai-service: parseRemediationResponse", () => {
     };
     expect(() => parseRemediationResponse(JSON.stringify(tooFew))).toThrow();
   });
+
+  it("normalizes human-style applicability and evidence health wording", () => {
+    const responseWithNaturalLanguage = {
+      ...validRemediationResponse,
+      businessFit: {
+        applicability: "Likely applicable",
+        rationale: "The control likely applies, but company size and processing scale are missing.",
+      },
+      evidenceValidation: {
+        overallHealth: "Missing",
+        missingTypes: ["Policy", "Evidence log"],
+        recommendations: ["Upload the policy and log."],
+      },
+      confidence: "72",
+    };
+
+    const parsed = parseRemediationResponse(JSON.stringify(responseWithNaturalLanguage));
+
+    expect(parsed.businessFit?.applicability).toBe("PARTIALLY_APPLICABLE");
+    expect(parsed.evidenceValidation?.overallHealth).toBe("MISSING");
+    expect(parsed.confidence).toBe(72);
+  });
 });
 
 describe("ai-service: generateRemediation", () => {
@@ -135,6 +157,36 @@ describe("ai-service: generateRemediation", () => {
     const result = await generateRemediation(input);
     expect(result.steps).toHaveLength(3);
     expect(setCache).toHaveBeenCalled();
+  });
+
+  it("builds an auditor-style prompt that calls out missing context and evidence limits", async () => {
+    vi.mocked(getCache).mockResolvedValue(null);
+    vi.mocked(generateText).mockResolvedValue({
+      text: JSON.stringify(validRemediationResponse),
+      usage: { totalTokens: 150 },
+    } as never);
+
+    await generateRemediation({
+      ...input,
+      userNotes: "Needs documented review cadence",
+      uploadedEvidenceFiles: ["screenshot.png"],
+      productDescription: "B2B SaaS platform for mid-market teams",
+      targetAudience: "Operations and security teams",
+    });
+
+    const prompt = vi.mocked(generateText).mock.calls[0]?.[0]?.prompt as string | undefined;
+
+    expect(prompt).toContain("Likely applicable or Potentially applicable");
+    expect(prompt).toContain("company size, processing scale, jurisdiction, or regulatory scope");
+    expect(prompt).toContain(
+      "do not assume legal obligations solely because the product processes financial or personal data",
+    );
+    expect(prompt).toContain("state that compliance cannot be verified");
+    expect(prompt).toContain("directly related to the current control");
+    expect(prompt).toContain("what missing information prevents a higher score");
+    expect(prompt).toContain(
+      "Assess whether this control is legally required for the organization",
+    );
   });
 
   it("throws timeout error to allow API route to return 504", async () => {

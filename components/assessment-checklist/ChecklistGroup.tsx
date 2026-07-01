@@ -4,11 +4,11 @@ import ControlCard from "./ControlCard";
 import { ChevronDown, Plus } from "lucide-react";
 interface Props {
   framework: string;
-  category?: string;
+  category: string;
   controls: Control[];
-  assessmentId?: string;
-  onStatusChange?: (itemId: string, status: Status) => void;
-  updatingItemId?: string | null;
+  assessmentId: string;
+  onStatusChange: (itemId: string, nextStatus: Status) => void;
+  updatingItemId: string | null;
   onOpenRemediation?: (context: {
     controlId: string;
     assessmentItemId: string;
@@ -17,6 +17,8 @@ interface Props {
     framework: string;
     status: string;
     severity: string;
+    assessmentId: string;
+    userNotes?: string | null;
   }) => void;
 }
 
