@@ -131,6 +131,7 @@ export function useAssessmentQuery(assessmentId: string) {
     queryKey: assessmentQueryKeys.detail(assessmentId),
     queryFn: () => getAssessmentDetails(assessmentId),
     enabled: assessmentId.trim().length > 0,
+    staleTime: 5 * 60 * 1000,
   });
 
   const rawItems = query.data?.items ?? emptyAssessmentItems;

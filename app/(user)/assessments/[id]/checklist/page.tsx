@@ -308,6 +308,7 @@ export default function ChecklistPage() {
         sort,
       }),
     enabled: assessmentId.length > 0,
+    staleTime: 5 * 60 * 1000,
     placeholderData: (previous) => previous,
   });
 
@@ -315,6 +316,7 @@ export default function ChecklistPage() {
     queryKey: scoreQueryKey,
     queryFn: () => getAssessmentScore(assessmentId),
     enabled: assessmentId.length > 0,
+    staleTime: 5 * 60 * 1000,
   });
 
   useEffect(() => {

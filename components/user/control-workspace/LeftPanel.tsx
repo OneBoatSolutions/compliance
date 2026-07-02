@@ -149,17 +149,18 @@ export default function LeftPanel({
 
       {/* 🔹 3. TEXTAREA (FULL WIDTH FIX) */}
       <div className="w-full">
-        <p className="text-sm font-medium mb-2">Compliance Gap Details</p>
+        <p className="text-sm font-medium mb-2">
+          {status === "COMPLIANT" ? "Compliance Notes" : "Compliance Gap Details"}
+        </p>
 
         <textarea
           value={comments}
           onChange={(e) => setComments(e.target.value)}
           onKeyDown={handleGapDetailsKeyDown}
-          maxLength={1000}
           rows={4}
           placeholder="Describe any compliance gaps..."
-          aria-label="Compliance gap details"
-          aria-describedby="comments-counter"
+          aria-label={status === "COMPLIANT" ? "Compliance notes" : "Compliance gap details"}
+          aria-describedby="comments-helper"
           className={`
         w-full rounded-xl p-4 text-sm bg-slate-50 transition-all duration-200
         ${!comments ? "border border-red-300 focus:border-red-500 focus:ring-red-500/20" : "border border-slate-200 focus:border-purple-500 focus:ring-purple-500/20"}
@@ -167,19 +168,18 @@ export default function LeftPanel({
       `}
         />
 
-        <p
-          className="text-xs text-muted-foreground text-right mt-1"
-          id="comments-counter"
-          aria-live="polite"
-        >
-          {comments.length}/1000
+        <p className="text-xs text-muted-foreground mt-1" id="comments-helper" aria-live="polite">
+          Reference specific evidence such as policy documents, audit logs, system configurations,
+          or control test results to support your assessment.
         </p>
         <div className="flex justify-end mt-3">
           <button
             type="button"
             disabled={isSaving}
             onClick={onSave}
-            aria-label="Save compliance gap details"
+            aria-label={
+              status === "COMPLIANT" ? "Save compliance notes" : "Save compliance gap details"
+            }
             className="  rounded-lg  bg-purple-600 px-4 py-2 text-sm text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 "
           >
             {isSaving ? "Saving..." : "Save"}

@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function WorkspaceHeader({
   control,
@@ -15,6 +16,29 @@ export default function WorkspaceHeader({
   };
 }) {
   const router = useRouter();
+
+  // Prefetch the checklist page so back navigation is instant
+  useEffect(() => {
+    if (control?.assessmentId) {
+      router.prefetch(`/assessments/${control.assessmentId}/checklist`);
+    }
+  }, [control?.assessmentId, router]);
+
+  // Use browser back when the user came from the checklist page
+  const handleBack = () => {
+    const cameFromChecklist =
+      typeof window !== "undefined" && sessionStorage.getItem("from-checklist") === "true";
+
+    if (cameFromChecklist) {
+      sessionStorage.removeItem("from-checklist");
+      router.back();
+    } else if (control?.assessmentId) {
+      router.push(`/assessments/${control.assessmentId}/checklist`);
+    } else {
+      router.back();
+    }
+  };
+
   return (
     <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-6">
       {/* LEFT */}
@@ -22,13 +46,7 @@ export default function WorkspaceHeader({
         {/* Back Link */}
         <button
           type="button"
-          onClick={() => {
-            if (control?.assessmentId) {
-              router.push(`/assessments/${control.assessmentId}/checklist`);
-            } else {
-              router.back();
-            }
-          }}
+          onClick={handleBack}
           className="mb-4 text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors"
         >
           ← Back to Assessment
