@@ -1,4 +1,5 @@
 import { OnboardingFormValues } from "@/lib/validations/onboarding";
+import { SuggestionSource } from "@/types/ai";
 import { create } from "zustand";
 
 export interface FrameworkSuggestion {
@@ -9,6 +10,7 @@ export interface FrameworkSuggestion {
   explanation: string;
   tags: string[];
   controls: number;
+  source?: SuggestionSource;
 }
 
 export type OnboardingPhase =
@@ -91,6 +93,7 @@ interface AssessmentState {
   phase: OnboardingPhase;
   error: OnboardingFlowError | null;
   lastRetryContext: RetryContext | null;
+  suggestionSource: SuggestionSource | "none" | null;
 
   setOnboardingData: (data: OnboardingFormValues) => void;
   setOrganizationId: (id: string) => void;
@@ -124,6 +127,7 @@ interface ApiErrorEnvelope {
 interface ApiSuccessEnvelope<T> {
   success: true;
   data: T;
+  source?: SuggestionSource | "none";
 }
 
 type ApiEnvelope<T> = ApiErrorEnvelope | ApiSuccessEnvelope<T>;
@@ -386,6 +390,7 @@ const initialState = {
   phase: "idle" as OnboardingPhase,
   error: null,
   lastRetryContext: null,
+  suggestionSource: null,
 };
 
 export const useAssessmentStore = create<AssessmentState>((set, get) => ({
@@ -516,13 +521,73 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
         },
       });
 
-      const suggestions = await executeWithRetry(() =>
-        fetchWithTimeout<FrameworkSuggestion[]>("/api/ai/map-compliance", {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), requestTimeoutMs);
+
+      let payload: unknown;
+      let status: number;
+      try {
+        const response = await fetch("/api/ai/map-compliance", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(mapToAIProfile(data)),
-        }),
-      );
+          credentials: "include",
+          signal: controller.signal,
+        });
+        status = response.status;
+        payload = await parseJsonPayload(response);
+        if (!response.ok) {
+          const errorMessage =
+            payload && typeof payload === "object" && "error" in payload
+              ? String((payload as Partial<ApiErrorEnvelope>).error ?? "Request failed")
+              : `Request failed (${response.status})`;
+
+          throw new OnboardingRequestError(errorMessage, {
+            status,
+            retryable: isRetryableStatus(status),
+          });
+        }
+      } catch (error) {
+        if (error instanceof OnboardingRequestError) {
+          throw error;
+        }
+        if (error instanceof DOMException && error.name === "AbortError") {
+          throw new OnboardingRequestError("Request timed out. Please try again.", {
+            status: 408,
+            retryable: true,
+            timedOut: true,
+          });
+        }
+        throw new OnboardingRequestError("Network error. Please check your connection and retry.", {
+          retryable: true,
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
+
+      if (!payload || typeof payload !== "object" || !("success" in payload)) {
+        throw new OnboardingRequestError("Server returned an empty response", {
+          status,
+          retryable: false,
+        });
+      }
+
+      const envelope = payload as {
+        success: boolean;
+        error?: string;
+        data: FrameworkSuggestion[];
+        source?: SuggestionSource | "none";
+      };
+
+      if (!envelope.success) {
+        throw new OnboardingRequestError(envelope.error || "Request failed", {
+          status,
+          retryable: isRetryableStatus(status),
+        });
+      }
+
+      const suggestions = envelope.data;
+      const responseSource = envelope.source ?? "ai";
 
       if (!Array.isArray(suggestions) || suggestions.length === 0) {
         throw new OnboardingRequestError("No frameworks returned. Please retry.", {
@@ -551,6 +616,7 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
         onboardingData: data,
         suggestions: mappedSuggestions,
         selectedFrameworkIds: preSelected,
+        suggestionSource: responseSource,
         phase: "results",
         error: null,
         lastRetryContext: null,

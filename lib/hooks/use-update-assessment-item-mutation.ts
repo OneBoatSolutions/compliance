@@ -295,6 +295,7 @@ export function useUpdateAssessmentItemMutation(
     onSettled: async () => {
       const invalidations: Array<Promise<void>> = [
         queryClient.invalidateQueries({ queryKey: assessmentDetailKey }),
+        queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
       ];
 
       if (options.checklistQueryPrefix) {

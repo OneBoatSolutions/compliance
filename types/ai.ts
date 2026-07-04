@@ -40,4 +40,4 @@ export interface GenerateRemediationInput {
   targetAudience?: string;
 }
 
-export type SuggestionSource = "ai" | "heuristic";
+export type SuggestionSource = "ai" | "heuristic" | "keyword";

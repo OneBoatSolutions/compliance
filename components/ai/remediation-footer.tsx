@@ -1,4 +1,4 @@
-import { FileText, Printer, RefreshCw, Save } from "lucide-react";
+import { FileText, FileDown, RefreshCw, Save, Loader2 } from "lucide-react";
 
 export default function RemediationFooter({
   onRegenerate,
@@ -35,7 +35,7 @@ export default function RemediationFooter({
         disabled={disabled || saving}
         className="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-100 transition disabled:opacity-50"
       >
-        <Save size={14} />
+        {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
         {saving ? "Saving..." : "Save Plan"}
       </button>
 
@@ -55,8 +55,8 @@ export default function RemediationFooter({
         disabled={disabled}
         className="flex items-center gap-2 px-3 py-1.5 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700 transition disabled:opacity-50"
       >
-        <Printer size={14} />
-        PDF
+        <FileDown size={14} />
+        Export PDF
       </button>
     </div>
   );

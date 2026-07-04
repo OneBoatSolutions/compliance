@@ -1,7 +1,8 @@
 import type { ItemStatus } from "@prisma/client";
-import { unstable_cache } from "next/cache";
 
+import { getCache, setCache, invalidateCache } from "@/lib/cache";
 import { prisma } from "@/lib/prisma";
+import { roundScore } from "@/lib/assessment-score";
 import type {
   DashboardActivityItem,
   DashboardApiData,
@@ -37,10 +38,6 @@ function weightedScorePercent(
     return 0;
   }
   return (numerator / denominator) * 100;
-}
-
-function roundScore(n: number): number {
-  return Math.round(n * 100) / 100;
 }
 
 interface ItemWithControlFramework {
@@ -260,11 +257,18 @@ async function buildDashboardData(userId: string): Promise<DashboardApiData> {
   };
 }
 
-export const getCachedDashboardData = unstable_cache(
-  async (userId: string) => buildDashboardData(userId),
-  ["dashboard-data"],
-  {
-    revalidate: 60,
-    tags: ["dashboard"],
-  },
-);
+export async function getCachedDashboardData(userId: string): Promise<DashboardApiData> {
+  const cacheKey = `dashboard_data_${userId}`;
+  const cached = await getCache<DashboardApiData>(cacheKey);
+  if (cached) {
+    return cached;
+  }
+  const data = await buildDashboardData(userId);
+  await setCache(cacheKey, data, 300); // 5-minute TTL
+  return data;
+}
+
+export async function invalidateDashboardCache(userId: string): Promise<void> {
+  const cacheKey = `dashboard_data_${userId}`;
+  await invalidateCache(cacheKey);
+}

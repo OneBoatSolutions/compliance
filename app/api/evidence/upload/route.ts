@@ -23,6 +23,7 @@ import {
   successResponse,
   validationErrorResponse,
 } from "@/lib/api-helpers";
+import { invalidateDashboardCache } from "@/lib/dashboard-data";
 import { requireAuth } from "@/lib/auth-helpers";
 import { sanitizeFilename, scanFileBuffer, verifyFileMagic } from "@/lib/file-validation";
 import { parseMultipartRequest } from "@/lib/multipart";
@@ -196,6 +197,8 @@ export const POST = withErrorHandler(async (req: Request) => {
 
     created.push(evidence);
   }
+
+  await invalidateDashboardCache(session.user.id);
 
   return successResponse({ evidence: created }, 201);
 });

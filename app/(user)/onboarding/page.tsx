@@ -21,6 +21,7 @@ import {
   Flag,
   CircleCheck,
   CircleAlert,
+  Clock,
 } from "lucide-react";
 
 const mapToBackend = (values: OnboardingFormValues) => ({
@@ -571,8 +572,9 @@ export default function OnboardingPage() {
       />
       <div className="max-w-5xl mx-auto mt-8 px-4">
         <div className="mb-6">
-          <span className="text-sm bg-purple-100 text-purple-600 px-3 py-1 rounded-full">
-            ⏱ About 5 minutes
+          <span className="inline-flex items-center gap-1.5 text-sm bg-purple-100 text-purple-600 px-3 py-1 rounded-full">
+            <Clock className="h-3.5 w-3.5" />
+            About 5 minutes
           </span>
           <h1 className="text-3xl font-semibold mt-3">Tell us about your business</h1>
           <p className="text-gray-600 mt-1">

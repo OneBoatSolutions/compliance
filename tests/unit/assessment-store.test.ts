@@ -220,4 +220,114 @@ describe("assessment onboarding store", () => {
     expect(useAssessmentStore.getState().phase).toBe("success");
     expect(fetchSpy).toHaveBeenCalledTimes(3);
   });
+
+  it("submits onboarding and stores fallback source when backend uses heuristic fallback", async () => {
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        jsonResponse(
+          {
+            success: true,
+            data: [{ id: "org_1" }],
+          },
+          200,
+        ),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(
+          {
+            success: true,
+            data: {
+              id: "org_1",
+            },
+          },
+          200,
+        ),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(
+          {
+            success: true,
+            data: [
+              {
+                frameworkId: "fw_gdpr",
+                code: "GDPR",
+                name: "General Data Protection Regulation",
+                confidence: 55,
+                explanation: "Relevant for EU personal data processing.",
+                tags: ["privacy", "pii", "eu"],
+                controls: 24,
+                source: "heuristic",
+              },
+            ],
+            source: "heuristic",
+          },
+          200,
+        ),
+      );
+
+    const result = await useAssessmentStore.getState().submitOnboarding(onboardingInput);
+
+    expect(result.ok).toBe(true);
+
+    const state = useAssessmentStore.getState();
+    expect(state.phase).toBe("results");
+    expect(state.suggestionSource).toBe("heuristic");
+    expect(fetchSpy).toHaveBeenCalledTimes(3);
+  });
+
+  it("submits onboarding and stores fallback source when backend uses keyword fallback", async () => {
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        jsonResponse(
+          {
+            success: true,
+            data: [{ id: "org_1" }],
+          },
+          200,
+        ),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(
+          {
+            success: true,
+            data: {
+              id: "org_1",
+            },
+          },
+          200,
+        ),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(
+          {
+            success: true,
+            data: [
+              {
+                frameworkId: "fw_gdpr",
+                code: "GDPR",
+                name: "General Data Protection Regulation",
+                confidence: 55,
+                explanation: "Relevant for EU personal data processing.",
+                tags: ["privacy", "pii", "eu"],
+                controls: 24,
+                source: "keyword",
+              },
+            ],
+            source: "keyword",
+          },
+          200,
+        ),
+      );
+
+    const result = await useAssessmentStore.getState().submitOnboarding(onboardingInput);
+
+    expect(result.ok).toBe(true);
+
+    const state = useAssessmentStore.getState();
+    expect(state.phase).toBe("results");
+    expect(state.suggestionSource).toBe("keyword");
+    expect(fetchSpy).toHaveBeenCalledTimes(3);
+  });
 });

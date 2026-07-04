@@ -3,6 +3,8 @@ import { successResponse } from "@/lib/api-helpers";
 import { requireAuth } from "@/lib/auth-helpers";
 import { getCachedDashboardData } from "@/lib/dashboard-data";
 
+export const dynamic = "force-dynamic";
+
 export const GET = withErrorHandler(async (req: Request) => {
   void req;
 

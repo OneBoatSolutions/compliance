@@ -4,6 +4,8 @@ import { getFrameworkScoresForAssessment } from "@/lib/assessment-score";
 import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 interface RouteContext {
   params: Promise<{
     id: string;

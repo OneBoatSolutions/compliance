@@ -148,6 +148,7 @@ export default function RemediationDrawer({
   const [loading, setLoading] = useState(true);
   const [regenerating, setRegenerating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [exportingPdf, setExportingPdf] = useState(false);
   const [updatingStepIndex, setUpdatingStepIndex] = useState<number | null>(null);
   const [evidenceMetadata, setEvidenceMetadata] = useState<string[]>([]);
 
@@ -279,10 +280,33 @@ export default function RemediationDrawer({
 
     setSaving(true);
     try {
-      const saved = await apiClient.post<RemediationData, RemediationData>(
+      const cleanPayload = {
+        assessmentItemId: data.assessmentItemId,
+        controlId: data.controlId,
+        controlTitle: data.controlTitle,
+        controlDescription: data.controlDescription,
+        frameworkName: data.frameworkName,
+        currentStatus: data.currentStatus,
+        severity: data.severity,
+        title: data.title ?? `Remediation plan for ${data.controlTitle}`,
+        summary: data.summary ?? data.controlDescription,
+        steps: data.steps.map((step) => ({
+          id: step.id,
+          title: step.title,
+          description: step.description,
+          priority: step.priority,
+          owner: step.owner,
+          estimatedHours: step.estimatedHours,
+          status: step.status,
+        })),
+        policies: data.policies ?? [],
+        technicalControls: data.technicalControls ?? [],
+      };
+
+      const saved = await apiClient.post<RemediationData, typeof cleanPayload>(
         "/api/remediation-plans",
         {
-          body: data,
+          body: cleanPayload,
         },
       );
       setData(saved);
@@ -290,7 +314,8 @@ export default function RemediationDrawer({
         toast.success("Plan saved");
       }
       return saved;
-    } catch {
+    } catch (err) {
+      console.error("Failed to save remediation plan:", err);
       if (showToast) {
         toast.error("Failed to save plan");
       }
@@ -377,8 +402,26 @@ export default function RemediationDrawer({
     }
   };
 
-  const handleExportPDF = () => {
-    window.print();
+  const handleExportPDF = async () => {
+    setExportingPdf(true);
+    const toastId = toast.loading("Generating compliance report PDF...");
+    try {
+      const response = await apiClient.post<{ success: boolean; fileUrl: string }, never>(
+        `/api/reports/${assessmentId}/generate`,
+      );
+
+      if (response && response.fileUrl) {
+        toast.success("PDF report generated successfully!", { id: toastId });
+        window.open(response.fileUrl, "_blank", "noopener,noreferrer");
+      } else {
+        throw new Error("Missing fileUrl in API response");
+      }
+    } catch (error) {
+      console.error("Failed to generate PDF report:", error);
+      toast.error("Failed to generate PDF report", { id: toastId });
+    } finally {
+      setExportingPdf(false);
+    }
   };
 
   const handleExportMarkdown = () => {
@@ -393,7 +436,7 @@ export default function RemediationDrawer({
     toast.success("Markdown exported");
   };
 
-  const isBusy = loading || regenerating || saving;
+  const isBusy = loading || regenerating || saving || exportingPdf;
 
   return (
     <div className="remediation-print-container fixed inset-0 z-50 flex overflow-hidden">

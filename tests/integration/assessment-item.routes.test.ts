@@ -118,6 +118,10 @@ describe("Assessment item API route", () => {
   it("returns evidence for an owned assessment item", async () => {
     vi.spyOn(prisma.assessmentItem, "findFirst").mockResolvedValue({
       id: "item_1",
+      status: "COMPLIANT",
+      comments: "Good",
+      owner: "IT",
+      targetDate: new Date("2026-05-01T00:00:00.000Z"),
       evidence: [
         {
           id: "ev_1",
@@ -152,6 +156,10 @@ describe("Assessment item API route", () => {
       },
       select: {
         id: true,
+        status: true,
+        comments: true,
+        owner: true,
+        targetDate: true,
         evidence: {
           orderBy: {
             uploadedAt: "desc",

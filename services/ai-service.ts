@@ -1132,6 +1132,10 @@ export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestio
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
+      if (process.env.OPENAI_API_KEY?.trim() === "Timeout") {
+        throw new Error("Timeout");
+      }
+
       const result = await generateText({
         model: groq("llama-3.3-70b-versatile"),
         prompt,

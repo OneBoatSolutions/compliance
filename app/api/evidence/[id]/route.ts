@@ -3,6 +3,7 @@ import { notFoundResponse, successResponse } from "@/lib/api-helpers";
 import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { deleteFileFromStorage, generateSignedDownloadUrl } from "@/services/storage-service";
+import { invalidateDashboardCache } from "@/lib/dashboard-data";
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -75,6 +76,8 @@ export const DELETE = withErrorHandler(async (req: Request, { params }: RouteCon
       id: evidence.id,
     },
   });
+
+  await invalidateDashboardCache(session.user.id);
 
   return successResponse({
     id: evidence.id,

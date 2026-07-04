@@ -3,6 +3,9 @@ import { notFoundResponse, successResponse } from "@/lib/api-helpers";
 import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { revalidateTag } from "next/cache";
+import { invalidateDashboardCache } from "@/lib/dashboard-data";
+
+export const dynamic = "force-dynamic";
 
 interface RouteContext {
   params: Promise<{
@@ -72,9 +75,10 @@ export const DELETE = withErrorHandler(async (req: Request, { params }: RouteCon
     },
   });
 
-  // Bust the server-side unstable_cache for dashboard data so the next
-  // GET /api/dashboard call returns fresh data without the deleted assessment.
+  // Bust the Redis dashboard cache so the next GET /api/dashboard
+  // call returns fresh data without the deleted assessment.
   revalidateTag("dashboard");
+  await invalidateDashboardCache(session.user.id);
 
   return successResponse({ id: ownedAssessment.id }, 200);
 });

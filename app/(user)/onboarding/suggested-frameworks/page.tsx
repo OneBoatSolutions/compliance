@@ -11,7 +11,7 @@ import Stepper from "@/components/framework-selection/Stepper";
 import { useAssessmentStore } from "@/stores/assessment-store";
 import BottomNavigation from "@/components/framework-selection/bottomNavigation";
 import { useRouter } from "next/navigation";
-import { Search, Plus, X } from "lucide-react";
+import { Search, Plus, X, AlertCircle } from "lucide-react";
 import { Shield } from "lucide-react";
 
 /* ---------------- PAGE ---------------- */
@@ -69,9 +69,14 @@ export default function Page() {
     phase,
     error: flowError,
     clearError,
+    suggestionSource,
   } = useAssessmentStore();
 
   const creatingAssessment = phase === "creating";
+  const isFallback = useMemo(
+    () => suggestionSource === "heuristic" || suggestionSource === "keyword",
+    [suggestionSource],
+  );
   const [isHydrated, setIsHydrated] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
   const [search, setSearch] = useState("");
@@ -282,6 +287,25 @@ export default function Page() {
               Retry
             </button>
           )}
+        </div>
+      )}
+      {isFallback && (
+        <div
+          role="alert"
+          aria-live="polite"
+          className="max-w-7xl mx-auto bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30 rounded-2xl p-4 flex gap-3 text-sm text-amber-800 dark:text-amber-200 shadow-sm animate-fadeIn"
+        >
+          <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+          <div>
+            <h5 className="font-semibold text-amber-900 dark:text-amber-100">
+              Auto-Suggested Recommendations
+            </h5>
+            <p className="mt-1 text-amber-700 dark:text-amber-300 leading-relaxed">
+              Our live AI engine is currently experiencing high latency. The compliance frameworks
+              below have been automatically suggested based on your business profile&apos;s industry
+              keywords, regions, and data types instead of a dynamic AI distillation.
+            </p>
+          </div>
         </div>
       )}
       <>

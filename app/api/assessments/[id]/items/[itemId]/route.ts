@@ -5,6 +5,7 @@ import { requireAuth } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { updateAssessmentItemSchema } from "@/lib/validations/assessment";
 import { revalidateTag } from "next/cache";
+import { invalidateDashboardCache } from "@/lib/dashboard-data";
 
 interface RouteContext {
   params: Promise<{
@@ -108,6 +109,7 @@ export const PATCH = withErrorHandler(async (req: Request, { params }: RouteCont
   });
 
   revalidateTag("dashboard");
+  await invalidateDashboardCache(session.user.id);
 
   return successResponse({ score: data.score }, 200);
 });

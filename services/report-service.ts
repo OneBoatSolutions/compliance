@@ -6,6 +6,7 @@ import {
   type ScoreItemRow,
 } from "@/lib/assessment-score";
 import { prisma } from "@/lib/prisma";
+import PDFDocument from "pdfkit";
 
 type ItemStatus =
   | "NOT_STARTED"
@@ -511,4 +512,151 @@ export async function buildReportBundle(context: ReportRequestContext): Promise<
 
   bundle.executiveSummary = await measureReportStep("aiSummary", () => generateNarrative(bundle));
   return bundle;
+}
+
+export function generateReportPDF(bundle: ReportBundle): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    try {
+      const doc = new PDFDocument({ margin: 50, size: "A4" });
+      const chunks: Buffer[] = [];
+
+      doc.on("data", (chunk) => chunks.push(chunk));
+      doc.on("end", () => resolve(Buffer.concat(chunks)));
+      doc.on("error", (err) => reject(err));
+
+      // --- COVER PAGE ---
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#1e1b4b"); // Dark Navy Blue background
+      doc.fillColor("#ffffff");
+
+      doc.fontSize(28).font("Helvetica-Bold").text(bundle.reportTitle, 50, 200, { align: "left" });
+      doc.moveDown();
+      doc
+        .fontSize(16)
+        .font("Helvetica")
+        .text(`Prepared for: ${bundle.assessment.organization.productName}`, { align: "left" });
+      doc.moveDown(0.5);
+      doc
+        .fontSize(12)
+        .fillColor("#94a3b8")
+        .text(`Generated on: ${new Date(bundle.generatedAt).toLocaleDateString()}`, {
+          align: "left",
+        });
+      doc.text("Version: 1.0", { align: "left" });
+
+      // --- EXECUTIVE SUMMARY PAGE ---
+      doc.addPage();
+      doc.fillColor("#0f172a"); // Slate-900 color for body text
+
+      doc.fontSize(22).font("Helvetica-Bold").text("Executive Summary", 50, 50);
+      doc.moveDown();
+
+      // Score block with a nice slate background
+      const currentY = doc.y;
+      doc.rect(50, currentY, 495, 80).fill("#f1f5f9");
+      doc.fillColor("#0f172a");
+      doc
+        .fontSize(12)
+        .font("Helvetica-Bold")
+        .text("Overall Readiness Score", 70, currentY + 15);
+
+      const scoreColor =
+        bundle.overallScore >= 80 ? "#16a34a" : bundle.overallScore >= 50 ? "#ca8a04" : "#dc2626";
+      doc
+        .fontSize(32)
+        .font("Helvetica-Bold")
+        .fillColor(scoreColor)
+        .text(`${bundle.overallScore.toFixed(1)}%`, 70, currentY + 35);
+
+      doc.moveDown(3);
+      doc.fillColor("#0f172a");
+      doc
+        .fontSize(12)
+        .font("Helvetica")
+        .text(bundle.executiveSummary, 50, doc.y + 20, { width: 495, align: "justify" });
+      doc.moveDown(2);
+
+      // --- RISK SUMMARY ---
+      doc.fontSize(16).font("Helvetica-Bold").text("Risk & Gaps Summary");
+      doc.moveDown(0.5);
+      doc.fontSize(11).font("Helvetica");
+      doc.text(`Total Risk Score: ${bundle.riskSummary.totalRiskScore}`);
+      doc.text(`Critical Gaps (open critical risks): ${bundle.riskSummary.openHighRisks}`);
+      doc.text(`Medium Risks open: ${bundle.riskSummary.openMediumRisks}`);
+      doc.text(`Low Risks open: ${bundle.riskSummary.openLowRisks}`);
+      doc.text(`Overall Risk Level: ${bundle.riskSummary.riskLevel}`);
+      doc.moveDown(1.5);
+
+      // --- DETAILED GAPS & ROADMAP ---
+      doc.fontSize(16).font("Helvetica-Bold").text("Remediation Priorities & Action Plan");
+      doc.moveDown(0.5);
+
+      if (bundle.remediation.length === 0) {
+        doc
+          .fontSize(11)
+          .font("Helvetica")
+          .text(
+            "No immediate gaps identified. The organization is fully compliant with the assessed controls.",
+          );
+      } else {
+        bundle.remediation.forEach((item, index) => {
+          if (doc.y > 680) {
+            doc.addPage();
+          }
+          doc
+            .fontSize(12)
+            .font("Helvetica-Bold")
+            .text(`${index + 1}. ${item.title}`);
+          doc
+            .fontSize(10)
+            .font("Helvetica")
+            .text(`Priority: ${item.priority} | Effort: ${item.effort}`, { indent: 15 });
+          doc.text(`Rationale: ${item.rationale}`, { indent: 15 });
+          doc.moveDown(0.5);
+        });
+      }
+
+      // --- CONTROLS INVENTORY ---
+      doc.addPage();
+      doc.fontSize(18).font("Helvetica-Bold").text("Control Status Inventory", 50, 50);
+      doc.moveDown();
+
+      // Draw table header
+      doc.fontSize(10).font("Helvetica-Bold");
+      doc.text("Control Code", 50, doc.y, { width: 100, continued: true });
+      doc.text("Title", 150, doc.y, { width: 220, continued: true });
+      doc.text("Severity", 370, doc.y, { width: 80, continued: true });
+      doc.text("Status", 450, doc.y, { width: 95 });
+      doc.moveDown(0.5);
+      doc.strokeColor("#cbd5e1").lineWidth(1).moveTo(50, doc.y).lineTo(545, doc.y).stroke();
+      doc.moveDown(0.5);
+
+      doc.font("Helvetica");
+      bundle.controlRows.forEach((row) => {
+        // Prevent table overflow
+        if (doc.y > 700) {
+          doc.addPage();
+          doc.fontSize(10).font("Helvetica-Bold");
+          doc.text("Control Code", 50, 50, { width: 100, continued: true });
+          doc.text("Title", 150, 50, { width: 220, continued: true });
+          doc.text("Severity", 370, 50, { width: 80, continued: true });
+          doc.text("Status", 450, 50, { width: 95 });
+          doc.moveDown(0.5);
+          doc.strokeColor("#cbd5e1").lineWidth(1).moveTo(50, doc.y).lineTo(545, doc.y).stroke();
+          doc.moveDown(0.5);
+          doc.font("Helvetica");
+        }
+
+        const yPos = doc.y;
+        doc.text(row.code, 50, yPos, { width: 90 });
+        doc.text(row.title, 150, yPos, { width: 210 });
+        doc.text(row.severity, 370, yPos, { width: 70 });
+        doc.text(row.status.replaceAll("_", " "), 450, yPos, { width: 95 });
+        doc.moveDown(0.5);
+      });
+
+      doc.end();
+    } catch (err) {
+      reject(err);
+    }
+  });
 }
