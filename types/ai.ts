@@ -39,3 +39,5 @@ export interface GenerateRemediationInput {
   productDescription?: string;
   targetAudience?: string;
 }
+
+export type SuggestionSource = "ai" | "heuristic";

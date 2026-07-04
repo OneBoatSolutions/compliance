@@ -30,7 +30,6 @@ import {
   generateRemediation,
   parseRemediationResponse,
   mapCompliance,
-  getComplianceFallback,
   clearAIServiceCachesForTests,
 } from "@/services/ai-service";
 import type { GenerateRemediationInput } from "@/types/ai";
@@ -212,12 +211,16 @@ describe("ai-service: generateRemediation", () => {
   });
 });
 
-describe("ai-service: getComplianceFallback", () => {
+describe("ai-service: heuristic fallback (replaces old getComplianceFallback)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("returns enriched fallback suggestions mapped to frameworks", async () => {
+  it("returns heuristic suggestions mapped to frameworks when AI times out", async () => {
+    vi.mocked(getCache).mockResolvedValue(null);
+    vi.mocked(generateText).mockRejectedValue(new Error("Timeout"));
+
+    // Mock framework catalog so enrichment works
     vi.mocked(prisma.framework.findMany).mockResolvedValue([
       {
         id: "fw_gdpr",
@@ -239,10 +242,52 @@ describe("ai-service: getComplianceFallback", () => {
       },
     ] as never);
 
-    const result = await getComplianceFallback();
+    const result = await mapCompliance(mockOrgProfile);
     expect(result.length).toBeGreaterThanOrEqual(1);
     expect(result[0]).toHaveProperty("frameworkId");
     expect(result[0]).toHaveProperty("controls");
+    expect(result[0]).toHaveProperty("source");
+    expect(result[0].source).toBe("heuristic");
+    // Confidence should be capped at 55 for heuristic results
+    expect(result[0].confidence).toBeLessThanOrEqual(55);
+  });
+
+  it("returns heuristic suggestions with source: heuristic", async () => {
+    vi.mocked(getCache).mockResolvedValue(null);
+    vi.mocked(generateText).mockRejectedValue(new Error("Timeout"));
+
+    vi.mocked(prisma.framework.findMany).mockResolvedValue([
+      {
+        id: "fw_gdpr",
+        code: "GDPR",
+        name: "General Data Protection Regulation",
+        _count: { controls: 20 },
+      },
+    ] as never);
+
+    const result = await mapCompliance(mockOrgProfile);
+    expect(result.length).toBeGreaterThanOrEqual(1);
+    expect(result[0].source).toBe("heuristic");
+  });
+
+  it("returns empty array when no keywords match the org profile", async () => {
+    const obscureOrg = {
+      name: "WidgetCo",
+      description: "We make widgets",
+      services: "Widget manufacturing",
+      customers: "Other widget makers",
+      problem: "Widget quality",
+      dataHandled: ["metal", "plastic"],
+      regions: ["mars"],
+    };
+
+    vi.mocked(getCache).mockResolvedValue(null);
+    vi.mocked(generateText).mockRejectedValue(new Error("Timeout"));
+
+    vi.mocked(prisma.framework.findMany).mockResolvedValue([] as never);
+
+    const result = await mapCompliance(obscureOrg);
+    expect(result).toHaveLength(0);
   });
 });
 
@@ -262,6 +307,7 @@ describe("ai-service: mapCompliance", () => {
         tags: ["privacy"],
         frameworkId: "fw1",
         controls: 10,
+        source: "ai",
       },
     ]);
     vi.mocked(generateText).mockRejectedValue(new Error("should not be called"));
@@ -269,14 +315,25 @@ describe("ai-service: mapCompliance", () => {
     const result = await mapCompliance(mockOrgProfile);
     expect(result).toHaveLength(1);
     expect(result[0].code).toBe("GDPR");
+    expect(result[0].source).toBe("ai");
   });
 
-  it("returns fallback suggestions when AI times out", async () => {
+  it("returns heuristic suggestions when AI times out", async () => {
     vi.mocked(getCache).mockResolvedValue(null);
     vi.mocked(generateText).mockRejectedValue(new Error("Timeout"));
 
+    vi.mocked(prisma.framework.findMany).mockResolvedValue([
+      {
+        id: "fw_gdpr",
+        code: "GDPR",
+        name: "General Data Protection Regulation",
+        _count: { controls: 20 },
+      },
+    ] as never);
+
     const result = await mapCompliance(mockOrgProfile);
     expect(result.length).toBeGreaterThanOrEqual(1);
+    expect(result[0].source).toBe("heuristic");
     expect(setCache).toHaveBeenCalled();
   });
 

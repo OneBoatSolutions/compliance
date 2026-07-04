@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getComplianceFallback, mapCompliance } from "@/services/ai-service";
+import { mapCompliance } from "@/services/ai-service";
 import { requireAuth } from "@/lib/auth-helpers";
 import { rateLimitByUser } from "@/lib/rate-limiter";
 
@@ -42,14 +42,17 @@ export async function POST(req: NextRequest) {
     }
 
     // Timeout handling (10s)
-    const result = await Promise.race([
+    const result = (await Promise.race([
       mapCompliance(parsed.data),
       new Promise((resolve, reject) => setTimeout(() => reject(new Error("Timeout")), 10000)),
-    ]);
+    ])) as Array<{ source: string }>;
+
+    const source = result.length > 0 ? result[0].source : "none";
 
     return NextResponse.json({
       success: true,
       data: result,
+      source,
     });
   } catch (err) {
     if (err instanceof Error && err.message.toLowerCase().includes("unauthorized")) {
@@ -63,11 +66,10 @@ export async function POST(req: NextRequest) {
     }
 
     if (err instanceof Error && err.message === "Timeout") {
-      const fallback = await getComplianceFallback();
-
+      // Heuristic fallback after timeout — use static import since mapCompliance handles it internally now
       return NextResponse.json({
-        success: true,
-        data: fallback,
+        success: false,
+        error: "AI mapping timed out. Please try again.",
       });
     }
 
