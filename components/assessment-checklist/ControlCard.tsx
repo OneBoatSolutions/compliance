@@ -312,6 +312,7 @@ focus:ring-purple-500 transition-all duration-200 hover:scale-105 active:scale-9
                 ) : assessmentId ? (
                   <Link
                     href={`/assessments/${assessmentId}/control-workspace/${control.id}`}
+                    onClick={() => sessionStorage.setItem("from-checklist", "true")}
                     className="mt-4 inline-block bg-white text-purple-700 px-4 py-2 rounded-md text-sm font-medium"
                   >
                     Get AI Remediation Plan →
@@ -346,6 +347,7 @@ focus:ring-purple-500 transition-all duration-200 hover:scale-105 active:scale-9
                 {assessmentId ? (
                   <Link
                     href={`/assessments/${assessmentId}/control-workspace/${control.id}`}
+                    onClick={() => sessionStorage.setItem("from-checklist", "true")}
                     className="inline-flex items-center gap-2 border border-slate-300 rounded-lg px-3 py-2 text-sm text-purple-600 focus:outline-none
 focus:ring-2
 focus:ring-purple-500 transition-all duration-200 hover:scale-105 active:scale-95"
@@ -378,6 +380,7 @@ focus:ring-purple-500 transition-all duration-200 hover:scale-105 active:scale-9
               {assessmentId && (
                 <Link
                   href={`/assessments/${assessmentId}/control-workspace/${control.id}`}
+                  onClick={() => sessionStorage.setItem("from-checklist", "true")}
                   className="border border-[#6d18ff] text-[#6d18ff] px-3 py-1 rounded text-sm hover:bg-[#6d18ff]/5 transition-colors focus:outline-none
 focus:ring-2
 focus:ring-purple-500 transition-all duration-200 hover:scale-105 active:scale-95"
