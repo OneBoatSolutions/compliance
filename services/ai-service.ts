@@ -6,6 +6,7 @@ import type {
   GenerateRemediationInput,
   RemediationPriority,
   RemediationResponse,
+  SuggestionSource,
 } from "@/types/ai";
 import crypto from "crypto";
 import { getCache, setCache } from "@/lib/cache";
@@ -31,6 +32,7 @@ interface AIFrameworkSuggestion {
   confidence: number;
   explanation: string;
   tags: string[];
+  source: SuggestionSource;
 }
 
 export interface FrameworkSuggestion extends AIFrameworkSuggestion {
@@ -197,33 +199,6 @@ let frameworkCatalogCache: { data: FrameworkCatalogEntry[]; expiry: number } = {
   expiry: 0,
 };
 
-const fallbackSuggestions: AIFrameworkSuggestion[] = [
-  {
-    code: "GDPR",
-    name: "General Data Protection Regulation",
-    confidence: 82,
-    explanation:
-      "GDPR is commonly applicable when personal data is collected or processed for users in EU regions.",
-    tags: ["privacy", "pii", "eu"],
-  },
-  {
-    code: "HIPAA",
-    name: "Health Insurance Portability and Accountability Act",
-    confidence: 76,
-    explanation:
-      "HIPAA is relevant for products handling protected health information or serving healthcare workflows in the US.",
-    tags: ["healthcare", "phi", "security"],
-  },
-  {
-    code: "PCI-DSS",
-    name: "Payment Card Industry Data Security Standard",
-    confidence: 74,
-    explanation:
-      "PCI-DSS is applicable for systems storing, processing, or transmitting cardholder payment information.",
-    tags: ["payments", "finance", "security"],
-  },
-];
-
 function normalizeLookupValue(value: string): string {
   return value
     .trim()
@@ -319,8 +294,296 @@ async function enrichFrameworkSuggestions(
   return dedupeSuggestions(mapped);
 }
 
-export async function getComplianceFallback(): Promise<FrameworkSuggestion[]> {
-  return enrichFrameworkSuggestions(fallbackSuggestions);
+// ── Keyword-based heuristic fallback ──────────────────────────────────────────
+// Used when AI mapping fails (timeout, parse error, etc.).
+// Scores frameworks based on keyword matches against the org profile.
+// Confidence is capped at 55 to distinguish from AI-generated results.
+
+interface HeuristicRule {
+  keywords: string[];
+  matchCode: string;
+  boost: number;
+  explanation: string;
+  tags: string[];
+}
+
+const heuristicRules: HeuristicRule[] = [
+  {
+    keywords: ["pii", "personal data", "personal information", "data subject", "data protection"],
+    matchCode: "GDPR",
+    boost: 30,
+    explanation:
+      "Your organization handles personal data, which may fall under data protection regulations like GDPR if you operate in or serve users in the EU.",
+    tags: ["privacy", "pii", "eu"],
+  },
+  {
+    keywords: ["eu", "europe", "european", "european union", "eea"],
+    matchCode: "GDPR",
+    boost: 25,
+    explanation:
+      "Your organization operates in or serves users in the EU/EEA region, where GDPR is the primary data protection regulation.",
+    tags: ["privacy", "pii", "eu"],
+  },
+  {
+    keywords: [
+      "health",
+      "phi",
+      "healthcare",
+      "medical",
+      "patient",
+      "hipaa",
+      "ehr",
+      "electronic health record",
+      "protected health information",
+    ],
+    matchCode: "HIPAA",
+    boost: 30,
+    explanation:
+      "Your organization handles health-related data, which may be subject to HIPAA if you operate in the US healthcare ecosystem.",
+    tags: ["healthcare", "phi", "security"],
+  },
+  {
+    keywords: [
+      "payment",
+      "cardholder",
+      "pci",
+      "credit card",
+      "debit card",
+      "card payment",
+      "pci-dss",
+      "merchant",
+      "transaction processing",
+    ],
+    matchCode: "PCI-DSS",
+    boost: 30,
+    explanation:
+      "Your organization stores, processes, or transmits cardholder data, which is subject to PCI-DSS compliance requirements.",
+    tags: ["payments", "finance", "security"],
+  },
+  {
+    keywords: [
+      "finance",
+      "financial",
+      "banking",
+      "bank",
+      "fintech",
+      "investment",
+      "securities",
+      "money",
+      "lending",
+    ],
+    matchCode: "SOC2",
+    boost: 20,
+    explanation:
+      "Financial services organizations commonly adopt SOC 2 to demonstrate security, availability, and confidentiality controls to customers and auditors.",
+    tags: ["security", "audit", "trust"],
+  },
+  {
+    keywords: ["soc2", "soc 2", "soc ii", "service organization", "trust services", "type ii"],
+    matchCode: "SOC2",
+    boost: 25,
+    explanation:
+      "Your organization's profile aligns with SOC 2, which is widely adopted by service organizations handling customer data.",
+    tags: ["security", "audit", "trust"],
+  },
+  {
+    keywords: [
+      "iso 27001",
+      "iso27001",
+      "information security",
+      "isms",
+      "information security management",
+    ],
+    matchCode: "ISO27001",
+    boost: 25,
+    explanation:
+      "Your organization's focus on information security aligns with ISO 27001, the international standard for information security management systems.",
+    tags: ["security", "management", "standard"],
+  },
+  {
+    keywords: ["cloud", "saas", "infrastructure", "aws", "azure", "gcp", "hosting", "data center"],
+    matchCode: "CSA-STAR",
+    boost: 20,
+    explanation:
+      "Cloud service providers and SaaS organizations commonly adopt CSA STAR to demonstrate cloud security posture.",
+    tags: ["cloud", "security", "saas"],
+  },
+  {
+    keywords: [
+      "government",
+      "public sector",
+      "fedramp",
+      "state",
+      "federal",
+      "agency",
+      "gxp",
+      "21 cfr",
+    ],
+    matchCode: "FedRAMP",
+    boost: 25,
+    explanation:
+      "Your organization serves government or public sector customers, which may require FedRAMP authorization.",
+    tags: ["government", "security", "us"],
+  },
+  {
+    keywords: ["us", "united states", "usa", "america", "north america"],
+    matchCode: "NIST",
+    boost: 15,
+    explanation:
+      "US-based organizations commonly adopt the NIST Cybersecurity Framework as a baseline for security controls.",
+    tags: ["security", "framework", "us"],
+  },
+  {
+    keywords: ["australia", "australian", "au", "anz", "new zealand"],
+    matchCode: "IRAP",
+    boost: 20,
+    explanation:
+      "Your organization operates in Australia/New Zealand, where IRAP is the standard for government and critical infrastructure security assessments.",
+    tags: ["government", "security", "anz"],
+  },
+  {
+    keywords: ["japan", "japanese", "jp", "asia pacific"],
+    matchCode: "CCSL",
+    boost: 15,
+    explanation:
+      "Your organization operates in Japan or Asia Pacific, where CCSL (Cloud Compliance Security Label) may be relevant.",
+    tags: ["cloud", "security", "japan"],
+  },
+  {
+    keywords: ["singapore", "singaporean", "sg", "southeast asia"],
+    matchCode: "MTCS",
+    boost: 20,
+    explanation:
+      "Your organization operates in Singapore or Southeast Asia, where MTCS (Multi-Tier Cloud Security) may be applicable.",
+    tags: ["cloud", "security", "singapore"],
+  },
+  {
+    keywords: ["china", "chinese", "cn", "prc", "beijing", "shanghai"],
+    matchCode: "MLPS",
+    boost: 20,
+    explanation:
+      "Your organization operates in China, where MLPS (Multi-Level Protection Scheme) is the mandatory cybersecurity standard.",
+    tags: ["security", "china", "regulation"],
+  },
+  {
+    keywords: ["india", "indian", "in", "bharat"],
+    matchCode: "ISMS",
+    boost: 15,
+    explanation:
+      "Your organization operates in India, where ISMS standards and the upcoming Digital Personal Data Protection Act may apply.",
+    tags: ["security", "india", "privacy"],
+  },
+  {
+    keywords: ["canada", "canadian", "ca", "north"],
+    matchCode: "PIPEDA",
+    boost: 20,
+    explanation:
+      "Your organization operates in Canada, where PIPEDA governs how private sector organizations collect, use, and disclose personal information.",
+    tags: ["privacy", "canada", "pii"],
+  },
+  {
+    keywords: ["brazil", "brazilian", "br", "south america", "latin america"],
+    matchCode: "LGPD",
+    boost: 20,
+    explanation:
+      "Your organization operates in Brazil or Latin America, where LGPD is the primary data protection regulation.",
+    tags: ["privacy", "brazil", "pii"],
+  },
+  {
+    keywords: ["children", "kids", "minor", "under 13", "child", "coppa", "student", "education"],
+    matchCode: "COPPA",
+    boost: 25,
+    explanation:
+      "Your organization may collect data from children, which is subject to COPPA (Children's Online Privacy Protection Act) in the US.",
+    tags: ["privacy", "children", "us"],
+  },
+  {
+    keywords: [
+      "ai",
+      "artificial intelligence",
+      "machine learning",
+      "ml",
+      "llm",
+      "model",
+      "algorithm",
+    ],
+    matchCode: "EU-AI-Act",
+    boost: 20,
+    explanation:
+      "Your organization develops or uses AI systems, which may be subject to the EU AI Act or emerging AI governance frameworks.",
+    tags: ["ai", "regulation", "eu"],
+  },
+];
+
+function getHeuristicSuggestions(org: OrgProfile): AIFrameworkSuggestion[] {
+  const scores = new Map<string, { boost: number; explanations: string[]; tags: Set<string> }>();
+
+  const fieldsToScan = [
+    org.name,
+    org.description,
+    org.services,
+    org.customers,
+    org.problem,
+    ...org.dataHandled,
+    ...org.regions,
+  ];
+
+  const normalizedFields = fieldsToScan.map((f) => f.toLowerCase());
+
+  for (const rule of heuristicRules) {
+    let matched = false;
+    for (const field of normalizedFields) {
+      for (const keyword of rule.keywords) {
+        if (field.includes(keyword)) {
+          matched = true;
+          break;
+        }
+      }
+      if (matched) {
+        break;
+      }
+    }
+
+    if (matched) {
+      const existing = scores.get(rule.matchCode);
+      if (existing) {
+        existing.boost += rule.boost;
+        existing.explanations.push(rule.explanation);
+        for (const tag of rule.tags) {
+          existing.tags.add(tag);
+        }
+      } else {
+        scores.set(rule.matchCode, {
+          boost: rule.boost,
+          explanations: [rule.explanation],
+          tags: new Set(rule.tags),
+        });
+      }
+    }
+  }
+
+  if (scores.size === 0) {
+    return [];
+  }
+
+  const maxConfidence = 55;
+  const maxPossibleBoost = Math.max(...Array.from(scores.values()).map((s) => s.boost), 1);
+  const suggestions: AIFrameworkSuggestion[] = Array.from(scores.entries()).map(([code, data]) => {
+    // Normalize confidence: scale boost relative to max possible, capped at maxConfidence
+    const rawConfidence = Math.round((data.boost / maxPossibleBoost) * maxConfidence);
+    const confidence = Math.min(maxConfidence, Math.max(10, rawConfidence));
+
+    return {
+      code,
+      name: code, // Will be enriched with real name
+      confidence,
+      explanation: data.explanations[0],
+      tags: Array.from(data.tags),
+      source: "heuristic" as SuggestionSource,
+    };
+  });
+
+  return suggestions.sort((a, b) => b.confidence - a.confidence).slice(0, 8);
 }
 
 function buildPrompt(org: OrgProfile): string {
@@ -839,6 +1102,7 @@ async function parseAIResponse(text: string): Promise<AIFrameworkSuggestion[]> {
         confidence: Math.min(100, Math.max(0, f.confidence ?? 50)),
         explanation: typeof f.explanation === "string" ? f.explanation : "",
         tags: Array.isArray(f.tags) ? f.tags : [],
+        source: "ai" as SuggestionSource,
       }),
     );
 
@@ -917,23 +1181,24 @@ export async function mapCompliance(org: OrgProfile): Promise<FrameworkSuggestio
     }
   }
 
-  const fallback = await getComplianceFallback();
+  const heuristicSuggestions = getHeuristicSuggestions(org);
+  const enrichedFallback = await enrichFrameworkSuggestions(heuristicSuggestions);
 
-  await setCache(key, fallback, aiCacheTtlSeconds);
+  await setCache(key, enrichedFallback, aiCacheTtlSeconds);
 
   prisma.aIInteraction
     .create({
       data: {
         type: "COMPLIANCE_MAPPING",
         input: JSON.stringify(org),
-        output: JSON.stringify(fallback),
-        model: "fallback",
+        output: JSON.stringify(enrichedFallback),
+        model: "heuristic",
         tokensUsed: 0,
       },
     })
     .catch((logError: unknown) => {
-      console.error("Failed to log fallback AI interaction", logError);
+      console.error("Failed to log heuristic AI interaction", logError);
     });
 
-  return fallback;
+  return enrichedFallback;
 }

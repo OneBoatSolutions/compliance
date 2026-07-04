@@ -131,5 +131,7 @@ describe("AI map-compliance API route", () => {
     expect(res.status).toBe(200);
     expect(json.success).toBe(true);
     expect(Array.isArray(json.data)).toBe(true);
+    expect(json.source).toBeDefined();
+    expect(json.source).toBe("heuristic");
   });
 });
